@@ -1,6 +1,6 @@
 {
   "schema": "showcase-source-manifest/1",
-  "sourceHash": "3ac11d60d51bc512b346497fc7776f5e35145b8079ac275affb05d8d849d2cbc",
+  "sourceHash": "1af1e7eb994932ce6f42b6fc4a1e5fc3f2fcea1b372cffa87b76fc841cc83878",
   "gitCommit": null,
   "reason": "Local commits were not authorized",
   "excludedGeneratedFiles": [
@@ -205,8 +205,8 @@
     },
     {
       "path": "tools/run-validation.ps1",
-      "sha256": "028651d9ac2b75405afb64443d776974e87237b6b5e53d6185675d08be22b77c",
-      "bytes": 9373
+      "sha256": "46ac718b78571793326498aaacfb22321413f6ae1b4329761a7d0e1867033382",
+      "bytes": 9580
     },
     {
       "path": "tools/Showcase.Console/Program.cs",
@@ -610,7 +610,7 @@
     },
     {
       "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Pale_sandstone.mat",
-      "sha256": "fca350a4db60e0a7d35484a1acedbc54ede59a0218157428f5e0a7657ba13480",
+      "sha256": "b171ef435c37c5c0d36557d12fe09da062053e285d26044ae0b655b22390aed4",
       "bytes": 8344
     },
     {
@@ -630,7 +630,7 @@
     },
     {
       "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_sandstone.mat",
-      "sha256": "5e70fd919c2caa038371fa9419fb72357062dc47de3e8a348c9f6f38386bb7ee",
+      "sha256": "68f284a9fa5952673fbd3fcf46951bf475d6a22c35e006fdaee5770ca4a8a408",
       "bytes": 8368
     },
     {
@@ -795,7 +795,7 @@
     },
     {
       "path": "Unity/Assets/Scenes/Showcase.unity",
-      "sha256": "2b2a9a2e10dde49b9e3e2449686e7281d1763f989d27d7504b581698203701da",
+      "sha256": "9d2e8c8fde8ca249ef921bf5600894e779ac1d7a75a44cf65399f59989d1d5d3",
       "bytes": 4883
     },
     {
@@ -900,8 +900,8 @@
     },
     {
       "path": "Unity/Assets/Showcase/Environment/CourtyardMeshes.cs",
-      "sha256": "a55350e08f9588a2c28abcaacb939351ec787f8f2bc7543a5bfb4fd79cfdc58a",
-      "bytes": 6471
+      "sha256": "16c31f4e3f031bf5b65d5a627c5878f91b85de6f4d310ba750cd75cea0152bbf",
+      "bytes": 7503
     },
     {
       "path": "Unity/Assets/Showcase/Environment/CourtyardMeshes.cs.meta",
@@ -955,8 +955,8 @@
     },
     {
       "path": "Unity/Assets/Showcase/Environment/ShowcaseEnvironment.cs",
-      "sha256": "659cbf10e8c2a47ca05f76fe739ea20796b21564396703e3cb1b511a816ec1c0",
-      "bytes": 20508
+      "sha256": "9ff1cbb173f35f98c3f2b5cecefc0e9d2d8040c808563fc5e301bc4547b3961c",
+      "bytes": 23358
     },
     {
       "path": "Unity/Assets/Showcase/Environment/ShowcaseEnvironment.cs.meta",
@@ -1310,12 +1310,22 @@
     },
     {
       "path": "Unity/Assets/Showcase/Runtime/GeometryGuides.cs",
-      "sha256": "9d54aa409a762152b97f1a27d807eefacf756cab72533d4d1db554557efc0ad6",
-      "bytes": 3046
+      "sha256": "027d054bb1a439c4ea767262b95846efbefafaf1368c6427fea1eb46dbf09256",
+      "bytes": 4200
     },
     {
       "path": "Unity/Assets/Showcase/Runtime/GeometryGuides.cs.meta",
       "sha256": "fa9423b286ff703b3273b37099cf80283a0fd67e2ae414c7939df057973a787f",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/GpuAblation.cs",
+      "sha256": "97c06816073542b9ed47e21b921c3375bcea89bf4157b93b98385e8b90acf724",
+      "bytes": 12109
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/GpuAblation.cs.meta",
+      "sha256": "10ce088a3623986ea378987da4ba715c8dc2349f05f91ce3a6fd19d7836928ca",
       "bytes": 59
     },
     {
@@ -1360,8 +1370,8 @@
     },
     {
       "path": "Unity/Assets/Showcase/Runtime/RuntimeEvidence.cs",
-      "sha256": "868c99d119f9595ca06e22ff98e429a253dc6216c87ab057f74727140602ba2b",
-      "bytes": 5872
+      "sha256": "75393579913b9a2e836d8775b6844d85b01050d683c6e1cf51b8b79f78c4d9db",
+      "bytes": 5945
     },
     {
       "path": "Unity/Assets/Showcase/Runtime/RuntimeEvidence.cs.meta",
@@ -1380,8 +1390,8 @@
     },
     {
       "path": "Unity/Assets/Showcase/Runtime/SectionView.cs",
-      "sha256": "36e8bd59282ab28928f15f6ad976ea4be1a49dad0282ec9cb132103b62ffbffa",
-      "bytes": 6027
+      "sha256": "ff563d88d0650de0d807da92eb4c8377a652a108c0d266091552b2f73cad64e2",
+      "bytes": 6096
     },
     {
       "path": "Unity/Assets/Showcase/Runtime/SectionView.cs.meta",
@@ -1440,8 +1450,8 @@
     },
     {
       "path": "Unity/Assets/Showcase/Runtime/ShowcaseController.cs",
-      "sha256": "2f53db5add9c8ad9a26bb7f905e442defb26f20dd5ed114bf66c24fd45c70b96",
-      "bytes": 32805
+      "sha256": "81a9b8a1e5795ee31fc9dfe231457b1d84b4e83295226c331c33bc050ded700f",
+      "bytes": 34548
     },
     {
       "path": "Unity/Assets/Showcase/Runtime/ShowcaseController.cs.meta",

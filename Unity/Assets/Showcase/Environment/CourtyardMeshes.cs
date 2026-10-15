@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -7,10 +8,23 @@ namespace NDimensionalShogi.Showcase.Environment
     /// <summary>Original modeled profiles and vegetation, batched by material after construction.</summary>
     internal sealed class CourtyardMeshes
     {
-        readonly Dictionary<Material,List<CombineInstance>> batches=new Dictionary<Material,List<CombineInstance>>();
+        // Batches are keyed by material and by a horizontal cell, so that shadow cascades,
+        // reflection faces and the main frustum cull whole cells instead of rasterising the
+        // entire courtyard in every pass. Geometry, materials and UVs are unchanged.
+        public const float CellMetres=6f;
+        readonly struct Batch : IEquatable<Batch>
+        {
+            public readonly Material Material;public readonly int X,Z;
+            public Batch(Material material,int x,int z){Material=material;X=x;Z=z;}
+            public bool Equals(Batch other)=>Material==other.Material&&X==other.X&&Z==other.Z;
+            public override bool Equals(object obj)=>obj is Batch other&&Equals(other);
+            public override int GetHashCode()=>(Material.GetInstanceID()*397+X)*397+Z;
+        }
+        readonly Dictionary<Batch,List<CombineInstance>> batches=new Dictionary<Batch,List<CombineInstance>>();
         public void Add(Mesh mesh,Material material,Vector3 position,Quaternion rotation,Vector3 scale)
         {
-            if(!batches.TryGetValue(material,out var list))batches.Add(material,list=new List<CombineInstance>());
+            var key=new Batch(material,Mathf.FloorToInt(position.x/CellMetres),Mathf.FloorToInt(position.z/CellMetres));
+            if(!batches.TryGetValue(key,out var list))batches.Add(key,list=new List<CombineInstance>());
             list.Add(new CombineInstance{mesh=mesh,transform=Matrix4x4.TRS(position,rotation,scale)});
         }
         public void Box(Material material,Vector3 position,Vector3 size,float bevel=.015f,Quaternion? rotation=null)
@@ -28,11 +42,12 @@ namespace NDimensionalShogi.Showcase.Environment
         {
             foreach(var pair in batches)
             {
-                var mesh=new Mesh{name=pair.Key.name+" courtyard batch",indexFormat=IndexFormat.UInt32};
+                var material=pair.Key.Material;string cell=" cell "+pair.Key.X+","+pair.Key.Z;
+                var mesh=new Mesh{name=material.name+" courtyard batch"+cell,indexFormat=IndexFormat.UInt32};
                 mesh.CombineMeshes(pair.Value.ToArray(),true,true);mesh.RecalculateBounds();
-                var go=new GameObject(pair.Key.name){layer=8,isStatic=true};go.transform.SetParent(parent,false);
+                var go=new GameObject(material.name+cell){layer=8,isStatic=true};go.transform.SetParent(parent,false);
                 go.AddComponent<MeshFilter>().sharedMesh=mesh;
-                var renderer=go.AddComponent<MeshRenderer>();renderer.sharedMaterial=pair.Key;
+                var renderer=go.AddComponent<MeshRenderer>();renderer.sharedMaterial=material;
                 renderer.shadowCastingMode=ShadowCastingMode.On;renderer.receiveShadows=true;
                 renderer.lightProbeUsage=LightProbeUsage.BlendProbes;
             }

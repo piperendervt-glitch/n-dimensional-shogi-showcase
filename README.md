@@ -2,7 +2,7 @@
 
 屋外の木製盤で、2Dの対局に見える導入から3Dの高さ方向への逃走と追撃を3組繰り返し、4Dへ移る27手のWindowsデモです。4DではAの1手ごとに初期の3D表示（H0）へ戻り、Bが銀・金・飛車・歩を使って応手します。Bの観測に4Dの情報は入りません。最後はAが王を捕獲します。
 
-既定は1080p・30FPSを目標とする画質設定です。木材はCC0のPBRスキャン、駒名は高解像度の完成語画像を使用し、木漏れ日・接地影・動的反射を加えています。次元回転はゆっくり進み、ShowcaseRasterでは画面全体の時間停止風エフェクトを伴います。目標FPSの達成状況は実測結果を参照してください。
+既定は1080p・30FPSを目標とする画質設定です。木材はCC0のPBRスキャン、駒名は高解像度の完成語画像を使用し、木漏れ日・接地影・動的反射を加えています。次元回転はゆっくり進み、ShowcaseRasterでは画面全体の時間停止風エフェクトを伴います。目標FPSの達成状況は実測結果を参照してください。描画負荷の原因分析と最適化（2026-10-15）は [docs/RENDER_OPTIMIZATION_JA.md](docs/RENDER_OPTIMIZATION_JA.md) を参照してください。
 
 これは**独自の固定4Dデモルール**です。本将棋完全互換や、自律的な強さの実証を目的としません。歩は前進に加えて非前方軸へ横断・捕獲できます。成り・打ち・自玉安全による着手拒否はなく、王捕獲で終局します。
 
@@ -62,8 +62,10 @@ PowerShellからの例:
 | `--capture-video` | 実描画フレームをJPEGと時刻へ記録。性能測定とは別run |
 | `--capture-passes` | 実際のHDRP Color/Depth/Normalと反射のGPU読み戻し。検査画像・EXR・監査JSONを保存 |
 | `--benchmark-no-captures` | スクリーンショット・動画・GPU読み戻しを行わない性能測定。記録オプションとの併用を拒否 |
+| `--target-fps 60` | フレームレート上限（既定30）。最適化後の1080p計測では60で中央値16.67msが成立（4D回転中に一部超過）。詳細は [描画最適化](docs/RENDER_OPTIMIZATION_JA.md) |
 | `--exit-after-run` | 指定run完了後に終了 |
 | `--shape-comparison` | A/Cを同じカメラ・光で0/30/45/60/90度撮影する診断run |
+| `--gpu-ablation` | 固定カメラ・固定局面で効果を1つずつOFFにし、GPU/フレーム時間を `gpu-ablation.json` へ記録する診断run。フレームレート上限なし |
 | `--evidence PATH` | 記録先。省略時はUnity persistentDataPath以下 |
 
 Unityの `-screen-width 1920 -screen-height 1080 -screen-fullscreen 0` も使用できます。

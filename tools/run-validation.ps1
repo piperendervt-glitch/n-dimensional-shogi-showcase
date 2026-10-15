@@ -3,7 +3,7 @@
 param(
     [string]$Executable = (Join-Path $PSScriptRoot '../builds/Showcase-Windows/NDShogiShowcase.exe'),
     [Parameter(Mandatory=$true)][string]$OutputRoot,
-    [ValidateSet('Benchmark','Capture','Automation','Smoke','ShapeComparison','LightingAudit')][string]$RunKind = 'Benchmark',
+    [ValidateSet('Benchmark','Capture','Automation','Smoke','ShapeComparison','LightingAudit','GpuAblation')][string]$RunKind = 'Benchmark',
     [ValidateSet('DirectedLive','VerifiedReplay')][string]$Mode = 'DirectedLive',
     [ValidateSet('ShowcaseRaster','GeometryReference')][string]$Profile = 'ShowcaseRaster',
     [ValidateSet('lattice-line/1','supercover-closed/1')][string]$Occlusion = 'lattice-line/1',
@@ -12,6 +12,7 @@ param(
     [int]$Height = 1080,
     [ValidateRange(1,20)][int]$Loops = 1,
     [ValidateRange(0.01,20)][double]$Speed = 1,
+    [ValidateRange(1,240)][int]$TargetFps = 30,
     [ValidateRange(0.25,10)][double]$SampleSeconds = 1,
     [ValidateRange(10,3600)][int]$TimeoutSeconds = 600,
     [switch]$CaptureVideo,
@@ -34,6 +35,8 @@ foreach($value in @('-screen-fullscreen','0','-screen-width',"$Width",'-screen-h
 if($RunKind -eq 'Benchmark'){$taskArgs.Add('--benchmark-no-captures')}
 if($RunKind -eq 'ShapeComparison'){$taskArgs.Add('--shape-comparison')}
 if($RunKind -eq 'LightingAudit'){$taskArgs.Add('--lighting-audit')}
+if($RunKind -eq 'GpuAblation'){$taskArgs.Add('--gpu-ablation')}
+if($TargetFps -ne 30){$taskArgs.Add('--target-fps');$taskArgs.Add("$TargetFps")}
 if($CaptureVideo){$taskArgs.Add('--capture-video')}
 if($CapturePasses){$taskArgs.Add('--capture-passes')}
 if($HelpersOff){$taskArgs.Add('--helpers-off')}

@@ -50,6 +50,7 @@ namespace Showcase.Unity
         readonly List<double> times=new List<double>(30000),gpuTimes=new List<double>(30000),cpuTimes=new List<double>(30000);
         readonly FrameTiming[] timing=new FrameTiming[1];
         int initialGC,initialGC1,initialGC2; bool closed;
+        public FrameEvidence LastFrame { get; private set; }
         public RuntimeEvidence(string path,RunHeader header)
         {
             Header=header;DirectoryPath=path;Directory.CreateDirectory(path);
@@ -66,7 +67,7 @@ namespace Showcase.Unity
             if(n>0){f.cpuMainMs=timing[0].cpuMainThreadFrameTime;f.cpuRenderMs=timing[0].cpuRenderThreadFrameTime;f.cpuPresentWaitMs=timing[0].cpuMainThreadPresentWaitTime;f.gpuMs=timing[0].gpuFrameTime;}
             f.monoBytes=Profiler.GetMonoUsedSizeLong();f.totalAllocatedBytes=Profiler.GetTotalAllocatedMemoryLong();
             f.gcDelta=GC.CollectionCount(0)-initialGC;f.gcGen1Delta=GC.CollectionCount(1)-initialGC1;f.gcGen2Delta=GC.CollectionCount(2)-initialGC2;
-            frames.WriteLine(JsonUtility.ToJson(f));times.Add(f.frameMs);
+            frames.WriteLine(JsonUtility.ToJson(f));times.Add(f.frameMs);LastFrame=f;
             if(f.gpuMs>0)gpuTimes.Add(f.gpuMs);if(f.cpuMainMs>0)cpuTimes.Add(f.cpuMainMs);
         }
         public static double Percentile(List<double> values,double p)

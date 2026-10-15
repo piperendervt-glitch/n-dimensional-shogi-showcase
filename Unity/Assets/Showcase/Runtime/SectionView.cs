@@ -20,6 +20,7 @@ namespace Showcase.Unity
         readonly List<Vector2> uv = new List<Vector2>(512);
         readonly List<Vector4> local4 = new List<Vector4>(512), provenance = new List<Vector4>(512);
         readonly List<int> top = new List<int>(1024), side = new List<int>(1024);
+        readonly List<Vector4> tangents = new List<Vector4>(512);
         public readonly GameObject Object;
         public readonly MeshRenderer Renderer;
         public SectionResult Last { get; private set; }
@@ -82,14 +83,14 @@ namespace Showcase.Unity
             mesh.subMeshCount=2;mesh.SetTriangles(side,0,false);mesh.SetTriangles(top,1,false);mesh.RecalculateBounds();mesh.RecalculateTangents();
             // Rank-deficient fixed UV fields (e.g. A at 90 degrees) have no material tangent.
             // Use a finite geometric tangent, never a remapped glyph or camera-dependent UV.
-            var tangents=mesh.tangents;
-            for(int i=0;i<tangents.Length;i++)
+            mesh.GetTangents(tangents);
+            for(int i=0;i<tangents.Count;i++)
             {
                 var t=tangents[i];var v=new Vector3(t.x,t.y,t.z);
                 if(float.IsNaN(v.x)||float.IsNaN(v.y)||float.IsNaN(v.z)||float.IsNaN(t.w)||float.IsInfinity(t.w)||float.IsInfinity(v.sqrMagnitude)||v.sqrMagnitude<.1f||Mathf.Abs(Vector3.Dot(v,normals[i]))>.01f)
                 {var n=normals[i];v=Vector3.Cross(n,Mathf.Abs(n.y)<.9f?Vector3.up:Vector3.right).normalized;tangents[i]=new Vector4(v.x,v.y,v.z,1);}
             }
-            mesh.tangents=tangents;
+            mesh.SetTangents(tangents);
         }
         public static Vector3 MapVector(Vec3 p)=>new Vector3((float)p.Y,(float)p.Z,(float)p.X);
         public static Vector3 MapPoint(Vec4 p,double angle)=>Anchor+MapVector(SliceFrame.AtAngle(angle).Project(p))*Cell;

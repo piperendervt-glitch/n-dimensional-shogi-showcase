@@ -11,7 +11,10 @@ namespace NDimensionalShogi.Showcase.Environment
         public EnvironmentMaterials Materials;
         public Volume Volume;
         public HDAdditionalReflectionData DynamicReflection;
+        public HDAdditionalReflectionData EnvironmentReflection;
         public PlanarReflectionProbe TableReflection;
+        public Light Sun;
+        public HDAdditionalLightData SunData;
         public EnvironmentDebug Debug;
         public GameObject Root;
         public float TableTop => .82f;
@@ -39,6 +42,10 @@ namespace NDimensionalShogi.Showcase.Environment
             rig.Camera.transform.position=new Vector3(.65f,1.40f,-.84f);rig.Camera.transform.LookAt(new Vector3(0,.88f,0));
             var hd=cameraGo.AddComponent<HDAdditionalCameraData>();hd.antialiasing=HDAdditionalCameraData.AntialiasingMode.SubpixelMorphologicalAntiAliasing;
             hd.clearColorMode=HDAdditionalCameraData.ClearColorMode.Sky;
+            // No TAA, motion blur or temporal effect consumes motion vectors; skip the pass.
+            hd.customRenderingSettings=true;
+            hd.renderingPathCustomFrameSettingsOverrideMask.mask[(uint)FrameSettingsField.MotionVectors]=true;
+            hd.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.MotionVectors,false);
             cameraGo.AddComponent<AudioListener>();
             // Back-left sunshine produces grazing highlights on the walnut, while the canopy
             // protects the board. A physical sky supplies blue skylight rather than grey ambient.
@@ -52,7 +59,7 @@ namespace NDimensionalShogi.Showcase.Environment
             sun.dirLightPCSSBlockerSampleCount=64;sun.dirLightPCSSFilterSampleCount=64;
             sun.dirLightPCSSBlockerSearchAngularDiameter=2;sun.dirLightPCSSMinFilterMaxAngularDiameter=2;
             sun.dirLightPCSSMinFilterSizeTexels=1.25f;sun.dirLightPCSSMaxPenumbraSize=.10f;
-            sun.normalBias=.75f;sun.slopeBias=.5f;RenderSettings.sun=light;
+            sun.normalBias=.75f;sun.slopeBias=.5f;RenderSettings.sun=light;rig.Sun=light;rig.SunData=sun;
             sun.useContactShadow.useOverride=true;sun.useContactShadow.@override=true;
             var volumeGo=new GameObject("Fixed daylight and photographic response");rig.Volume=volumeGo.AddComponent<Volume>();rig.Volume.isGlobal=true;rig.Volume.priority=10;
             var profile=ScriptableObject.CreateInstance<VolumeProfile>();profile.name="ShowcaseRaster / daylight";rig.Volume.sharedProfile=profile;
@@ -66,8 +73,17 @@ namespace NDimensionalShogi.Showcase.Environment
             var dof=profile.Add<DepthOfField>(true);dof.focusMode.Override(DepthOfFieldMode.Manual);dof.nearFocusStart.Override(.05f);dof.nearFocusEnd.Override(.15f);dof.farFocusStart.Override(1.8f);dof.farFocusEnd.Override(4.8f);
             var ao=profile.Add<ScreenSpaceAmbientOcclusion>(true);ao.intensity.Override(1.2f);ao.radius.Override(.25f);ao.directLightingStrength.Override(.35f);
             ao.temporalAccumulation.Override(false);ao.quality.Override(ScalableSettingLevelParameter.LevelCount);ao.fullResolution=true;ao.stepCount=8;ao.directionCount=4;ao.maximumRadiusInPixels=48;
-            var shadows=profile.Add<HDShadowSettings>(true);shadows.maxShadowDistance.Override(18);shadows.cascadeShadowSplit0.Override(.10f);shadows.cascadeShadowSplit1.Override(.28f);shadows.cascadeShadowSplit2.Override(.58f);
-            shadows.cascadeShadowBorder0.Override(.12f);shadows.cascadeShadowBorder1.Override(.12f);shadows.cascadeShadowBorder2.Override(.12f);
+            // Cascades 0/1 (0–1.8 m, 1.8–5 m) keep their texel density. Everything past
+            // 4.8 m is fully defocused by the DOF below, so one cascade covers 5–18 m.
+            var shadows=profile.Add<HDShadowSettings>(true);shadows.maxShadowDistance.Override(18);shadows.cascadeShadowSplitCount.Override(3);shadows.cascadeShadowSplit0.Override(.10f);shadows.cascadeShadowSplit1.Override(.28f);
+            shadows.cascadeShadowBorder0.Override(.12f);shadows.cascadeShadowBorder1.Override(.12f);
+            // Reflection renders evaluate this extra volume as well: two cascades over 10 m
+            // instead of four over 18 m. The main camera's volume mask excludes this layer.
+            var probeVolumeGo=new GameObject("Reflection-render shadow budget"){layer=ProbeVolumeLayer};
+            var probeVolume=probeVolumeGo.AddComponent<Volume>();probeVolume.isGlobal=true;probeVolume.priority=20;
+            var probeProfile=ScriptableObject.CreateInstance<VolumeProfile>();probeProfile.name="ShowcaseRaster / reflection shadow budget";probeVolume.sharedProfile=probeProfile;
+            var probeShadows=probeProfile.Add<HDShadowSettings>(true);probeShadows.maxShadowDistance.Override(10);probeShadows.cascadeShadowSplitCount.Override(2);
+            probeShadows.cascadeShadowSplit0.Override(.25f);probeShadows.cascadeShadowBorder0.Override(.12f);
             var contact=profile.Add<ContactShadows>(true);contact.enable.Override(true);contact.length.Override(.055f);contact.opacity.Override(.9f);contact.maxDistance.Override(8);contact.fadeDistance.Override(2);
             contact.quality.Override(ScalableSettingLevelParameter.LevelCount);contact.sampleCount=24;contact.rayBias.Override(.08f);contact.thicknessScale.Override(.08f);
             var color=profile.Add<ColorAdjustments>(true);color.saturation.Override(-2);color.contrast.Override(12);
@@ -81,7 +97,7 @@ namespace NDimensionalShogi.Showcase.Environment
             var probeGo=new GameObject("Environment-only reflection probe"){layer=8};probeGo.transform.position=new Vector3(0,1.2f,0);
             var probe=probeGo.AddComponent<ReflectionProbe>();probe.mode=ReflectionProbeMode.Realtime;probe.refreshMode=ReflectionProbeRefreshMode.OnAwake;
             probe.timeSlicingMode=ReflectionProbeTimeSlicingMode.AllFacesAtOnce;probe.resolution=128;probe.size=new Vector3(14,8,14);probe.cullingMask=1<<8;probe.boxProjection=true;
-            var hdProbe=probeGo.AddComponent<HDAdditionalReflectionData>();hdProbe.mode=ProbeSettings.Mode.Realtime;
+            var hdProbe=probeGo.AddComponent<HDAdditionalReflectionData>();hdProbe.mode=ProbeSettings.Mode.Realtime;rig.EnvironmentReflection=hdProbe;
             hdProbe.realtimeMode=ProbeSettings.RealtimeMode.OnEnable;hdProbe.influenceVolume.boxSize=new Vector3(14,8,14);
             hdProbe.settingsRaw.cameraSettings.culling.cullingMask=1<<8;
             // A bounded, low-resolution local cubemap keeps off-camera dynamic sections in reflections.
@@ -97,6 +113,9 @@ namespace NDimensionalShogi.Showcase.Environment
             dynamicProbe.settingsRaw.cameraSettings.culling.cullingMask=(1<<0)|(1<<8);
             dynamicProbe.settingsRaw.cameraSettings.frustum.nearClipPlaneRaw=.01f;dynamicProbe.settingsRaw.cameraSettings.frustum.farClipPlaneRaw=30;
             dynamicProbe.settingsRaw.proxySettings.useInfluenceVolumeAsProxyVolume=true;
+            // Six 128 px faces per frame: sun shadow maps, SSAO and contact shadows are not
+            // resolvable at that size, so the faces render direct light without them.
+            ConfigureReflectionRender(dynamicProbe,false);
             // A fresh mirrored camera render, with no temporal history, supplies the tabletop's
             // correctly positioned highlights and current section reflections.
             var planarGo=new GameObject("Current-frame walnut planar reflection");planarGo.transform.position=new Vector3(0,.821f,0);
@@ -112,7 +131,26 @@ namespace NDimensionalShogi.Showcase.Environment
             planar.settingsRaw.cameraSettings.frustum.nearClipPlaneRaw=.01f;planar.settingsRaw.cameraSettings.frustum.farClipPlaneRaw=30;
             planar.settingsRaw.resolutionScalable.useOverride=true;planar.settingsRaw.resolutionScalable.@override=PlanarReflectionAtlasResolution.Resolution512;
             planar.settingsRaw.roughReflections=true;
+            // The mirrored tabletop view keeps real sun shadows (two cascades), without screen-space passes.
+            ConfigureReflectionRender(planar,true);
             rig.Debug=rig.Root.AddComponent<EnvironmentDebug>();rig.Debug.Initialize(rig,light,sun,bounce,hdProbe);
+        }
+
+        public const int ProbeVolumeLayer=10;
+        public static void ConfigureReflectionRender(HDProbe probe,bool shadowMaps)
+        {
+            ref var camera=ref probe.settingsRaw.cameraSettings;
+            camera.volumes.layerMask=(1<<0)|(1<<ProbeVolumeLayer);
+            camera.customRenderingSettings=true;
+            Override(ref camera,FrameSettingsField.ShadowMaps,shadowMaps);
+            Override(ref camera,FrameSettingsField.ContactShadows,false);
+            Override(ref camera,FrameSettingsField.SSAO,false);
+            Override(ref camera,FrameSettingsField.Volumetrics,false);
+        }
+        static void Override(ref CameraSettings camera,FrameSettingsField field,bool enabled)
+        {
+            camera.renderingPathCustomFrameSettingsOverrideMask.mask[(uint)field]=true;
+            camera.renderingPathCustomFrameSettings.SetEnabled(field,enabled);
         }
 
         static void BuildCourtyard(EnvironmentRig rig)

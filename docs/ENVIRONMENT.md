@@ -12,7 +12,7 @@
 - Windows Standaloneサポート導入済み
 - NVIDIA GeForce RTX 5060 Ti / 16,311 MiB / driver 617.42 (nvidia-smi)
 
-描画設定はHDRP Balanced、SMAA、内部解像度100%、ユーザー追加指示により目標30fps、vSyncなし、フレーム生成なし。太陽の動的PCSS影とcontact shadow、非時間蓄積SSAO、物理大気sky ambient、環境専用の静的構成プローブ、128px・6面を毎フレーム更新する局所反射プローブ、天板用512px平面反射を使用する。SSR/SSGI/RTは無効。APVや静的ライトマップを焼いておらず、完全な間接光の再計算とは説明しない。盤・駒は静的ベイクへ含めない。
+描画設定はHDRP Balanced、SMAA、内部解像度100%、ユーザー追加指示により目標30fps、vSyncなし、フレーム生成なし。太陽の動的PCSS影とcontact shadow、非時間蓄積SSAO、物理大気sky ambient、環境専用の静的構成プローブ、128px・6面を毎フレーム更新する局所反射プローブ、天板用512px平面反射を使用する。2026-10-15の描画最適化以降、本カメラの指向性影は3段カスケード（0.10/0.28分割、18m）、反射プローブの描画は専用volume（2段・10m）と専用frame settings（立方体: 影マップ・SSAO・接地影なし、平面: 影マップあり・SSAO・接地影なし）で行い、本カメラのmotion vectorパスは無効、静的メッシュは6m格子ごとに結合する。根拠と計測は `RENDER_OPTIMIZATION_JA.md`。SSR/SSGI/RTは無効。APVや静的ライトマップを焼いておらず、完全な間接光の再計算とは説明しない。盤・駒は静的ベイクへ含めない。
 
 ShowcaseRasterは控えめなBloomと背景DOF、GeometryReferenceは両方無効。同じ固定形状、材質場、動的影・反射を使用する。補助格子はlayer9、実体はlayer0、静的背景はlayer8。局所反射はlayer0/8を対象とし、格子の影・反射は作らない。
 
