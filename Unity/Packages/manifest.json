@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "com.ndshogi.showcase.core": "file:../../src/Showcase.Core",
+    "com.showcase.geometry": "file:../../src/Showcase.Geometry",
+    "com.unity.render-pipelines.high-definition": "17.3.0",
+    "com.unity.render-pipelines.core": "17.3.0",
+    "com.unity.shadergraph": "17.3.0",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.imgui": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.screencapture": "1.0.0",
+    "com.unity.modules.imageconversion": "1.0.0",
+    "com.unity.modules.jsonserialize": "1.0.0",
+    "com.unity.modules.particlesystem": "1.0.0"
+  }
+}

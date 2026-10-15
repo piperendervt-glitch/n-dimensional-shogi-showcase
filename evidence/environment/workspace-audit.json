@@ -1,0 +1,50 @@
+{
+  "checkedUtc": "2026-10-15T10:48:08.8071794Z",
+  "workspace": "C:\\dev\\n-dimensional-shogi-showcase",
+  "branch": "main",
+  "head": null,
+  "headReason": "Unborn branch; no commits authorized or created",
+  "status": [
+    "?? .gitignore",
+    "?? README.md",
+    "?? Unity/",
+    "?? docs/",
+    "?? evidence/",
+    "?? scenarios/",
+    "?? src/",
+    "?? tests/",
+    "?? tools/"
+  ],
+  "mainline": "C:\\dev\\n-dimensional-shogi",
+  "mainlineHead": "ae71161e5bc3d8726eaa1ea3fde9f2598c2fc7da",
+  "mainlineStatus": [],
+  "baselineObservedEarlier": "ae71161e5bc3d8726eaa1ea3fde9f2598c2fc7da; clean",
+  "mainlineMatchesBaseline": true,
+  "pathObjects": [
+    {
+      "path": "C:\\dev\\n-dimensional-shogi",
+      "attributes": "Directory",
+      "linkType": null,
+      "target": null
+    },
+    {
+      "path": "C:\\dev\\n-dimensional-shogi-showcase",
+      "attributes": "Directory",
+      "linkType": null,
+      "target": null
+    },
+    {
+      "path": "C:\\dev",
+      "attributes": "Directory",
+      "linkType": null,
+      "target": null
+    }
+  ],
+  "actionsExcluded": [
+    "mainline writes",
+    "commit",
+    "push",
+    "publication",
+    "paid assets"
+  ]
+}

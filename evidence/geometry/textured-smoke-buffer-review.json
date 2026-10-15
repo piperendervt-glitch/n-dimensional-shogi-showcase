@@ -1,0 +1,462 @@
+{
+  "run": "evidence\\runtime\\textured-smoke\\20261015-103617-833-ShowcaseRaster-1",
+  "scope": "File integrity and observed actual depth/normal buffers; no GPU shadow/reflection pass validation. ROI comparisons are selected pixels, not full-image proof.",
+  "captures": [
+    {
+      "snapshot": "scene01-close",
+      "status": "GPU_READBACK_COMPLETE",
+      "captureFrame": 18,
+      "requestFrame": 18,
+      "errors": [],
+      "declaredAudit": "PASS: CPU renderer declaration only; GPU shadow/reflection not verified",
+      "isolatedStaleDepthDetected": true,
+      "volumePieces": 40,
+      "emptyWithTriangles": 0,
+      "camera-hdr": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "535c408a2e150d29bc7a4d7ac0c0cdc48414b94d090fb1002185c14681bee6e8"
+      },
+      "depth-metres": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "3339c370418709564f7af694e8cb4bee13ed658ee4e1b52ecf6b7fa6e7c2b4c8",
+        "minMetres": 0.3101266622543335,
+        "maxMetres": 100.0
+      },
+      "normal-world": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "1807df15fc88ea36b333ac8df74672e46b44eb402c7167c96c827e202569c548",
+        "validPixels": 918860,
+        "unitErrorMax": 1.7881393432617188e-07,
+        "unitErrorP99": 1.1920928955078125e-07
+      }
+    },
+    {
+      "snapshot": "scene01-opening",
+      "status": "GPU_READBACK_COMPLETE",
+      "captureFrame": 217,
+      "requestFrame": 217,
+      "errors": [],
+      "declaredAudit": "PASS: CPU renderer declaration only; GPU shadow/reflection not verified",
+      "isolatedStaleDepthDetected": true,
+      "volumePieces": 40,
+      "emptyWithTriangles": 0,
+      "camera-hdr": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "dcba328db2d864ee74270d1889e2c92cf5ef9add646a429d3dc9e0da85d85a99"
+      },
+      "depth-metres": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "60e9d019e0314a4195b402ff46171a76cc870b8d69a7ba379799f239ec000036",
+        "minMetres": 0.5869652628898621,
+        "maxMetres": 100.0
+      },
+      "normal-world": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "ff443bb5be1d3e86f25be6cd26e470baa8ae1809568c37da5b598fe5c5d84ade",
+        "validPixels": 912253,
+        "unitErrorMax": 1.7881393432617188e-07,
+        "unitErrorP99": 1.1920928955078125e-07
+      }
+    },
+    {
+      "snapshot": "scene01-wide",
+      "status": "GPU_READBACK_COMPLETE",
+      "captureFrame": 3,
+      "requestFrame": 3,
+      "errors": [],
+      "declaredAudit": "PASS: CPU renderer declaration only; GPU shadow/reflection not verified",
+      "isolatedStaleDepthDetected": true,
+      "volumePieces": 40,
+      "emptyWithTriangles": 0,
+      "camera-hdr": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "b70141a0d308cf1bb0314c4bdce95d587a39ceb1c7073a5b0e18ca792f8ed27c"
+      },
+      "depth-metres": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "4b7f36f1eda60e3c8c2d35eb0552a8448788fae2044f1a96efd81c1a77fc9781",
+        "minMetres": 0.5869652628898621,
+        "maxMetres": 100.0
+      },
+      "normal-world": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "47ae3780675c6d0bb6a7fbcb14c5d746a7c5ca0c9acc2df156091c9dc80fcfc3",
+        "validPixels": 912253,
+        "unitErrorMax": 1.7881393432617188e-07,
+        "unitErrorP99": 1.1920928955078125e-07
+      }
+    },
+    {
+      "snapshot": "scene02-height",
+      "status": "GPU_READBACK_COMPLETE",
+      "captureFrame": 278,
+      "requestFrame": 278,
+      "errors": [],
+      "declaredAudit": "PASS: CPU renderer declaration only; GPU shadow/reflection not verified",
+      "isolatedStaleDepthDetected": true,
+      "volumePieces": 40,
+      "emptyWithTriangles": 0,
+      "camera-hdr": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "df340f5dfd276383b20059dd5ca33c81c4a98c6b00410ee5b924772373cf6a63"
+      },
+      "depth-metres": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "dadf89d0a4102f59ceaef65207e7fb725334b5efe523c58e652fca3f3826a297",
+        "minMetres": 0.6281422972679138,
+        "maxMetres": 100.0
+      },
+      "normal-world": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "0b2b01a79452c7708ff92296839ed476fb38d84869bf0e9a482515dedfa2b74f",
+        "validPixels": 913545,
+        "unitErrorMax": 1.7881393432617188e-07,
+        "unitErrorP99": 1.1920928955078125e-07
+      }
+    },
+    {
+      "snapshot": "scene03-pressure",
+      "status": "GPU_READBACK_COMPLETE",
+      "captureFrame": 291,
+      "requestFrame": 291,
+      "errors": [],
+      "declaredAudit": "PASS: CPU renderer declaration only; GPU shadow/reflection not verified",
+      "isolatedStaleDepthDetected": true,
+      "volumePieces": 40,
+      "emptyWithTriangles": 0,
+      "camera-hdr": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "588407330f873c68abae56a4ddbc7f0b7b755bba687e04d97a92942d68d160fe"
+      },
+      "depth-metres": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "4a0012f2cda7567ac4c3ba7d6740c9f30b02d1eed65b69bcc32a781f40d9e7b6",
+        "minMetres": 0.6329150199890137,
+        "maxMetres": 100.0
+      },
+      "normal-world": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "b7c85164b25391cf8afaab622c7fec2376ab3c3b70ed97559bb7e940fa4619e7",
+        "validPixels": 916886,
+        "unitErrorMax": 1.7881393432617188e-07,
+        "unitErrorP99": 1.1920928955078125e-07
+      }
+    },
+    {
+      "snapshot": "scene04-absence",
+      "status": "GPU_READBACK_COMPLETE",
+      "captureFrame": 649,
+      "requestFrame": 649,
+      "errors": [],
+      "declaredAudit": "PASS: CPU renderer declaration only; GPU shadow/reflection not verified",
+      "isolatedStaleDepthDetected": true,
+      "volumePieces": 39,
+      "emptyWithTriangles": 0,
+      "camera-hdr": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "3fa08964da6d50d7d1991656abcae70b2e9bca0272c65975a49d90e94a7db50f"
+      },
+      "depth-metres": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "ca1fbb887d9d81e406a72240a34756456a574667eb8e8073707072334a0d172d",
+        "minMetres": 0.6329150199890137,
+        "maxMetres": 100.0
+      },
+      "normal-world": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "267fa183310b808a8c7ad77412f051199b389471659e75f5fc71ba53438103eb",
+        "validPixels": 916886,
+        "unitErrorMax": 1.7881393432617188e-07,
+        "unitErrorP99": 1.1920928955078125e-07
+      }
+    },
+    {
+      "snapshot": "scene04-h90",
+      "status": "GPU_READBACK_COMPLETE",
+      "captureFrame": 460,
+      "requestFrame": 460,
+      "errors": [],
+      "declaredAudit": "PASS: CPU renderer declaration only; GPU shadow/reflection not verified",
+      "isolatedStaleDepthDetected": true,
+      "volumePieces": 4,
+      "emptyWithTriangles": 0,
+      "camera-hdr": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "7c26b94d2053510c808fa322225d1842570f536a67e6a729f0f5547685c06a44"
+      },
+      "depth-metres": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "da1b160daa43b613382540068566d881ffe128258684c088889497165581b3a8",
+        "minMetres": 0.6329150199890137,
+        "maxMetres": 100.0
+      },
+      "normal-world": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "f9f1d229ce7b24ba4de140cbff7670a61e4306e903d844778dac93c75a4977b7",
+        "validPixels": 916886,
+        "unitErrorMax": 1.7881393432617188e-07,
+        "unitErrorP99": 1.1920928955078125e-07
+      }
+    },
+    {
+      "snapshot": "scene05-before-capture",
+      "status": "GPU_READBACK_COMPLETE",
+      "captureFrame": 1426,
+      "requestFrame": 1426,
+      "errors": [],
+      "declaredAudit": "PASS: CPU renderer declaration only; GPU shadow/reflection not verified",
+      "isolatedStaleDepthDetected": true,
+      "volumePieces": 36,
+      "emptyWithTriangles": 0,
+      "camera-hdr": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "789c6215141220702580c13c7072f85c142a5c77e3a76c75362092ac8c2a7219"
+      },
+      "depth-metres": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "b3dee35128c0279074e516a0ac2ed6d16f0afaba96e08b2402bf89aed3f901c0",
+        "minMetres": 0.49976715445518494,
+        "maxMetres": 100.0
+      },
+      "normal-world": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "7caaf5208de42d3a10e8df9e3db503f22e9869645cce203e5cc601e2b4354e95",
+        "validPixels": 914407,
+        "unitErrorMax": 1.7881393432617188e-07,
+        "unitErrorP99": 1.1920928955078125e-07
+      }
+    },
+    {
+      "snapshot": "scene05-ending",
+      "status": "GPU_READBACK_COMPLETE",
+      "captureFrame": 1452,
+      "requestFrame": 1452,
+      "errors": [],
+      "declaredAudit": "PASS: CPU renderer declaration only; GPU shadow/reflection not verified",
+      "isolatedStaleDepthDetected": true,
+      "volumePieces": 36,
+      "emptyWithTriangles": 0,
+      "camera-hdr": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "168ec8cc60b63b1d04c3935b75a397a342b74c9acbc49478fb161b4245f97384"
+      },
+      "depth-metres": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "c16367f6b574a4633a7c3f4fca77d4f4b401bcdd8ce03c17509776f5ce935981",
+        "minMetres": 0.4997667372226715,
+        "maxMetres": 100.0
+      },
+      "normal-world": {
+        "decoded": true,
+        "shape": [
+          720,
+          1280,
+          4
+        ],
+        "finite": true,
+        "sha256": "fff73902a887166c1394b6e4f2b7f1285b3343aac863d766bab7f409ec2e82b7",
+        "validPixels": 914406,
+        "unitErrorMax": 1.7881393432617188e-07,
+        "unitErrorP99": 1.1920928955078125e-07
+      }
+    }
+  ],
+  "selectedHeroRoi": {
+    "imageCoordinates": "top-left PNG/EXR reader convention",
+    "xRange": [
+      619,
+      637
+    ],
+    "yRange": [
+      350,
+      362
+    ],
+    "samples": [
+      {
+        "x": 624,
+        "y": 355,
+        "beforeDepthMetres": 0.9190714955329895,
+        "afterDepthMetres": 1.0575518608093262,
+        "depthChangeMetres": 0.13848036527633667
+      },
+      {
+        "x": 628,
+        "y": 355,
+        "beforeDepthMetres": 0.9179253578186035,
+        "afterDepthMetres": 1.0575518608093262,
+        "depthChangeMetres": 0.13962650299072266
+      },
+      {
+        "x": 632,
+        "y": 355,
+        "beforeDepthMetres": 0.9182329773902893,
+        "afterDepthMetres": 1.0575518608093262,
+        "depthChangeMetres": 0.13931888341903687
+      },
+      {
+        "x": 628,
+        "y": 358,
+        "beforeDepthMetres": 0.9170409440994263,
+        "afterDepthMetres": 1.0509698390960693,
+        "depthChangeMetres": 0.13392889499664307
+      }
+    ],
+    "limitation": "The source geometry/camera was not logged for this first capture run, so these visual-selected locations are supporting observations; the next build adds exact current-mesh ray probes."
+  }
+}

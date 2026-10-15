@@ -1,0 +1,699 @@
+{
+    "schema": "showcase-playback-automation/1",
+    "status": "PASS",
+    "startedUtc": "2026-10-15T11:26:10.1247954Z",
+    "finishedUtc": "2026-10-15T11:27:19.7860299Z",
+    "unity": "6000.3.11f1",
+    "device": "NVIDIA GeForce RTX 5060 Ti",
+    "mechanism": "Standalone programmatic calls to the exact public command methods used by the controller's keyboard handlers.",
+    "osKeyboardInjection": false,
+    "externalProcessExitVerified": false,
+    "exitConfirmationRequested": true,
+    "limitation": "This does not test OS input focus or physical key delivery. Process exit is verified by the launching process.",
+    "checks": [
+        {
+            "name": "controller-initialized",
+            "status": "PASS",
+            "detail": "Condition reached.",
+            "realtimeSeconds": 0.5200222134590149,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112610-046-ShowcaseRaster-1",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 1,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 2.399036066606641,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.49000000953674319,
+                    "y": 1.25,
+                    "z": -0.6600000262260437
+                },
+                "cameraRotation": {
+                    "x": 0.19943711161613465,
+                    "y": -0.30195945501327517,
+                    "z": 0.06475654989480972,
+                    "w": 0.9299741983413696
+                }
+            }
+        },
+        {
+            "name": "initial-state",
+            "status": "PASS",
+            "detail": "Initial snapshot has 40 views and zero committed moves.",
+            "realtimeSeconds": 0.537281334400177,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112610-046-ShowcaseRaster-1",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 1,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 2.449037980288267,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.49000000953674319,
+                    "y": 1.25,
+                    "z": -0.6600000262260437
+                },
+                "cameraRotation": {
+                    "x": 0.19943711161613465,
+                    "y": -0.30195945501327517,
+                    "z": 0.06475654989480972,
+                    "w": 0.9299741983413696
+                }
+            }
+        },
+        {
+            "name": "pending-move-observed",
+            "status": "PASS",
+            "detail": "Condition reached.",
+            "realtimeSeconds": 2.6791558265686037,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112610-046-ShowcaseRaster-1",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 1,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 8.56746270088479,
+                "paused": false,
+                "debug": false,
+                "reserved": true,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.460537850856781,
+                    "y": 1.2240039110183716,
+                    "z": -0.6149402856826782
+                },
+                "cameraRotation": {
+                    "x": 0.19848789274692536,
+                    "y": -0.3110688328742981,
+                    "z": 0.06665845215320587,
+                    "w": 0.9270358085632324
+                }
+            }
+        },
+        {
+            "name": "pause-command",
+            "status": "PASS",
+            "detail": "Same public method as Space; reservation remains uncommitted.",
+            "realtimeSeconds": 2.679710865020752,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112610-046-ShowcaseRaster-1",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 1,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 8.56746270088479,
+                "paused": true,
+                "debug": false,
+                "reserved": true,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.460537850856781,
+                    "y": 1.2240039110183716,
+                    "z": -0.6149402856826782
+                },
+                "cameraRotation": {
+                    "x": 0.19848789274692536,
+                    "y": -0.3110688328742981,
+                    "z": 0.06665845215320587,
+                    "w": 0.9270358085632324
+                }
+            }
+        },
+        {
+            "name": "paused-move-stable",
+            "status": "PASS",
+            "detail": "Sampled every rendered frame for 0.4 real seconds: hash, ply, commits, angle, elapsed time, camera position and rotation.",
+            "realtimeSeconds": 3.0905773639678957,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112610-046-ShowcaseRaster-1",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 1,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 8.56746270088479,
+                "paused": true,
+                "debug": false,
+                "reserved": true,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.460537850856781,
+                    "y": 1.2240039110183716,
+                    "z": -0.6149402856826782
+                },
+                "cameraRotation": {
+                    "x": 0.19848789274692536,
+                    "y": -0.3110688328742981,
+                    "z": 0.06665845215320587,
+                    "w": 0.9270358085632324
+                }
+            }
+        },
+        {
+            "name": "debug-toggle-no-jump",
+            "status": "PASS",
+            "detail": "Same public method as F1; camera, angle, time, state and commits unchanged.",
+            "realtimeSeconds": 3.0916028022766115,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112610-046-ShowcaseRaster-1",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 1,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 8.56746270088479,
+                "paused": true,
+                "debug": true,
+                "reserved": true,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.460537850856781,
+                    "y": 1.2240039110183716,
+                    "z": -0.6149402856826782
+                },
+                "cameraRotation": {
+                    "x": 0.19848789274692536,
+                    "y": -0.3110688328742981,
+                    "z": 0.06665845215320587,
+                    "w": 0.9270358085632324
+                }
+            }
+        },
+        {
+            "name": "resume-command",
+            "status": "PASS",
+            "detail": "Pause resumes only through the shared user command.",
+            "realtimeSeconds": 3.098205327987671,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112610-046-ShowcaseRaster-1",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 1,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 8.56746270088479,
+                "paused": false,
+                "debug": false,
+                "reserved": true,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.460537850856781,
+                    "y": 1.2240039110183716,
+                    "z": -0.6149402856826782
+                },
+                "cameraRotation": {
+                    "x": 0.19848789274692536,
+                    "y": -0.3110688328742981,
+                    "z": 0.06665845215320587,
+                    "w": 0.9270358085632324
+                }
+            }
+        },
+        {
+            "name": "restart-cancels-reservation",
+            "status": "PASS",
+            "detail": "Same public method as R; old reservation cancelled, initial state and 40 views rebuilt.",
+            "realtimeSeconds": 3.1351046562194826,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112613-228-ShowcaseRaster-2",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 2,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 0.0,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.49000000953674319,
+                    "y": 1.25,
+                    "z": -0.6600000262260437
+                },
+                "cameraRotation": {
+                    "x": 0.19943711161613465,
+                    "y": -0.30195945501327517,
+                    "z": 0.06475654989480972,
+                    "w": 0.9299741983413696
+                }
+            }
+        },
+        {
+            "name": "exit-dialog-pauses",
+            "status": "PASS",
+            "detail": "Same public method as Esc.",
+            "realtimeSeconds": 3.135848045349121,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112613-228-ShowcaseRaster-2",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 2,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 0.0,
+                "paused": true,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": true,
+                "cameraPosition": {
+                    "x": 0.49000000953674319,
+                    "y": 1.25,
+                    "z": -0.6600000262260437
+                },
+                "cameraRotation": {
+                    "x": 0.19943711161613465,
+                    "y": -0.30195945501327517,
+                    "z": 0.06475654989480972,
+                    "w": 0.9299741983413696
+                }
+            }
+        },
+        {
+            "name": "exit-cancel-restores-paused-state",
+            "status": "PASS",
+            "detail": "Cancelling exit restores the pre-dialog paused state.",
+            "realtimeSeconds": 3.1367969512939455,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112613-228-ShowcaseRaster-2",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 2,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 0.0,
+                "paused": true,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.49000000953674319,
+                    "y": 1.25,
+                    "z": -0.6600000262260437
+                },
+                "cameraRotation": {
+                    "x": 0.19943711161613465,
+                    "y": -0.30195945501327517,
+                    "z": 0.06475654989480972,
+                    "w": 0.9299741983413696
+                }
+            }
+        },
+        {
+            "name": "exit-cancel-restores-playing-state",
+            "status": "PASS",
+            "detail": "Cancelling exit restores the pre-dialog playing state.",
+            "realtimeSeconds": 3.142676591873169,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112613-228-ShowcaseRaster-2",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 2,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 0.0,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.49000000953674319,
+                    "y": 1.25,
+                    "z": -0.6600000262260437
+                },
+                "cameraRotation": {
+                    "x": 0.19943711161613465,
+                    "y": -0.30195945501327517,
+                    "z": 0.06475654989480972,
+                    "w": 0.9299741983413696
+                }
+            }
+        },
+        {
+            "name": "rotation-observed",
+            "status": "PASS",
+            "detail": "Condition reached.",
+            "realtimeSeconds": 12.71338176727295,
+            "snapshot": {
+                "stateHash": "560c2eb8438d49158dadeb2e9dc884c84952e820a3b51f409c27abc3f65fee18",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112613-228-ShowcaseRaster-2",
+                "ply": 6,
+                "commitCount": 6,
+                "runIndex": 2,
+                "scene": 4,
+                "pieceViews": 40,
+                "angle": 3.854023692263727,
+                "elapsed": 28.790700003504754,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.5099949240684509,
+                    "y": 1.309984803199768,
+                    "z": -0.6799949407577515
+                },
+                "cameraRotation": {
+                    "x": 0.20917417109012605,
+                    "y": -0.30363208055496218,
+                    "z": 0.06851224601268769,
+                    "w": 0.9270166754722595
+                }
+            }
+        },
+        {
+            "name": "paused-rotation-stable",
+            "status": "PASS",
+            "detail": "Sampled every rendered frame for 0.4 real seconds: hash, ply, commits, angle, elapsed time, camera position and rotation.",
+            "realtimeSeconds": 13.119236946105957,
+            "snapshot": {
+                "stateHash": "560c2eb8438d49158dadeb2e9dc884c84952e820a3b51f409c27abc3f65fee18",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112613-228-ShowcaseRaster-2",
+                "ply": 6,
+                "commitCount": 6,
+                "runIndex": 2,
+                "scene": 4,
+                "pieceViews": 40,
+                "angle": 3.854023692263727,
+                "elapsed": 28.790700003504754,
+                "paused": true,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.5099949240684509,
+                    "y": 1.309984803199768,
+                    "z": -0.6799949407577515
+                },
+                "cameraRotation": {
+                    "x": 0.20917417109012605,
+                    "y": -0.30363208055496218,
+                    "z": 0.06851224601268769,
+                    "w": 0.9270166754722595
+                }
+            }
+        },
+        {
+            "name": "complete-loop-1",
+            "status": "PASS",
+            "detail": "Exactly 19 commits, 36 surviving piece views, and identical terminal state across loops.",
+            "realtimeSeconds": 35.11845779418945,
+            "snapshot": {
+                "stateHash": "c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112613-228-ShowcaseRaster-2",
+                "ply": 19,
+                "commitCount": 19,
+                "runIndex": 2,
+                "scene": 5,
+                "pieceViews": 36,
+                "angle": 0.0,
+                "elapsed": 94.78821951895952,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": true,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.4000001549720764,
+                    "y": 1.2200006246566773,
+                    "z": -0.5700002908706665
+                },
+                "cameraRotation": {
+                    "x": 0.19934582710266114,
+                    "y": -0.27470365166664126,
+                    "z": 0.05832912400364876,
+                    "w": 0.938827395439148
+                }
+            }
+        },
+        {
+            "name": "automatic-loop-reset",
+            "status": "PASS",
+            "detail": "Controller's automatic loop reset restored initial state; no harness restart was called here.",
+            "realtimeSeconds": 37.84442901611328,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112647-915-ShowcaseRaster-3",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 3,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 0.20489848405122758,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.49000000953674319,
+                    "y": 1.25,
+                    "z": -0.6600000262260437
+                },
+                "cameraRotation": {
+                    "x": 0.19943711161613465,
+                    "y": -0.30195945501327517,
+                    "z": 0.06475654989480972,
+                    "w": 0.9299741983413696
+                }
+            }
+        },
+        {
+            "name": "complete-loop-2",
+            "status": "PASS",
+            "detail": "Exactly 19 commits, 36 surviving piece views, and identical terminal state across loops.",
+            "realtimeSeconds": 69.38394165039063,
+            "snapshot": {
+                "stateHash": "c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112647-915-ShowcaseRaster-3",
+                "ply": 19,
+                "commitCount": 19,
+                "runIndex": 3,
+                "scene": 5,
+                "pieceViews": 36,
+                "angle": 0.0,
+                "elapsed": 94.82395900972188,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": true,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.4000001847743988,
+                    "y": 1.2200007438659669,
+                    "z": -0.5700003504753113
+                },
+                "cameraRotation": {
+                    "x": 0.19934584200382234,
+                    "y": -0.27470365166664126,
+                    "z": 0.058329127728939059,
+                    "w": 0.938827395439148
+                }
+            }
+        },
+        {
+            "name": "two-natural-completions",
+            "status": "PASS",
+            "detail": "Requires --loops 3: one deliberate restart followed by two completed runs and an automatic reset.",
+            "realtimeSeconds": 69.40060424804688,
+            "snapshot": {
+                "stateHash": "c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112647-915-ShowcaseRaster-3",
+                "ply": 19,
+                "commitCount": 19,
+                "runIndex": 3,
+                "scene": 5,
+                "pieceViews": 36,
+                "angle": 0.0,
+                "elapsed": 94.87396270595491,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": true,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.4000001847743988,
+                    "y": 1.2200007438659669,
+                    "z": -0.5700003504753113
+                },
+                "cameraRotation": {
+                    "x": 0.19934584200382234,
+                    "y": -0.27470365166664126,
+                    "z": 0.058329127728939059,
+                    "w": 0.938827395439148
+                }
+            }
+        },
+        {
+            "name": "terminal-glow-observed",
+            "status": "PASS",
+            "detail": "Actual terminal light exists before pause and restart.",
+            "realtimeSeconds": 69.6172866821289,
+            "snapshot": {
+                "stateHash": "c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112647-915-ShowcaseRaster-3",
+                "ply": 19,
+                "commitCount": 19,
+                "runIndex": 3,
+                "scene": 5,
+                "pieceViews": 36,
+                "angle": 0.0,
+                "elapsed": 95.52396940626204,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": true,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.4000001847743988,
+                    "y": 1.2200007438659669,
+                    "z": -0.5700003504753113
+                },
+                "cameraRotation": {
+                    "x": 0.19934584200382234,
+                    "y": -0.27470365166664126,
+                    "z": 0.058329127728939059,
+                    "w": 0.938827395439148
+                }
+            }
+        },
+        {
+            "name": "terminal-restart-clears-transients",
+            "status": "PASS",
+            "detail": "Restart during terminal pause clears pieces and transient capture light. Light present immediately before restart: True.",
+            "realtimeSeconds": 69.66118621826172,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112719-748-ShowcaseRaster-4",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 4,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 0.1314587965607643,
+                "paused": false,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": false,
+                "cameraPosition": {
+                    "x": 0.49000000953674319,
+                    "y": 1.25,
+                    "z": -0.6600000262260437
+                },
+                "cameraRotation": {
+                    "x": 0.19943711161613465,
+                    "y": -0.30195945501327517,
+                    "z": 0.06475654989480972,
+                    "w": 0.9299741983413696
+                }
+            }
+        },
+        {
+            "name": "exit-confirmation-ready",
+            "status": "PASS",
+            "detail": "Final exit dialog opened through the same command as Esc.",
+            "realtimeSeconds": 69.66205596923828,
+            "snapshot": {
+                "stateHash": "68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a",
+                "failure": "",
+                "evidenceDirectory": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112719-748-ShowcaseRaster-4",
+                "ply": 0,
+                "commitCount": 0,
+                "runIndex": 4,
+                "scene": 1,
+                "pieceViews": 40,
+                "angle": 0.0,
+                "elapsed": 0.1314587965607643,
+                "paused": true,
+                "debug": false,
+                "reserved": false,
+                "terminal": false,
+                "exitDialog": true,
+                "cameraPosition": {
+                    "x": 0.49000000953674319,
+                    "y": 1.25,
+                    "z": -0.6600000262260437
+                },
+                "cameraRotation": {
+                    "x": 0.19943711161613465,
+                    "y": -0.30195945501327517,
+                    "z": 0.06475654989480972,
+                    "w": 0.9299741983413696
+                }
+            }
+        }
+    ],
+    "completedRunEvidence": [
+        "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112613-228-ShowcaseRaster-2",
+        "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-automation\\20261015-112647-915-ShowcaseRaster-3"
+    ]
+}

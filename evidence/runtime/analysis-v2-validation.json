@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "legacy-contract-preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "separate-30-and-60-fps-counts",
+      "status": "PASS"
+    },
+    {
+      "name": "legacy-target-not-new-acceptance",
+      "status": "PASS"
+    },
+    {
+      "name": "all-nine-A-rotations-and-thirteen-B-replies",
+      "status": "PASS"
+    },
+    {
+      "name": "old-director-is-not-retroactively-failed",
+      "status": "PASS"
+    },
+    {
+      "name": "missing-H0-return-detected",
+      "status": "PASS"
+    },
+    {
+      "name": "B-animation-outside-H0-detected",
+      "status": "PASS"
+    },
+    {
+      "name": "rotation-state-warp-detected",
+      "status": "PASS"
+    },
+    {
+      "name": "interrupted-automation-run-is-incomplete",
+      "status": "PASS"
+    },
+    {
+      "name": "27-ply-completion-contract",
+      "status": "PASS"
+    },
+    {
+      "name": "VFX-window-starts-after-return-at-GameEnded",
+      "status": "PASS"
+    },
+    {
+      "name": "VFX-window-uses-unscaled-two-seconds",
+      "status": "PASS"
+    },
+    {
+      "name": "markdown-reports-new-target-and-window",
+      "status": "PASS"
+    }
+  ],
+  "scope": "Synthetic analyzer fault cases only, not runtime or performance evidence."
+}

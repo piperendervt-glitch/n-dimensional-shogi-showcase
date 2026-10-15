@@ -1,0 +1,12 @@
+{
+  "schema": "acceptance-canonical-columns-check/1",
+  "canonical": "docs\\references\\SHOWCASE_MODE_PLAN_v0_1_JA.md",
+  "ledger": "docs\\ACCEPTANCE_SHOWCASE.md",
+  "canonicalSha256": "c9698cbdaefaf1b1c59a55ceae6d5836801af799f9504bfd9a1895670b38ad5d",
+  "ledgerSha256": "9cbdd9f548a327dc192c7cda6260710a63be06c6635bc7b7cdc94071bdd54dc5",
+  "canonicalRows": 48,
+  "ledgerRows": 48,
+  "firstFourColumnsExactIncludingWhitespace": true,
+  "mismatches": [],
+  "scope": "Checks the first four source columns of all 48 SM-AC rows only. Evidence/status columns and human acceptance are not approved by this comparison."
+}

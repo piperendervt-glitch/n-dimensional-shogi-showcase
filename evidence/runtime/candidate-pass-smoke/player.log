@@ -1,0 +1,42 @@
+Mono path[0] = 'C:/dev/n-dimensional-shogi-showcase/builds/Showcase-Windows/NDShogiShowcase_Data/Managed'
+Mono config path = 'C:/dev/n-dimensional-shogi-showcase/builds/Showcase-Windows/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.3.11f1 (3000ef702840)
+[Subsystems] Discovering subsystems at path C:/dev/n-dimensional-shogi-showcase/builds/Showcase-Windows/NDShogiShowcase_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 5060 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 16050 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 5060 Ti (ID=0x2d04)
+    Vendor:   NVIDIA
+    VRAM:     16050 MB
+    Driver:   32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.220 seconds
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.476300 ms
+InvalidOperationException: Pass evidence capture capacity reached.
+  at Showcase.Unity.PassEvidenceCapture.Capture (System.String absolutePrefix) [0x00041] in <299c8ce9bb644f5abdde456293102cbe>:0 
+  at Showcase.Unity.ShowcaseController.Screenshot (System.String name) [0x0003c] in <299c8ce9bb644f5abdde456293102cbe>:0 
+  at Showcase.Unity.ShowcaseController+<Sequence>d__56.MoveNext () [0x00748] in <299c8ce9bb644f5abdde456293102cbe>:0 
+  at UnityEngine.SetupCoroutine.InvokeMoveNext (System.Collections.IEnumerator enumerator, System.IntPtr returnValueAddress) [0x00026] in <83e181398a22434d95ed006517de556b>:0 
+
+HDRP custom pass did not run within 15 seconds. Check the camera/pipeline CustomPass frame setting.
+HDRP custom pass did not run within 15 seconds. Check the camera/pipeline CustomPass frame setting.
+HDRP custom pass did not run within 15 seconds. Check the camera/pipeline CustomPass frame setting.

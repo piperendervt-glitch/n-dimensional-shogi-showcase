@@ -1,0 +1,104 @@
+{
+  "status": "PASS_EXACT_OLD_NEW",
+  "cases": 31752,
+  "elapsedMilliseconds": 4492,
+  "comparison": "Exact status, diagnostic, volume, bounds, ordered vertices including local4D/normal/provenance, ordered indices",
+  "oldSourceSha256": "64292231858ee7299274153c2889111ed10480ba97ad14c0baf03dc949c3b559",
+  "newSourceSha256": "e1898e837f886b7b02b0a14984168105866adbb10a7d9b23742c9d9e884381bd",
+  "harnessSha256": "2e665884274d976928c372a9c0ac55951c38269eb522dc3a1c4b7449a07cc9af",
+  "runtime": "9.0.19",
+  "coverage": "A/C 40-piece\u002Bboard layouts: 0-2 degrees in0.02 steps;3-180 in1-degree steps; fixed/w endpoint offsets through0-90; MaxFaces/MaxVertices and epsilon sweeps; rank0/1/2 contact",
+  "timings": [
+    {
+      "trial": 0,
+      "order": "old/new",
+      "old": {
+        "milliseconds": 104.2021,
+        "bytes": 452319400,
+        "gen0Collections": 464,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      },
+      "current": {
+        "milliseconds": 53.7624,
+        "bytes": 167934312,
+        "gen0Collections": 476,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      }
+    },
+    {
+      "trial": 1,
+      "order": "new/old",
+      "old": {
+        "milliseconds": 109.1529,
+        "bytes": 452319400,
+        "gen0Collections": 517,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      },
+      "current": {
+        "milliseconds": 53.4592,
+        "bytes": 167934312,
+        "gen0Collections": 488,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      }
+    },
+    {
+      "trial": 2,
+      "order": "old/new",
+      "old": {
+        "milliseconds": 103.4385,
+        "bytes": 452319400,
+        "gen0Collections": 546,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      },
+      "current": {
+        "milliseconds": 55.069,
+        "bytes": 167934312,
+        "gen0Collections": 558,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      }
+    },
+    {
+      "trial": 3,
+      "order": "new/old",
+      "old": {
+        "milliseconds": 102.3322,
+        "bytes": 452319400,
+        "gen0Collections": 599,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      },
+      "current": {
+        "milliseconds": 55.5558,
+        "bytes": 167934312,
+        "gen0Collections": 570,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      }
+    },
+    {
+      "trial": 4,
+      "order": "old/new",
+      "old": {
+        "milliseconds": 102.448,
+        "bytes": 452319400,
+        "gen0Collections": 628,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      },
+      "current": {
+        "milliseconds": 53.9417,
+        "bytes": 167934312,
+        "gen0Collections": 640,
+        "sections": 1476,
+        "checksum": 184752.32920204822
+      }
+    }
+  ],
+  "scope": "Single-threaded console math comparison only. Not Unity frame timing or proof of 60fps. Alternating warm trials; managed bytes from current thread."
+}

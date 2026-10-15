@@ -1,0 +1,151 @@
+{
+  "status": "PASS",
+  "passed": 36,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "initial-40-piece-standard-fixture",
+      "status": "PASS"
+    },
+    {
+      "name": "fixed-dimension-and-unknown-occlusion-rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "pawn-forward-and-transverse-symmetric",
+      "status": "PASS"
+    },
+    {
+      "name": "B-3D-capability-fixed",
+      "status": "PASS"
+    },
+    {
+      "name": "king-80-A-neighbors-26-B-neighbors",
+      "status": "PASS"
+    },
+    {
+      "name": "gold-silver-knight-generalized-counts",
+      "status": "PASS"
+    },
+    {
+      "name": "holder-rook-and-bishop-predicates",
+      "status": "PASS"
+    },
+    {
+      "name": "lance-sign-zero-boundaries-friendly-occupancy",
+      "status": "PASS"
+    },
+    {
+      "name": "slider-blocking-and-knight-jump-exception",
+      "status": "PASS"
+    },
+    {
+      "name": "exact-supercover-known-corner-difference",
+      "status": "PASS"
+    },
+    {
+      "name": "occlusion-choice-affects-authoritative-legality",
+      "status": "PASS"
+    },
+    {
+      "name": "hidden-pieces-retain-occupancy-and-attacks",
+      "status": "PASS"
+    },
+    {
+      "name": "capture-king-terminal-no-promotion-drops",
+      "status": "PASS"
+    },
+    {
+      "name": "no-legal-moves-draw",
+      "status": "PASS"
+    },
+    {
+      "name": "source-state-immutable-and-sparse",
+      "status": "PASS"
+    },
+    {
+      "name": "transaction-cancel-pause-reserve-and-single-commit",
+      "status": "PASS"
+    },
+    {
+      "name": "directed-live-complete-27-ply-cpu-evaluated-route",
+      "status": "PASS"
+    },
+    {
+      "name": "scene-pressure-three-height-exchanges-hidden-ending-guards",
+      "status": "PASS"
+    },
+    {
+      "name": "ordinary-B-mixed-piece-development-after-escape",
+      "status": "PASS"
+    },
+    {
+      "name": "ordinary-B-development-does-not-use-escape-ply",
+      "status": "PASS"
+    },
+    {
+      "name": "four-dimensional-presentation-metadata-alternates-one-move",
+      "status": "PASS"
+    },
+    {
+      "name": "early-four-dimensional-escape-is-rejected-by-scenario-guard",
+      "status": "PASS"
+    },
+    {
+      "name": "repeat-seed-identical-candidates-and-transcript",
+      "status": "PASS"
+    },
+    {
+      "name": "verified-replay-revalidates-and-identifies-mode",
+      "status": "PASS"
+    },
+    {
+      "name": "portable-replay-fixture-loads-without-live-CPU",
+      "status": "PASS"
+    },
+    {
+      "name": "portable-replay-tamper-and-wrong-occlusion-rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "B-counterfactual-hidden-location-kind-count-invariance",
+      "status": "PASS"
+    },
+    {
+      "name": "B-boundary-full-state-and-hash-injection-rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "B-leaky-policy-mutation-detected",
+      "status": "PASS"
+    },
+    {
+      "name": "display-independent-observation-and-selection",
+      "status": "PASS"
+    },
+    {
+      "name": "independent-verifier-rejects-illegal-move-mutation",
+      "status": "PASS"
+    },
+    {
+      "name": "independent-verifier-rejects-state-warp",
+      "status": "PASS"
+    },
+    {
+      "name": "independent-rule-crosscheck-eight-kinds-both-occlusions",
+      "status": "PASS"
+    },
+    {
+      "name": "independent-verifier-rejects-blocked-slider",
+      "status": "PASS"
+    },
+    {
+      "name": "alternate-occlusion-is-explicit-separate-run",
+      "status": "PASS"
+    },
+    {
+      "name": "all-run-snapshots-preserve-rules-and-capabilities",
+      "status": "PASS"
+    }
+  ]
+}

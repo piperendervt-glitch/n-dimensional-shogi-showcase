@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+Unity/Library/
+Unity/Temp/
+Unity/Logs/
+Unity/UserSettings/
+Unity/MemoryCaptures/
+builds/
+artifacts/
+evidence/**/video-frames/
+evidence/runtime/frames/
+evidence/**/*.exr
+evidence/**/*.avi
+*.csproj.user
+.vs/
+.DS_Store

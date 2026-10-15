@@ -1,0 +1,93 @@
+{
+  "schema": "showcase-original-inputs/1",
+  "recordedDateClient": "2026-10-15",
+  "workspace": "C:\\dev\\n-dimensional-shogi-showcase",
+  "gitCommit": null,
+  "provenance": "User-supplied original files; hashes computed by reading bytes. No mainline write, commit, remote or publication performed.",
+  "files": [
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\00_SHOWCASE_MODE_CHAT_KICKOFF_v0_1_JA.md",
+      "name": "00_SHOWCASE_MODE_CHAT_KICKOFF_v0_1_JA.md",
+      "status": "READABLE",
+      "bytes": 3568,
+      "sha256": "c42deb5dab9be912bad8eb2b73bfc47644ed3a44bda56a90528f399652626dd0"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\00_SHOWCASE_MODE_HANDOFF_v0_1_JA.md",
+      "name": "00_SHOWCASE_MODE_HANDOFF_v0_1_JA.md",
+      "status": "READABLE",
+      "bytes": 10598,
+      "sha256": "cfc7af2ed899cb43bdb37f14738e4e7c9cba91345586ed4ddfb9fb5fdaaad059"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\CODEX_SHOWCASE_MODE_IMPLEMENTATION_REQUEST_v0_1_JA.md",
+      "name": "CODEX_SHOWCASE_MODE_IMPLEMENTATION_REQUEST_v0_1_JA.md",
+      "status": "READABLE",
+      "bytes": 18291,
+      "sha256": "86bd2c04d63750809352ab2984bc7bf6a3843033d3634607c436c7a97d7bab56"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\CODEX_SHOWCASE_MODE_START_HERE_v0_1_JA.md",
+      "name": "CODEX_SHOWCASE_MODE_START_HERE_v0_1_JA.md",
+      "status": "READABLE",
+      "bytes": 6593,
+      "sha256": "2c7113552c4cbd8aafa736dad801ac45dfc4375817a6c708c71be06c7198bca3"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\README_SHOWCASE_MODE_PACKAGE_v0_1_JA.md",
+      "name": "README_SHOWCASE_MODE_PACKAGE_v0_1_JA.md",
+      "status": "READABLE",
+      "bytes": 953,
+      "sha256": "7f2afa1cdbf31f8dba2ce782aae509582c3eb47df4d0218c8ffea39ceba8a01c"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\SHOWCASE_MODE_OPEN_QUESTIONS_v0_1_JA.md",
+      "name": "SHOWCASE_MODE_OPEN_QUESTIONS_v0_1_JA.md",
+      "status": "READABLE",
+      "bytes": 12357,
+      "sha256": "7635e69a69894515200ef3920e509bd7c95506b138ef293a48775da9adb3bf3a"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\SHOWCASE_MODE_PLAN_v0_1_JA.md",
+      "name": "SHOWCASE_MODE_PLAN_v0_1_JA.md",
+      "status": "READABLE",
+      "bytes": 48763,
+      "sha256": "c9698cbdaefaf1b1c59a55ceae6d5836801af799f9504bfd9a1895670b38ad5d"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi\\06_REALTIME_CG_RENDERING_DESIGN_v0_1_1_JA.md",
+      "name": "06_REALTIME_CG_RENDERING_DESIGN_v0_1_1_JA.md",
+      "status": "READABLE",
+      "bytes": 60730,
+      "sha256": "f872494a7095e298ef886e1df31369aa24f67520eebc895be1829a0b17802145"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi\\ChatGPT 画像 2026年10月15日 17_56_35-1.png",
+      "name": "ChatGPT 画像 2026年10月15日 17_56_35-1.png",
+      "status": "READABLE",
+      "bytes": 2447585,
+      "sha256": "970496ec93777bbfdbcc6e97999d3af2cb71485ead142d310332f828d6d4d0c3"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi\\ChatGPT 画像 2026年10月15日 17_56_36-2.png",
+      "name": "ChatGPT 画像 2026年10月15日 17_56_36-2.png",
+      "status": "READABLE",
+      "bytes": 2470157,
+      "sha256": "e89506592fa348046005127df3afb4ef99a59d0b0ad4c60472dcd141834ce86c"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi\\ChatGPT 画像 2026年10月15日 17_56_39-4.png",
+      "name": "ChatGPT 画像 2026年10月15日 17_56_39-4.png",
+      "status": "READABLE",
+      "bytes": 2282684,
+      "sha256": "498a6f18960e1fc4ba7d1b70490c3e27c036dcac6dd13f50addb4629c03be473"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi\\ChatGPT 画像 2026年10月15日 17_56_40-5.png",
+      "name": "ChatGPT 画像 2026年10月15日 17_56_40-5.png",
+      "status": "READABLE",
+      "bytes": 2372857,
+      "sha256": "3349b87927f9cb91f6443ff620cecff7c0ae5892b317b9a7d1db4e4a49606474"
+    }
+  ]
+}

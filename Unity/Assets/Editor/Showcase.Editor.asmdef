@@ -1,0 +1,5 @@
+{
+  "name": "Showcase.Editor",
+  "references": ["Showcase.Environment", "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.HighDefinition.Runtime"],
+  "includePlatforms": ["Editor"]
+}

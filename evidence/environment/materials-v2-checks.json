@@ -1,0 +1,405 @@
+{
+  "schema": "showcase-material-checks/2",
+  "materialVersion": "pbr-courtyard/2.0",
+  "files": 37,
+  "allPass": true,
+  "checks": [
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Bishop.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Bishop_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Bishop_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 0.9372549019607843,
+      "maxNormalLengthError": 0.005412571842407066,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Board.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Board_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Board_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 1.0,
+      "maxNormalLengthError": 0.0008147392264863385,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Gold.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Gold_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Gold_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 0.9372549019607843,
+      "maxNormalLengthError": 0.0052888803993734745,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\KingA.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\KingA_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\KingA_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 0.9372549019607843,
+      "maxNormalLengthError": 0.005352840026259464,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\KingB.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\KingB_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\KingB_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 0.9372549019607843,
+      "maxNormalLengthError": 0.005412571842407177,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Knight.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Knight_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Knight_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 0.9372549019607843,
+      "maxNormalLengthError": 0.005412571842407177,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Lance.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Lance_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Lance_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 0.9372549019607843,
+      "maxNormalLengthError": 0.005412571842407066,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Pawn.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Pawn_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Pawn_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 0.9372549019607843,
+      "maxNormalLengthError": 0.0052888803993734745,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Rook.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Rook_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Rook_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 0.9372549019607843,
+      "maxNormalLengthError": 0.005412571842407177,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Silver.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Silver_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Silver_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 0.9372549019607843,
+      "maxNormalLengthError": 0.005412571842407177,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Showcase\\Resources\\PieceTextures\\Wood.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Resources\\ShowcasePbr\\Honey_Color.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Resources\\ShowcasePbr\\Honey_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Resources\\ShowcasePbr\\Honey_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 1.0,
+      "maxNormalLengthError": 0.0008147392264863385,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Resources\\ShowcasePbr\\Walnut_Color.png",
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Resources\\ShowcasePbr\\Walnut_Mask.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "pass": true
+    },
+    {
+      "path": "Unity\\Assets\\Resources\\ShowcasePbr\\Walnut_Normal.png",
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "hashMatch": true,
+      "minimumNormalZ": 1.0,
+      "maxNormalLengthError": 0.0025956317324222766,
+      "pass": true
+    }
+  ],
+  "limits": "Offline dimensions/hash/normal-range checks; appearance and actual runtime shader bindings require rendered review.",
+  "walnutSmoothnessMean": 0.5477756051456227,
+  "walnutCoatMask": 0.18
+}

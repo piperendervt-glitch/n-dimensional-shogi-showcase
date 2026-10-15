@@ -1,0 +1,13 @@
+{
+  "schema": "showcase-geometry/0.1",
+  "coordinates": ["f", "u", "v", "w"],
+  "cellPitchMetres": 0.05,
+  "shapeVersion": "geometry/0.1",
+  "board": { "min": [-4.5,-4.5,-0.8,-4.5], "max": [4.5,4.5,0,4.5], "bevelCells": 0.04 },
+  "pawn": { "fExtent": [-0.36,0.36], "uHalfWidth": 0.29, "topHeightAtCenter": 0.17, "topSlope": 0.0555555555555556, "edgeBevelCells": 0.012, "variantAWHalfThickness": 0.2, "variantC": "Duplicate each nonzero-u halfspace with u replaced by w; preserve source solid at every angle." },
+  "slice": { "initialDegrees": 0, "stopDegrees": 90, "rotationPlane": ["u","w"], "center": [0,0,0,0], "basis": ["e_f","cos(theta)e_u + sin(theta)e_w","e_v"], "normal": "cos(theta)e_w - sin(theta)e_u" },
+  "tabletopMinimumMetres": [0.9,0.9],
+  "material": { "referenceA": "M3(local.f, local.u, local.v)", "visualC": "M3(local.f, local.u + local.w, local.v)", "glyph": "Only on original source Top face; no camera-dependent relabeling", "visualAcceptance": "HUMAN_PENDING" },
+  "numeric": { "primaryPrecision": "double", "primaryToleranceCells": 1e-9, "oracleToleranceCells": 1e-8, "comparisonToleranceCells": 2e-6 },
+  "nonClaims": ["These dimensions are project choices, not historical shogi standards.", "Geometry tests do not establish GPU performance or image quality."]
+}

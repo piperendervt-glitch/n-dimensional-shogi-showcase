@@ -1,0 +1,58 @@
+{"kind":"RunStarted","message":"DirectedLive; all rules fixed; official 40-piece initial state","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"Pause","message":"True","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"ExitDialog","message":"True","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"ExitDialog","message":"False","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"Pause","message":"False","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"ExitDialog","message":"True","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"ExitDialog","message":"False","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:-2,0,0,0>-1,0,0,0","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":8.089170020073653,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:-2,0,0,0>-1,0,0,0","stateHash":"f625bf1252788972f279061806b8e2b0cbe7bb7ac43b92d950b93572eb4429cc","ply":1,"scene":1,"time":9.78918662108481,"angle":0.0}
+{"kind":"MoveReserved","message":"B-Pawn--4:2,-4,0,0>1,-4,0,0","stateHash":"f625bf1252788972f279061806b8e2b0cbe7bb7ac43b92d950b93572eb4429cc","ply":1,"scene":1,"time":10.909728040918708,"angle":0.0}
+{"kind":"MoveCommitted","message":"B-Pawn--4:2,-4,0,0>1,-4,0,0","stateHash":"e0c87c5bea23fdb98c475bd30ce318c8bbc5b1d7f62fa9f095a0eabe6161678c","ply":2,"scene":1,"time":12.609735924750567,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:-1,0,0,0>0,0,0,0","stateHash":"e0c87c5bea23fdb98c475bd30ce318c8bbc5b1d7f62fa9f095a0eabe6161678c","ply":2,"scene":1,"time":13.392054330557585,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:-1,0,0,0>0,0,0,0","stateHash":"70060e0aabe26999ce607ad096c0fd6eb0c370634b0c2cb2caefd4ce9a172834","ply":3,"scene":1,"time":15.09310713596642,"angle":0.0}
+{"kind":"MoveReserved","message":"B-Pawn-0:2,0,0,0>1,0,0,0","stateHash":"70060e0aabe26999ce607ad096c0fd6eb0c370634b0c2cb2caefd4ce9a172834","ply":3,"scene":1,"time":16.22190361842513,"angle":0.0}
+{"kind":"MoveCommitted","message":"B-Pawn-0:2,0,0,0>1,0,0,0","stateHash":"f7186fff6a84ba5dda975aae4e76865defa63b52800df3090008db9bb6025010","ply":4,"scene":1,"time":17.921923220157625,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:0,0,0,0>0,0,1,0","stateHash":"f7186fff6a84ba5dda975aae4e76865defa63b52800df3090008db9bb6025010","ply":4,"scene":2,"time":18.705991504713894,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:0,0,0,0>0,0,1,0","stateHash":"cfb57256efbdcae7df541f2676c1739a9741fefb7ba1ce7943d21215ddab80e3","ply":5,"scene":2,"time":21.506003089249135,"angle":0.0}
+{"kind":"MoveReserved","message":"B-Pawn-0:1,0,0,0>1,0,1,0","stateHash":"cfb57256efbdcae7df541f2676c1739a9741fefb7ba1ce7943d21215ddab80e3","ply":5,"scene":3,"time":22.656418215483428,"angle":0.0}
+{"kind":"MoveCommitted","message":"B-Pawn-0:1,0,0,0>1,0,1,0","stateHash":"560c2eb8438d49158dadeb2e9dc884c84952e820a3b51f409c27abc3f65fee18","ply":6,"scene":3,"time":24.391884304583074,"angle":0.0}
+{"kind":"SliceRotationStarted","message":"0 -> 90","stateHash":"560c2eb8438d49158dadeb2e9dc884c84952e820a3b51f409c27abc3f65fee18","ply":6,"scene":4,"time":28.092038109898568,"angle":0.0}
+{"kind":"Pause","message":"True","stateHash":"560c2eb8438d49158dadeb2e9dc884c84952e820a3b51f409c27abc3f65fee18","ply":6,"scene":4,"time":28.790700003504754,"angle":3.854023692263727}
+{"kind":"Pause","message":"False","stateHash":"560c2eb8438d49158dadeb2e9dc884c84952e820a3b51f409c27abc3f65fee18","ply":6,"scene":4,"time":28.790700003504754,"angle":3.854023692263727}
+{"kind":"SliceRotationComplete","message":"State hash unchanged","stateHash":"560c2eb8438d49158dadeb2e9dc884c84952e820a3b51f409c27abc3f65fee18","ply":6,"scene":4,"time":34.09701447933912,"angle":90.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:0,0,1,0>0,0,1,1","stateHash":"560c2eb8438d49158dadeb2e9dc884c84952e820a3b51f409c27abc3f65fee18","ply":6,"scene":4,"time":36.14702485688031,"angle":90.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:0,0,1,0>0,0,1,1","stateHash":"371e7e5d3f78267372c3e29e2b426aa91be08e4a54a127895555f16aed2d1233","ply":7,"scene":4,"time":38.94703194871545,"angle":90.0}
+{"kind":"SliceRotationStarted","message":"90 -> 0","stateHash":"371e7e5d3f78267372c3e29e2b426aa91be08e4a54a127895555f16aed2d1233","ply":7,"scene":4,"time":40.44777836278081,"angle":90.0}
+{"kind":"SliceRotationComplete","message":"State hash unchanged","stateHash":"371e7e5d3f78267372c3e29e2b426aa91be08e4a54a127895555f16aed2d1233","ply":7,"scene":4,"time":46.507946049794558,"angle":0.0}
+{"kind":"ReturnedH0","message":"Hero remains in authoritative state; physical section=Empty","stateHash":"371e7e5d3f78267372c3e29e2b426aa91be08e4a54a127895555f16aed2d1233","ply":7,"scene":4,"time":46.507946049794558,"angle":0.0}
+{"kind":"MoveReserved","message":"B-Pawn--4:1,-4,0,0>0,-4,0,0","stateHash":"371e7e5d3f78267372c3e29e2b426aa91be08e4a54a127895555f16aed2d1233","ply":7,"scene":4,"time":51.65933215431869,"angle":0.0}
+{"kind":"MoveCommitted","message":"B-Pawn--4:1,-4,0,0>0,-4,0,0","stateHash":"1ee75d2560354f4c08940cfc3facd82b60e29e7bdddabc69e3ecd9749b98078e","ply":8,"scene":4,"time":53.359365843236449,"angle":0.0}
+{"kind":"SliceRotationStarted","message":"0 -> 90","stateHash":"1ee75d2560354f4c08940cfc3facd82b60e29e7bdddabc69e3ecd9749b98078e","ply":8,"scene":5,"time":54.0593744572252,"angle":0.0}
+{"kind":"SliceRotationComplete","message":"State hash unchanged","stateHash":"1ee75d2560354f4c08940cfc3facd82b60e29e7bdddabc69e3ecd9749b98078e","ply":8,"scene":5,"time":58.07213003374636,"angle":90.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:0,0,1,1>1,0,1,1","stateHash":"1ee75d2560354f4c08940cfc3facd82b60e29e7bdddabc69e3ecd9749b98078e","ply":8,"scene":5,"time":59.12213663198054,"angle":90.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:0,0,1,1>1,0,1,1","stateHash":"9739d84107c88e7135a2f7d2dd76c00ea2503f24b0b293a422a3635dde853e6c","ply":9,"scene":5,"time":60.822153232991698,"angle":90.0}
+{"kind":"MoveReserved","message":"B-Pawn--4:0,-4,0,0>-1,-4,0,0","stateHash":"9739d84107c88e7135a2f7d2dd76c00ea2503f24b0b293a422a3635dde853e6c","ply":9,"scene":5,"time":61.974278032779697,"angle":90.0}
+{"kind":"MoveCommitted","message":"B-Pawn--4:0,-4,0,0>-1,-4,0,0","stateHash":"4caa25c3fdf62d112b4e43b926fd6bd0bdcff20ac4545b216f5e8a843dd8d4b6","ply":10,"scene":5,"time":63.67438914254308,"angle":90.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:1,0,1,1>2,0,1,1","stateHash":"4caa25c3fdf62d112b4e43b926fd6bd0bdcff20ac4545b216f5e8a843dd8d4b6","ply":10,"scene":5,"time":64.47439793497324,"angle":90.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:1,0,1,1>2,0,1,1","stateHash":"f1a4b6b85c459e9f2185ad14ff145f2414b02b89e0093da301144c573de8efcc","ply":11,"scene":5,"time":66.17439893446863,"angle":90.0}
+{"kind":"MoveReserved","message":"B-Pawn--4:-1,-4,0,0>-2,-4,0,0","stateHash":"f1a4b6b85c459e9f2185ad14ff145f2414b02b89e0093da301144c573de8efcc","ply":11,"scene":5,"time":67.27692563831806,"angle":90.0}
+{"kind":"MoveCommitted","message":"B-Pawn--4:-1,-4,0,0>-2,-4,0,0","stateHash":"42df11e63c8f1ad113feb4b5b87b315b69b2d986df96c5c284f4c430ad110f11","ply":12,"scene":5,"time":68.97693144343794,"angle":90.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:2,0,1,1>3,0,1,1","stateHash":"42df11e63c8f1ad113feb4b5b87b315b69b2d986df96c5c284f4c430ad110f11","ply":12,"scene":5,"time":69.77693152986467,"angle":90.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:2,0,1,1>3,0,1,1","stateHash":"35163ad35e1d07e5cad84e3fdc15f6f7ddf208b1b90fd54ceea1fced902adc1e","ply":13,"scene":5,"time":71.47694605216384,"angle":90.0}
+{"kind":"MoveReserved","message":"B-Pawn--4:-2,-4,0,0>-3,-4,0,0","stateHash":"35163ad35e1d07e5cad84e3fdc15f6f7ddf208b1b90fd54ceea1fced902adc1e","ply":13,"scene":5,"time":72.57859975285828,"angle":90.0}
+{"kind":"MoveCommitted","message":"B-Pawn--4:-2,-4,0,0>-3,-4,0,0","stateHash":"d40608bdde9eefef07fd9cd0a74a1f2d12c081b1ecb663519468be2d31abea18","ply":14,"scene":5,"time":74.31467903964222,"angle":90.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:3,0,1,1>4,0,1,1","stateHash":"d40608bdde9eefef07fd9cd0a74a1f2d12c081b1ecb663519468be2d31abea18","ply":14,"scene":5,"time":75.11468364112079,"angle":90.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:3,0,1,1>4,0,1,1","stateHash":"b41982f9eec1dded3b06862b357ed97cba96fc97ea30347ed346e5dc1b6dd357","ply":15,"scene":5,"time":76.81477493606508,"angle":90.0}
+{"kind":"MoveReserved","message":"B-Pawn--4:-3,-4,0,0>-4,-4,0,0","stateHash":"b41982f9eec1dded3b06862b357ed97cba96fc97ea30347ed346e5dc1b6dd357","ply":15,"scene":5,"time":78.01623263396323,"angle":90.0}
+{"kind":"MoveCommitted","message":"B-Pawn--4:-3,-4,0,0>-4,-4,0,0","stateHash":"59b5471139ac4528395cd0aa5967709e994e1e9f0d898a82408f063da2c8023d","ply":16,"scene":5,"time":79.71623994782567,"angle":90.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:4,0,1,1>4,0,0,1","stateHash":"59b5471139ac4528395cd0aa5967709e994e1e9f0d898a82408f063da2c8023d","ply":16,"scene":5,"time":80.46624112688005,"angle":90.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:4,0,1,1>4,0,0,1","stateHash":"8a0e46c1d19353ab2decdeeabc063962e18c7cf6ac56f6725e1e2c721e16145a","ply":17,"scene":5,"time":82.16625352576375,"angle":90.0}
+{"kind":"MoveReserved","message":"B-Pawn--4:-4,-4,0,0>-4,-3,0,0","stateHash":"8a0e46c1d19353ab2decdeeabc063962e18c7cf6ac56f6725e1e2c721e16145a","ply":17,"scene":5,"time":83.26790932193399,"angle":90.0}
+{"kind":"MoveCommitted","message":"B-Pawn--4:-4,-4,0,0>-4,-3,0,0","stateHash":"47e475289a83859769e7f6062be8a5aee185fc570f9d78450329d80a37be09e3","ply":18,"scene":5,"time":84.96792650967837,"angle":90.0}
+{"kind":"SliceRotationStarted","message":"90 -> 0","stateHash":"47e475289a83859769e7f6062be8a5aee185fc570f9d78450329d80a37be09e3","ply":18,"scene":5,"time":85.71792141348124,"angle":90.0}
+{"kind":"SliceRotationComplete","message":"State hash unchanged","stateHash":"47e475289a83859769e7f6062be8a5aee185fc570f9d78450329d80a37be09e3","ply":18,"scene":5,"time":90.81613582000137,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:4,0,0,1>4,0,0,0","stateHash":"47e475289a83859769e7f6062be8a5aee185fc570f9d78450329d80a37be09e3","ply":18,"scene":5,"time":91.86615021340549,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:4,0,0,1>4,0,0,0","stateHash":"c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00","ply":19,"scene":5,"time":94.6666043177247,"angle":0.0}
+{"kind":"IndependentVerificationPassed","message":"0360cee4b45ee3d959d5ed14af4bf997c7398d40b2d4b9a99e9b9b6d5b212eec","stateHash":"c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00","ply":19,"scene":5,"time":95.38822071813047,"angle":0.0}
+{"kind":"GameEnded","message":"KingCapture; winner=A; commits=19","stateHash":"c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00","ply":19,"scene":5,"time":95.38822071813047,"angle":0.0}

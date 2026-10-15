@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup><BaseIntermediateOutputPath>../../artifacts/obj/Showcase.Core/</BaseIntermediateOutputPath><BaseOutputPath>../../artifacts/bin/Showcase.Core/</BaseOutputPath></PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup><TargetFramework>netstandard2.1</TargetFramework><LangVersion>9.0</LangVersion><Nullable>enable</Nullable><DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**</DefaultItemExcludes></PropertyGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>

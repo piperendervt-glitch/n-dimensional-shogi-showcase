@@ -1,0 +1,278 @@
+{
+  "status": "PASS_TECHNICAL_IMAGE_DIFFERENCES",
+  "scope": "Actual fixed-camera screenshots from shared lighting APIs. Numeric differences prove operation, not photorealism, aesthetic approval or OS key delivery.",
+  "source": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\quality-v2-lighting-preview2\\20261015-120213-734-ShowcaseRaster-1",
+  "header": {
+    "runId": "20261015-120213-734-ShowcaseRaster-1",
+    "startedUtc": "2026-10-15T12:02:13.7424071Z",
+    "unity": "6000.3.11f1",
+    "device": "NVIDIA GeForce RTX 5060 Ti",
+    "driver": "Direct3D 11.0 [level 11.1]",
+    "graphicsApi": "Direct3D11",
+    "profile": "ShowcaseRaster",
+    "mode": "DirectedLive",
+    "occlusion": "lattice-line/1",
+    "shape": "geometry/0.1 C",
+    "material": "fixed-affine-f-uplusw/1 | pbr-courtyard/2.0",
+    "buildSource": "dfde8091109d4cccb5ae7acabee88594 / uncommitted-local-source; see build manifest",
+    "sourceManifestSha256": "825630d0b7235ec5ca0eb4d4dc89cb093ea3d5acc39140a356562dd43d7587e8",
+    "sourceHash": "1a330fde7f942c55ab8e0f29becb88db4bc14af63b329453d2472a987487957e",
+    "buildUtc": "2026-10-15T12:01:11.4029927Z",
+    "width": 1920,
+    "height": 1080,
+    "graphicsMemoryMB": 16050,
+    "seed": 20261015,
+    "rules": "showcase-asymmetric-4d-king-capture/0.1",
+    "observation": "logical-w-zero/1",
+    "slice": "uw-observer-rotation/1",
+    "antialiasing": "SMAA",
+    "internalResolution": "100%",
+    "frameGeneration": "off",
+    "cpuBudget": "5000 nodes",
+    "quality": "High Fidelity / HDRP photographic / PCSS",
+    "cpuModel": "AMD Ryzen 7 8745HX with Radeon Graphics ",
+    "captureMode": "screenshots",
+    "scenarioVersion": "three-height-exchanges-alternating-4d/2",
+    "transitionEffect": "time-suspension-current-frame/1",
+    "lightingVersion": "courtyard-lighting/2.0",
+    "initialLightingEffects": "F2 ACES ON | F3 indirect ON | F4 leaves ON | F5 AO/contact ON | F6 reflections ON | F7 bloom ON | F8 DOF ON\nShift+F5 AO buffer | Shift+F4 contact-shadow buffer | Ctrl+F4 sun shadow ON | Ctrl+F5 contact shadow ON | diagnostic: None",
+    "targetFrameRate": 30,
+    "expectedPlies": 27
+  },
+  "checks": {
+    "all_effect_toggles_change_actual_image": true,
+    "ao_actual_buffer_nonconstant": true,
+    "contact_actual_buffer_nonconstant": true,
+    "transition_changes_actual_image": true,
+    "restored_baseline_within_one_code_value_mean": true,
+    "no_move_committed": true,
+    "shared_api_audit_completed": true,
+    "state_hash_unchanged": true
+  },
+  "images": [
+    {
+      "file": "lighting-all-on.png",
+      "sha256": "99a99e3d7d3017a3dc8ae136ff42c34c806c9e71d7d19d744002c927e6d2d6e2",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        117.32717895507812,
+        103.16205596923828,
+        74.59191131591797
+      ],
+      "std": 60.97219467163086,
+      "minimum": 0.0,
+      "maximum": 254.0,
+      "meanAbsoluteDifference": 0.0,
+      "changedPixelFraction": 0.0
+    },
+    {
+      "file": "lighting-off-AmbientOcclusion.png",
+      "sha256": "43f44accb9316d52cda45a414ec1409e79b2f47d846f28a035d1613c33f78636",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        119.06195831298828,
+        105.26194763183594,
+        76.46106719970703
+      ],
+      "std": 61.02376937866211,
+      "minimum": 0.0,
+      "maximum": 254.0,
+      "meanAbsoluteDifference": 1.9146143198013306,
+      "changedPixelFraction": 0.25871961805555554
+    },
+    {
+      "file": "lighting-off-Bloom.png",
+      "sha256": "2c89e4c1eb308d1456c5ff032b3c8ab07c98c958ccff4e1699cc2448d44f33d9",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        118.39450073242188,
+        103.7916488647461,
+        74.44728088378906
+      ],
+      "std": 59.356143951416016,
+      "minimum": 0.0,
+      "maximum": 254.0,
+      "meanAbsoluteDifference": 1.9811174869537354,
+      "changedPixelFraction": 0.9652864583333334
+    },
+    {
+      "file": "lighting-off-ContactShadows.png",
+      "sha256": "72fadcf9b759634ff65b3bb58bccc7f43e12d839c5058aa60039abd101f5ae6f",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        117.77471923828125,
+        103.51889038085938,
+        74.86427307128906
+      ],
+      "std": 61.09014129638672,
+      "minimum": 0.0,
+      "maximum": 254.0,
+      "meanAbsoluteDifference": 0.3758537471294403,
+      "changedPixelFraction": 0.04437307098765432
+    },
+    {
+      "file": "lighting-off-DappledShadows.png",
+      "sha256": "3f4a76ffc4629b59db7a3126e27dbaf21ee56be698889e92c358d5cc8d1d4089",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        118.25027465820312,
+        103.9678726196289,
+        75.27654266357422
+      ],
+      "std": 61.7039680480957,
+      "minimum": 0.0,
+      "maximum": 254.0,
+      "meanAbsoluteDifference": 0.8129243850708008,
+      "changedPixelFraction": 0.12990499614197532
+    },
+    {
+      "file": "lighting-off-DepthOfField.png",
+      "sha256": "28ac705418483a1c444ae4f4ee5f8156ae415efb899e7c55aa9641261ab50990",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        116.89998626708984,
+        102.86617279052734,
+        74.75169372558594
+      ],
+      "std": 61.57854461669922,
+      "minimum": 0.0,
+      "maximum": 254.0,
+      "meanAbsoluteDifference": 1.8012406826019287,
+      "changedPixelFraction": 0.24543788580246914
+    },
+    {
+      "file": "lighting-off-IndirectLighting.png",
+      "sha256": "d95935e81532880b43e6af13c89ec25f556402d0955720fb20b2c891405f56cb",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        43.61695098876953,
+        37.68585205078125,
+        29.14972686767578
+      ],
+      "std": 48.36271667480469,
+      "minimum": 0.0,
+      "maximum": 254.0,
+      "meanAbsoluteDifference": 61.55677795410156,
+      "changedPixelFraction": 0.9982339891975308
+    },
+    {
+      "file": "lighting-off-Reflections.png",
+      "sha256": "e09cfa801fb253cfc45a6a1a135921a69abf3ec5d7c8dd0f5bbfce9379e31fc5",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        108.6805419921875,
+        92.29271697998047,
+        61.97181701660156
+      ],
+      "std": 66.16031646728516,
+      "minimum": 0.0,
+      "maximum": 254.0,
+      "meanAbsoluteDifference": 10.660980224609375,
+      "changedPixelFraction": 0.9968913966049383
+    },
+    {
+      "file": "lighting-off-SunShadows.png",
+      "sha256": "e5d62d350db1724407e5adb6b5464b30424aa323ed6a6e094a1609bb28bbbe45",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        174.2277069091797,
+        153.67044067382812,
+        122.86040496826172
+      ],
+      "std": 69.4220962524414,
+      "minimum": 0.0,
+      "maximum": 255.0,
+      "meanAbsoluteDifference": 51.8104362487793,
+      "changedPixelFraction": 0.9082224151234568
+    },
+    {
+      "file": "lighting-off-ToneMapping.png",
+      "sha256": "4eddd77dab85de6d44a9e38edceb3c11b7c859fbe981ba29137813d2c1dccf60",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        145.14874267578125,
+        127.25822448730469,
+        95.70651245117188
+      ],
+      "std": 60.924320220947266,
+      "minimum": 2.0,
+      "maximum": 255.0,
+      "meanAbsoluteDifference": 24.316497802734375,
+      "changedPixelFraction": 1.0
+    },
+    {
+      "file": "lighting-only-AmbientOcclusion.png",
+      "sha256": "dd879002c6d545c5c9a5a170477b9c5c9bbb648de582bf5ed421614605c2971b",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        250.35183715820312,
+        250.35183715820312,
+        250.24169921875
+      ],
+      "std": 15.261359214782715,
+      "minimum": 0.0,
+      "maximum": 255.0,
+      "meanAbsoluteDifference": 150.8502197265625,
+      "changedPixelFraction": 1.0
+    },
+    {
+      "file": "lighting-only-ContactShadows.png",
+      "sha256": "02806de91288381f9859ac649b8df20affbe3b5581574c080b6f4fb85ac05b14",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        183.96023559570312,
+        183.96023559570312,
+        183.9432830810547
+      ],
+      "std": 110.27835083007812,
+      "minimum": 0.0,
+      "maximum": 255.0,
+      "meanAbsoluteDifference": 141.75621032714844,
+      "changedPixelFraction": 0.9999995177469135
+    },
+    {
+      "file": "lighting-restored.png",
+      "sha256": "99a99e3d7d3017a3dc8ae136ff42c34c806c9e71d7d19d744002c927e6d2d6e2",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        117.32717895507812,
+        103.16205596923828,
+        74.59191131591797
+      ],
+      "std": 60.97219467163086,
+      "minimum": 0.0,
+      "maximum": 254.0,
+      "meanAbsoluteDifference": 0.0,
+      "changedPixelFraction": 0.0
+    },
+    {
+      "file": "lighting-transition-on.png",
+      "sha256": "10bd011e3bcae728eedd7de6b3cae768bc063481d3309abb8ee9e72bddd0ac7a",
+      "width": 1920,
+      "height": 1080,
+      "meanRGB": [
+        101.50686645507812,
+        101.52404022216797,
+        99.67658996582031
+      ],
+      "std": 54.58073043823242,
+      "minimum": 0.0,
+      "maximum": 255.0,
+      "meanAbsoluteDifference": 19.04450798034668,
+      "changedPixelFraction": 0.9999455054012346
+    }
+  ]
+}

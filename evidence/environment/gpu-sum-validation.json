@@ -1,0 +1,298 @@
+{
+  "schema": "showcase-gpu-sum-validation/1",
+  "checkedUtc": "2026-10-15T11:05:31.2805075Z",
+  "appLaunched": false,
+  "source": "read-only existing live WDDM CIM instances",
+  "syntaxValid": true,
+  "launcherSha256": "5fde4e0ed5a40a662f9be0a513584d9a879640a7e9013c2f78efa6ce3c087933",
+  "rows": [
+    {
+      "process": "pid_12392",
+      "adapters": 2,
+      "dedicated": 1925120,
+      "shared": 4300800,
+      "committed": 6291456,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_12800",
+      "adapters": 2,
+      "dedicated": 15327232,
+      "shared": 319488,
+      "committed": 17584128,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_12828",
+      "adapters": 1,
+      "dedicated": 16183296,
+      "shared": 319488,
+      "committed": 18464768,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_14116",
+      "adapters": 3,
+      "dedicated": 138465280,
+      "shared": 9248768,
+      "committed": 162570240,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_1424",
+      "adapters": 1,
+      "dedicated": 65490944,
+      "shared": 17424384,
+      "committed": 113594368,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_14848",
+      "adapters": 1,
+      "dedicated": 20365312,
+      "shared": 319488,
+      "committed": 24383488,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_14984",
+      "adapters": 1,
+      "dedicated": 27664384,
+      "shared": 0,
+      "committed": 30011392,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_15844",
+      "adapters": 1,
+      "dedicated": 0,
+      "shared": 0,
+      "committed": 0,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_15888",
+      "adapters": 1,
+      "dedicated": 0,
+      "shared": 0,
+      "committed": 262144,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_1592",
+      "adapters": 3,
+      "dedicated": 130961408,
+      "shared": 6205440,
+      "committed": 132501504,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_15948",
+      "adapters": 1,
+      "dedicated": 0,
+      "shared": 0,
+      "committed": 0,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_15968",
+      "adapters": 1,
+      "dedicated": 12394496,
+      "shared": 212992,
+      "committed": 15245312,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_17008",
+      "adapters": 1,
+      "dedicated": 10858496,
+      "shared": 1097728,
+      "committed": 13324288,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_1720",
+      "adapters": 1,
+      "dedicated": 10858496,
+      "shared": 1097728,
+      "committed": 13324288,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_17396",
+      "adapters": 1,
+      "dedicated": 12709888,
+      "shared": 0,
+      "committed": 14979072,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_18352",
+      "adapters": 1,
+      "dedicated": 2161451008,
+      "shared": 282624,
+      "committed": 57479168,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_18748",
+      "adapters": 1,
+      "dedicated": 103915520,
+      "shared": 729088,
+      "committed": 120279040,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_19760",
+      "adapters": 1,
+      "dedicated": 10858496,
+      "shared": 1097728,
+      "committed": 13324288,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_2036",
+      "adapters": 2,
+      "dedicated": 1838313472,
+      "shared": 25747456,
+      "committed": 850092032,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_21720",
+      "adapters": 1,
+      "dedicated": 210341888,
+      "shared": 364544,
+      "committed": 217239552,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_23868",
+      "adapters": 1,
+      "dedicated": 11403264,
+      "shared": 364544,
+      "committed": 12988416,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_23912",
+      "adapters": 1,
+      "dedicated": 15589376,
+      "shared": 258048,
+      "committed": 18345984,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_24124",
+      "adapters": 2,
+      "dedicated": 270336,
+      "shared": 278528,
+      "committed": 618496,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_26136",
+      "adapters": 2,
+      "dedicated": 79294464,
+      "shared": 364544,
+      "committed": 92233728,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_3184",
+      "adapters": 3,
+      "dedicated": 180150272,
+      "shared": 28610560,
+      "committed": 217034752,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_32848",
+      "adapters": 1,
+      "dedicated": 36376576,
+      "shared": 258048,
+      "committed": 40873984,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_34636",
+      "adapters": 2,
+      "dedicated": 93143040,
+      "shared": 851968,
+      "committed": 96112640,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_3820",
+      "adapters": 1,
+      "dedicated": 11403264,
+      "shared": 364544,
+      "committed": 12988416,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_4",
+      "adapters": 3,
+      "dedicated": 4792320,
+      "shared": 794624,
+      "committed": 5586944,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_5260",
+      "adapters": 3,
+      "dedicated": 155439104,
+      "shared": 18030592,
+      "committed": 187412480,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_5264",
+      "adapters": 1,
+      "dedicated": 10858496,
+      "shared": 1097728,
+      "committed": 13324288,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_5704",
+      "adapters": 2,
+      "dedicated": 57552896,
+      "shared": 987136,
+      "committed": 70078464,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_6148",
+      "adapters": 1,
+      "dedicated": 0,
+      "shared": 0,
+      "committed": 26521600,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_7944",
+      "adapters": 2,
+      "dedicated": 14999552,
+      "shared": 0,
+      "committed": 17289216,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_7976",
+      "adapters": 1,
+      "dedicated": 22806528,
+      "shared": 1101824,
+      "committed": 25088000,
+      "independentOriginalCimSumMatches": true
+    },
+    {
+      "process": "pid_8004",
+      "adapters": 1,
+      "dedicated": 16556032,
+      "shared": 8855552,
+      "committed": 26697728,
+      "independentOriginalCimSumMatches": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "scenarioVersion": "central-pawn-directed/1",
+  "defaultMode": "DirectedLive",
+  "seed": 20261015,
+  "nodeBudgetPerMove": 5000,
+  "heroId": "A-Pawn-0",
+  "expectedPlies": 19,
+  "scenePlies": {"Opening2D": [1,4], "Escape3D": [5,5], "Pressure3D": [6,6], "Rotate4D": [7,8], "Attack4DEnding": [9,19]},
+  "A_goalPolicy": "Advance central pawn to f=0; escape to v=1 then w=1; advance to f=4; descend to v=0; return w=0 to capture king.",
+  "B_goalPolicy": "If central invader is observed at f>=0, bring central pawn to its forward neighbor and visible height; otherwise advance left flank and traverse at far edge.",
+  "directedPreference": {"preferredPiece": 100000, "distancePerCell": -10000},
+  "disclosure": "Every legal root is evaluated. B searches opponent replies with an equal bounded allocation. Strong disclosed scene preferences can override tactical caution. This is directed CPU play, not an independently discovered victory.",
+  "replayFixture": "central-pawn-lattice-v1.ndsr",
+  "returnGhost": false
+}

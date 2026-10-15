@@ -1,0 +1,514 @@
+{
+  "schema": "showcase-material-checks/3",
+  "materialVersion": "pbr-courtyard/3.0",
+  "sourceCount": 12,
+  "preparedCount": 40,
+  "allPass": true,
+  "preservedPrevious37": true,
+  "checks": [
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Bishop.png",
+      "sha256": "c641a87f8cd23a658c0f2c0680d705155bc9284b81a7d24266836d751924fa17",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Bishop_Mask.png",
+      "sha256": "cfbde3aa943b122ce89dc4c55978347b55c41fd7e93a08e224f86ffc4cc3dfef",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Bishop_Normal.png",
+      "sha256": "685e94aaced21d9ee28bf7c2f1e5bc857206f71b91d28a1f1d734b6b9bac8ba5",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9372549057006836,
+      "maximumLengthError": 0.005412578582763672,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Board.png",
+      "sha256": "a64d8a55f67c260d795254a97367f1b9cbbdd1e5fca43f71bace375e3d5d24c9",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Board_Mask.png",
+      "sha256": "de09c639a20a77c305f312dd7a8040f17f98bbaefa336f6204d69640a0bc1f04",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Board_Normal.png",
+      "sha256": "1dcf5765436ab774fa8e51f5c33d06e0e9f2cac8c56a0a703b93844437ae7e16",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 1.0,
+      "maximumLengthError": 0.0008147954940795898,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Gold.png",
+      "sha256": "28de0ad0367fb65efde61ae2c4198235203b63285bcaf8d08d8b18719706c28a",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Gold_Mask.png",
+      "sha256": "eb777a446093ad6553922d0faa1151ed35d71cf48254fd7ed2b8fa7fa7e3591e",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Gold_Normal.png",
+      "sha256": "819810014a07a2836c6dd1878bcb36768a2490ac681dd6952e709382833f988b",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9372549057006836,
+      "maximumLengthError": 0.005288898944854736,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingA.png",
+      "sha256": "cd0c3bb8520caa8aa7e91774795e9dd5f2c178b861dd1cf6861f4ca2a31ec23d",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingA_Mask.png",
+      "sha256": "2b820fa0d84e95a02732ad4fd68f2bc9b3089c9dfaaa6809ef9f8df4c040068f",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingA_Normal.png",
+      "sha256": "8e318712ff3b1785125c33c14b28bfd904aa916e11cc843173a8a8e3949f9f76",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9372549057006836,
+      "maximumLengthError": 0.0053528547286987305,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingB.png",
+      "sha256": "89061cad17c41f3e4844e0c25b2d0f7d1e803f2a6803d98b78ce9ead8db2685f",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingB_Mask.png",
+      "sha256": "1212453fc932b59e9bafa239dd1d50a10df408ccd9af48666e77e79239b2ebfa",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingB_Normal.png",
+      "sha256": "1c413e53bb165a4391c756eb4a036c442bd601441d05b4817872a4d68e66ff3c",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9372549057006836,
+      "maximumLengthError": 0.005412578582763672,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Knight.png",
+      "sha256": "fa4a7a390e8b4d95531722139caf595ee67b5f199e4bea94aa7da0746ab2808d",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Knight_Mask.png",
+      "sha256": "df356d5972caa9934155daa276a2a17a2c2bf051b9b8265445ca716bfe4dcaea",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Knight_Normal.png",
+      "sha256": "6896dfffc0f9f2821df6ff6afb03643f4fef0523027b347f53893e54099e46f2",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9372549057006836,
+      "maximumLengthError": 0.005412578582763672,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Lance.png",
+      "sha256": "c861398631c7294668cea2d366a926be76d4261984f6abf83f92e0493e5b4658",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Lance_Mask.png",
+      "sha256": "4d8694678c700dd088b86712bc4fe68b1867b409638d1ad9aae2bcda8a341082",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Lance_Normal.png",
+      "sha256": "0e3543291434d193b6e3cac7b785355cbbfc127d391ec31434c506ad099f408d",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9372549057006836,
+      "maximumLengthError": 0.005412578582763672,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Pawn.png",
+      "sha256": "36e3297288949b1cfc9eee5601ed70fc2715f88bbd84cb4c6d8b5239ae9d8894",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Pawn_Mask.png",
+      "sha256": "3b9aac53b046870b94272a92e0bebca4b9b4b616b0a736edc35327b3715460e8",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Pawn_Normal.png",
+      "sha256": "a13b2216032ce851c505e5cbaddad58c2bc8988028f1b3580e770c5c14fd42a0",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9372549057006836,
+      "maximumLengthError": 0.005288898944854736,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Rook.png",
+      "sha256": "50da288ba7e025c4972376ab2c6fbf091aee36de2fcbd0cc5774016bb037744c",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Rook_Mask.png",
+      "sha256": "0b2620d4cf973ca52de2e2de564a4cf6f5c69700b63f78d61c028540d33bbbfc",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Rook_Normal.png",
+      "sha256": "fb57cba9e311d429425599ed7911736a0ae8c1f757bfe8096e2ac809a8dbc3b4",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9372549057006836,
+      "maximumLengthError": 0.005412578582763672,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Silver.png",
+      "sha256": "08da9936fddf55de60664959883a21c172f5f58869e8d25cf43fad6a7d62ae30",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Silver_Mask.png",
+      "sha256": "609eb22de42227f35725fb080fb458fc4009e256b2ba23b58432ff864dbe1509",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Silver_Normal.png",
+      "sha256": "72c731d48df5caf05965231959dde69629bc32de0ab80c894749dd57e03d352e",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9372549057006836,
+      "maximumLengthError": 0.005412578582763672,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Wood.png",
+      "sha256": "11570ca74f9322101c026d33475a86fef99e8cbd53a8b4916a687574d621cad0",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Honey_Color.png",
+      "sha256": "11570ca74f9322101c026d33475a86fef99e8cbd53a8b4916a687574d621cad0",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Honey_Mask.png",
+      "sha256": "97482c2932f7907d770549e0f2056b4603e19f6d27862cf52d3f0110416ca667",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Honey_Normal.png",
+      "sha256": "7098ac75074e9e9250f91eccb3c70dfe40820b16b54511303708e605a5a7e810",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 1.0,
+      "maximumLengthError": 0.0008147954940795898,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Sandstone_Color.png",
+      "sha256": "7c8bccb7d4e7b663d3a7548588f4aa685291a920897e39f8a9cfd0fc9b38daaf",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Sandstone_Mask.png",
+      "sha256": "549e45523d003be4a20529abaec76cd7fc581b1b774425d65134abad8265a031",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Sandstone_Normal.png",
+      "sha256": "d9ea2d455ccd97eb06100375120ee7c031f72b58159844452e8363cc016d999b",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 0.9529411792755127,
+      "maximumLengthError": 0.004670619964599609
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Walnut_Color.png",
+      "sha256": "b3ac2deb411f4daed5d45a724ef60331b196b4f2e38c232261a1c91c9dc31019",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        3
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Walnut_Mask.png",
+      "sha256": "7d9cadb8844339b37164b0520bbb0409556dc1ef1c3a2eb6a9f9ca7c3f54a825",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "matchesPreviousBuildSource": true
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Walnut_Normal.png",
+      "sha256": "19678b1f7bdc66674be050ba6057871d237ae2f5534dc108f1d20d59460f87a4",
+      "hashMatch": true,
+      "dimensions": [
+        2048,
+        2048,
+        4
+      ],
+      "pass": true,
+      "minimumNormalZ": 1.0,
+      "maximumLengthError": 0.002595663070678711,
+      "matchesPreviousBuildSource": true
+    }
+  ],
+  "limits": "Offline file/hash/normal checks; runtime appearance requires a new build and captured review."
+}

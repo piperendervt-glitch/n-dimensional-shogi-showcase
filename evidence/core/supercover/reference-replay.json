@@ -1,0 +1,354 @@
+{
+  "schema": "showcase-replay/1",
+  "ruleset": "showcase-asymmetric-4d-king-capture/0.1",
+  "occlusion": "supercover-closed/1",
+  "mode": "VerifiedReplay",
+  "initialHash": "02a3515a45a801fc43e6543220fd70646cae7dbd305fc4165380d9f0cefc1bf6",
+  "transcriptHash": "60d0a25cad90361fe4f16bcf0f61539e9b9d96c2cac73bbccab686b8ba3116ea",
+  "finalHash": "12dc1fb4b253d29e6c08bb0acf98a978a80ecbb9ed4cf65e117953a1bdb4b102",
+  "seed": 20261015,
+  "records": [
+    {
+      "ply": 1,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        -2,
+        0,
+        0,
+        0
+      ],
+      "to": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "beforeHash": "02a3515a45a801fc43e6543220fd70646cae7dbd305fc4165380d9f0cefc1bf6",
+      "afterHash": "707ab132f117d05b7ec07d2dfb0adb6230534f2061ea3aeb14238c9eaf2827b6"
+    },
+    {
+      "ply": 2,
+      "pieceId": "B-Pawn--4",
+      "from": [
+        2,
+        -4,
+        0,
+        0
+      ],
+      "to": [
+        1,
+        -4,
+        0,
+        0
+      ],
+      "beforeHash": "707ab132f117d05b7ec07d2dfb0adb6230534f2061ea3aeb14238c9eaf2827b6",
+      "afterHash": "e5fd89b00aef77f5b38e8548296992781d68d2b58b637c8ead8bc7116c8d4925"
+    },
+    {
+      "ply": 3,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "to": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "beforeHash": "e5fd89b00aef77f5b38e8548296992781d68d2b58b637c8ead8bc7116c8d4925",
+      "afterHash": "4fbccedb812536d41d37033adcd044aeee9b1d683a1732c1b9463d71ea8d141b"
+    },
+    {
+      "ply": 4,
+      "pieceId": "B-Pawn-0",
+      "from": [
+        2,
+        0,
+        0,
+        0
+      ],
+      "to": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "beforeHash": "4fbccedb812536d41d37033adcd044aeee9b1d683a1732c1b9463d71ea8d141b",
+      "afterHash": "45c25b47e875af4487f719604f2c7e5fba276eb78d60c70bc014e3a4e27c3a88"
+    },
+    {
+      "ply": 5,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "to": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "beforeHash": "45c25b47e875af4487f719604f2c7e5fba276eb78d60c70bc014e3a4e27c3a88",
+      "afterHash": "4f58887c63bca399e9b6fe333ceb0944d93e5e10788bb086cfa0a22fac9cb654"
+    },
+    {
+      "ply": 6,
+      "pieceId": "B-Pawn-0",
+      "from": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "to": [
+        1,
+        0,
+        1,
+        0
+      ],
+      "beforeHash": "4f58887c63bca399e9b6fe333ceb0944d93e5e10788bb086cfa0a22fac9cb654",
+      "afterHash": "9af17d5ab9f22899874c8e2cc4f0a292c3a5baeebdd0cf279cc36769bebde1d7"
+    },
+    {
+      "ply": 7,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "to": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "beforeHash": "9af17d5ab9f22899874c8e2cc4f0a292c3a5baeebdd0cf279cc36769bebde1d7",
+      "afterHash": "00811988da2c13f7ef5ca0d65a3b2779af27f1bbb32380ae0e26daeba612f910"
+    },
+    {
+      "ply": 8,
+      "pieceId": "B-Pawn--4",
+      "from": [
+        1,
+        -4,
+        0,
+        0
+      ],
+      "to": [
+        0,
+        -4,
+        0,
+        0
+      ],
+      "beforeHash": "00811988da2c13f7ef5ca0d65a3b2779af27f1bbb32380ae0e26daeba612f910",
+      "afterHash": "51715d13a855b59bcd0f9971b7c0e8b28ea6ca53cda50001e60882cb4bf9a7cb"
+    },
+    {
+      "ply": 9,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "to": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "beforeHash": "51715d13a855b59bcd0f9971b7c0e8b28ea6ca53cda50001e60882cb4bf9a7cb",
+      "afterHash": "115a161f90f23e679eaad4d852dccb9f4ff0236a453fa7f11bb87f09ba267f73"
+    },
+    {
+      "ply": 10,
+      "pieceId": "B-Pawn--4",
+      "from": [
+        0,
+        -4,
+        0,
+        0
+      ],
+      "to": [
+        -1,
+        -4,
+        0,
+        0
+      ],
+      "beforeHash": "115a161f90f23e679eaad4d852dccb9f4ff0236a453fa7f11bb87f09ba267f73",
+      "afterHash": "e7f064bc8a6cb8340b3d05310212971f8249e89e8a2f994a96a33b89eeafe292"
+    },
+    {
+      "ply": 11,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "to": [
+        2,
+        0,
+        1,
+        1
+      ],
+      "beforeHash": "e7f064bc8a6cb8340b3d05310212971f8249e89e8a2f994a96a33b89eeafe292",
+      "afterHash": "6068caaf558c512cb99cfaeb0d08841b3051e9aed5cd758ca188cdb858753d05"
+    },
+    {
+      "ply": 12,
+      "pieceId": "B-Pawn--4",
+      "from": [
+        -1,
+        -4,
+        0,
+        0
+      ],
+      "to": [
+        -2,
+        -4,
+        0,
+        0
+      ],
+      "beforeHash": "6068caaf558c512cb99cfaeb0d08841b3051e9aed5cd758ca188cdb858753d05",
+      "afterHash": "554c64c17e780b6d9cbb53a143221636d9467289ddaca65c555e11c1875483d4"
+    },
+    {
+      "ply": 13,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        2,
+        0,
+        1,
+        1
+      ],
+      "to": [
+        3,
+        0,
+        1,
+        1
+      ],
+      "beforeHash": "554c64c17e780b6d9cbb53a143221636d9467289ddaca65c555e11c1875483d4",
+      "afterHash": "5c8aaabc40a4698525df6deb70de677d91761cd27a70f180b8b53043b7c4d6a5"
+    },
+    {
+      "ply": 14,
+      "pieceId": "B-Pawn--4",
+      "from": [
+        -2,
+        -4,
+        0,
+        0
+      ],
+      "to": [
+        -3,
+        -4,
+        0,
+        0
+      ],
+      "beforeHash": "5c8aaabc40a4698525df6deb70de677d91761cd27a70f180b8b53043b7c4d6a5",
+      "afterHash": "e6bc1d98015e68b2bcbc6eafa25321fc06f4ce48365af7a3bcb4a50397bf5b74"
+    },
+    {
+      "ply": 15,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        3,
+        0,
+        1,
+        1
+      ],
+      "to": [
+        4,
+        0,
+        1,
+        1
+      ],
+      "beforeHash": "e6bc1d98015e68b2bcbc6eafa25321fc06f4ce48365af7a3bcb4a50397bf5b74",
+      "afterHash": "f00f1bf153377b8506efd0d73f845b183b9d440de9eb3287da5d526a25581a52"
+    },
+    {
+      "ply": 16,
+      "pieceId": "B-Pawn--4",
+      "from": [
+        -3,
+        -4,
+        0,
+        0
+      ],
+      "to": [
+        -4,
+        -4,
+        0,
+        0
+      ],
+      "beforeHash": "f00f1bf153377b8506efd0d73f845b183b9d440de9eb3287da5d526a25581a52",
+      "afterHash": "553f88d5523aafcf94c8d01037466c1f1befe09b383eaef2f7bc0f5c277083ec"
+    },
+    {
+      "ply": 17,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        4,
+        0,
+        1,
+        1
+      ],
+      "to": [
+        4,
+        0,
+        0,
+        1
+      ],
+      "beforeHash": "553f88d5523aafcf94c8d01037466c1f1befe09b383eaef2f7bc0f5c277083ec",
+      "afterHash": "07c69e24b435937fac3a798c384d1e5bb26dc061ef19edc0d5022925a7a2084a"
+    },
+    {
+      "ply": 18,
+      "pieceId": "B-Pawn--4",
+      "from": [
+        -4,
+        -4,
+        0,
+        0
+      ],
+      "to": [
+        -4,
+        -3,
+        0,
+        0
+      ],
+      "beforeHash": "07c69e24b435937fac3a798c384d1e5bb26dc061ef19edc0d5022925a7a2084a",
+      "afterHash": "e86a368d06f08a264aa94d10fecfa4efd121998925cc6fd6f8767cdcf62e08ba"
+    },
+    {
+      "ply": 19,
+      "pieceId": "A-Pawn-0",
+      "from": [
+        4,
+        0,
+        0,
+        1
+      ],
+      "to": [
+        4,
+        0,
+        0,
+        0
+      ],
+      "beforeHash": "e86a368d06f08a264aa94d10fecfa4efd121998925cc6fd6f8767cdcf62e08ba",
+      "afterHash": "12dc1fb4b253d29e6c08bb0acf98a978a80ecbb9ed4cf65e117953a1bdb4b102"
+    }
+  ]
+}

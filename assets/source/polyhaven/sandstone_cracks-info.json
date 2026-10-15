@@ -1,0 +1,52 @@
+{
+  "type": 1,
+  "tags": [
+    "rough",
+    "dirt",
+    "ground",
+    "sandstone",
+    "cracked",
+    "plaster"
+  ],
+  "date_published": 1541405109,
+  "name": "Sandstone Cracks",
+  "old_id": 171,
+  "categories": [
+    "wall",
+    "floor",
+    "natural",
+    "man made",
+    "outdoor",
+    "road",
+    "terrain"
+  ],
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "sponsors": [
+    "8571269"
+  ],
+  "dimensions": [
+    2000,
+    2000
+  ],
+  "max_resolution": [
+    8192,
+    8192
+  ],
+  "files_hash": "b7905a82d54b5079e40ca178e09f25bf1de5dcca",
+  "description": "Free 8K sandstone cracks texture - rough, sandy surface in warm beige, dusty erosion with fine fissures and plaster-like granular detail.",
+  "category_id": "b79564de-1eea-52fe-b6db-f55024588749",
+  "category": "Stone/Slabs & Tiles/Sandstone",
+  "attributes": {
+    "surface_use": "ground",
+    "condition": [
+      "cracked"
+    ],
+    "origin": "natural",
+    "setting": "outdoor"
+  },
+  "img_version": "5bc18cfd",
+  "download_count": 119279,
+  "thumbnail_url": "https://cdn.polyhaven.com/asset_img/thumbs/sandstone_cracks.png?width=256&height=256&format=webp&v=5bc18cfd"
+}

@@ -1,0 +1,13 @@
+{
+    "ply": 14,
+    "seed": 20261015,
+    "nodeBudget": 0,
+    "nodesVisited": 0,
+    "cpu": "VerifiedReplay/1",
+    "observationHash": "f84f5d014deaff1dfcc1dabba5b4e8d7a6f8227104a9b71e3cd5ed3cfae569dd",
+    "fingerprint": "a62e5cce88d61d8cb168f9b82fed0ec1a254427ce28fb5876ce87899dd8a70ad",
+    "preference": "Stored independently verified move; each transition revalidated. No live search.",
+    "selected": "B-Silver-2:4,2,0,0>3,1,0,0",
+    "nonPawnRescue": false,
+    "candidates": []
+}

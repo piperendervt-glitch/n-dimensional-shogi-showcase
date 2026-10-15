@@ -1,0 +1,11 @@
+{"kind":"RunStarted","message":"DirectedLive; all rules fixed; official 40-piece initial state","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:-2,0,0,0>-1,0,0,0","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":8.228224832564593,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:-2,0,0,0>-1,0,0,0","stateHash":"f625bf1252788972f279061806b8e2b0cbe7bb7ac43b92d950b93572eb4429cc","ply":1,"scene":1,"time":9.929917227476836,"angle":0.0}
+{"kind":"MoveReserved","message":"B-Pawn--4:2,-4,0,0>1,-4,0,0","stateHash":"f625bf1252788972f279061806b8e2b0cbe7bb7ac43b92d950b93572eb4429cc","ply":1,"scene":1,"time":11.056975213810802,"angle":0.0}
+{"kind":"MoveCommitted","message":"B-Pawn--4:2,-4,0,0>1,-4,0,0","stateHash":"e0c87c5bea23fdb98c475bd30ce318c8bbc5b1d7f62fa9f095a0eabe6161678c","ply":2,"scene":1,"time":12.75697921961546,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:-1,0,0,0>0,0,0,0","stateHash":"e0c87c5bea23fdb98c475bd30ce318c8bbc5b1d7f62fa9f095a0eabe6161678c","ply":2,"scene":1,"time":13.506982220336795,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:-1,0,0,0>0,0,0,0","stateHash":"70060e0aabe26999ce607ad096c0fd6eb0c370634b0c2cb2caefd4ce9a172834","ply":3,"scene":1,"time":15.207034796476365,"angle":0.0}
+{"kind":"MoveReserved","message":"B-Pawn-0:2,0,0,0>1,0,0,0","stateHash":"70060e0aabe26999ce607ad096c0fd6eb0c370634b0c2cb2caefd4ce9a172834","ply":3,"scene":1,"time":16.308584986254574,"angle":0.0}
+{"kind":"MoveCommitted","message":"B-Pawn-0:2,0,0,0>1,0,0,0","stateHash":"f7186fff6a84ba5dda975aae4e76865defa63b52800df3090008db9bb6025010","ply":4,"scene":1,"time":18.00859048962593,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:0,0,0,0>0,0,1,0","stateHash":"f7186fff6a84ba5dda975aae4e76865defa63b52800df3090008db9bb6025010","ply":4,"scene":2,"time":18.758594105020167,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:0,0,0,0>0,0,1,0","stateHash":"cfb57256efbdcae7df541f2676c1739a9741fefb7ba1ce7943d21215ddab80e3","ply":5,"scene":2,"time":21.55872779712081,"angle":0.0}

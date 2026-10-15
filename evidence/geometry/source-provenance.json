@@ -1,0 +1,57 @@
+{
+  "sourceFiles": [
+    {
+      "path": "scenarios/geometry-v1.json",
+      "sha256": "98b945e595212eeacc90377e7e73b6d1c28934ec20cfbece53d89a425e69fd67",
+      "bytes": 1288
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/Showcase.Geometry.asmdef",
+      "sha256": "de4a5979e4a73d9210bb2096dff7f71a93442ea87247d8591495193af645483a",
+      "bytes": 294
+    },
+    {
+      "path": "src/Showcase.Geometry/Showcase.Geometry.csproj",
+      "sha256": "638a3410d6ac9437be3140edade500ffc5ac8977113544d5a96b8f7c655ab2c6",
+      "bytes": 667
+    },
+    {
+      "path": "src/Showcase.Geometry/package.json",
+      "sha256": "452d0ac93bc23e85249399419725b12ac197c39d865164f71635fad619fc7b59",
+      "bytes": 172
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs",
+      "sha256": "1dcd57cd9df7073c195d31f41e53eb5bbeddb6cb38ae7a1c267eb2429f0fabb1",
+      "bytes": 7067
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs",
+      "sha256": "e1898e837f886b7b02b0a14984168105866adbb10a7d9b23742c9d9e884381bd",
+      "bytes": 11990
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs",
+      "sha256": "9fa23152a55edf706d1a5f9b44f2253abdd091ed88ae7385029f3f1e2160a664",
+      "bytes": 3840
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs",
+      "sha256": "ebde7b160c7e435b97845ea00082a99660ee05289c5fea9940e246fc911931c4",
+      "bytes": 2908
+    },
+    {
+      "path": "tests/Showcase.Geometry.Tests/Program.cs",
+      "sha256": "7092742982d02ae5112d5f11086ad147bf31b65bcf0176c68c2194c6a2d0ebfb",
+      "bytes": 19586
+    },
+    {
+      "path": "tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj",
+      "sha256": "0ea7b175044f63dfc4bc4d6ca88b81885aed5b08e0e1397343a172d46efc62b3",
+      "bytes": 307
+    }
+  ],
+  "testAssemblySha256": "2a94c0695e75d0d7ddaf9ed322dbcbcb50d939d498967a82d8240c1513890420",
+  "geometryAssemblySha256": "fce1079536fd9066a09ea48eaa88e5d7afcec8619b4c6088990c44767b99e521",
+  "command": "dotnet run --project tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj --configuration Release -- evidence/geometry"
+}

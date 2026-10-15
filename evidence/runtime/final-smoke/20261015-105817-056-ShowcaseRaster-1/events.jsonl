@@ -1,0 +1,12 @@
+{"kind":"RunStarted","message":"DirectedLive; all rules fixed; official 40-piece initial state","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:-2,0,0,0>-1,0,0,0","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":11.975615054368973,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:-2,0,0,0>-1,0,0,0","stateHash":"f625bf1252788972f279061806b8e2b0cbe7bb7ac43b92d950b93572eb4429cc","ply":1,"scene":1,"time":13.725612245500088,"angle":0.0}
+{"kind":"MoveReserved","message":"B-Pawn--4:2,-4,0,0>1,-4,0,0","stateHash":"f625bf1252788972f279061806b8e2b0cbe7bb7ac43b92d950b93572eb4429cc","ply":1,"scene":1,"time":14.822959145531059,"angle":0.0}
+{"kind":"MoveCommitted","message":"B-Pawn--4:2,-4,0,0>1,-4,0,0","stateHash":"e0c87c5bea23fdb98c475bd30ce318c8bbc5b1d7f62fa9f095a0eabe6161678c","ply":2,"scene":1,"time":16.522962860763074,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:-1,0,0,0>0,0,0,0","stateHash":"e0c87c5bea23fdb98c475bd30ce318c8bbc5b1d7f62fa9f095a0eabe6161678c","ply":2,"scene":1,"time":17.27296526916325,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:-1,0,0,0>0,0,0,0","stateHash":"70060e0aabe26999ce607ad096c0fd6eb0c370634b0c2cb2caefd4ce9a172834","ply":3,"scene":1,"time":18.972972879186274,"angle":0.0}
+{"kind":"MoveReserved","message":"B-Pawn-0:2,0,0,0>1,0,0,0","stateHash":"70060e0aabe26999ce607ad096c0fd6eb0c370634b0c2cb2caefd4ce9a172834","ply":3,"scene":1,"time":20.03527495265007,"angle":0.0}
+{"kind":"MoveCommitted","message":"B-Pawn-0:2,0,0,0>1,0,0,0","stateHash":"f7186fff6a84ba5dda975aae4e76865defa63b52800df3090008db9bb6025010","ply":4,"scene":1,"time":21.7352849598974,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:0,0,0,0>0,0,1,0","stateHash":"f7186fff6a84ba5dda975aae4e76865defa63b52800df3090008db9bb6025010","ply":4,"scene":2,"time":26.465588254854084,"angle":0.0}
+{"kind":"MoveCommitted","message":"A-Pawn-0:0,0,0,0>0,0,1,0","stateHash":"cfb57256efbdcae7df541f2676c1739a9741fefb7ba1ce7943d21215ddab80e3","ply":5,"scene":2,"time":29.265661066398026,"angle":0.0}
+{"kind":"ScenarioMismatch","message":"System.InvalidOperationException: Pass pixel audit failed: C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-smoke\\20261015-105817-056-ShowcaseRaster-1\\scene02-height (FAIL_SAMPLED_PIXELS)","stateHash":"cfb57256efbdcae7df541f2676c1739a9741fefb7ba1ce7943d21215ddab80e3","ply":5,"scene":2,"time":29.611220564693214,"angle":0.0}

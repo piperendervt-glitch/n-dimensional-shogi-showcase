@@ -1,0 +1,5556 @@
+{
+    "status": "FAIL_SAMPLED_PIXELS",
+    "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes test selected stale-depth pixels. Other scene occluders are classified separately. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+    "probes": 326,
+    "matchedDepth": 323,
+    "matchedNormals": 307,
+    "occluded": 3,
+    "stalePixelsExcluded": 8,
+    "failures": 16,
+    "depthToleranceMetres": 0.0010000000474974514,
+    "normalDotMinimum": 0.75,
+    "samples": [
+        {
+            "id": "A-Bishop",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 641,
+            "y": 126,
+            "expectedDepthMetres": 0.577987551689148,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5779858827590942,
+            "depthErrorMetres": -0.0000016689300537109376,
+            "normalDot": 0.9999333024024963,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Bishop",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 628,
+            "y": 133,
+            "expectedDepthMetres": 0.5818017721176148,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.581801176071167,
+            "depthErrorMetres": -5.960464477539063e-7,
+            "normalDot": 0.9999333024024963,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Bishop",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 688,
+            "y": 135,
+            "expectedDepthMetres": 0.5822991132736206,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5822988152503967,
+            "depthErrorMetres": -2.980232238769531e-7,
+            "normalDot": 0.999992311000824,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669568061828613
+            }
+        },
+        {
+            "id": "A-Bishop",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 685,
+            "y": 135,
+            "expectedDepthMetres": 0.5779760479927063,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5779749155044556,
+            "depthErrorMetres": -0.0000011324882507324219,
+            "normalDot": 0.9999861121177673,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669568061828613
+            }
+        },
+        {
+            "id": "A-Bishop",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 641,
+            "y": 135,
+            "expectedDepthMetres": 0.5757243633270264,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5757256746292114,
+            "depthErrorMetres": 0.0000013113021850585938,
+            "normalDot": 0.99961256980896,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264671325683594,
+                "z": -0.6872012615203857
+            }
+        },
+        {
+            "id": "A-Bishop",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 628,
+            "y": 140,
+            "expectedDepthMetres": 0.5800435543060303,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5800449848175049,
+            "depthErrorMetres": 0.000001430511474609375,
+            "normalDot": 0.9999122619628906,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264671325683594,
+                "z": -0.6872012615203857
+            }
+        },
+        {
+            "id": "A-Bishop",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 680,
+            "y": 133,
+            "expectedDepthMetres": 0.5739109516143799,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5739125609397888,
+            "depthErrorMetres": 0.0000016093254089355469,
+            "normalDot": 0.9999586343765259,
+            "expectedNormal": {
+                "x": 0.7035564184188843,
+                "y": 0.7044934630393982,
+                "z": 0.09325934201478958
+            }
+        },
+        {
+            "id": "A-Bishop",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 674,
+            "y": 126,
+            "expectedDepthMetres": 0.567477822303772,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5674808621406555,
+            "depthErrorMetres": 0.000003039836883544922,
+            "normalDot": 0.9999862909317017,
+            "expectedNormal": {
+                "x": 0.7035564184188843,
+                "y": 0.7044934630393982,
+                "z": 0.09325934201478958
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 691,
+            "y": 154,
+            "expectedDepthMetres": 0.6090835332870483,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6090864539146423,
+            "depthErrorMetres": 0.0000029206275939941408,
+            "normalDot": 0.9998688697814941,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Bishop",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 694,
+            "y": 149,
+            "expectedDepthMetres": 0.5904717445373535,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5904806852340698,
+            "depthErrorMetres": 0.000008940696716308594,
+            "normalDot": 0.9999989867210388,
+            "expectedNormal": {
+                "x": 0.4324634373188019,
+                "y": 0.6912006139755249,
+                "z": 0.5789794325828552
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 331,
+            "y": 191,
+            "expectedDepthMetres": 0.6388649344444275,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6388628482818604,
+            "depthErrorMetres": -0.000002086162567138672,
+            "normalDot": 0.999934196472168,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 322,
+            "y": 196,
+            "expectedDepthMetres": 0.6424762010574341,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6424754858016968,
+            "depthErrorMetres": -7.152557373046875e-7,
+            "normalDot": 0.9997896552085877,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 373,
+            "y": 198,
+            "expectedDepthMetres": 0.6425596475601196,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6425573825836182,
+            "depthErrorMetres": -0.0000022649765014648439,
+            "normalDot": 0.9999909996986389,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669641077518463
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 369,
+            "y": 198,
+            "expectedDepthMetres": 0.639056921005249,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6390541195869446,
+            "depthErrorMetres": -0.0000028014183044433595,
+            "normalDot": 0.999978244304657,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669641077518463
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 330,
+            "y": 199,
+            "expectedDepthMetres": 0.6367510557174683,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.636752724647522,
+            "depthErrorMetres": 0.0000016689300537109376,
+            "normalDot": 0.9996809363365173,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264268398284912,
+                "z": -0.6872437000274658
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 321,
+            "y": 203,
+            "expectedDepthMetres": 0.6408368945121765,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6408383250236511,
+            "depthErrorMetres": 0.000001430511474609375,
+            "normalDot": 0.9999649524688721,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264268398284912,
+                "z": -0.6872437000274658
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 364,
+            "y": 185,
+            "expectedDepthMetres": 0.6371762156486511,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6371762156486511,
+            "depthErrorMetres": 0.0,
+            "normalDot": 0.999991238117218,
+            "expectedNormal": {
+                "x": 0.9970544576644898,
+                "y": 0.0,
+                "z": 0.07669641077518463
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 356,
+            "y": 179,
+            "expectedDepthMetres": 0.6314349174499512,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6314350962638855,
+            "depthErrorMetres": 1.7881393432617188e-7,
+            "normalDot": 0.9999909400939941,
+            "expectedNormal": {
+                "x": 0.9970544576644898,
+                "y": 0.0,
+                "z": 0.07669641077518463
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 362,
+            "y": 197,
+            "expectedDepthMetres": 0.6345130801200867,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6345146298408508,
+            "depthErrorMetres": 0.0000015497207641601563,
+            "normalDot": 0.9999987483024597,
+            "expectedNormal": {
+                "x": 0.7035274505615234,
+                "y": 0.7045225501060486,
+                "z": 0.0932580977678299
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 354,
+            "y": 192,
+            "expectedDepthMetres": 0.6286683082580566,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6286686658859253,
+            "depthErrorMetres": 3.5762786865234377e-7,
+            "normalDot": 0.9999959468841553,
+            "expectedNormal": {
+                "x": 0.7035274505615234,
+                "y": 0.7045225501060486,
+                "z": 0.0932580977678299
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 382,
+            "y": 213,
+            "expectedDepthMetres": 0.6552804112434387,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6552845239639282,
+            "depthErrorMetres": 0.000004112720489501953,
+            "normalDot": 0.9999875426292419,
+            "expectedNormal": {
+                "x": 0.43245989084243777,
+                "y": 0.6912038326263428,
+                "z": 0.5789781212806702
+            }
+        },
+        {
+            "id": "A-Gold--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 382,
+            "y": 210,
+            "expectedDepthMetres": 0.6509401202201843,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.650949239730835,
+            "depthErrorMetres": 0.000009119510650634766,
+            "normalDot": 0.9999997615814209,
+            "expectedNormal": {
+                "x": 0.4324493706226349,
+                "y": 0.6912222504615784,
+                "z": 0.5789640545845032
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 450,
+            "y": 139,
+            "expectedDepthMetres": 0.589900016784668,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5898997187614441,
+            "depthErrorMetres": -2.980232238769531e-7,
+            "normalDot": 0.9997996687889099,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 440,
+            "y": 145,
+            "expectedDepthMetres": 0.593173623085022,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5931731462478638,
+            "depthErrorMetres": -4.76837158203125e-7,
+            "normalDot": 0.9998461008071899,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 495,
+            "y": 147,
+            "expectedDepthMetres": 0.5931222438812256,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5931203365325928,
+            "depthErrorMetres": -0.0000019073486328125,
+            "normalDot": 0.9999922513961792,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669641077518463
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 491,
+            "y": 147,
+            "expectedDepthMetres": 0.5891724824905396,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5891707539558411,
+            "depthErrorMetres": -0.0000017285346984863282,
+            "normalDot": 0.9999790191650391,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669641077518463
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 450,
+            "y": 148,
+            "expectedDepthMetres": 0.5875519514083862,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5875533223152161,
+            "depthErrorMetres": 0.0000013709068298339844,
+            "normalDot": 0.9999943971633911,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264268398284912,
+                "z": -0.6872437000274658
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 439,
+            "y": 152,
+            "expectedDepthMetres": 0.5915427207946777,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5915438532829285,
+            "depthErrorMetres": 0.0000011324882507324219,
+            "normalDot": 0.9999590516090393,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264268398284912,
+                "z": -0.6872437000274658
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 485,
+            "y": 145,
+            "expectedDepthMetres": 0.5851751565933228,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5851761102676392,
+            "depthErrorMetres": 9.5367431640625e-7,
+            "normalDot": 0.9999991655349731,
+            "expectedNormal": {
+                "x": 0.7035216689109802,
+                "y": 0.7045284509658814,
+                "z": 0.09325777739286423
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 478,
+            "y": 139,
+            "expectedDepthMetres": 0.5795187950134277,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5795192718505859,
+            "depthErrorMetres": 4.76837158203125e-7,
+            "normalDot": 0.9999773502349854,
+            "expectedNormal": {
+                "x": 0.7035216689109802,
+                "y": 0.7045284509658814,
+                "z": 0.09325777739286423
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 502,
+            "y": 164,
+            "expectedDepthMetres": 0.6049611568450928,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6049681901931763,
+            "depthErrorMetres": 0.000007033348083496094,
+            "normalDot": 0.9999939799308777,
+            "expectedNormal": {
+                "x": 0.4324493706226349,
+                "y": 0.6912222504615784,
+                "z": 0.5789640545845032
+            }
+        },
+        {
+            "id": "A-Gold-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 503,
+            "y": 161,
+            "expectedDepthMetres": 0.6017438173294067,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6017506718635559,
+            "depthErrorMetres": 0.000006854534149169922,
+            "normalDot": 0.9999998807907105,
+            "expectedNormal": {
+                "x": 0.4324493706226349,
+                "y": 0.6912222504615784,
+                "z": 0.5789640545845032
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 384,
+            "y": 165,
+            "expectedDepthMetres": 0.6126927137374878,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6126915812492371,
+            "depthErrorMetres": -0.0000011324882507324219,
+            "normalDot": 0.9998568296432495,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 373,
+            "y": 172,
+            "expectedDepthMetres": 0.6164608001708984,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6164602637290955,
+            "depthErrorMetres": -5.364418029785156e-7,
+            "normalDot": 0.9999457001686096,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 433,
+            "y": 174,
+            "expectedDepthMetres": 0.6159044504165649,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6159029006958008,
+            "depthErrorMetres": -0.0000015497207641601563,
+            "normalDot": 0.9999833703041077,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669651508331299
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 429,
+            "y": 174,
+            "expectedDepthMetres": 0.6122193336486816,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.61221843957901,
+            "depthErrorMetres": -8.940696716308594e-7,
+            "normalDot": 0.9999510645866394,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669651508331299
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 384,
+            "y": 175,
+            "expectedDepthMetres": 0.6100616455078125,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6100625991821289,
+            "depthErrorMetres": 9.5367431640625e-7,
+            "normalDot": 0.9996792674064636,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264577150344849,
+                "z": -0.6872112154960632
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 373,
+            "y": 179,
+            "expectedDepthMetres": 0.614387035369873,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6143883466720581,
+            "depthErrorMetres": 0.0000013113021850585938,
+            "normalDot": 0.9998834133148193,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264483571052551,
+                "z": -0.6872210502624512
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 422,
+            "y": 172,
+            "expectedDepthMetres": 0.607729434967041,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6077309846878052,
+            "depthErrorMetres": 0.0000015497207641601563,
+            "normalDot": 0.9999822378158569,
+            "expectedNormal": {
+                "x": 0.7035242915153503,
+                "y": 0.7045257091522217,
+                "z": 0.09325838834047318
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 413,
+            "y": 165,
+            "expectedDepthMetres": 0.6007123589515686,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6007154583930969,
+            "depthErrorMetres": 0.0000030994415283203127,
+            "normalDot": 0.9999875426292419,
+            "expectedNormal": {
+                "x": 0.7035242915153503,
+                "y": 0.7045257091522217,
+                "z": 0.09325838834047318
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 442,
+            "y": 192,
+            "expectedDepthMetres": 0.6302932500839233,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.630301296710968,
+            "depthErrorMetres": 0.000008046627044677734,
+            "normalDot": 0.9999939203262329,
+            "expectedNormal": {
+                "x": 0.4324598014354706,
+                "y": 0.6912065744400024,
+                "z": 0.5789749026298523
+            }
+        },
+        {
+            "id": "A-King-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 444,
+            "y": 188,
+            "expectedDepthMetres": 0.6270408630371094,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6270464658737183,
+            "depthErrorMetres": 0.000005602836608886719,
+            "normalDot": 0.9999754428863525,
+            "expectedNormal": {
+                "x": 0.4324567914009094,
+                "y": 0.6912119388580322,
+                "z": 0.5789707899093628
+            }
+        },
+        {
+            "id": "A-Knight-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 593,
+            "y": 79,
+            "expectedDepthMetres": 0.5411174893379211,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5411170125007629,
+            "depthErrorMetres": -4.76837158203125e-7,
+            "normalDot": 0.9999601244926453,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Knight-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 582,
+            "y": 85,
+            "expectedDepthMetres": 0.5443083643913269,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5443071126937866,
+            "depthErrorMetres": -0.0000012516975402832032,
+            "normalDot": 0.9999333024024963,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Knight-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 638,
+            "y": 87,
+            "expectedDepthMetres": 0.5442008972167969,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5441983938217163,
+            "depthErrorMetres": -0.0000025033950805664064,
+            "normalDot": 0.9999879598617554,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Knight-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 635,
+            "y": 87,
+            "expectedDepthMetres": 0.5405747890472412,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5405758023262024,
+            "depthErrorMetres": 0.0000010132789611816407,
+            "normalDot": 0.9999884963035584,
+            "expectedNormal": {
+                "x": 0.7035350799560547,
+                "y": 0.7045152187347412,
+                "z": 0.09325641393661499
+            }
+        },
+        {
+            "id": "A-Knight-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 593,
+            "y": 87,
+            "expectedDepthMetres": 0.53917396068573,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5391743183135986,
+            "depthErrorMetres": 3.5762786865234377e-7,
+            "normalDot": 0.9995357990264893,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264912724494934,
+                "z": -0.6871755719184876
+            }
+        },
+        {
+            "id": "A-Knight-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 581,
+            "y": 92,
+            "expectedDepthMetres": 0.5429901480674744,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5429908633232117,
+            "depthErrorMetres": 7.152557373046875e-7,
+            "normalDot": 0.9999297857284546,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264912724494934,
+                "z": -0.6871755719184876
+            }
+        },
+        {
+            "id": "A-Knight-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 630,
+            "y": 84,
+            "expectedDepthMetres": 0.536987841129303,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5369890332221985,
+            "depthErrorMetres": 0.0000011920928955078126,
+            "normalDot": 0.9999958872795105,
+            "expectedNormal": {
+                "x": 0.7035402655601502,
+                "y": 0.7045099139213562,
+                "z": 0.09325713664293289
+            }
+        },
+        {
+            "id": "A-Knight-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 624,
+            "y": 77,
+            "expectedDepthMetres": 0.5314459800720215,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5314483046531677,
+            "depthErrorMetres": 0.0000023245811462402345,
+            "normalDot": 0.9999821782112122,
+            "expectedNormal": {
+                "x": 0.7035402655601502,
+                "y": 0.7045099139213562,
+                "z": 0.09325713664293289
+            }
+        },
+        {
+            "id": "A-Knight-3",
+            "kind": "interior",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 642,
+            "y": 106,
+            "expectedDepthMetres": 0.5555204153060913,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5555304884910584,
+            "depthErrorMetres": 0.000010073184967041016,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 645,
+            "y": 102,
+            "expectedDepthMetres": 0.5644493103027344,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5644526481628418,
+            "depthErrorMetres": 0.000003337860107421875,
+            "normalDot": 0.9987830519676209,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 674,
+            "y": 44,
+            "expectedDepthMetres": 0.5163778066635132,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5163760185241699,
+            "depthErrorMetres": -0.0000017881393432617188,
+            "normalDot": 0.9999669194221497,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 661,
+            "y": 51,
+            "expectedDepthMetres": 0.5198365449905396,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5198357105255127,
+            "depthErrorMetres": -8.344650268554688e-7,
+            "normalDot": 0.9999397397041321,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 720,
+            "y": 53,
+            "expectedDepthMetres": 0.5189753770828247,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5189743041992188,
+            "depthErrorMetres": -0.0000010728836059570313,
+            "normalDot": 0.9999832510948181,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 718,
+            "y": 52,
+            "expectedDepthMetres": 0.5163554549217224,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5163537263870239,
+            "depthErrorMetres": -0.0000017285346984863282,
+            "normalDot": 0.9999861717224121,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 674,
+            "y": 52,
+            "expectedDepthMetres": 0.5144708156585693,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5144715905189514,
+            "depthErrorMetres": 7.748603820800781e-7,
+            "normalDot": 0.9999339580535889,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264913320541382,
+                "z": -0.6871756315231323
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 661,
+            "y": 58,
+            "expectedDepthMetres": 0.518369197845459,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5183702111244202,
+            "depthErrorMetres": 0.0000010132789611816407,
+            "normalDot": 0.9999202489852905,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.726491391658783,
+                "z": -0.6871756315231323
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 713,
+            "y": 49,
+            "expectedDepthMetres": 0.5122991800308228,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5123013257980347,
+            "depthErrorMetres": 0.0000021457672119140627,
+            "normalDot": 0.9999814629554749,
+            "expectedNormal": {
+                "x": 0.7035406231880188,
+                "y": 0.7045093774795532,
+                "z": 0.09325797855854035
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 708,
+            "y": 41,
+            "expectedDepthMetres": 0.5068343877792358,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5068363547325134,
+            "depthErrorMetres": 0.0000019669532775878908,
+            "normalDot": 0.9999911785125732,
+            "expectedNormal": {
+                "x": 0.7035589218139648,
+                "y": 0.7044909596443176,
+                "z": 0.09325899183750153
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "interior",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 723,
+            "y": 73,
+            "expectedDepthMetres": 0.5308048725128174,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5308151841163635,
+            "depthErrorMetres": 0.000010311603546142578,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Lance-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 726,
+            "y": 69,
+            "expectedDepthMetres": 0.5284379124641419,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5284421443939209,
+            "depthErrorMetres": 0.000004231929779052734,
+            "normalDot": 0.9999983906745911,
+            "expectedNormal": {
+                "x": 0.43246397376060488,
+                "y": 0.6912016272544861,
+                "z": 0.5789777636528015
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 442,
+            "y": 258,
+            "expectedDepthMetres": 0.7166626453399658,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7166608572006226,
+            "depthErrorMetres": -0.0000017881393432617188,
+            "normalDot": 0.9999274015426636,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 434,
+            "y": 262,
+            "expectedDepthMetres": 0.7199673652648926,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7199660539627075,
+            "depthErrorMetres": -0.0000013113021850585938,
+            "normalDot": 0.9998461008071899,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 477,
+            "y": 264,
+            "expectedDepthMetres": 0.7200930118560791,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7200912833213806,
+            "depthErrorMetres": -0.0000017285346984863282,
+            "normalDot": 0.9999917149543762,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 474,
+            "y": 264,
+            "expectedDepthMetres": 0.7167336344718933,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7167327404022217,
+            "depthErrorMetres": -8.940696716308594e-7,
+            "normalDot": 0.9999910593032837,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 442,
+            "y": 265,
+            "expectedDepthMetres": 0.71449875831604,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7145003080368042,
+            "depthErrorMetres": 0.0000015497207641601563,
+            "normalDot": 0.9999766945838928,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719605445862,
+                "z": -0.6871961951255798
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 434,
+            "y": 268,
+            "expectedDepthMetres": 0.7182900905609131,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7182914614677429,
+            "depthErrorMetres": 0.0000013709068298339844,
+            "normalDot": 0.9998987913131714,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264409065246582,
+                "z": -0.6872289776802063
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 470,
+            "y": 253,
+            "expectedDepthMetres": 0.7149540781974793,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7149533629417419,
+            "depthErrorMetres": -7.152557373046875e-7,
+            "normalDot": 0.9999971389770508,
+            "expectedNormal": {
+                "x": 0.9970544576644898,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 464,
+            "y": 248,
+            "expectedDepthMetres": 0.7106645107269287,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7106720209121704,
+            "depthErrorMetres": 0.000007510185241699219,
+            "normalDot": 0.9992751479148865,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 469,
+            "y": 263,
+            "expectedDepthMetres": 0.712422251701355,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.71242356300354,
+            "depthErrorMetres": 0.0000013113021850585938,
+            "normalDot": 0.9999991655349731,
+            "expectedNormal": {
+                "x": 0.7035432457923889,
+                "y": 0.7045068740844727,
+                "z": 0.09325750917196274
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 463,
+            "y": 259,
+            "expectedDepthMetres": 0.7066718339920044,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7066724896430969,
+            "depthErrorMetres": 6.556510925292969e-7,
+            "normalDot": 0.9998941421508789,
+            "expectedNormal": {
+                "x": 0.7035419344902039,
+                "y": 0.7045081257820129,
+                "z": 0.09325742721557617
+            }
+        },
+        {
+            "id": "A-Pawn--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 482,
+            "y": 275,
+            "expectedDepthMetres": 0.7299578189849854,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7299613952636719,
+            "depthErrorMetres": 0.0000035762786865234377,
+            "normalDot": 0.9999972581863403,
+            "expectedNormal": {
+                "x": -7.282176852640987e-7,
+                "y": 0.9984603524208069,
+                "z": 0.05546985939145088
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 484,
+            "y": 273,
+            "expectedDepthMetres": 0.7436535358428955,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7436585426330566,
+            "depthErrorMetres": 0.0000050067901611328129,
+            "normalDot": 0.9993530511856079,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 391,
+            "y": 276,
+            "expectedDepthMetres": 0.7413255572319031,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7413239479064941,
+            "depthErrorMetres": -0.0000016093254089355469,
+            "normalDot": 0.9997996687889099,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 383,
+            "y": 280,
+            "expectedDepthMetres": 0.7448620796203613,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7448610663414002,
+            "depthErrorMetres": -0.0000010132789611816407,
+            "normalDot": 0.999647319316864,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 425,
+            "y": 282,
+            "expectedDepthMetres": 0.7448689341545105,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7448654770851135,
+            "depthErrorMetres": -0.0000034570693969726564,
+            "normalDot": 0.9999909996986389,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.0766962319612503
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 421,
+            "y": 282,
+            "expectedDepthMetres": 0.7406131029129028,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7406099438667297,
+            "depthErrorMetres": -0.000003159046173095703,
+            "normalDot": 0.9999944567680359,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.0766962319612503
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 390,
+            "y": 283,
+            "expectedDepthMetres": 0.7392703294754028,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7392720580101013,
+            "depthErrorMetres": 0.0000017285346984863282,
+            "normalDot": 0.9999319911003113,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719605445862,
+                "z": -0.6871961355209351
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 383,
+            "y": 286,
+            "expectedDepthMetres": 0.742974042892456,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7429766058921814,
+            "depthErrorMetres": 0.000002562999725341797,
+            "normalDot": 0.9999271035194397,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719605445862,
+                "z": -0.6871961951255798
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 418,
+            "y": 271,
+            "expectedDepthMetres": 0.7408980131149292,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7409074902534485,
+            "depthErrorMetres": 0.00000947713851928711,
+            "normalDot": 0.9984789490699768,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 412,
+            "y": 267,
+            "expectedDepthMetres": 0.735458493232727,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7354657053947449,
+            "depthErrorMetres": 0.000007212162017822266,
+            "normalDot": 0.9981131553649902,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 417,
+            "y": 282,
+            "expectedDepthMetres": 0.737636923789978,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7376390695571899,
+            "depthErrorMetres": 0.0000021457672119140627,
+            "normalDot": 0.9999439120292664,
+            "expectedNormal": {
+                "x": 0.7035418748855591,
+                "y": 0.7045083045959473,
+                "z": 0.09325722604990006
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 410,
+            "y": 278,
+            "expectedDepthMetres": 0.7312487363815308,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7312496304512024,
+            "depthErrorMetres": 8.940696716308594e-7,
+            "normalDot": 0.9998720288276672,
+            "expectedNormal": {
+                "x": 0.7035418748855591,
+                "y": 0.7045083045959473,
+                "z": 0.09325722604990006
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 431,
+            "y": 293,
+            "expectedDepthMetres": 0.7568929195404053,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7568989396095276,
+            "depthErrorMetres": 0.000006020069122314453,
+            "normalDot": 0.9999991059303284,
+            "expectedNormal": {
+                "x": 0.43246498703956606,
+                "y": 0.6911998391151428,
+                "z": 0.5789791345596314
+            }
+        },
+        {
+            "id": "A-Pawn--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 432,
+            "y": 290,
+            "expectedDepthMetres": 0.7520785927772522,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7520841956138611,
+            "depthErrorMetres": 0.000005602836608886719,
+            "normalDot": 0.9999989867210388,
+            "expectedNormal": {
+                "x": 0.43246498703956606,
+                "y": 0.6911998391151428,
+                "z": 0.5789791345596314
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 343,
+            "y": 294,
+            "expectedDepthMetres": 0.7656768560409546,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7656763195991516,
+            "depthErrorMetres": -5.364418029785156e-7,
+            "normalDot": 0.9999658465385437,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 336,
+            "y": 297,
+            "expectedDepthMetres": 0.7691988348960877,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.769196093082428,
+            "depthErrorMetres": -0.0000027418136596679689,
+            "normalDot": 0.9998019933700562,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 376,
+            "y": 299,
+            "expectedDepthMetres": 0.769250214099884,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7692489624023438,
+            "depthErrorMetres": -0.0000012516975402832032,
+            "normalDot": 0.9999917149543762,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 373,
+            "y": 299,
+            "expectedDepthMetres": 0.7661800384521484,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7661793828010559,
+            "depthErrorMetres": -6.556510925292969e-7,
+            "normalDot": 0.999980628490448,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 342,
+            "y": 300,
+            "expectedDepthMetres": 0.7638776898384094,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7638798356056213,
+            "depthErrorMetres": 0.0000021457672119140627,
+            "normalDot": 0.9999862909317017,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719605445862,
+                "z": -0.6871961355209351
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 335,
+            "y": 303,
+            "expectedDepthMetres": 0.7678329944610596,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7678345441818237,
+            "depthErrorMetres": 0.0000015497207641601563,
+            "normalDot": 0.999950647354126,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719009399414,
+                "z": -0.6871961355209351
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 369,
+            "y": 289,
+            "expectedDepthMetres": 0.7643320560455322,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7643290758132935,
+            "depthErrorMetres": -0.0000029802322387695314,
+            "normalDot": 0.9999933242797852,
+            "expectedNormal": {
+                "x": 0.9970544576644898,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 363,
+            "y": 285,
+            "expectedDepthMetres": 0.7600955963134766,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7600730061531067,
+            "depthErrorMetres": -0.000022590160369873047,
+            "normalDot": 0.999997079372406,
+            "expectedNormal": {
+                "x": 0.7050144076347351,
+                "y": -0.7071164846420288,
+                "z": 0.05423148721456528
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 368,
+            "y": 299,
+            "expectedDepthMetres": 0.762193500995636,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7621949315071106,
+            "depthErrorMetres": 0.000001430511474609375,
+            "normalDot": 0.9999591112136841,
+            "expectedNormal": {
+                "x": 0.7035297155380249,
+                "y": 0.7045204639434815,
+                "z": 0.09325696527957916
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 361,
+            "y": 295,
+            "expectedDepthMetres": 0.7557816505432129,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7557847499847412,
+            "depthErrorMetres": 0.0000030994415283203127,
+            "normalDot": 0.9997413754463196,
+            "expectedNormal": {
+                "x": 0.7035297155380249,
+                "y": 0.7045204639434815,
+                "z": 0.09325696527957916
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "interior",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 383,
+            "y": 309,
+            "expectedDepthMetres": 0.7811957001686096,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7812044620513916,
+            "depthErrorMetres": 0.000008761882781982422,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 383,
+            "y": 307,
+            "expectedDepthMetres": 0.7767943143844605,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7768019437789917,
+            "depthErrorMetres": 0.00000762939453125,
+            "normalDot": 0.9999997019767761,
+            "expectedNormal": {
+                "x": 0.43246498703956606,
+                "y": 0.6911998391151428,
+                "z": 0.5789791345596314
+            }
+        },
+        {
+            "id": "A-Pawn-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 556,
+            "y": 217,
+            "expectedDepthMetres": 0.6673107743263245,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6673093438148499,
+            "depthErrorMetres": -0.000001430511474609375,
+            "normalDot": 0.9999274015426636,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 547,
+            "y": 222,
+            "expectedDepthMetres": 0.670367419719696,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6703661680221558,
+            "depthErrorMetres": -0.0000012516975402832032,
+            "normalDot": 0.9999601244926453,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 592,
+            "y": 224,
+            "expectedDepthMetres": 0.6698576211929321,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6698561310768127,
+            "depthErrorMetres": -0.0000014901161193847657,
+            "normalDot": 0.9999860525131226,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 590,
+            "y": 224,
+            "expectedDepthMetres": 0.6672730445861816,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6672716736793518,
+            "depthErrorMetres": -0.0000013709068298339844,
+            "normalDot": 0.9999926090240479,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 556,
+            "y": 225,
+            "expectedDepthMetres": 0.6654249429702759,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6654268503189087,
+            "depthErrorMetres": 0.0000019073486328125,
+            "normalDot": 0.9997789263725281,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264409065246582,
+                "z": -0.6872289776802063
+            }
+        },
+        {
+            "id": "A-Pawn-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 546,
+            "y": 228,
+            "expectedDepthMetres": 0.6692887544631958,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6692901849746704,
+            "depthErrorMetres": 0.000001430511474609375,
+            "normalDot": 0.9999966025352478,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719605445862,
+                "z": -0.6871961951255798
+            }
+        },
+        {
+            "id": "A-Pawn-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 585,
+            "y": 223,
+            "expectedDepthMetres": 0.6634626388549805,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6634681820869446,
+            "depthErrorMetres": 0.000005543231964111328,
+            "normalDot": 0.9999967217445374,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984604716300964,
+                "z": 0.055469121783971789
+            }
+        },
+        {
+            "id": "A-Pawn-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 580,
+            "y": 218,
+            "expectedDepthMetres": 0.6576061248779297,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6576076745986939,
+            "depthErrorMetres": 0.0000015497207641601563,
+            "normalDot": 0.999976396560669,
+            "expectedNormal": {
+                "x": 0.7035419344902039,
+                "y": 0.7045082449913025,
+                "z": 0.09325732290744782
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 597,
+            "y": 237,
+            "expectedDepthMetres": 0.6970580816268921,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6970669627189636,
+            "depthErrorMetres": 0.000008881092071533203,
+            "normalDot": 0.9999083280563355,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn-1",
+            "kind": "near-edge",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 598,
+            "y": 234,
+            "expectedDepthMetres": 0.6785157918930054,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6785295605659485,
+            "depthErrorMetres": 0.000013768672943115234,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 619,
+            "y": 194,
+            "expectedDepthMetres": 0.6429511904716492,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6429497003555298,
+            "depthErrorMetres": -0.0000014901161193847657,
+            "normalDot": 0.9997577667236328,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 609,
+            "y": 199,
+            "expectedDepthMetres": 0.6462787389755249,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6462767124176025,
+            "depthErrorMetres": -0.0000020265579223632814,
+            "normalDot": 0.9996991753578186,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 657,
+            "y": 201,
+            "expectedDepthMetres": 0.6460749506950378,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.646072506904602,
+            "depthErrorMetres": -0.0000024437904357910158,
+            "normalDot": 0.9999906420707703,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 655,
+            "y": 201,
+            "expectedDepthMetres": 0.6431940793991089,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6431915163993836,
+            "depthErrorMetres": -0.000002562999725341797,
+            "normalDot": 0.9999944567680359,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 619,
+            "y": 202,
+            "expectedDepthMetres": 0.6408181190490723,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6408200263977051,
+            "depthErrorMetres": 0.0000019073486328125,
+            "normalDot": 0.9997608661651611,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719605445862,
+                "z": -0.6871961951255798
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 609,
+            "y": 205,
+            "expectedDepthMetres": 0.6444173455238342,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6444160342216492,
+            "depthErrorMetres": -0.0000013113021850585938,
+            "normalDot": 0.999979555606842,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 650,
+            "y": 200,
+            "expectedDepthMetres": 0.638522744178772,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6385250687599182,
+            "depthErrorMetres": 0.0000023245811462402345,
+            "normalDot": 0.9999958872795105,
+            "expectedNormal": {
+                "x": 0.703535795211792,
+                "y": 0.7045143842697144,
+                "z": 0.09325709939002991
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 645,
+            "y": 195,
+            "expectedDepthMetres": 0.6328258514404297,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.632828414440155,
+            "depthErrorMetres": 0.000002562999725341797,
+            "normalDot": 0.9999528527259827,
+            "expectedNormal": {
+                "x": 0.703535795211792,
+                "y": 0.7045143842697144,
+                "z": 0.09325709939002991
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "interior",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 660,
+            "y": 215,
+            "expectedDepthMetres": 0.6572637557983398,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.657280445098877,
+            "depthErrorMetres": 0.000016689300537109375,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn-2",
+            "kind": "near-edge",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 662,
+            "y": 212,
+            "expectedDepthMetres": 0.6533256769180298,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6533471941947937,
+            "depthErrorMetres": 0.000021517276763916016,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 688,
+            "y": 170,
+            "expectedDepthMetres": 0.6178956031799316,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6178939342498779,
+            "depthErrorMetres": -0.0000016689300537109376,
+            "normalDot": 0.9999637603759766,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 677,
+            "y": 175,
+            "expectedDepthMetres": 0.6214209794998169,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.621418833732605,
+            "depthErrorMetres": -0.0000021457672119140627,
+            "normalDot": 0.9998900890350342,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 727,
+            "y": 177,
+            "expectedDepthMetres": 0.6220690011978149,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6220677495002747,
+            "depthErrorMetres": -0.0000012516975402832032,
+            "normalDot": 0.9999924898147583,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 724,
+            "y": 177,
+            "expectedDepthMetres": 0.6171777248382568,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.617180585861206,
+            "depthErrorMetres": 0.00000286102294921875,
+            "normalDot": 0.9999955296516419,
+            "expectedNormal": {
+                "x": 0.7035346627235413,
+                "y": 0.7045155763626099,
+                "z": 0.09325641393661499
+            }
+        },
+        {
+            "id": "A-Pawn-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 688,
+            "y": 178,
+            "expectedDepthMetres": 0.6162109971046448,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6162120699882507,
+            "depthErrorMetres": 0.0000010728836059570313,
+            "normalDot": 0.9999114871025086,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264409065246582,
+                "z": -0.6872289776802063
+            }
+        },
+        {
+            "id": "A-Pawn-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 677,
+            "y": 181,
+            "expectedDepthMetres": 0.6197701692581177,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6197713613510132,
+            "depthErrorMetres": 0.0000011920928955078126,
+            "normalDot": 0.9999945163726807,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719009399414,
+                "z": -0.6871961355209351
+            }
+        },
+        {
+            "id": "A-Pawn-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 721,
+            "y": 175,
+            "expectedDepthMetres": 0.6141904592514038,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6141946315765381,
+            "depthErrorMetres": 0.000004172325134277344,
+            "normalDot": 0.9999711513519287,
+            "expectedNormal": {
+                "x": 0.703546404838562,
+                "y": 0.7045037746429443,
+                "z": 0.09325747191905976
+            }
+        },
+        {
+            "id": "A-Pawn-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 716,
+            "y": 170,
+            "expectedDepthMetres": 0.6084240674972534,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6084263920783997,
+            "depthErrorMetres": 0.0000023245811462402345,
+            "normalDot": 0.9999871850013733,
+            "expectedNormal": {
+                "x": 0.7035418748855591,
+                "y": 0.7045083045959473,
+                "z": 0.09325722604990006
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 729,
+            "y": 192,
+            "expectedDepthMetres": 0.6464365720748901,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6464411616325378,
+            "depthErrorMetres": 0.000004589557647705078,
+            "normalDot": 0.9982610940933228,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 731,
+            "y": 189,
+            "expectedDepthMetres": 0.6433205008506775,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6433263421058655,
+            "depthErrorMetres": 0.000005841255187988281,
+            "normalDot": 0.9986246228218079,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 762,
+            "y": 143,
+            "expectedDepthMetres": 0.5934378504753113,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.593436598777771,
+            "depthErrorMetres": -0.0000012516975402832032,
+            "normalDot": 0.9999274015426636,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 750,
+            "y": 149,
+            "expectedDepthMetres": 0.5968409180641174,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5968396663665772,
+            "depthErrorMetres": -0.0000012516975402832032,
+            "normalDot": 0.9999201893806458,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Pawn-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 802,
+            "y": 151,
+            "expectedDepthMetres": 0.5968202352523804,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5968183875083923,
+            "depthErrorMetres": -0.0000018477439880371094,
+            "normalDot": 0.9999949932098389,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669654488563538
+            }
+        },
+        {
+            "id": "A-Pawn-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 800,
+            "y": 151,
+            "expectedDepthMetres": 0.5929079055786133,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5929111838340759,
+            "depthErrorMetres": 0.0000032782554626464845,
+            "normalDot": 0.9999957084655762,
+            "expectedNormal": {
+                "x": 0.7035285234451294,
+                "y": 0.7045217156410217,
+                "z": 0.09325628727674484
+            }
+        },
+        {
+            "id": "A-Pawn-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 762,
+            "y": 151,
+            "expectedDepthMetres": 0.5915096402168274,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5915098190307617,
+            "depthErrorMetres": 1.7881393432617188e-7,
+            "normalDot": 0.9998641610145569,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719605445862,
+                "z": -0.6871961355209351
+            }
+        },
+        {
+            "id": "A-Pawn-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 751,
+            "y": 155,
+            "expectedDepthMetres": 0.5950515270233154,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5950520634651184,
+            "depthErrorMetres": 5.364418029785156e-7,
+            "normalDot": 0.9999209642410278,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264719605445862,
+                "z": -0.6871961355209351
+            }
+        },
+        {
+            "id": "A-Pawn-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 797,
+            "y": 149,
+            "expectedDepthMetres": 0.5898633003234863,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.589866578578949,
+            "depthErrorMetres": 0.0000032782554626464845,
+            "normalDot": 0.999976396560669,
+            "expectedNormal": {
+                "x": 0.7035422325134277,
+                "y": 0.7045078277587891,
+                "z": 0.09325806796550751
+            }
+        },
+        {
+            "id": "A-Pawn-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 792,
+            "y": 143,
+            "expectedDepthMetres": 0.5834710001945496,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5834731459617615,
+            "depthErrorMetres": 0.0000021457672119140627,
+            "normalDot": 0.99995356798172,
+            "expectedNormal": {
+                "x": 0.7035422325134277,
+                "y": 0.7045078277587891,
+                "z": 0.09325806796550751
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 803,
+            "y": 167,
+            "expectedDepthMetres": 0.6213664412498474,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6213699579238892,
+            "depthErrorMetres": 0.000003516674041748047,
+            "normalDot": 0.9993337392807007,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 806,
+            "y": 163,
+            "expectedDepthMetres": 0.6175329685211182,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6175379157066345,
+            "depthErrorMetres": 0.000004947185516357422,
+            "normalDot": 0.9999741315841675,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 287,
+            "y": 266,
+            "expectedDepthMetres": 0.7253916263580322,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7253900766372681,
+            "depthErrorMetres": -0.0000015497207641601563,
+            "normalDot": 0.9999718070030212,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 278,
+            "y": 270,
+            "expectedDepthMetres": 0.729927122592926,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7299257516860962,
+            "depthErrorMetres": -0.0000013709068298339844,
+            "normalDot": 0.999686598777771,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 326,
+            "y": 272,
+            "expectedDepthMetres": 0.7297526001930237,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.729750394821167,
+            "depthErrorMetres": -0.000002205371856689453,
+            "normalDot": 0.9999898672103882,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.0766962394118309
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 322,
+            "y": 272,
+            "expectedDepthMetres": 0.7260897755622864,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7260869741439819,
+            "depthErrorMetres": -0.0000028014183044433595,
+            "normalDot": 0.9999731779098511,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.0766962394118309
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 286,
+            "y": 273,
+            "expectedDepthMetres": 0.7232782244682312,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7232793569564819,
+            "depthErrorMetres": 0.0000011324882507324219,
+            "normalDot": 0.9998283386230469,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264671325683594,
+                "z": -0.6872012615203857
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 278,
+            "y": 276,
+            "expectedDepthMetres": 0.7274341583251953,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7274349331855774,
+            "depthErrorMetres": 7.748603820800781e-7,
+            "normalDot": 0.9999591708183289,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264671325683594,
+                "z": -0.6872012615203857
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 317,
+            "y": 260,
+            "expectedDepthMetres": 0.7239232063293457,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7239218354225159,
+            "depthErrorMetres": -0.0000013709068298339844,
+            "normalDot": 0.9999927878379822,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.0766962468624115
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "near-edge",
+            "result": "OCCLUDED_BY_OTHER_SCENE_GEOMETRY",
+            "x": 309,
+            "y": 255,
+            "expectedDepthMetres": 0.7177561521530151,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7061005234718323,
+            "depthErrorMetres": -0.011655628681182862,
+            "normalDot": 0.9999894499778748,
+            "expectedNormal": {
+                "x": 0.7050070762634277,
+                "y": -0.7071238160133362,
+                "z": 0.054231155663728717
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 315,
+            "y": 272,
+            "expectedDepthMetres": 0.7214826345443726,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7214875817298889,
+            "depthErrorMetres": 0.000004947185516357422,
+            "normalDot": 0.9999951124191284,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984602928161621,
+                "z": 0.05547168478369713
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "near-edge",
+            "result": "OCCLUDED_BY_OTHER_SCENE_GEOMETRY",
+            "x": 307,
+            "y": 267,
+            "expectedDepthMetres": 0.7145549058914185,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7022290229797363,
+            "depthErrorMetres": -0.012325882911682129,
+            "normalDot": 0.999761164188385,
+            "expectedNormal": {
+                "x": 0.7035564184188843,
+                "y": 0.7044934630393982,
+                "z": 0.09325934201478958
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 335,
+            "y": 285,
+            "expectedDepthMetres": 0.7439348697662354,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7439431548118591,
+            "depthErrorMetres": 0.000008285045623779297,
+            "normalDot": 0.9999799728393555,
+            "expectedNormal": {
+                "x": 0.43245363235473635,
+                "y": 0.6912170648574829,
+                "z": 0.5789669752120972
+            }
+        },
+        {
+            "id": "A-Rook",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 335,
+            "y": 282,
+            "expectedDepthMetres": 0.7386791706085205,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7386842966079712,
+            "depthErrorMetres": 0.000005125999450683594,
+            "normalDot": 0.9999997615814209,
+            "expectedNormal": {
+                "x": 0.43246012926101687,
+                "y": 0.6912057995796204,
+                "z": 0.5789756774902344
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 278,
+            "y": 214,
+            "expectedDepthMetres": 0.6634547710418701,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6634545922279358,
+            "depthErrorMetres": -1.7881393432617188e-7,
+            "normalDot": 0.999934196472168,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 270,
+            "y": 219,
+            "expectedDepthMetres": 0.6666808128356934,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6666793823242188,
+            "depthErrorMetres": -0.000001430511474609375,
+            "normalDot": 0.9999561905860901,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 318,
+            "y": 221,
+            "expectedDepthMetres": 0.6665588617324829,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6665564775466919,
+            "depthErrorMetres": -0.000002384185791015625,
+            "normalDot": 0.9999815821647644,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669641077518463
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 314,
+            "y": 221,
+            "expectedDepthMetres": 0.6632000207901001,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6631975173950195,
+            "depthErrorMetres": -0.0000025033950805664064,
+            "normalDot": 0.9999781847000122,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669641077518463
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 277,
+            "y": 222,
+            "expectedDepthMetres": 0.6613808870315552,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6613838076591492,
+            "depthErrorMetres": 0.0000029206275939941408,
+            "normalDot": 0.9999496936798096,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.726426899433136,
+                "z": -0.6872438192367554
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 269,
+            "y": 225,
+            "expectedDepthMetres": 0.6650882959365845,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6650902628898621,
+            "depthErrorMetres": 0.0000019669532775878908,
+            "normalDot": 0.9999114871025086,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.726426899433136,
+                "z": -0.6872438192367554
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 310,
+            "y": 208,
+            "expectedDepthMetres": 0.6633898019790649,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6633635759353638,
+            "depthErrorMetres": -0.000026226043701171875,
+            "normalDot": 0.9999964237213135,
+            "expectedNormal": {
+                "x": 0.7050522565841675,
+                "y": -0.7070783972740173,
+                "z": 0.05423460528254509
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 301,
+            "y": 202,
+            "expectedDepthMetres": 0.6570401787757874,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6570460200309753,
+            "depthErrorMetres": 0.000005841255187988281,
+            "normalDot": 0.9999958276748657,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 308,
+            "y": 220,
+            "expectedDepthMetres": 0.6594448685646057,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6594458222389221,
+            "depthErrorMetres": 9.5367431640625e-7,
+            "normalDot": 0.9999771118164063,
+            "expectedNormal": {
+                "x": 0.7035215497016907,
+                "y": 0.7045285105705261,
+                "z": 0.09325756877660752
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 299,
+            "y": 215,
+            "expectedDepthMetres": 0.6530427932739258,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6530438661575317,
+            "depthErrorMetres": 0.0000010728836059570313,
+            "normalDot": 0.9999037981033325,
+            "expectedNormal": {
+                "x": 0.7035215497016907,
+                "y": 0.7045285105705261,
+                "z": 0.09325756877660752
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 328,
+            "y": 235,
+            "expectedDepthMetres": 0.6798878908157349,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6798924207687378,
+            "depthErrorMetres": 0.0000045299530029296879,
+            "normalDot": 0.9999688267707825,
+            "expectedNormal": {
+                "x": 0.4324486255645752,
+                "y": 0.6912235021591187,
+                "z": 0.5789631009101868
+            }
+        },
+        {
+            "id": "A-Silver--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 328,
+            "y": 232,
+            "expectedDepthMetres": 0.6756503582000732,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6756513714790344,
+            "depthErrorMetres": 0.0000010132789611816407,
+            "normalDot": 0.999998927116394,
+            "expectedNormal": {
+                "x": 0.4324486255645752,
+                "y": 0.6912235021591187,
+                "z": 0.5789631009101868
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 518,
+            "y": 110,
+            "expectedDepthMetres": 0.5649301409721375,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.564929187297821,
+            "depthErrorMetres": -9.5367431640625e-7,
+            "normalDot": 0.999951183795929,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 507,
+            "y": 116,
+            "expectedDepthMetres": 0.5684196949005127,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5684182643890381,
+            "depthErrorMetres": -0.000001430511474609375,
+            "normalDot": 0.9998729825019836,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -1.0
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 564,
+            "y": 118,
+            "expectedDepthMetres": 0.5684901475906372,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5684896111488342,
+            "depthErrorMetres": -5.364418029785156e-7,
+            "normalDot": 0.9999906420707703,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669670134782791
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 561,
+            "y": 118,
+            "expectedDepthMetres": 0.565237820148468,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.565237820148468,
+            "depthErrorMetres": 0.0,
+            "normalDot": 0.9999885559082031,
+            "expectedNormal": {
+                "x": 0.9970545172691345,
+                "y": 0.0,
+                "z": 0.07669670134782791
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 518,
+            "y": 119,
+            "expectedDepthMetres": 0.5628781914710999,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5628805160522461,
+            "depthErrorMetres": 0.0000023245811462402345,
+            "normalDot": 0.9999445080757141,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264593839645386,
+                "z": -0.6872093081474304
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 506,
+            "y": 123,
+            "expectedDepthMetres": 0.5667757987976074,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5667764544487,
+            "depthErrorMetres": 6.556510925292969e-7,
+            "normalDot": 0.9999960064888,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7264268398284912,
+                "z": -0.6872437000274658
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 555,
+            "y": 116,
+            "expectedDepthMetres": 0.5608565807342529,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5608582496643066,
+            "depthErrorMetres": 0.0000016689300537109376,
+            "normalDot": 0.9999902844429016,
+            "expectedNormal": {
+                "x": 0.7035216689109802,
+                "y": 0.7045284509658814,
+                "z": 0.09325777739286423
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 548,
+            "y": 109,
+            "expectedDepthMetres": 0.5548401474952698,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5548416972160339,
+            "depthErrorMetres": 0.0000015497207641601563,
+            "normalDot": 0.9999657869338989,
+            "expectedNormal": {
+                "x": 0.7035216689109802,
+                "y": 0.7045284509658814,
+                "z": 0.09325777739286423
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 570,
+            "y": 137,
+            "expectedDepthMetres": 0.5812193155288696,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5812267065048218,
+            "depthErrorMetres": 0.0000073909759521484379,
+            "normalDot": 0.9999967217445374,
+            "expectedNormal": {
+                "x": 0.4324483573436737,
+                "y": 0.691223680973053,
+                "z": 0.578963041305542
+            }
+        },
+        {
+            "id": "A-Silver-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 572,
+            "y": 133,
+            "expectedDepthMetres": 0.5776864290237427,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.5776928663253784,
+            "depthErrorMetres": 0.0000064373016357421879,
+            "normalDot": 0.9999998211860657,
+            "expectedNormal": {
+                "x": 0.4324483573436737,
+                "y": 0.691223680973053,
+                "z": 0.578963041305542
+            }
+        },
+        {
+            "id": "B-Bishop",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 560,
+            "y": 398,
+            "expectedDepthMetres": 0.9548271894454956,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9548247456550598,
+            "depthErrorMetres": -0.0000024437904357910158,
+            "normalDot": 0.999985933303833,
+            "expectedNormal": {
+                "x": 0.6246945858001709,
+                "y": 0.0,
+                "z": -0.78086918592453
+            }
+        },
+        {
+            "id": "B-Bishop",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 557,
+            "y": 400,
+            "expectedDepthMetres": 0.9536963701248169,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9536938667297363,
+            "depthErrorMetres": -0.0000025033950805664064,
+            "normalDot": 0.9999926686286926,
+            "expectedNormal": {
+                "x": 0.6246945858001709,
+                "y": 0.0,
+                "z": -0.78086918592453
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 555,
+            "y": 393,
+            "expectedDepthMetres": 0.9568271636962891,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9568361043930054,
+            "depthErrorMetres": 0.000008940696716308594,
+            "normalDot": 0.999724805355072,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 550,
+            "y": 393,
+            "expectedDepthMetres": 0.9338123798370361,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9338157773017883,
+            "depthErrorMetres": 0.0000033974647521972658,
+            "normalDot": 0.9999840259552002,
+            "expectedNormal": {
+                "x": 0.7035468816757202,
+                "y": 0.7045032978057861,
+                "z": -0.09325666725635529
+            }
+        },
+        {
+            "id": "B-Bishop",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 545,
+            "y": 405,
+            "expectedDepthMetres": 0.9627528190612793,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9627619385719299,
+            "depthErrorMetres": 0.000009119510650634766,
+            "normalDot": 0.9999754428863525,
+            "expectedNormal": {
+                "x": -0.4324634373188019,
+                "y": 0.6912006139755249,
+                "z": -0.5789794325828552
+            }
+        },
+        {
+            "id": "B-Bishop",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 544,
+            "y": 407,
+            "expectedDepthMetres": 0.9666155576705933,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9666205048561096,
+            "depthErrorMetres": 0.000004947185516357422,
+            "normalDot": 0.9999977350234985,
+            "expectedNormal": {
+                "x": -0.4324634373188019,
+                "y": 0.6912006139755249,
+                "z": -0.5789794325828552
+            }
+        },
+        {
+            "id": "B-Bishop",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 566,
+            "y": 397,
+            "expectedDepthMetres": 0.9562209844589233,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9562188982963562,
+            "depthErrorMetres": -0.000002086162567138672,
+            "normalDot": 0.9999691843986511,
+            "expectedNormal": {
+                "x": 0.8840155601501465,
+                "y": 0.0,
+                "z": -0.46745747327804568
+            }
+        },
+        {
+            "id": "B-Bishop",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 565,
+            "y": 397,
+            "expectedDepthMetres": 0.9557642936706543,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.955763041973114,
+            "depthErrorMetres": -0.0000012516975402832032,
+            "normalDot": 0.9999938607215881,
+            "expectedNormal": {
+                "x": 0.6246945858001709,
+                "y": 0.0,
+                "z": -0.78086918592453
+            }
+        },
+        {
+            "id": "B-Gold--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 679,
+            "y": 394,
+            "expectedDepthMetres": 0.944695234298706,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9446938037872315,
+            "depthErrorMetres": -0.000001430511474609375,
+            "normalDot": 0.9999895095825195,
+            "expectedNormal": {
+                "x": 0.6246950030326843,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Gold--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 676,
+            "y": 395,
+            "expectedDepthMetres": 0.9439682960510254,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9439663290977478,
+            "depthErrorMetres": -0.0000019669532775878908,
+            "normalDot": 0.9999939799308777,
+            "expectedNormal": {
+                "x": 0.6246950030326843,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Gold--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 664,
+            "y": 400,
+            "expectedDepthMetres": 0.9516928195953369,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9516967535018921,
+            "depthErrorMetres": 0.000003933906555175781,
+            "normalDot": 0.9999917149543762,
+            "expectedNormal": {
+                "x": -0.4324493706226349,
+                "y": 0.6912222504615784,
+                "z": -0.5789640545845032
+            }
+        },
+        {
+            "id": "B-Gold--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 662,
+            "y": 402,
+            "expectedDepthMetres": 0.9561488032341003,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9561495780944824,
+            "depthErrorMetres": 7.748603820800781e-7,
+            "normalDot": 0.9999980330467224,
+            "expectedNormal": {
+                "x": -0.4324493706226349,
+                "y": 0.6912222504615784,
+                "z": -0.5789640545845032
+            }
+        },
+        {
+            "id": "B-Gold--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 685,
+            "y": 392,
+            "expectedDepthMetres": 0.9468177556991577,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9468148350715637,
+            "depthErrorMetres": -0.0000029206275939941408,
+            "normalDot": 0.9999955296516419,
+            "expectedNormal": {
+                "x": 0.8840150833129883,
+                "y": 0.0,
+                "z": -0.4674583673477173
+            }
+        },
+        {
+            "id": "B-Gold--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 684,
+            "y": 393,
+            "expectedDepthMetres": 0.9458131790161133,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9458110332489014,
+            "depthErrorMetres": -0.0000021457672119140627,
+            "normalDot": 0.9999987483024597,
+            "expectedNormal": {
+                "x": 0.8840150833129883,
+                "y": 0.0,
+                "z": -0.4674583673477173
+            }
+        },
+        {
+            "id": "B-Gold-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 776,
+            "y": 371,
+            "expectedDepthMetres": 0.8953715562820435,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.895368754863739,
+            "depthErrorMetres": -0.0000028014183044433595,
+            "normalDot": 0.999968409538269,
+            "expectedNormal": {
+                "x": 0.6246950030326843,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Gold-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 774,
+            "y": 372,
+            "expectedDepthMetres": 0.8947691917419434,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8947672843933106,
+            "depthErrorMetres": -0.0000019073486328125,
+            "normalDot": 0.999991238117218,
+            "expectedNormal": {
+                "x": 0.6246950030326843,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Gold-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 765,
+            "y": 388,
+            "expectedDepthMetres": 0.9206146001815796,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9206252694129944,
+            "depthErrorMetres": 0.000010669231414794922,
+            "normalDot": 0.9999951124191284,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984603524208069,
+                "z": -0.05547049269080162
+            }
+        },
+        {
+            "id": "B-Gold-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 768,
+            "y": 391,
+            "expectedDepthMetres": 0.9261406660079956,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9261505007743836,
+            "depthErrorMetres": 0.000009834766387939453,
+            "normalDot": 0.9999939799308777,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984603524208069,
+                "z": -0.05547049269080162
+            }
+        },
+        {
+            "id": "B-Gold-1",
+            "kind": "interior",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 760,
+            "y": 378,
+            "expectedDepthMetres": 0.9030404686927795,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9030435085296631,
+            "depthErrorMetres": 0.000003039836883544922,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Gold-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 758,
+            "y": 379,
+            "expectedDepthMetres": 0.9059085249900818,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9059121608734131,
+            "depthErrorMetres": 0.000003635883331298828,
+            "normalDot": 0.9999943375587463,
+            "expectedNormal": {
+                "x": -0.4324493706226349,
+                "y": 0.6912222504615784,
+                "z": -0.5789640545845032
+            }
+        },
+        {
+            "id": "B-Gold-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 782,
+            "y": 369,
+            "expectedDepthMetres": 0.897017240524292,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8970152735710144,
+            "depthErrorMetres": -0.0000019669532775878908,
+            "normalDot": 0.9999890923500061,
+            "expectedNormal": {
+                "x": 0.8840146064758301,
+                "y": 0.0,
+                "z": -0.46745938062667849
+            }
+        },
+        {
+            "id": "B-Gold-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 782,
+            "y": 370,
+            "expectedDepthMetres": 0.8965891599655151,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8965876698493958,
+            "depthErrorMetres": -0.0000014901161193847657,
+            "normalDot": 0.9999988079071045,
+            "expectedNormal": {
+                "x": 0.8840146064758301,
+                "y": 0.0,
+                "z": -0.46745938062667849
+            }
+        },
+        {
+            "id": "B-King-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 726,
+            "y": 382,
+            "expectedDepthMetres": 0.9181724786758423,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9181696176528931,
+            "depthErrorMetres": -0.00000286102294921875,
+            "normalDot": 0.9999912977218628,
+            "expectedNormal": {
+                "x": 0.6246953010559082,
+                "y": 0.0,
+                "z": -0.780868649482727
+            }
+        },
+        {
+            "id": "B-King-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 724,
+            "y": 384,
+            "expectedDepthMetres": 0.9171613454818726,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.917158305644989,
+            "depthErrorMetres": -0.000003039836883544922,
+            "normalDot": 0.9999892711639404,
+            "expectedNormal": {
+                "x": 0.6246953010559082,
+                "y": 0.0,
+                "z": -0.780868649482727
+            }
+        },
+        {
+            "id": "B-King-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 720,
+            "y": 377,
+            "expectedDepthMetres": 0.9199795722961426,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9199647903442383,
+            "depthErrorMetres": -0.000014781951904296875,
+            "normalDot": 0.9999879598617554,
+            "expectedNormal": {
+                "x": 0.44171202182769778,
+                "y": -0.7071279287338257,
+                "z": -0.5521417856216431
+            }
+        },
+        {
+            "id": "B-King-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 715,
+            "y": 377,
+            "expectedDepthMetres": 0.9190584421157837,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9190416932106018,
+            "depthErrorMetres": -0.000016748905181884766,
+            "normalDot": 0.999990701675415,
+            "expectedNormal": {
+                "x": 0.44171202182769778,
+                "y": -0.7071279287338257,
+                "z": -0.5521417856216431
+            }
+        },
+        {
+            "id": "B-King-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 715,
+            "y": 401,
+            "expectedDepthMetres": 0.9464063048362732,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.946418285369873,
+            "depthErrorMetres": 0.000011980533599853516,
+            "normalDot": 0.9999907612800598,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984602928161621,
+                "z": -0.05547112971544266
+            }
+        },
+        {
+            "id": "B-King-0",
+            "kind": "interior",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 709,
+            "y": 390,
+            "expectedDepthMetres": 0.9261085391044617,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9261125326156616,
+            "depthErrorMetres": 0.000003993511199951172,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-King-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 707,
+            "y": 392,
+            "expectedDepthMetres": 0.9301607608795166,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.930166482925415,
+            "depthErrorMetres": 0.0000057220458984375,
+            "normalDot": 0.9999955296516419,
+            "expectedNormal": {
+                "x": -0.4324598014354706,
+                "y": 0.6912065744400024,
+                "z": -0.5789749026298523
+            }
+        },
+        {
+            "id": "B-King-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 733,
+            "y": 381,
+            "expectedDepthMetres": 0.919690728187561,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.919688880443573,
+            "depthErrorMetres": -0.0000018477439880371094,
+            "normalDot": 0.9999803304672241,
+            "expectedNormal": {
+                "x": 0.8840145468711853,
+                "y": 0.0,
+                "z": -0.46745941042900088
+            }
+        },
+        {
+            "id": "B-King-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 732,
+            "y": 381,
+            "expectedDepthMetres": 0.9192019104957581,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9192000031471252,
+            "depthErrorMetres": -0.0000019073486328125,
+            "normalDot": 0.9999970197677612,
+            "expectedNormal": {
+                "x": 0.6246953010559082,
+                "y": 0.0,
+                "z": -0.780868649482727
+            }
+        },
+        {
+            "id": "B-Knight--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 591,
+            "y": 414,
+            "expectedDepthMetres": 0.9951565265655518,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9951542019844055,
+            "depthErrorMetres": -0.0000023245811462402345,
+            "normalDot": 0.9999933838844299,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Knight--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 589,
+            "y": 416,
+            "expectedDepthMetres": 0.9940920472145081,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9940893054008484,
+            "depthErrorMetres": -0.0000027418136596679689,
+            "normalDot": 0.9999890327453613,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Knight--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 578,
+            "y": 420,
+            "expectedDepthMetres": 1.0015571117401124,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 1.0015618801116944,
+            "depthErrorMetres": 0.00000476837158203125,
+            "normalDot": 0.9999921917915344,
+            "expectedNormal": {
+                "x": -0.43246397376060488,
+                "y": 0.6912016272544861,
+                "z": -0.5789777636528015
+            }
+        },
+        {
+            "id": "B-Knight--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 577,
+            "y": 421,
+            "expectedDepthMetres": 1.0042517185211182,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 1.004258394241333,
+            "depthErrorMetres": 0.00000667572021484375,
+            "normalDot": 0.9999943375587463,
+            "expectedNormal": {
+                "x": -0.43246397376060488,
+                "y": 0.6912016272544861,
+                "z": -0.5789777636528015
+            }
+        },
+        {
+            "id": "B-Knight--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 596,
+            "y": 413,
+            "expectedDepthMetres": 0.9965330362319946,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9965299963951111,
+            "depthErrorMetres": -0.000003039836883544922,
+            "normalDot": 0.999968945980072,
+            "expectedNormal": {
+                "x": 0.8840145468711853,
+                "y": 0.0,
+                "z": -0.4674593210220337
+            }
+        },
+        {
+            "id": "B-Knight--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 595,
+            "y": 414,
+            "expectedDepthMetres": 0.995597243309021,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9955945611000061,
+            "depthErrorMetres": -0.000002682209014892578,
+            "normalDot": 0.999997079372406,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Knight-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 885,
+            "y": 345,
+            "expectedDepthMetres": 0.8471984267234802,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8471957445144653,
+            "depthErrorMetres": -0.000002682209014892578,
+            "normalDot": 0.9999990463256836,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Knight-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 883,
+            "y": 347,
+            "expectedDepthMetres": 0.8462310433387756,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8462294340133667,
+            "depthErrorMetres": -0.0000016093254089355469,
+            "normalDot": 0.9999699592590332,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Knight-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 871,
+            "y": 364,
+            "expectedDepthMetres": 0.8732092380523682,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8732262849807739,
+            "depthErrorMetres": 0.00001704692840576172,
+            "normalDot": 0.9999974370002747,
+            "expectedNormal": {
+                "x": -0.7035470008850098,
+                "y": 0.704503059387207,
+                "z": -0.09325791895389557
+            }
+        },
+        {
+            "id": "B-Knight-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 868,
+            "y": 352,
+            "expectedDepthMetres": 0.8538345694541931,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8538366556167603,
+            "depthErrorMetres": 0.000002086162567138672,
+            "normalDot": 0.999986469745636,
+            "expectedNormal": {
+                "x": -0.4324670433998108,
+                "y": 0.6911962628364563,
+                "z": -0.578981876373291
+            }
+        },
+        {
+            "id": "B-Knight-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 865,
+            "y": 354,
+            "expectedDepthMetres": 0.8577224612236023,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.857725977897644,
+            "depthErrorMetres": 0.000003516674041748047,
+            "normalDot": 0.9999980926513672,
+            "expectedNormal": {
+                "x": -0.4324670433998108,
+                "y": 0.6911962628364563,
+                "z": -0.578981876373291
+            }
+        },
+        {
+            "id": "B-Knight-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 891,
+            "y": 344,
+            "expectedDepthMetres": 0.848548173904419,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8485465049743652,
+            "depthErrorMetres": -0.0000016689300537109376,
+            "normalDot": 0.9999852180480957,
+            "expectedNormal": {
+                "x": 0.884016752243042,
+                "y": 0.0,
+                "z": -0.46745508909225466
+            }
+        },
+        {
+            "id": "B-Knight-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 890,
+            "y": 344,
+            "expectedDepthMetres": 0.8480818271636963,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8480802178382874,
+            "depthErrorMetres": -0.0000016093254089355469,
+            "normalDot": 0.999998152256012,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Lance--4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 550,
+            "y": 424,
+            "expectedDepthMetres": 1.0195919275283814,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 1.0195896625518799,
+            "depthErrorMetres": -0.0000022649765014648439,
+            "normalDot": 0.9999953508377075,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Lance--4",
+            "kind": "near-edge",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 548,
+            "y": 426,
+            "expectedDepthMetres": 1.018568754196167,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 1.0185710191726685,
+            "depthErrorMetres": 0.0000022649765014648439,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Lance--4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 538,
+            "y": 429,
+            "expectedDepthMetres": 1.0252562761306763,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 1.0252656936645508,
+            "depthErrorMetres": 0.000009417533874511719,
+            "normalDot": 0.9999927282333374,
+            "expectedNormal": {
+                "x": -0.43246397376060488,
+                "y": 0.6912016272544861,
+                "z": -0.5789777636528015
+            }
+        },
+        {
+            "id": "B-Lance--4",
+            "kind": "near-edge",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 537,
+            "y": 431,
+            "expectedDepthMetres": 1.0295381546020508,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 1.0295486450195313,
+            "depthErrorMetres": 0.00001049041748046875,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Lance--4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 555,
+            "y": 423,
+            "expectedDepthMetres": 1.0209290981292725,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 1.0209259986877442,
+            "depthErrorMetres": -0.0000030994415283203127,
+            "normalDot": 0.9999802708625794,
+            "expectedNormal": {
+                "x": 0.884016752243042,
+                "y": 0.0,
+                "z": -0.46745508909225466
+            }
+        },
+        {
+            "id": "B-Lance--4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 554,
+            "y": 423,
+            "expectedDepthMetres": 1.0204702615737916,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 1.0204672813415528,
+            "depthErrorMetres": -0.0000029802322387695314,
+            "normalDot": 0.9999967217445374,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Lance-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 945,
+            "y": 331,
+            "expectedDepthMetres": 0.8226409554481506,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.822638988494873,
+            "depthErrorMetres": -0.0000019669532775878908,
+            "normalDot": 0.9999570846557617,
+            "expectedNormal": {
+                "x": 0.6246945261955261,
+                "y": 0.0,
+                "z": -0.7808692455291748
+            }
+        },
+        {
+            "id": "B-Lance-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 943,
+            "y": 333,
+            "expectedDepthMetres": 0.8216902613639832,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8216879367828369,
+            "depthErrorMetres": -0.0000023245811462402345,
+            "normalDot": 0.9999988079071045,
+            "expectedNormal": {
+                "x": 0.6246945261955261,
+                "y": 0.0,
+                "z": -0.7808692455291748
+            }
+        },
+        {
+            "id": "B-Lance-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 928,
+            "y": 350,
+            "expectedDepthMetres": 0.8461504578590393,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8461547493934631,
+            "depthErrorMetres": 0.000004291534423828125,
+            "normalDot": 0.9999913573265076,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984604716300964,
+                "z": -0.0554690882563591
+            }
+        },
+        {
+            "id": "B-Lance-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 930,
+            "y": 354,
+            "expectedDepthMetres": 0.8532490730285645,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8532646298408508,
+            "depthErrorMetres": 0.000015556812286376953,
+            "normalDot": 0.9999811053276062,
+            "expectedNormal": {
+                "x": -0.703528106212616,
+                "y": 0.7045220732688904,
+                "z": -0.0932568684220314
+            }
+        },
+        {
+            "id": "B-Lance-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 926,
+            "y": 339,
+            "expectedDepthMetres": 0.8299217224121094,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8299233913421631,
+            "depthErrorMetres": 0.0000016689300537109376,
+            "normalDot": 0.9999910593032837,
+            "expectedNormal": {
+                "x": -0.43246397376060488,
+                "y": 0.6912016272544861,
+                "z": -0.5789777636528015
+            }
+        },
+        {
+            "id": "B-Lance-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 923,
+            "y": 341,
+            "expectedDepthMetres": 0.8334610462188721,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8334622979164124,
+            "depthErrorMetres": 0.0000012516975402832032,
+            "normalDot": 0.9999992847442627,
+            "expectedNormal": {
+                "x": -0.43246397376060488,
+                "y": 0.6912016272544861,
+                "z": -0.5789777636528015
+            }
+        },
+        {
+            "id": "B-Lance-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 951,
+            "y": 330,
+            "expectedDepthMetres": 0.8242590427398682,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8242573738098145,
+            "depthErrorMetres": -0.0000016689300537109376,
+            "normalDot": 0.9999911189079285,
+            "expectedNormal": {
+                "x": 0.884016752243042,
+                "y": 0.0,
+                "z": -0.46745508909225466
+            }
+        },
+        {
+            "id": "B-Lance-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 950,
+            "y": 330,
+            "expectedDepthMetres": 0.8236300349235535,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.823627233505249,
+            "depthErrorMetres": -0.0000028014183044433595,
+            "normalDot": 0.9999944567680359,
+            "expectedNormal": {
+                "x": 0.884016752243042,
+                "y": 0.0,
+                "z": -0.46745508909225466
+            }
+        },
+        {
+            "id": "B-Pawn--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 619,
+            "y": 357,
+            "expectedDepthMetres": 0.8686139583587647,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8686118721961975,
+            "depthErrorMetres": -0.000002086162567138672,
+            "normalDot": 0.999997615814209,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 617,
+            "y": 358,
+            "expectedDepthMetres": 0.8680368065834045,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8680351376533508,
+            "depthErrorMetres": -0.0000016689300537109376,
+            "normalDot": 0.9999761581420898,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 604,
+            "y": 364,
+            "expectedDepthMetres": 0.8761909008026123,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8761966824531555,
+            "depthErrorMetres": 0.000005781650543212891,
+            "normalDot": 0.9999862313270569,
+            "expectedNormal": {
+                "x": -0.432465136051178,
+                "y": 0.6911997199058533,
+                "z": -0.5789791345596314
+            }
+        },
+        {
+            "id": "B-Pawn--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 603,
+            "y": 365,
+            "expectedDepthMetres": 0.8783267140388489,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8783311247825623,
+            "depthErrorMetres": 0.000004410743713378906,
+            "normalDot": 0.9999905824661255,
+            "expectedNormal": {
+                "x": -0.432465136051178,
+                "y": 0.6911997199058533,
+                "z": -0.5789791345596314
+            }
+        },
+        {
+            "id": "B-Pawn--1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 625,
+            "y": 355,
+            "expectedDepthMetres": 0.8703330755233765,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8703306317329407,
+            "depthErrorMetres": -0.0000024437904357910158,
+            "normalDot": 0.9999747276306152,
+            "expectedNormal": {
+                "x": 0.8840151429176331,
+                "y": 0.0,
+                "z": -0.46745824813842776
+            }
+        },
+        {
+            "id": "B-Pawn--1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 624,
+            "y": 356,
+            "expectedDepthMetres": 0.8694890737533569,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8694862723350525,
+            "depthErrorMetres": -0.0000028014183044433595,
+            "normalDot": 0.9999995827674866,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 572,
+            "y": 369,
+            "expectedDepthMetres": 0.8934845924377441,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.893481969833374,
+            "depthErrorMetres": -0.0000026226043701171877,
+            "normalDot": 0.99997478723526,
+            "expectedNormal": {
+                "x": 0.62469482421875,
+                "y": 0.0,
+                "z": -0.7808690667152405
+            }
+        },
+        {
+            "id": "B-Pawn--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 569,
+            "y": 371,
+            "expectedDepthMetres": 0.892410397529602,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8924087882041931,
+            "depthErrorMetres": -0.0000016093254089355469,
+            "normalDot": 0.9999792575836182,
+            "expectedNormal": {
+                "x": 0.62469482421875,
+                "y": 0.0,
+                "z": -0.7808690667152405
+            }
+        },
+        {
+            "id": "B-Pawn--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 557,
+            "y": 376,
+            "expectedDepthMetres": 0.9011644124984741,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9011679887771606,
+            "depthErrorMetres": 0.0000035762786865234377,
+            "normalDot": 0.9999936819076538,
+            "expectedNormal": {
+                "x": -0.4324634373188019,
+                "y": 0.6912025213241577,
+                "z": -0.5789770483970642
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 556,
+            "y": 378,
+            "expectedDepthMetres": 0.923728346824646,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9237363934516907,
+            "depthErrorMetres": 0.000008046627044677734,
+            "normalDot": 0.9996969699859619,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 578,
+            "y": 368,
+            "expectedDepthMetres": 0.8950260877609253,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8950240015983582,
+            "depthErrorMetres": -0.000002086162567138672,
+            "normalDot": 0.9999999403953552,
+            "expectedNormal": {
+                "x": 0.8840151429176331,
+                "y": 0.0,
+                "z": -0.46745824813842776
+            }
+        },
+        {
+            "id": "B-Pawn--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 577,
+            "y": 368,
+            "expectedDepthMetres": 0.8945026397705078,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8945004940032959,
+            "depthErrorMetres": -0.0000021457672119140627,
+            "normalDot": 0.9999978542327881,
+            "expectedNormal": {
+                "x": 0.8840151429176331,
+                "y": 0.0,
+                "z": -0.46745824813842776
+            }
+        },
+        {
+            "id": "B-Pawn--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 527,
+            "y": 381,
+            "expectedDepthMetres": 0.9180422425270081,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9180400967597961,
+            "depthErrorMetres": -0.0000021457672119140627,
+            "normalDot": 0.9999878406524658,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 525,
+            "y": 383,
+            "expectedDepthMetres": 0.9170534014701843,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9170507192611694,
+            "depthErrorMetres": -0.000002682209014892578,
+            "normalDot": 0.9999974370002747,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 513,
+            "y": 387,
+            "expectedDepthMetres": 0.9251177310943604,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9251244068145752,
+            "depthErrorMetres": 0.00000667572021484375,
+            "normalDot": 0.9999973773956299,
+            "expectedNormal": {
+                "x": -0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 512,
+            "y": 389,
+            "expectedDepthMetres": 0.9477741718292236,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9477798342704773,
+            "depthErrorMetres": 0.000005662441253662109,
+            "normalDot": 0.9996373653411865,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn--3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 533,
+            "y": 380,
+            "expectedDepthMetres": 0.9195601940155029,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9195569753646851,
+            "depthErrorMetres": -0.0000032186508178710939,
+            "normalDot": 0.9999991059303284,
+            "expectedNormal": {
+                "x": 0.8840151429176331,
+                "y": 0.0,
+                "z": -0.46745824813842776
+            }
+        },
+        {
+            "id": "B-Pawn--3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 532,
+            "y": 380,
+            "expectedDepthMetres": 0.9190383553504944,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.919035017490387,
+            "depthErrorMetres": -0.000003337860107421875,
+            "normalDot": 0.9999954104423523,
+            "expectedNormal": {
+                "x": 0.8840151429176331,
+                "y": 0.0,
+                "z": -0.46745824813842776
+            }
+        },
+        {
+            "id": "B-Pawn--4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 250,
+            "y": 237,
+            "expectedDepthMetres": 0.6869596838951111,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6869582533836365,
+            "depthErrorMetres": -0.000001430511474609375,
+            "normalDot": 0.9999947547912598,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn--4",
+            "kind": "near-edge",
+            "result": "OCCLUDED_BY_OTHER_SCENE_GEOMETRY",
+            "x": 246,
+            "y": 239,
+            "expectedDepthMetres": 0.6860501766204834,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6626598238945007,
+            "depthErrorMetres": -0.023390352725982667,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn--4",
+            "kind": "interior",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 235,
+            "y": 246,
+            "expectedDepthMetres": 0.6930354237556458,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6930437088012695,
+            "depthErrorMetres": 0.000008285045623779297,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn--4",
+            "kind": "near-edge",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 235,
+            "y": 249,
+            "expectedDepthMetres": 0.6966149806976318,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.696624755859375,
+            "depthErrorMetres": 0.000009775161743164063,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn--4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 258,
+            "y": 235,
+            "expectedDepthMetres": 0.6885532736778259,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.688550591468811,
+            "depthErrorMetres": -0.000002682209014892578,
+            "normalDot": 0.9999619722366333,
+            "expectedNormal": {
+                "x": 0.8840157389640808,
+                "y": 0.0,
+                "z": -0.467457115650177
+            }
+        },
+        {
+            "id": "B-Pawn--4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 257,
+            "y": 236,
+            "expectedDepthMetres": 0.687941312789917,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6879391670227051,
+            "depthErrorMetres": -0.0000021457672119140627,
+            "normalDot": 0.9999935626983643,
+            "expectedNormal": {
+                "x": 0.8840157389640808,
+                "y": 0.0,
+                "z": -0.467457115650177
+            }
+        },
+        {
+            "id": "B-Pawn-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 636,
+            "y": 379,
+            "expectedDepthMetres": 0.7853366136550903,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7853344082832336,
+            "depthErrorMetres": -0.000002205371856689453,
+            "normalDot": 0.9999938011169434,
+            "expectedNormal": {
+                "x": 0.6246950030326843,
+                "y": 0.0,
+                "z": -0.7808688282966614
+            }
+        },
+        {
+            "id": "B-Pawn-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 634,
+            "y": 381,
+            "expectedDepthMetres": 0.7844781875610352,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7844771146774292,
+            "depthErrorMetres": -0.0000010728836059570313,
+            "normalDot": 0.9999926686286926,
+            "expectedNormal": {
+                "x": 0.6246950030326843,
+                "y": 0.0,
+                "z": -0.7808688282966614
+            }
+        },
+        {
+            "id": "B-Pawn-0",
+            "kind": "interior",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 620,
+            "y": 387,
+            "expectedDepthMetres": 0.7923885583877564,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7923921346664429,
+            "depthErrorMetres": 0.0000035762786865234377,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 618,
+            "y": 389,
+            "expectedDepthMetres": 0.7962714433670044,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7962724566459656,
+            "depthErrorMetres": 0.0000010132789611816407,
+            "normalDot": 0.9999980926513672,
+            "expectedNormal": {
+                "x": -0.43246006965637209,
+                "y": 0.6912045478820801,
+                "z": -0.5789771676063538
+            }
+        },
+        {
+            "id": "B-Pawn-0",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 643,
+            "y": 377,
+            "expectedDepthMetres": 0.7869837284088135,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7869813442230225,
+            "depthErrorMetres": -0.000002384185791015625,
+            "normalDot": 0.9999752640724182,
+            "expectedNormal": {
+                "x": 0.8840153217315674,
+                "y": 0.0,
+                "z": -0.46745797991752627
+            }
+        },
+        {
+            "id": "B-Pawn-0",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 642,
+            "y": 378,
+            "expectedDepthMetres": 0.7862094640731812,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7862079739570618,
+            "depthErrorMetres": -0.0000014901161193847657,
+            "normalDot": 0.9999945759773254,
+            "expectedNormal": {
+                "x": 0.6246950030326843,
+                "y": 0.0,
+                "z": -0.7808688282966614
+            }
+        },
+        {
+            "id": "B-Pawn-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 722,
+            "y": 329,
+            "expectedDepthMetres": 0.8195798397064209,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8195781707763672,
+            "depthErrorMetres": -0.0000016689300537109376,
+            "normalDot": 0.9999927282333374,
+            "expectedNormal": {
+                "x": 0.6246949434280396,
+                "y": 0.0,
+                "z": -0.7808689475059509
+            }
+        },
+        {
+            "id": "B-Pawn-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 720,
+            "y": 331,
+            "expectedDepthMetres": 0.818656325340271,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.818654477596283,
+            "depthErrorMetres": -0.0000018477439880371094,
+            "normalDot": 0.9999927282333374,
+            "expectedNormal": {
+                "x": 0.6246949434280396,
+                "y": 0.0,
+                "z": -0.7808689475059509
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 712,
+            "y": 349,
+            "expectedDepthMetres": 0.8658209443092346,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8658299446105957,
+            "depthErrorMetres": 0.000009000301361083984,
+            "normalDot": 0.9999802112579346,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 715,
+            "y": 352,
+            "expectedDepthMetres": 0.8714728951454163,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8714812994003296,
+            "depthErrorMetres": 0.000008404254913330078,
+            "normalDot": 0.9999980330467224,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn-1",
+            "kind": "interior",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 706,
+            "y": 337,
+            "expectedDepthMetres": 0.8261330127716065,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.826137125492096,
+            "depthErrorMetres": 0.000004112720489501953,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 704,
+            "y": 339,
+            "expectedDepthMetres": 0.8295847773551941,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8295910954475403,
+            "depthErrorMetres": 0.000006318092346191406,
+            "normalDot": 0.9999955296516419,
+            "expectedNormal": {
+                "x": -0.432466059923172,
+                "y": 0.6911982297897339,
+                "z": -0.5789802074432373
+            }
+        },
+        {
+            "id": "B-Pawn-1",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 729,
+            "y": 328,
+            "expectedDepthMetres": 0.8212420344352722,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8212394714355469,
+            "depthErrorMetres": -0.000002562999725341797,
+            "normalDot": 0.9999945163726807,
+            "expectedNormal": {
+                "x": 0.8840151429176331,
+                "y": 0.0,
+                "z": -0.46745824813842776
+            }
+        },
+        {
+            "id": "B-Pawn-1",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 728,
+            "y": 329,
+            "expectedDepthMetres": 0.8203203678131104,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8203182816505432,
+            "depthErrorMetres": -0.000002086162567138672,
+            "normalDot": 0.9999955892562866,
+            "expectedNormal": {
+                "x": 0.8840151429176331,
+                "y": 0.0,
+                "z": -0.46745824813842776
+            }
+        },
+        {
+            "id": "B-Pawn-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 779,
+            "y": 314,
+            "expectedDepthMetres": 0.7950252890586853,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7950237989425659,
+            "depthErrorMetres": -0.0000014901161193847657,
+            "normalDot": 0.9999514222145081,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 776,
+            "y": 316,
+            "expectedDepthMetres": 0.7940237522125244,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7940216660499573,
+            "depthErrorMetres": -0.000002086162567138672,
+            "normalDot": 0.9999812841415405,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 766,
+            "y": 335,
+            "expectedDepthMetres": 0.8403860330581665,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.84039705991745,
+            "depthErrorMetres": 0.000011026859283447266,
+            "normalDot": 0.9997854828834534,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 770,
+            "y": 338,
+            "expectedDepthMetres": 0.8237813115119934,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.823792576789856,
+            "depthErrorMetres": 0.000011265277862548828,
+            "normalDot": 0.9999949932098389,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984604120254517,
+                "z": -0.055469125509262088
+            }
+        },
+        {
+            "id": "B-Pawn-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 761,
+            "y": 322,
+            "expectedDepthMetres": 0.8016207218170166,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8016259074211121,
+            "depthErrorMetres": 0.000005185604095458984,
+            "normalDot": 0.999986469745636,
+            "expectedNormal": {
+                "x": -0.43246498703956606,
+                "y": 0.6911998391151428,
+                "z": -0.5789791345596314
+            }
+        },
+        {
+            "id": "B-Pawn-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 759,
+            "y": 324,
+            "expectedDepthMetres": 0.8047291040420532,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8047330975532532,
+            "depthErrorMetres": 0.000003993511199951172,
+            "normalDot": 0.9999989867210388,
+            "expectedNormal": {
+                "x": -0.43246498703956606,
+                "y": 0.6911998391151428,
+                "z": -0.5789791345596314
+            }
+        },
+        {
+            "id": "B-Pawn-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 785,
+            "y": 313,
+            "expectedDepthMetres": 0.7963560819625855,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7963540554046631,
+            "depthErrorMetres": -0.0000020265579223632814,
+            "normalDot": 0.9999803304672241,
+            "expectedNormal": {
+                "x": 0.884016215801239,
+                "y": 0.0,
+                "z": -0.4674561023712158
+            }
+        },
+        {
+            "id": "B-Pawn-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 784,
+            "y": 314,
+            "expectedDepthMetres": 0.7954952716827393,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7954938411712647,
+            "depthErrorMetres": -0.000001430511474609375,
+            "normalDot": 0.9999958872795105,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 839,
+            "y": 299,
+            "expectedDepthMetres": 0.7700746059417725,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7700726985931397,
+            "depthErrorMetres": -0.0000019073486328125,
+            "normalDot": 0.9999959468841553,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 836,
+            "y": 300,
+            "expectedDepthMetres": 0.7694437503814697,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7694421410560608,
+            "depthErrorMetres": -0.0000016093254089355469,
+            "normalDot": 0.9999917149543762,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 824,
+            "y": 320,
+            "expectedDepthMetres": 0.7952044010162354,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7952321171760559,
+            "depthErrorMetres": 0.00002771615982055664,
+            "normalDot": 0.9999958872795105,
+            "expectedNormal": {
+                "x": -0.7035461664199829,
+                "y": 0.7045038342475891,
+                "z": -0.09325787425041199
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 827,
+            "y": 324,
+            "expectedDepthMetres": 0.8008742928504944,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8008948564529419,
+            "depthErrorMetres": 0.000020563602447509766,
+            "normalDot": 0.9999863505363464,
+            "expectedNormal": {
+                "x": -0.7035297155380249,
+                "y": 0.7045204639434815,
+                "z": -0.09325696527957916
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 820,
+            "y": 307,
+            "expectedDepthMetres": 0.7772731781005859,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7772768139839172,
+            "depthErrorMetres": 0.000003635883331298828,
+            "normalDot": 0.9999789595603943,
+            "expectedNormal": {
+                "x": -0.43246498703956606,
+                "y": 0.6911998391151428,
+                "z": -0.5789791345596314
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 817,
+            "y": 309,
+            "expectedDepthMetres": 0.7808584570884705,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7808624505996704,
+            "depthErrorMetres": 0.000003993511199951172,
+            "normalDot": 0.9999955892562866,
+            "expectedNormal": {
+                "x": -0.43246498703956606,
+                "y": 0.6911998391151428,
+                "z": -0.5789791345596314
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 845,
+            "y": 297,
+            "expectedDepthMetres": 0.7716975212097168,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.771696150302887,
+            "depthErrorMetres": -0.0000013709068298339844,
+            "normalDot": 0.9999752044677734,
+            "expectedNormal": {
+                "x": 0.8840173482894898,
+                "y": 0.0,
+                "z": -0.4674540162086487
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 844,
+            "y": 298,
+            "expectedDepthMetres": 0.770890474319458,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7708891034126282,
+            "depthErrorMetres": -0.0000013709068298339844,
+            "normalDot": 0.9999855160713196,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Pawn-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 903,
+            "y": 282,
+            "expectedDepthMetres": 0.745467483997345,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7454655766487122,
+            "depthErrorMetres": -0.0000019073486328125,
+            "normalDot": 0.9999960064888,
+            "expectedNormal": {
+                "x": 0.6246945261955261,
+                "y": 0.0,
+                "z": -0.7808692455291748
+            }
+        },
+        {
+            "id": "B-Pawn-4",
+            "kind": "near-edge",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 900,
+            "y": 284,
+            "expectedDepthMetres": 0.744533896446228,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.744534969329834,
+            "depthErrorMetres": 0.0000010728836059570313,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Pawn-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 886,
+            "y": 304,
+            "expectedDepthMetres": 0.7694177031517029,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7694295048713684,
+            "depthErrorMetres": 0.000011801719665527344,
+            "normalDot": 0.9999933838844299,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984604716300964,
+                "z": -0.055469121783971789
+            }
+        },
+        {
+            "id": "B-Pawn-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 888,
+            "y": 308,
+            "expectedDepthMetres": 0.7749941945075989,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7750095129013062,
+            "depthErrorMetres": 0.00001531839370727539,
+            "normalDot": 0.9999811053276062,
+            "expectedNormal": {
+                "x": -0.7035297155380249,
+                "y": 0.7045204639434815,
+                "z": -0.09325696527957916
+            }
+        },
+        {
+            "id": "B-Pawn-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 883,
+            "y": 290,
+            "expectedDepthMetres": 0.7522304058074951,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7522318959236145,
+            "depthErrorMetres": 0.0000014901161193847657,
+            "normalDot": 0.9999766945838928,
+            "expectedNormal": {
+                "x": -0.4324619472026825,
+                "y": 0.6912052035331726,
+                "z": -0.5789750218391419
+            }
+        },
+        {
+            "id": "B-Pawn-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 880,
+            "y": 293,
+            "expectedDepthMetres": 0.75600665807724,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7560079097747803,
+            "depthErrorMetres": 0.0000012516975402832032,
+            "normalDot": 1.0,
+            "expectedNormal": {
+                "x": -0.4324619472026825,
+                "y": 0.6912052035331726,
+                "z": -0.5789750218391419
+            }
+        },
+        {
+            "id": "B-Pawn-4",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 909,
+            "y": 280,
+            "expectedDepthMetres": 0.7470373511314392,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7470367550849915,
+            "depthErrorMetres": -5.960464477539063e-7,
+            "normalDot": 0.9999803900718689,
+            "expectedNormal": {
+                "x": 0.8840173482894898,
+                "y": 0.0,
+                "z": -0.4674540162086487
+            }
+        },
+        {
+            "id": "B-Pawn-4",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 909,
+            "y": 281,
+            "expectedDepthMetres": 0.7466303110122681,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7466291189193726,
+            "depthErrorMetres": -0.0000011920928955078126,
+            "normalDot": 0.9999955296516419,
+            "expectedNormal": {
+                "x": 0.8840173482894898,
+                "y": 0.0,
+                "z": -0.4674540162086487
+            }
+        },
+        {
+            "id": "B-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 864,
+            "y": 323,
+            "expectedDepthMetres": 0.8068218231201172,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.806819498538971,
+            "depthErrorMetres": -0.0000023245811462402345,
+            "normalDot": 0.9999857544898987,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808688282966614
+            }
+        },
+        {
+            "id": "B-Rook",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 861,
+            "y": 325,
+            "expectedDepthMetres": 0.8057992458343506,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8057968020439148,
+            "depthErrorMetres": -0.0000024437904357910158,
+            "normalDot": 0.999921441078186,
+            "expectedNormal": {
+                "x": 0.6246950626373291,
+                "y": 0.0,
+                "z": -0.7808688282966614
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 857,
+            "y": 317,
+            "expectedDepthMetres": 0.7886106371879578,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7886210083961487,
+            "depthErrorMetres": 0.000010371208190917969,
+            "normalDot": 0.9999977946281433,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984604120254517,
+                "z": -0.055469125509262088
+            }
+        },
+        {
+            "id": "B-Pawn-3",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 851,
+            "y": 317,
+            "expectedDepthMetres": 0.7888938784599304,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7889041304588318,
+            "depthErrorMetres": 0.000010251998901367188,
+            "normalDot": 0.999985933303833,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984604120254517,
+                "z": -0.055469125509262088
+            }
+        },
+        {
+            "id": "B-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 847,
+            "y": 345,
+            "expectedDepthMetres": 0.8363513946533203,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8363704681396484,
+            "depthErrorMetres": 0.000019073486328125,
+            "normalDot": 0.9999916553497315,
+            "expectedNormal": {
+                "x": -0.7035184502601624,
+                "y": 0.7045316100120544,
+                "z": -0.09325782209634781
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 850,
+            "y": 349,
+            "expectedDepthMetres": 0.8658207654953003,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8658297657966614,
+            "depthErrorMetres": 0.000009000301361083984,
+            "normalDot": 0.999204695224762,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 843,
+            "y": 331,
+            "expectedDepthMetres": 0.8148621320724487,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8148656487464905,
+            "depthErrorMetres": 0.000003516674041748047,
+            "normalDot": 0.9999556541442871,
+            "expectedNormal": {
+                "x": -0.43246012926101687,
+                "y": 0.6912057995796204,
+                "z": -0.5789756774902344
+            }
+        },
+        {
+            "id": "B-Rook",
+            "kind": "near-edge",
+            "result": "FAIL_NORMAL_MISMATCH",
+            "x": 841,
+            "y": 334,
+            "expectedDepthMetres": 0.8184250593185425,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8184283971786499,
+            "depthErrorMetres": 0.000003337860107421875,
+            "normalDot": 0.0,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "B-Rook",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 870,
+            "y": 321,
+            "expectedDepthMetres": 0.8083727359771729,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8083704710006714,
+            "depthErrorMetres": -0.0000022649765014648439,
+            "normalDot": 0.99998939037323,
+            "expectedNormal": {
+                "x": 0.8840135931968689,
+                "y": 0.0,
+                "z": -0.4674611985683441
+            }
+        },
+        {
+            "id": "B-Rook",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 870,
+            "y": 322,
+            "expectedDepthMetres": 0.8079540729522705,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8079509735107422,
+            "depthErrorMetres": -0.0000030994415283203127,
+            "normalDot": 0.9999991059303284,
+            "expectedNormal": {
+                "x": 0.8840135931968689,
+                "y": 0.0,
+                "z": -0.4674611985683441
+            }
+        },
+        {
+            "id": "B-Silver--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 633,
+            "y": 404,
+            "expectedDepthMetres": 0.9694864153862,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9694843292236328,
+            "depthErrorMetres": -0.000002086162567138672,
+            "normalDot": 0.9999945163726807,
+            "expectedNormal": {
+                "x": 0.6246950030326843,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Silver--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 631,
+            "y": 406,
+            "expectedDepthMetres": 0.9684401750564575,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9684375524520874,
+            "depthErrorMetres": -0.0000026226043701171877,
+            "normalDot": 0.9999890327453613,
+            "expectedNormal": {
+                "x": 0.6246950030326843,
+                "y": 0.0,
+                "z": -0.7808687686920166
+            }
+        },
+        {
+            "id": "B-Silver--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 619,
+            "y": 410,
+            "expectedDepthMetres": 0.9766364097595215,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9766456484794617,
+            "depthErrorMetres": 0.000009238719940185547,
+            "normalDot": 0.9999866485595703,
+            "expectedNormal": {
+                "x": -0.4324617087841034,
+                "y": 0.691200315952301,
+                "z": -0.5789809226989746
+            }
+        },
+        {
+            "id": "B-Silver--2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 618,
+            "y": 412,
+            "expectedDepthMetres": 0.9801677465438843,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9801735877990723,
+            "depthErrorMetres": 0.000005841255187988281,
+            "normalDot": 0.9999955296516419,
+            "expectedNormal": {
+                "x": -0.4324483573436737,
+                "y": 0.691223680973053,
+                "z": -0.578963041305542
+            }
+        },
+        {
+            "id": "B-Silver--2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 639,
+            "y": 403,
+            "expectedDepthMetres": 0.9708433151245117,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9708405137062073,
+            "depthErrorMetres": -0.0000028014183044433595,
+            "normalDot": 0.999980628490448,
+            "expectedNormal": {
+                "x": 0.8840150833129883,
+                "y": 0.0,
+                "z": -0.4674583673477173
+            }
+        },
+        {
+            "id": "B-Silver-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 829,
+            "y": 358,
+            "expectedDepthMetres": 0.8709509372711182,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8709479570388794,
+            "depthErrorMetres": -0.0000029802322387695314,
+            "normalDot": 0.9999938011169434,
+            "expectedNormal": {
+                "x": 0.6246945261955261,
+                "y": 0.0,
+                "z": -0.78086918592453
+            }
+        },
+        {
+            "id": "B-Silver-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 827,
+            "y": 360,
+            "expectedDepthMetres": 0.8699688911437988,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8699667453765869,
+            "depthErrorMetres": -0.0000021457672119140627,
+            "normalDot": 0.9999727010726929,
+            "expectedNormal": {
+                "x": 0.6246945261955261,
+                "y": 0.0,
+                "z": -0.78086918592453
+            }
+        },
+        {
+            "id": "B-Silver-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 819,
+            "y": 380,
+            "expectedDepthMetres": 0.9024035930633545,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.9024109244346619,
+            "depthErrorMetres": 0.000007331371307373047,
+            "normalDot": 0.9999955892562866,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984603524208069,
+                "z": -0.05547049269080162
+            }
+        },
+        {
+            "id": "B-Silver-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 812,
+            "y": 365,
+            "expectedDepthMetres": 0.8779069185256958,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8779110908508301,
+            "depthErrorMetres": 0.000004172325134277344,
+            "normalDot": 0.9999985098838806,
+            "expectedNormal": {
+                "x": -0.4324486255645752,
+                "y": 0.6912235021591187,
+                "z": -0.5789631009101868
+            }
+        },
+        {
+            "id": "B-Silver-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 810,
+            "y": 367,
+            "expectedDepthMetres": 0.8812465667724609,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8812500834465027,
+            "depthErrorMetres": 0.000003516674041748047,
+            "normalDot": 0.999996542930603,
+            "expectedNormal": {
+                "x": -0.4324486255645752,
+                "y": 0.6912235021591187,
+                "z": -0.5789631009101868
+            }
+        },
+        {
+            "id": "B-Silver-2",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 836,
+            "y": 357,
+            "expectedDepthMetres": 0.872719943523407,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8727177977561951,
+            "depthErrorMetres": -0.0000021457672119140627,
+            "normalDot": 0.9999944567680359,
+            "expectedNormal": {
+                "x": 0.8840171694755554,
+                "y": 0.0,
+                "z": -0.46745437383651736
+            }
+        },
+        {
+            "id": "B-Silver-2",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 835,
+            "y": 357,
+            "expectedDepthMetres": 0.8721160888671875,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.8721135258674622,
+            "depthErrorMetres": -0.000002562999725341797,
+            "normalDot": 0.9999964237213135,
+            "expectedNormal": {
+                "x": 0.8840171694755554,
+                "y": 0.0,
+                "z": -0.46745437383651736
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 916,
+            "y": 245,
+            "expectedDepthMetres": 0.7328652143478394,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7328667044639587,
+            "depthErrorMetres": 0.0000014901161193847657,
+            "normalDot": 0.9999949336051941,
+            "expectedNormal": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 888,
+            "y": 219,
+            "expectedDepthMetres": 0.6825677156448364,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6825681328773499,
+            "depthErrorMetres": 4.172325134277344e-7,
+            "normalDot": 0.9999397397041321,
+            "expectedNormal": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "interior",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 304,
+            "y": 190,
+            "expectedDepthMetres": 0.6466477513313294,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.6466495990753174,
+            "depthErrorMetres": 0.0000018477439880371094,
+            "normalDot": 0.9998331069946289,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7071120142936707,
+                "z": -0.7071015238761902
+            }
+        },
+        {
+            "id": "Board",
+            "kind": "near-edge",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 185,
+            "y": 243,
+            "expectedDepthMetres": 0.7066890001296997,
+            "formerDepthMetres": 0.0,
+            "actualDepthMetres": 0.7066922187805176,
+            "depthErrorMetres": 0.0000032186508178710939,
+            "normalDot": 0.9998871684074402,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.7071120142936707,
+                "z": -0.7071015238761902
+            }
+        },
+        {
+            "id": "A-Pawn-0",
+            "kind": "former-empty-silhouette",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 581,
+            "y": 356,
+            "expectedDepthMetres": 0.879120945930481,
+            "formerDepthMetres": 0.7485780715942383,
+            "actualDepthMetres": 0.8791323900222778,
+            "depthErrorMetres": 0.000011444091796875,
+            "normalDot": 0.9957194924354553,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn-0",
+            "kind": "former-empty-silhouette",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 573,
+            "y": 360,
+            "expectedDepthMetres": 0.8869112730026245,
+            "formerDepthMetres": 0.7515283226966858,
+            "actualDepthMetres": 0.8869189620018005,
+            "depthErrorMetres": 0.00000768899917602539,
+            "normalDot": 0.9997912049293518,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn-0",
+            "kind": "former-empty-silhouette",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 613,
+            "y": 361,
+            "expectedDepthMetres": 0.8696077466011047,
+            "formerDepthMetres": 0.7511864900588989,
+            "actualDepthMetres": 0.8696197867393494,
+            "depthErrorMetres": 0.000012040138244628906,
+            "normalDot": 0.9999966025352478,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984603524208069,
+                "z": -0.05547076836228371
+            }
+        },
+        {
+            "id": "A-Pawn-0",
+            "kind": "former-empty-silhouette",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 611,
+            "y": 362,
+            "expectedDepthMetres": 0.8714401721954346,
+            "formerDepthMetres": 0.7480274438858032,
+            "actualDepthMetres": 0.8714497685432434,
+            "depthErrorMetres": 0.00000959634780883789,
+            "normalDot": 0.9999966025352478,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984603524208069,
+                "z": -0.05547076836228371
+            }
+        },
+        {
+            "id": "A-Pawn-0",
+            "kind": "former-empty-silhouette",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 581,
+            "y": 363,
+            "expectedDepthMetres": 0.8928443789482117,
+            "formerDepthMetres": 0.7466065287590027,
+            "actualDepthMetres": 0.8928500413894653,
+            "depthErrorMetres": 0.000005662441253662109,
+            "normalDot": 0.9994522333145142,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        },
+        {
+            "id": "A-Pawn-0",
+            "kind": "former-empty-silhouette",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 572,
+            "y": 365,
+            "expectedDepthMetres": 0.8952681422233582,
+            "formerDepthMetres": 0.7504675388336182,
+            "actualDepthMetres": 0.8952599167823792,
+            "depthErrorMetres": -0.000008225440979003906,
+            "normalDot": 0.9999847412109375,
+            "expectedNormal": {
+                "x": 0.4417349100112915,
+                "y": -0.7070924043655396,
+                "z": -0.5521690249443054
+            }
+        },
+        {
+            "id": "A-Pawn-0",
+            "kind": "former-empty-silhouette",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 607,
+            "y": 362,
+            "expectedDepthMetres": 0.8716704845428467,
+            "formerDepthMetres": 0.7448581457138062,
+            "actualDepthMetres": 0.8716802597045898,
+            "depthErrorMetres": 0.000009775161743164063,
+            "normalDot": 0.999993085861206,
+            "expectedNormal": {
+                "x": 0.0,
+                "y": 0.9984603524208069,
+                "z": -0.05547076836228371
+            }
+        },
+        {
+            "id": "A-Pawn-0",
+            "kind": "former-empty-silhouette",
+            "result": "PASS_SAMPLED_DEPTH_AND_NORMAL",
+            "x": 603,
+            "y": 359,
+            "expectedDepthMetres": 0.8796918392181397,
+            "formerDepthMetres": 0.7393307685852051,
+            "actualDepthMetres": 0.8796917200088501,
+            "depthErrorMetres": -1.1920928955078126e-7,
+            "normalDot": 0.9999960064888,
+            "expectedNormal": {
+                "x": -0.6246949434280396,
+                "y": 0.0,
+                "z": -0.7808689475059509
+            }
+        }
+    ]
+}

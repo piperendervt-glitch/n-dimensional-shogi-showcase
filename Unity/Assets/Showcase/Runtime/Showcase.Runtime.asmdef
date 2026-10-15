@@ -1,0 +1,5 @@
+{
+  "name": "Showcase.Runtime",
+  "references": ["NDShogi.Showcase.Core", "Showcase.Geometry", "Showcase.Environment", "Unity.RenderPipelines.HighDefinition.Runtime", "Unity.RenderPipelines.Core.Runtime"],
+  "autoReferenced": true
+}

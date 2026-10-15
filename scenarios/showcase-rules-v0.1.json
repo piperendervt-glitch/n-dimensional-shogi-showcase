@@ -1,0 +1,20 @@
+{
+  "ruleset": "showcase-asymmetric-4d-king-capture/0.1",
+  "dimensions": 4,
+  "axes": ["f", "u", "v", "w"],
+  "boundsInclusive": [-4, 4],
+  "initialPosition": "standard-looking-9x9-40-pieces/v1",
+  "defaultOcclusion": "lattice-line/1",
+  "supportedOcclusions": ["lattice-line/1", "supercover-closed/1"],
+  "pawnMoves": "forward OR +/-1 on exactly one transverse axis, captures included",
+  "rook": "H(1,1)",
+  "bishop": "H(2,2)",
+  "promotion": false,
+  "drops": false,
+  "selfCheckRejection": false,
+  "terminal": "KingCapture",
+  "noLegalMoves": "NoLegalMovesDraw",
+  "A": {"forward": 1, "axes": ["f", "u", "v", "w"], "observation": "full", "policy": "PawnFirst4D/1"},
+  "B": {"forward": -1, "axes": ["f", "u", "v"], "observation": "logical-w-zero/1", "policy": "Tactical3D/1"},
+  "standardShogiCompatible": false
+}

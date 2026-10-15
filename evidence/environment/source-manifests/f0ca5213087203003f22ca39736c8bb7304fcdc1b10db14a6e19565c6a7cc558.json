@@ -1,0 +1,1552 @@
+{
+  "schema": "showcase-source-manifest/1",
+  "sourceHash": "2865d6d2d63364f3f96dbad181883f967611d00bfa03da92a5bea4a466e2ba8f",
+  "gitCommit": null,
+  "reason": "Local commits were not authorized",
+  "excludedGeneratedFiles": [
+    "Unity/Assets/Resources/showcase-build.json",
+    "Unity/Assets/Resources/showcase-build.json.meta"
+  ],
+  "files": [
+    {
+      "path": "src/Showcase.Core/package.json",
+      "sha256": "9e8f0b2b4e688637fb8845895169e702468cd635583a74b557330fbe226c5107",
+      "bytes": 195
+    },
+    {
+      "path": "src/Showcase.Core/package.json.meta",
+      "sha256": "ab525a9c6f704034a79b5b56d5fb41fcde7feeb16099ca2e42680e67a1c21301",
+      "bytes": 163
+    },
+    {
+      "path": "src/Showcase.Core/Runtime/Cpu.cs",
+      "sha256": "162401d23d25dff5c4e5dad8bcc3b41584cae929d48b4689269efb167522b36a",
+      "bytes": 13160
+    },
+    {
+      "path": "src/Showcase.Core/Runtime/Cpu.cs.meta",
+      "sha256": "8ac3c8e115974b15dc9a0064e3f6beadf23d2cdd85c46d8b046288318bbfe304",
+      "bytes": 59
+    },
+    {
+      "path": "src/Showcase.Core/Runtime/Rules.cs",
+      "sha256": "396c0c713966a8244e8c1e9977f94d0d74b29c60ac4da1cff141e26a0b1812cb",
+      "bytes": 15011
+    },
+    {
+      "path": "src/Showcase.Core/Runtime/Rules.cs.meta",
+      "sha256": "a56edb203b095e237125f7e4106616288da43e01286d4f1edc8cdecdf8de4451",
+      "bytes": 59
+    },
+    {
+      "path": "src/Showcase.Core/Runtime/Scenario.cs",
+      "sha256": "9758b9bc6fc9f56aaa130ed04f19937e155e3393bfcbe504e7d16c955f0edccb",
+      "bytes": 19975
+    },
+    {
+      "path": "src/Showcase.Core/Runtime/Scenario.cs.meta",
+      "sha256": "f3b191647e991ee591f18ef4aca8a3594f881309acf35f042bfd6d1c60235584",
+      "bytes": 59
+    },
+    {
+      "path": "src/Showcase.Core/Runtime/Showcase.Core.asmdef",
+      "sha256": "fa3278eb962df5f5fb07bd2fcdcb7c4abaf33a80a73e3f6065bfae4ec97d7b5e",
+      "bytes": 302
+    },
+    {
+      "path": "src/Showcase.Core/Runtime/Showcase.Core.asmdef.meta",
+      "sha256": "4342c229a30f8a4dffb4fd223b5b388e8672cb6c9af038d10644d3f0e9eaf4e3",
+      "bytes": 166
+    },
+    {
+      "path": "src/Showcase.Core/Runtime.meta",
+      "sha256": "e588fc4941eab31e56b4accc8fe70ba47f3c12e7b69ecd11101493931bdb4fdf",
+      "bytes": 172
+    },
+    {
+      "path": "src/Showcase.Core/Showcase.Core.csproj",
+      "sha256": "01ee63fcc03d809d9433a440a71daf9133ac7db9b8ef326aac9aa0e165282664",
+      "bytes": 548
+    },
+    {
+      "path": "src/Showcase.Core/Showcase.Core.csproj.meta",
+      "sha256": "144006a84be0d30ff1c844666e2ba42f1aee151fb56cab6c21ab526753405f85",
+      "bytes": 155
+    },
+    {
+      "path": "src/Showcase.Geometry/package.json",
+      "sha256": "452d0ac93bc23e85249399419725b12ac197c39d865164f71635fad619fc7b59",
+      "bytes": 172
+    },
+    {
+      "path": "src/Showcase.Geometry/package.json.meta",
+      "sha256": "cdb0d2bc3a609018326908689c9df5ae8e0c34ffb11617e25e6957527cdb2919",
+      "bytes": 163
+    },
+    {
+      "path": "src/Showcase.Geometry/README.md.meta",
+      "sha256": "8bd72ed1fc48e037ebba22c52581a2a7627d2b380027d674d9b086a041253efd",
+      "bytes": 158
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs",
+      "sha256": "1dcd57cd9df7073c195d31f41e53eb5bbeddb6cb38ae7a1c267eb2429f0fabb1",
+      "bytes": 7067
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs.meta",
+      "sha256": "e57926f1d72f45983a95e33c4844efd4615059ecf6179cd15cb5ba1a899acc4c",
+      "bytes": 59
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs",
+      "sha256": "e1898e837f886b7b02b0a14984168105866adbb10a7d9b23742c9d9e884381bd",
+      "bytes": 11990
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs.meta",
+      "sha256": "afe7d221e6c1330a884cb2825178c9043478370f9949a8279f79014f59909348",
+      "bytes": 59
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs",
+      "sha256": "9fa23152a55edf706d1a5f9b44f2253abdd091ed88ae7385029f3f1e2160a664",
+      "bytes": 3840
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs.meta",
+      "sha256": "8c69fb36f155d1367179399ab07225287240c030b5a80b92a4ead4b59bdd69e4",
+      "bytes": 59
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/Showcase.Geometry.asmdef",
+      "sha256": "de4a5979e4a73d9210bb2096dff7f71a93442ea87247d8591495193af645483a",
+      "bytes": 294
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/Showcase.Geometry.asmdef.meta",
+      "sha256": "9c3ba05e5b53a4aaac321d1433f70fbf63c8176ce762ce5581ffc1bf5d6391b1",
+      "bytes": 166
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs",
+      "sha256": "ebde7b160c7e435b97845ea00082a99660ee05289c5fea9940e246fc911931c4",
+      "bytes": 2908
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs.meta",
+      "sha256": "04c1be00351db31c40047776002285fe768da92c08d1ef0ac7a424bd723a4dd7",
+      "bytes": 59
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime.meta",
+      "sha256": "07438b784c04c9ac958a8db225bb1ab240cf4d036e94fea331f73dbc97d1620f",
+      "bytes": 172
+    },
+    {
+      "path": "src/Showcase.Geometry/Showcase.Geometry.csproj",
+      "sha256": "638a3410d6ac9437be3140edade500ffc5ac8977113544d5a96b8f7c655ab2c6",
+      "bytes": 667
+    },
+    {
+      "path": "src/Showcase.Geometry/Showcase.Geometry.csproj.meta",
+      "sha256": "59423260075fb9e2253d606fb9dcf39b038b32c3036bf06b9eea29a14b6e2ce5",
+      "bytes": 155
+    },
+    {
+      "path": "tests/Showcase.Core.Tests/Program.cs",
+      "sha256": "7335145e8c2812afe765003b43fb316a59db2b99983a496d0328c62c94c672dc",
+      "bytes": 18041
+    },
+    {
+      "path": "tests/Showcase.Core.Tests/Showcase.Core.Tests.csproj",
+      "sha256": "b3cc2fbf86bd9de03d332c79991af5c05deed7d9cef7a26bc55e3dadf8565ed5",
+      "bytes": 269
+    },
+    {
+      "path": "tests/Showcase.Geometry.Tests/Program.cs",
+      "sha256": "7092742982d02ae5112d5f11086ad147bf31b65bcf0176c68c2194c6a2d0ebfb",
+      "bytes": 19586
+    },
+    {
+      "path": "tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj",
+      "sha256": "0ea7b175044f63dfc4bc4d6ca88b81885aed5b08e0e1397343a172d46efc62b3",
+      "bytes": 307
+    },
+    {
+      "path": "tools/analyze_runtime.py",
+      "sha256": "6754fd1b7b2befa4a0f154a18d84706c87e432fc11446fbf8722628df76c31cc",
+      "bytes": 42292
+    },
+    {
+      "path": "tools/assets/generate_piece_textures.py",
+      "sha256": "791a703a4b2f30b9e9a357bdaab188b49e2d038f78707183a60309c753755b28",
+      "bytes": 217
+    },
+    {
+      "path": "tools/assets/prepare_pbr_assets.py",
+      "sha256": "e68b994645bca5b306e52348b5086b6d10736e91814e75da4e3dc85733262ce9",
+      "bytes": 7055
+    },
+    {
+      "path": "tools/build-windows.ps1",
+      "sha256": "ed7a27bd9e5178b4dcd7647dddecfa3fe7c58b568404925a137c9d7bc32838f1",
+      "bytes": 1077
+    },
+    {
+      "path": "tools/encode_video.py",
+      "sha256": "c278349fb60030abd3896b956871e4bc614f4ebf655702370b5a2fe7f2f3e941",
+      "bytes": 3570
+    },
+    {
+      "path": "tools/export_source_manifest.py",
+      "sha256": "6aaa4d1852124aa30bc75f2c4ef641f1e67a3a66708cf299cba977922e0be13c",
+      "bytes": 2099
+    },
+    {
+      "path": "tools/run-validation.ps1",
+      "sha256": "028651d9ac2b75405afb64443d776974e87237b6b5e53d6185675d08be22b77c",
+      "bytes": 9373
+    },
+    {
+      "path": "tools/Showcase.Console/Program.cs",
+      "sha256": "faf7f3ce081101d8e62c6e2d27cbc2fcf93c360e78365fac8b94a19e880371ab",
+      "bytes": 4678
+    },
+    {
+      "path": "tools/Showcase.Console/Showcase.Console.csproj",
+      "sha256": "b3cc2fbf86bd9de03d332c79991af5c05deed7d9cef7a26bc55e3dadf8565ed5",
+      "bytes": 269
+    },
+    {
+      "path": "scenarios/central-pawn-directed-v1.json",
+      "sha256": "57bfe01b25e8e144a63c66fc9eb02bea364088d6124a4fbcf9308815682079d7",
+      "bytes": 1016
+    },
+    {
+      "path": "scenarios/central-pawn-directed-v2.json",
+      "sha256": "32c01290a8aa1f1c76ac71a2379609c002996131a2d0f5685a8a48c49b51393a",
+      "bytes": 2084
+    },
+    {
+      "path": "scenarios/geometry-v1.json",
+      "sha256": "98b945e595212eeacc90377e7e73b6d1c28934ec20cfbece53d89a425e69fd67",
+      "bytes": 1288
+    },
+    {
+      "path": "scenarios/reference-replay.json",
+      "sha256": "976dfdcfdfffa22f4d38fd3e1ec7e6529bf1ce772c0e7c0a5ce6c27957f26cf8",
+      "bytes": 10971
+    },
+    {
+      "path": "scenarios/showcase-rules-v0.1.json",
+      "sha256": "163d18d3ced35d7430502dc7c9699bbb3ae22f6765ff94750630b52aead45080",
+      "bytes": 819
+    },
+    {
+      "path": "Unity/Assets/Editor/Showcase.Editor.asmdef",
+      "sha256": "000c40b3011b5904c67312a3a0adb556f825b3a70a1f20e863d13ea5e867a3e3",
+      "bytes": 194
+    },
+    {
+      "path": "Unity/Assets/Editor/Showcase.Editor.asmdef.meta",
+      "sha256": "6e9300ae8402d122f5595c98d4e2e80952dbae7e2350bd3cb0f0126e83c3b8aa",
+      "bytes": 166
+    },
+    {
+      "path": "Unity/Assets/Editor/ShowcaseBuild.cs",
+      "sha256": "b3891b09d49481ff180cc98df40c32487d3517eaba0c0d7c1e51b6f2b007cddc",
+      "bytes": 9617
+    },
+    {
+      "path": "Unity/Assets/Editor/ShowcaseBuild.cs.meta",
+      "sha256": "6ceb96432511f585719f5285f37360ffad4fe7ce9ad8e8fc2332484624659e8b",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Editor/ShowcaseTextureImport.cs",
+      "sha256": "3682f50b45c1f1894609288be1f77e2a2d912da5c71fe007d54d01661c5e14bf",
+      "bytes": 1197
+    },
+    {
+      "path": "Unity/Assets/Editor/ShowcaseTextureImport.cs.meta",
+      "sha256": "327330e7978f79e8f7fa3a4218b12f98cee80037af75d0aad13229cd5e09122b",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Editor.meta",
+      "sha256": "846964c931abe594d802d00947c49524cce3d59f9a9079e29bc995c823e5aa2f",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Brushed_antique_brass.mat",
+      "sha256": "147709cfd2061f57dc1553e5d09a90a2ca4dab35e3f5ab84ed3373ed7ac3e4e1",
+      "bytes": 8143
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Brushed_antique_brass.mat.meta",
+      "sha256": "6fbdee8b18018e097d4e73cae6b7c33f308d89f1c8092e6ae505bb18bac268cb",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic.mat",
+      "sha256": "ff3d19993c3d576e40c5a05e3738cd83d26eec0e74f3ca1e3190ac78ff7a1494",
+      "bytes": 8383
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic.mat.meta",
+      "sha256": "874d724d1f65d0492797a927378cbb81b429c99d8ff75eaf0902b90e1c4d5239",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic_BaseColorMap.png",
+      "sha256": "9fb28a8e21108294d353724c5aba6c1654cce6218843fcaac22a7bb8aeb00899",
+      "bytes": 463898
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic_BaseColorMap.png.meta",
+      "sha256": "b1a75a8a48531e6e60257c75a4c0412367112c202d6ebb79396bdd1df05e865a",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic_MainTex.png",
+      "sha256": "9fb28a8e21108294d353724c5aba6c1654cce6218843fcaac22a7bb8aeb00899",
+      "bytes": 463898
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic_MainTex.png.meta",
+      "sha256": "d766ab830a180c7a0b4e60231ce7f0934490f0a8f15d7cfd46afa4a03367eadb",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic_MaskMap.png",
+      "sha256": "48c4c9d376c67cc76c697d98cdb7260e2d1a1353c53b28e60bd0254fe728c094",
+      "bytes": 587631
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic_MaskMap.png.meta",
+      "sha256": "0bba2308fec7247d950175e2aefb931ef19ea73383004f4cdbcdbc93eabb72ae",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic_NormalMap.png",
+      "sha256": "dcc4c6264d81e680a09f38cefd1708a8de6a3b1b90d484928e400c16d215880f",
+      "bytes": 686750
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Charcoal_ceramic_NormalMap.png.meta",
+      "sha256": "ac950c935738f1b30312a52e4b06266950203b5c2c04dd962e3d988284e5ddb0",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone.mat",
+      "sha256": "13bff191646606a2876ee6775f46632879c808cf3e04416b3351451cb817635d",
+      "bytes": 8346
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone.mat.meta",
+      "sha256": "e0a5e06de261c3bc909f45a3d2f6016314149c3c7d63c6346a0fbaf32fb24f8d",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone_BaseColorMap.png",
+      "sha256": "84e99b4dfa356be0e97ffd0b8be62e4c7d018cf8626f2cf986ba3a7ebaf46324",
+      "bytes": 849446
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone_BaseColorMap.png.meta",
+      "sha256": "5aa40bc2ec97a7f525392d038c8ac81257612315429765547a135a0c8a3ab8e5",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone_MainTex.png",
+      "sha256": "84e99b4dfa356be0e97ffd0b8be62e4c7d018cf8626f2cf986ba3a7ebaf46324",
+      "bytes": 849446
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone_MainTex.png.meta",
+      "sha256": "3e128cea7945cea1523bd178bacd53d1aacec1026747c3d0bf36df70acc30918",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone_MaskMap.png",
+      "sha256": "d018bf81bf0410896f2081f70c9ebef708c66b2cf7bf44690e27dec0ac99c733",
+      "bytes": 587210
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone_MaskMap.png.meta",
+      "sha256": "b1b8e15090a2ce5880d4b85e10d1dff0a7a4aff012a369bee4fc1f7e50ce95a2",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone_NormalMap.png",
+      "sha256": "dcc4c6264d81e680a09f38cefd1708a8de6a3b1b90d484928e400c16d215880f",
+      "bytes": 686750
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Column_limestone_NormalMap.png.meta",
+      "sha256": "139401a7423c3577a2ca01376fd2565d0d728e03c7acffd667ecd988546d11e7",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Fountain_jade_water.mat",
+      "sha256": "e7026d4541e0371e03dbe5c293d90d377ae5d27242c6e0e1fb722ce2d90339a9",
+      "bytes": 8142
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Fountain_jade_water.mat.meta",
+      "sha256": "6ced2cb90eac97876d9f1edcba20a055a80f957bd388333e8cd5afc845dac1fc",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth.mat",
+      "sha256": "1201229cec9112139dbf7e1f1a752c39b55a9c65e37680edc653b88a1f30562d",
+      "bytes": 8342
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth.mat.meta",
+      "sha256": "91904ded15338a945513c780e88527017f64fcc686b816091dc2343ab7e8a0fb",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth_BaseColorMap.png",
+      "sha256": "ddaeefb3ce8de691da792b5f371c453b0a5461ba1678d0d0e4770c25fcdd04f7",
+      "bytes": 292757
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth_BaseColorMap.png.meta",
+      "sha256": "e4d903ab58ce9429e2347229e14e3f690639f3c4e2ba201c3bf78040bae71f8d",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth_MainTex.png",
+      "sha256": "ddaeefb3ce8de691da792b5f371c453b0a5461ba1678d0d0e4770c25fcdd04f7",
+      "bytes": 292757
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth_MainTex.png.meta",
+      "sha256": "68e8167e1008db22175dfca64c25f16d173ff274c70f6b3db7e6fe50a4eaf465",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth_MaskMap.png",
+      "sha256": "236f5eba015b51c6badb54f732a51c238e026390df12f4ed24d3a3e8f6330153",
+      "bytes": 577509
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth_MaskMap.png.meta",
+      "sha256": "0d012fd189cffbc6b366abc8b56a4b090eb68e36d0ea541e69aa264e63e4e1f9",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth_NormalMap.png",
+      "sha256": "dcc4c6264d81e680a09f38cefd1708a8de6a3b1b90d484928e400c16d215880f",
+      "bytes": 686750
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Garden_earth_NormalMap.png.meta",
+      "sha256": "2973e4eb979d8e9b5c6b501d3cd23e0a8c81aeb67a1949b4bb15d46c31f51350",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Guide_Unlit.mat",
+      "sha256": "98ddf446651bd8975ce582bc8951880b756162b7ed95371f588c6bdd939875b4",
+      "bytes": 3528
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Guide_Unlit.mat.meta",
+      "sha256": "bb965d2828a76f0737396e8127398ac582ea9677fe6136c568e7b88ca995e4da",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya.mat",
+      "sha256": "785f234176d942f1cc5a7275c26d8c5c3e25bc5d83490f6af3590c498184ecd6",
+      "bytes": 8376
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya.mat.meta",
+      "sha256": "40b793c9cd98eb6084f2e4f5ce4c70f0cee5999c82e4edb22adadd224528d641",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya_BaseColorMap.png",
+      "sha256": "4589c1de98de840b35e48643cbad3e45864e55a95eeb60d27d5deab5d2fe04c8",
+      "bytes": 209494
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya_BaseColorMap.png.meta",
+      "sha256": "79715a4afbdb6fd32c2df981dd95a72b6752ee832f44c47d3a674f32ecdb8471",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya_MainTex.png",
+      "sha256": "4589c1de98de840b35e48643cbad3e45864e55a95eeb60d27d5deab5d2fe04c8",
+      "bytes": 209494
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya_MainTex.png.meta",
+      "sha256": "87009d4f0ba96b6f73ba011840e383145565e3e8879986238853e3de178ad760",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya_MaskMap.png",
+      "sha256": "05d90d83cdafd5016f3419c536975e01efa77105e659d836ec59b8fdb1584666",
+      "bytes": 151320
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya_MaskMap.png.meta",
+      "sha256": "043eff7e9d5b461835ba7a39cd1ad27b80c7cd3379a5ee3815cc8bc9f553e887",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya_NormalMap.png",
+      "sha256": "24e492bc3fb938fe0916e3add9b29ff8074f7c93939f3d8f8f11496f681dff67",
+      "bytes": 181880
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Honey_kaya_NormalMap.png.meta",
+      "sha256": "95c63257d7d6e3043634c6e8818a906204d992e05772d28259701d7a0ccda0e7",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Ivory_petals.mat",
+      "sha256": "40991c793f2482dbc7e9d11ed6c1d10e68ae61aed38de4eb0ec16a9faa8e6f6d",
+      "bytes": 8132
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Ivory_petals.mat.meta",
+      "sha256": "03dfa8dd682ce8014577958b1517c2a54b281914c22da014d1566df3c992e3f3",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Laurel_foliage_0.mat",
+      "sha256": "967f816e80f5cb0194cf08b180907f28fd8cfd35ca921a37c597237b76d09cbe",
+      "bytes": 8299
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Laurel_foliage_0.mat.meta",
+      "sha256": "3ec3adbaaa68de3b543e64cc981209e5da5f1df3b3fb1ccb83853b93b52a5120",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Laurel_foliage_0_BaseColorMap.png",
+      "sha256": "2ea914467a4cecccb9b9baea95dc7a97a9ccb5da88c3f90f5d150680add3646a",
+      "bytes": 55975
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Laurel_foliage_0_BaseColorMap.png.meta",
+      "sha256": "22e673cefbbdf2af3c82a53550ef117b1dc935c01bc31cea33655aa78a21977d",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Laurel_foliage_0_MainTex.png",
+      "sha256": "2ea914467a4cecccb9b9baea95dc7a97a9ccb5da88c3f90f5d150680add3646a",
+      "bytes": 55975
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Laurel_foliage_0_MainTex.png.meta",
+      "sha256": "9ef1da1cb330c0adea8e3452bd7cd0d70e6fa4473a04e2d1f60dee696cbc5024",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Laurel_foliage_0_NormalMap.png",
+      "sha256": "f5576ab5787088b82183b3ca5ed9798697ae8b7ebd8b86902000dae3fb539fcf",
+      "bytes": 38827
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Laurel_foliage_0_NormalMap.png.meta",
+      "sha256": "e88025e26aa0e5c6f5da97d7f7cb5e52f78a79efd99fa95e3c96bf71c9be97bc",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut.mat",
+      "sha256": "799f9df296fe6c70d38542c597ef7125f16c564d6031b1cd9abd2d3150958030",
+      "bytes": 8376
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut.mat.meta",
+      "sha256": "531f46acad329353175f3786414e75fd05ffd0fbc24a166bfe682ba1db518cdb",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut_BaseColorMap.png",
+      "sha256": "b540cefa78076373c28423d3497048ab31ec2a59bcc50520d76e3f03f66f66ba",
+      "bytes": 530881
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut_BaseColorMap.png.meta",
+      "sha256": "44347f1d9712c308883620d0990f6b63af2eb2ce4a0db7b64994f171590cfa34",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut_MainTex.png",
+      "sha256": "b540cefa78076373c28423d3497048ab31ec2a59bcc50520d76e3f03f66f66ba",
+      "bytes": 530881
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut_MainTex.png.meta",
+      "sha256": "d78e91a95943eb9829ce0f18e6a159e9083d578180ff37852fe8d0eccefc3f40",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut_MaskMap.png",
+      "sha256": "ab1428be717cd73b5c2cb7ef61c2182ea073823136b663790d569756aa127f91",
+      "bytes": 437380
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut_MaskMap.png.meta",
+      "sha256": "5ae9998fc9976c55fc9ed9ad652561d6bc1437bcc2da229590b52b668549ab4c",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut_NormalMap.png",
+      "sha256": "c7b678374f4d79882810d9409e5fe32de8b3c00ce76832e4933e303c5b6a373b",
+      "bytes": 468000
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Oiled_walnut_NormalMap.png.meta",
+      "sha256": "8f3c4942e9304fb1cd9910ed0221093d852053e801333130d24a9c05f7bfa6ae",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Sumi_ink.mat",
+      "sha256": "25cc8d0153324320b179c0e43fdb03479833c6c4da199e9f831d6d208b578d39",
+      "bytes": 8115
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Sumi_ink.mat.meta",
+      "sha256": "b7482559294d0a400a33a281491eb6c0ba456ea068a588b5d8f77e1a06c7c325",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine.mat",
+      "sha256": "923f6e3224f14f4863332b5809d437a2f45915b72781dac59aff6b534373a399",
+      "bytes": 8346
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine.mat.meta",
+      "sha256": "2b4ef218ac268bbce9b3835b49dbbe68514044679f3cb580c825fcdaf70ed319",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine_BaseColorMap.png",
+      "sha256": "28555e81f31d1e4ff3c1fc3aefd7f63d42f82b521cda0908eebcc8f64f118476",
+      "bytes": 884791
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine_BaseColorMap.png.meta",
+      "sha256": "b87c53eb7f436fd8a451030e55b092ca5ded9db18b507ceb620c42d1d4d3525b",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine_MainTex.png",
+      "sha256": "28555e81f31d1e4ff3c1fc3aefd7f63d42f82b521cda0908eebcc8f64f118476",
+      "bytes": 884791
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine_MainTex.png.meta",
+      "sha256": "637f0b303bcc2cc78842e76470bc151e4644d384b4731b5743f66e5fdd83c9b5",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine_MaskMap.png",
+      "sha256": "eef7e3fdf256489f77c38bc968bf332d6ee6b52159efd766a136360c1d2ba0b4",
+      "bytes": 587762
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine_MaskMap.png.meta",
+      "sha256": "c6d05103330e8fbc805b3e84729fd208d95db1814d1f5049780c5b9633abb12d",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine_NormalMap.png",
+      "sha256": "dcc4c6264d81e680a09f38cefd1708a8de6a3b1b90d484928e400c16d215880f",
+      "bytes": 686750
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants/Warm_travertine_NormalMap.png.meta",
+      "sha256": "e4736a2ca2ab1f8d3668cd9c927e14fa5330d040165953cc56284ee4fd08b0ed",
+      "bytes": 3364
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcaseMaterialVariants.meta",
+      "sha256": "d99aa78f1ed3b6aa3f197f0ea23b7c65ab11279bc59696f84a4ded8a34eec863",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Honey_Color.png",
+      "sha256": "11570ca74f9322101c026d33475a86fef99e8cbd53a8b4916a687574d621cad0",
+      "bytes": 4771640
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Honey_Color.png.meta",
+      "sha256": "de2f24a3182bcf66039b2b77adac60082d8f00edb6aa7d54a003e28996791a84",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Honey_Mask.png",
+      "sha256": "97482c2932f7907d770549e0f2056b4603e19f6d27862cf52d3f0110416ca667",
+      "bytes": 2150740
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Honey_Mask.png.meta",
+      "sha256": "f67c93b2bdbaf52b6148702a3ff37514277075dfbb1211be1462f459bbb70972",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Honey_Normal.png",
+      "sha256": "7098ac75074e9e9250f91eccb3c70dfe40820b16b54511303708e605a5a7e810",
+      "bytes": 1793538
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Honey_Normal.png.meta",
+      "sha256": "4d2e39cbfbfd344470ec4aa4ad7c73ca3fed075f455a58fab7b0f47a9fac2e01",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Walnut_Color.png",
+      "sha256": "b3ac2deb411f4daed5d45a724ef60331b196b4f2e38c232261a1c91c9dc31019",
+      "bytes": 5485521
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Walnut_Color.png.meta",
+      "sha256": "52e25cb6b9a2e29eb33f22493c5ee04bae588250d50da1b5d3f118b18f48808f",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Walnut_Mask.png",
+      "sha256": "bc157ed95f45be5853257fb42ebcd68477a2fdc86f910c05d019258122f96db6",
+      "bytes": 3073846
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Walnut_Mask.png.meta",
+      "sha256": "673641bb30e12097ebec2e0afc6ddda18b8f258d3a4647e3e46bba0f621e7365",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Walnut_Normal.png",
+      "sha256": "19678b1f7bdc66674be050ba6057871d237ae2f5534dc108f1d20d59460f87a4",
+      "bytes": 1622307
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr/Walnut_Normal.png.meta",
+      "sha256": "66e82328d0449af0b8e074598d6e3bea60be742b7f30c9b7f26670c462bb4621",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Resources/ShowcasePbr.meta",
+      "sha256": "1e523b10b4fae6363b23791241e0e27d2cd50f2f492bde36a65ff08a0a33ae4c",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Resources.meta",
+      "sha256": "c83085e775ada22868dd4a9c60ff81107edfbb019a899434549b6c804cc1bd71",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Scenes/Showcase.unity",
+      "sha256": "10524c53a6a70b39c3ee9a0007344557e7c51565458745fe60f112f71dc365c9",
+      "bytes": 4875
+    },
+    {
+      "path": "Unity/Assets/Scenes/Showcase.unity.meta",
+      "sha256": "20110e4640ffe3348dcfc47024dfd11744da9c918314ce413db3a989b0d039ba",
+      "bytes": 155
+    },
+    {
+      "path": "Unity/Assets/Scenes.meta",
+      "sha256": "7ac76479929b04051f0d571ee5ab957e870b63a4b98665769750d43afcd05d72",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRP Balanced.asset",
+      "sha256": "69e4387bf819c6f548b480bd9eea4c4338cd40a5b5e120a89a3e43a4291b52a6",
+      "bytes": 16371
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRP Balanced.asset.meta",
+      "sha256": "3f3a9d9a68c5d292ad3afc6a40f0f3e3a3fc1ea5f399fe5265707e85803f97b9",
+      "bytes": 182
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRP High Fidelity.asset",
+      "sha256": "9533b0767e3d8b4c94c99b1d125db8adace5c0e962b142662d198549a3168adf",
+      "bytes": 15795
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRP High Fidelity.asset.meta",
+      "sha256": "d62a19056bdd23d1fd316905274ef9bd85701eed6f59fb5a8c7688f182009f4b",
+      "bytes": 182
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRP Performant.asset",
+      "sha256": "898065b01c20a141b02845b657fd81cb8a863a669b4a98d845d461e55139209b",
+      "bytes": 15864
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRP Performant.asset.meta",
+      "sha256": "7920c2314914124534fc215c3922bd6866b7cde1336b626d267fc57021504fc1",
+      "bytes": 182
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRPDefaultResources/DefaultLookDevProfile.asset",
+      "sha256": "bf9ab43157d43aacaefe8f322f145214325a61640805931a923af3c6cafbc36a",
+      "bytes": 4985
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRPDefaultResources/DefaultLookDevProfile.asset.meta",
+      "sha256": "e1b4083f4f6209cc996b53e1f2bc141068845c2507a302fb0d82abde60495cfa",
+      "bytes": 189
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRPDefaultResources/DefaultSettingsVolumeProfile.asset",
+      "sha256": "437f5f7084bdc759abfbe98281d6dbb0bbbf7f41e772083c3750bf42251602e8",
+      "bytes": 64141
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRPDefaultResources/DefaultSettingsVolumeProfile.asset.meta",
+      "sha256": "31bd2ae6e5ae8b562528bd29d9772fd4199a7b668dc4e08c2ecbf7b80829bf39",
+      "bytes": 189
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRPDefaultResources/HDRenderPipelineAsset.asset",
+      "sha256": "5e90ebcf9f74c89858be99ba459887961d836f4f8a060c3b853f0875e1b5459c",
+      "bytes": 15361
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRPDefaultResources/HDRenderPipelineAsset.asset.meta",
+      "sha256": "85a43dd58c71af5b8c48b81ddd6d39132c5802c96f75c0d810706957be2a016f",
+      "bytes": 189
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRPDefaultResources/HDRenderPipelineGlobalSettings.asset",
+      "sha256": "3bca00ab72c3569f2641bc08bb30143f6f299606d1c692179303bd4c2eaf21a4",
+      "bytes": 57379
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRPDefaultResources/HDRenderPipelineGlobalSettings.asset.meta",
+      "sha256": "59895d2f4654f22fef154cc6d77667f0e0253b089e0861f6bfe86df117d293da",
+      "bytes": 189
+    },
+    {
+      "path": "Unity/Assets/Settings/HDRPDefaultResources.meta",
+      "sha256": "a2d533b5f079053416fd4cc33f328e7d2c5f0a04dc3c1f5280bd2a275eb13e8d",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Settings/SkyandFogSettingsProfile.asset",
+      "sha256": "4f987900e632f6d66316fff58ffcb8e7c48f4accd98ca8dd9aaa76c0fdad8dfb",
+      "bytes": 9802
+    },
+    {
+      "path": "Unity/Assets/Settings/SkyandFogSettingsProfile.asset.meta",
+      "sha256": "09bdf64a0d4951948d33e43818d3f3b6011181bf62287730450b9a311ff118f8",
+      "bytes": 189
+    },
+    {
+      "path": "Unity/Assets/Settings.meta",
+      "sha256": "f32067081b5c9c212671c30858afaeecea50e62e3881e2ee5f4a37d1f2636e33",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/CourtyardMeshes.cs",
+      "sha256": "a55350e08f9588a2c28abcaacb939351ec787f8f2bc7543a5bfb4fd79cfdc58a",
+      "bytes": 6471
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/CourtyardMeshes.cs.meta",
+      "sha256": "99e25ca16a41b93e89408a8a9171d643e1197618ed0e4f5181686a50657d043b",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/EnvironmentDebug.cs",
+      "sha256": "09421ae51133bee276eb422e155aa5b7bd97adc9995507bfd95fb1afa5460068",
+      "bytes": 11807
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/EnvironmentDebug.cs.meta",
+      "sha256": "be6eb1ee7530f2d9268017560b4a1797893fdd428f95dc38e5c0f9572c4ae69c",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/EnvironmentMaterials.cs",
+      "sha256": "730cecb649a8e793372b05e17ad5689783d75223a23ac1f0c6016adcbfb9d4b2",
+      "bytes": 9241
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/EnvironmentMaterials.cs.meta",
+      "sha256": "f625893e7a5c9dfa6f5bf220a7bd095005b3ff7f52d56b441bb2a37a224296e4",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/Resources/ShowcaseLightingDiagnostic.shader",
+      "sha256": "d0dcbbdbb50576ec88ab475bca3cd4120408b492aa5e43da7697ce3e325d456a",
+      "bytes": 2020
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/Resources/ShowcaseLightingDiagnostic.shader.meta",
+      "sha256": "ab6ae5a9d88c05204425f03c3c37701862a383dca6720eafe3fbe7e889c95a1b",
+      "bytes": 204
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/Resources.meta",
+      "sha256": "3924360c425e73143d110de8d2085aed7e32b9bba638879527855717d465a78a",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/Showcase.Environment.asmdef",
+      "sha256": "a4eb64fb6662cf1a64b90806f31fb3400fc4c2b1f3b3323db8e102e63da43b4d",
+      "bytes": 202
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/Showcase.Environment.asmdef.meta",
+      "sha256": "5a5317594fd41d809c6bafc85fa5c22be861f21049fb2bc36fffe1dac3178c02",
+      "bytes": 166
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/ShowcaseEnvironment.cs",
+      "sha256": "f20f389ab94a5b014fffcf29dbdddfc194aca2e0aacf087cbe9ea7c66b490ff2",
+      "bytes": 19607
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment/ShowcaseEnvironment.cs.meta",
+      "sha256": "98fcb5904ca947fb9b4c946a452e080d0242ddb1bdca6e5b14ed34f71c9dd395",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Environment.meta",
+      "sha256": "811907e1a1ee9a5ec7433ba07c526e47289641b451add0cdbf2610b4e77bda5e",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Bishop.png",
+      "sha256": "c641a87f8cd23a658c0f2c0680d705155bc9284b81a7d24266836d751924fa17",
+      "bytes": 4599593
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Bishop.png.meta",
+      "sha256": "54644e9e6091230917d5d304d551e06f9c7ef049f08f976ebb312c17a1367a0a",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Bishop_Mask.png",
+      "sha256": "cfbde3aa943b122ce89dc4c55978347b55c41fd7e93a08e224f86ffc4cc3dfef",
+      "bytes": 2144392
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Bishop_Mask.png.meta",
+      "sha256": "cf353c2de1620d4182f4715ace9240aac8e682e9d434df8ca7a79092194cace1",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Bishop_Normal.png",
+      "sha256": "685e94aaced21d9ee28bf7c2f1e5bc857206f71b91d28a1f1d734b6b9bac8ba5",
+      "bytes": 1928298
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Bishop_Normal.png.meta",
+      "sha256": "6ae4f7ba4e42631020427413d72a6a01b86269c59eca0bbece059fd73c058484",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Board.png",
+      "sha256": "a64d8a55f67c260d795254a97367f1b9cbbdd1e5fca43f71bace375e3d5d24c9",
+      "bytes": 4770017
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Board.png.meta",
+      "sha256": "2524d067f05a07038aee7c97bff69e8b9620b0545b37daf3e40ea1af13d3d8c7",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Board_Mask.png",
+      "sha256": "de09c639a20a77c305f312dd7a8040f17f98bbaefa336f6204d69640a0bc1f04",
+      "bytes": 2175770
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Board_Mask.png.meta",
+      "sha256": "f706ecf702475c5c5624852cc06a1b64d4e8ebe45365bbdca13faead5463e610",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Board_Normal.png",
+      "sha256": "1dcf5765436ab774fa8e51f5c33d06e0e9f2cac8c56a0a703b93844437ae7e16",
+      "bytes": 1789992
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Board_Normal.png.meta",
+      "sha256": "ae803bd310282189123b2cd062bd589eb9ca003242035a5f517eaf4fbe2ca571",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Gold.png",
+      "sha256": "28de0ad0367fb65efde61ae2c4198235203b63285bcaf8d08d8b18719706c28a",
+      "bytes": 4587209
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Gold.png.meta",
+      "sha256": "5018d869fa38b1b241b67b1939c659234d59bf9d526c62caffc21bc0f0376b08",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Gold_Mask.png",
+      "sha256": "eb777a446093ad6553922d0faa1151ed35d71cf48254fd7ed2b8fa7fa7e3591e",
+      "bytes": 2166708
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Gold_Mask.png.meta",
+      "sha256": "7f17b7289ff4f6e2974d91ff93f1e79c9c4993309bae46f528458194e67fb6f4",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Gold_Normal.png",
+      "sha256": "819810014a07a2836c6dd1878bcb36768a2490ac681dd6952e709382833f988b",
+      "bytes": 1994541
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Gold_Normal.png.meta",
+      "sha256": "ad6ef551f20f99ca8b26592b3a897922df6421b4611000352ee7463156986ce3",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingA.png",
+      "sha256": "cd0c3bb8520caa8aa7e91774795e9dd5f2c178b861dd1cf6861f4ca2a31ec23d",
+      "bytes": 4607672
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingA.png.meta",
+      "sha256": "dbccade2d06a5da5c8b19cf8dd6350988feb4247a029327a052702540a62556d",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingA_Mask.png",
+      "sha256": "2b820fa0d84e95a02732ad4fd68f2bc9b3089c9dfaaa6809ef9f8df4c040068f",
+      "bytes": 2151812
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingA_Mask.png.meta",
+      "sha256": "d8c74370f0c4c2916b42877a922308102ec31c78052a0cc5efea85ed8ca58e21",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingA_Normal.png",
+      "sha256": "8e318712ff3b1785125c33c14b28bfd904aa916e11cc843173a8a8e3949f9f76",
+      "bytes": 1946543
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingA_Normal.png.meta",
+      "sha256": "f235cb8585185fe4abca0bff61070a7bfcc02ace3b10a6180bc1e06d97ff645e",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingB.png",
+      "sha256": "89061cad17c41f3e4844e0c25b2d0f7d1e803f2a6803d98b78ce9ead8db2685f",
+      "bytes": 4617279
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingB.png.meta",
+      "sha256": "3dae9b2d7bb21df7b0de8b2f3bcae41f26b4296311316348ce03db3760d2c521",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingB_Mask.png",
+      "sha256": "1212453fc932b59e9bafa239dd1d50a10df408ccd9af48666e77e79239b2ebfa",
+      "bytes": 2147449
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingB_Mask.png.meta",
+      "sha256": "86ef9bbda8e2716639f6bf37a956336786d0bac3b738d96dd38137cef56dd1c1",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingB_Normal.png",
+      "sha256": "1c413e53bb165a4391c756eb4a036c442bd601441d05b4817872a4d68e66ff3c",
+      "bytes": 1933819
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/KingB_Normal.png.meta",
+      "sha256": "2d921699af93012120e791935c722b7f23221bc0c4633ac026efa92ade2b8698",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Knight.png",
+      "sha256": "fa4a7a390e8b4d95531722139caf595ee67b5f199e4bea94aa7da0746ab2808d",
+      "bytes": 4566191
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Knight.png.meta",
+      "sha256": "3b8fa81a0a32a3b17af5d034e885efb81e555d8ee613d69a415cc54f18c186d1",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Knight_Mask.png",
+      "sha256": "df356d5972caa9934155daa276a2a17a2c2bf051b9b8265445ca716bfe4dcaea",
+      "bytes": 2133693
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Knight_Mask.png.meta",
+      "sha256": "261f837cf1d101a09e0950367a91b264a79c41308f1e43147ddb203863d6c2f5",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Knight_Normal.png",
+      "sha256": "6896dfffc0f9f2821df6ff6afb03643f4fef0523027b347f53893e54099e46f2",
+      "bytes": 1957035
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Knight_Normal.png.meta",
+      "sha256": "4a7db52a0c7cadb6f6639367302750374d5ebecff6fe1322701c1a5be0bebfa3",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Lance.png",
+      "sha256": "c861398631c7294668cea2d366a926be76d4261984f6abf83f92e0493e5b4658",
+      "bytes": 4586073
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Lance.png.meta",
+      "sha256": "3b1304f4fbce72aeb1070f83e329cbda36e203fcd556cf3a8b97179f5cefa41c",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Lance_Mask.png",
+      "sha256": "4d8694678c700dd088b86712bc4fe68b1867b409638d1ad9aae2bcda8a341082",
+      "bytes": 2127626
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Lance_Mask.png.meta",
+      "sha256": "f9f923df0504e91498ec6f579fb5e86d8d9bd03c4ad03aa05afda2f393fccd65",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Lance_Normal.png",
+      "sha256": "0e3543291434d193b6e3cac7b785355cbbfc127d391ec31434c506ad099f408d",
+      "bytes": 1938505
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Lance_Normal.png.meta",
+      "sha256": "9ec3e0e6c946d08eda7c02d16588f4a30b6f88c328434d86e69ab1be5955b3c6",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Pawn.png",
+      "sha256": "36e3297288949b1cfc9eee5601ed70fc2715f88bbd84cb4c6d8b5239ae9d8894",
+      "bytes": 4624109
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Pawn.png.meta",
+      "sha256": "e30da6af238b311bac9610ad4a7a9b01c0d686fb95b60aab89ec951704dff06b",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Pawn_Mask.png",
+      "sha256": "3b9aac53b046870b94272a92e0bebca4b9b4b616b0a736edc35327b3715460e8",
+      "bytes": 2166879
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Pawn_Mask.png.meta",
+      "sha256": "4fcbd220e3972a4fd3e65bec2d793fabd6065a987a0d2b2c6c7c09b812a04476",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Pawn_Normal.png",
+      "sha256": "a13b2216032ce851c505e5cbaddad58c2bc8988028f1b3580e770c5c14fd42a0",
+      "bytes": 1964125
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Pawn_Normal.png.meta",
+      "sha256": "4109717973186da149e87b2edf9839151e3af64ccf714e50b5a8f8c40d9c8264",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Rook.png",
+      "sha256": "50da288ba7e025c4972376ab2c6fbf091aee36de2fcbd0cc5774016bb037744c",
+      "bytes": 4553102
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Rook.png.meta",
+      "sha256": "687954b02337a913b9c65997cd3a17601d36a4e0cb4c8c298a0d11a0c4d10d3e",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Rook_Mask.png",
+      "sha256": "0b2620d4cf973ca52de2e2de564a4cf6f5c69700b63f78d61c028540d33bbbfc",
+      "bytes": 2135491
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Rook_Mask.png.meta",
+      "sha256": "ace4da46fe51cd7240b8273e49e6b64b477207fe13c9d9cfc9a0cd2e09e492f8",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Rook_Normal.png",
+      "sha256": "fb57cba9e311d429425599ed7911736a0ae8c1f757bfe8096e2ac809a8dbc3b4",
+      "bytes": 1966113
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Rook_Normal.png.meta",
+      "sha256": "e66903f72ab473a13b51dc89165665ae3b2367d6a077c7cae6e50ba2f3b8d6f6",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Silver.png",
+      "sha256": "08da9936fddf55de60664959883a21c172f5f58869e8d25cf43fad6a7d62ae30",
+      "bytes": 4550236
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Silver.png.meta",
+      "sha256": "64b181a376bbf7c3fd65fd7e0e63edb43f0930fdb7b98c894b713196253594e3",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Silver_Mask.png",
+      "sha256": "609eb22de42227f35725fb080fb458fc4009e256b2ba23b58432ff864dbe1509",
+      "bytes": 2157221
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Silver_Mask.png.meta",
+      "sha256": "913dcfaf3638f7557e440bb5ae10ccce71706da8f45177433c9f0bf7585781b2",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Silver_Normal.png",
+      "sha256": "72c731d48df5caf05965231959dde69629bc32de0ab80c894749dd57e03d352e",
+      "bytes": 2016937
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Silver_Normal.png.meta",
+      "sha256": "2169fb840f6518c940202952c5f88d1c4187e0e81c94052b7754e6855e9ecda0",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Wood.png",
+      "sha256": "11570ca74f9322101c026d33475a86fef99e8cbd53a8b4916a687574d621cad0",
+      "bytes": 4771640
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures/Wood.png.meta",
+      "sha256": "dd9d7be8aa2d1f824822c2a185dfa5b76c75d3aa37872e0a99bf8d9e1fb2ab45",
+      "bytes": 3370
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/PieceTextures.meta",
+      "sha256": "67066c49a211854b561273e21c1f5fde0832181592ee0b635aa75c6b316c2d60",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/verified-replay.json",
+      "sha256": "976dfdcfdfffa22f4d38fd3e1ec7e6529bf1ce772c0e7c0a5ce6c27957f26cf8",
+      "bytes": 10971
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources/verified-replay.json.meta",
+      "sha256": "98a19711bc11932094f18e35361677253d9e165e3588f714e63e8605f45d1ed2",
+      "bytes": 158
+    },
+    {
+      "path": "Unity/Assets/Showcase/Resources.meta",
+      "sha256": "b8f38195345fcf9c5166e7b1ae44235ccee89b33a9731526f4b5efbc212b755c",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/DimensionalTransition.cs",
+      "sha256": "33d9f82a2e2c9b53844ab80b2522a1d9eac628ded63c3723e36fec1c9022bae9",
+      "bytes": 3029
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/DimensionalTransition.cs.meta",
+      "sha256": "c39859eeecf9370e245a29b6cd189c96f3c391209e6b45d834caacd584a5d79c",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/GeometryGuides.cs",
+      "sha256": "9d54aa409a762152b97f1a27d807eefacf756cab72533d4d1db554557efc0ad6",
+      "bytes": 3046
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/GeometryGuides.cs.meta",
+      "sha256": "fa9423b286ff703b3273b37099cf80283a0fd67e2ae414c7939df057973a787f",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/GpuStaleDepthFault.cs",
+      "sha256": "e145233bb1fe5c356866de6e461dea30b9708c86b92be6867427f054d5b7404a",
+      "bytes": 11138
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/GpuStaleDepthFault.cs.meta",
+      "sha256": "ccbee0e25f753c252b9e4b7bd39824de382f71fab3d809c9159de13abfea8dcd",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/PassEvidenceCapture.cs",
+      "sha256": "d9693de2728b4e8be38ed9e9a78ca279c4148e3baae4654e3e47c08bf5b2b0c1",
+      "bytes": 35553
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/PassEvidenceCapture.cs.meta",
+      "sha256": "ce5ae15a9e47b5a72fcc00bd2199e74bb2e9388a851dd67112d80a6bf151303c",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/PlaybackAutomation.cs",
+      "sha256": "caa43857a25386b679619f7822f8268b9abcf6b88d4de70848b4baeeb7af2dea",
+      "bytes": 13162
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/PlaybackAutomation.cs.meta",
+      "sha256": "52ee0352ea447587aba3f7244477775f2bcfc42ec50ff2e560dc5697b5412f35",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/ReplayPrevalidator.cs",
+      "sha256": "ae46baedfd3c8e8ee469881e28771bdbea5eec2461eefd314884d09c7f08802e",
+      "bytes": 2771
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/ReplayPrevalidator.cs.meta",
+      "sha256": "35f2f94267d84bc6067fdbfdbc2663e8bdce915cfae9516dc926670df96347a1",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/RuntimeEvidence.cs",
+      "sha256": "3c3de262b863e242d2b53aeb54990487acec8c97701b7de1d6c69cac2405b11f",
+      "bytes": 5726
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/RuntimeEvidence.cs.meta",
+      "sha256": "51d9d1a528e0e2904221bb32c4ea31c3c867e50722ca5ef4cb3ffe44dcd543bc",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/RuntimeTranscript.cs",
+      "sha256": "0c7dadd177df97e79cc426ffc45fbd9ea56adc2a9d4ad77fdb622adad43ee67c",
+      "bytes": 2022
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/RuntimeTranscript.cs.meta",
+      "sha256": "e7982f1302b77b67bf0ea2b122eefad6e82b40c99c2bf1800377eb29a8ff23d7",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/SectionView.cs",
+      "sha256": "36e8bd59282ab28928f15f6ad976ea4be1a49dad0282ec9cb132103b62ffbffa",
+      "bytes": 6027
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/SectionView.cs.meta",
+      "sha256": "91d2f1cdbc8887af2049db6d234bb2ebb1b14f4824b9c77724218b39fe3b7acd",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Shaders/Resources/ShowcaseDimensionalTransition.shader",
+      "sha256": "2e00942b43fecdc4d9f3d76796d4f832dbeda83624e386346ae844e4fb15ca1f",
+      "bytes": 2594
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Shaders/Resources/ShowcaseDimensionalTransition.shader.meta",
+      "sha256": "72f12740a66a91b7c812e19ca3e342379ced3bbd6a38a67204b4cb236625e0b0",
+      "bytes": 204
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Shaders/Resources/ShowcaseGpuStaleDepthFault.shader",
+      "sha256": "665571d8355cf43580964a08639a2d6352cd7e6e2f40b9f21110fb0d06ac9efa",
+      "bytes": 2726
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Shaders/Resources/ShowcaseGpuStaleDepthFault.shader.meta",
+      "sha256": "b553aaf33d22534ef13815110da330665671099a84ced9731f49decde0f579a8",
+      "bytes": 204
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Shaders/Resources/ShowcasePassEvidence.shader",
+      "sha256": "4d36d5c5a17ae42a74c78f70781c6fceea73983facb33c83ef10ca644a44a826",
+      "bytes": 2603
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Shaders/Resources/ShowcasePassEvidence.shader.meta",
+      "sha256": "117cfda369b7a59cb7b1f4bfd028d900642be3a7dd0f9619ad6275f23d67556a",
+      "bytes": 204
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Shaders/Resources.meta",
+      "sha256": "e9f8f9817387da6662d80e07b20f1a747797779be423d2766dd1b4c2d95aa48c",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Shaders.meta",
+      "sha256": "2f4905799411a91934f447a53d81d34743d89ac44bb336cc3a9df170b4968885",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Showcase.Runtime.asmdef",
+      "sha256": "b5ade7441a97269c2a39a9e3d209710e7a991d7cbb6a35215edcc8cdb34da9bd",
+      "bytes": 233
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/Showcase.Runtime.asmdef.meta",
+      "sha256": "663e03784c02cff8fb36e764cdd65e9725faffaba04f8f5105763b4b27b646ff",
+      "bytes": 166
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/ShowcaseController.cs",
+      "sha256": "8b3214b58204ff2b082c452dc8a89cbe7d55cfd4a4ddbfc240f9c5172b6ec055",
+      "bytes": 31724
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime/ShowcaseController.cs.meta",
+      "sha256": "ba19c81732a697956e270da4a801b557633d278f42a02c072d723699e02a7272",
+      "bytes": 59
+    },
+    {
+      "path": "Unity/Assets/Showcase/Runtime.meta",
+      "sha256": "0f97b46ed53f2e42f03af0d631900aeac8aa1e0760f789dde4a1e88f40862b22",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Assets/Showcase.meta",
+      "sha256": "1b17bdcf672ed0c5f1b28c829cccd849f3f2ab752b44979d0df203bb334f558b",
+      "bytes": 172
+    },
+    {
+      "path": "Unity/Packages/manifest.json",
+      "sha256": "95115cef2b839fae43b3ce64d450aafbabd83c34d25540c6aa01ebb12ef691be",
+      "bytes": 622
+    },
+    {
+      "path": "Unity/Packages/packages-lock.json",
+      "sha256": "9151f22bb03fe3162cab9c66baea498a15bc7e7305eed34a0194131c255cdd79",
+      "bytes": 6054
+    },
+    {
+      "path": "Unity/ProjectSettings/AudioManager.asset",
+      "sha256": "aeedeb3243f07b61dbbe854aa08b5ef6f0b5274dd9852ad9f6129dde3e105a31",
+      "bytes": 413
+    },
+    {
+      "path": "Unity/ProjectSettings/ClusterInputManager.asset",
+      "sha256": "40e65dd214bf254955d2c8829ca8ce2130fd3510485560ce012e9a1ddd93e623",
+      "bytes": 114
+    },
+    {
+      "path": "Unity/ProjectSettings/DynamicsManager.asset",
+      "sha256": "4ac4c1fbcfd242aef00c7fe80948376762a41de9d185540d13e25a8a28812452",
+      "bytes": 1254
+    },
+    {
+      "path": "Unity/ProjectSettings/EditorBuildSettings.asset",
+      "sha256": "56bd83706565df56c702e07530f60a9075d35dcdb9c63c8abe52f5aef6962333",
+      "bytes": 398
+    },
+    {
+      "path": "Unity/ProjectSettings/EditorSettings.asset",
+      "sha256": "705e5dde8b4ceb8147971b0c8f3781ebbe566a12b8e280379ee24f2bd9ad9474",
+      "bytes": 970
+    },
+    {
+      "path": "Unity/ProjectSettings/GraphicsSettings.asset",
+      "sha256": "14d2127680b186076590b5047d630c53bd24fc6b3e7421348bc921264333ee18",
+      "bytes": 2613
+    },
+    {
+      "path": "Unity/ProjectSettings/HDRPProjectSettings.asset",
+      "sha256": "a099dac46006fae337c3ec2c6b4ffb9df94616d7103cd957474b453e4f388b48",
+      "bytes": 850
+    },
+    {
+      "path": "Unity/ProjectSettings/InputManager.asset",
+      "sha256": "7a1bb836a1008d26d0860d143e9d9df7ca41731d30a72901b518063819c62df2",
+      "bytes": 9731
+    },
+    {
+      "path": "Unity/ProjectSettings/MemorySettings.asset",
+      "sha256": "1e8379a461b10ae09f3f696911088c16875d63e87ed5f2d95df9e1892703f9fd",
+      "bytes": 1192
+    },
+    {
+      "path": "Unity/ProjectSettings/MultiplayerManager.asset",
+      "sha256": "ce4075d7a7dd8ac7ffe55de2427692c63f90dae398208bd80cec0f27cbe09f4b",
+      "bytes": 232
+    },
+    {
+      "path": "Unity/ProjectSettings/NavMeshAreas.asset",
+      "sha256": "80106cfa7e6181a1928b142c075f3e510d527441e3d79bc83590e4ac91e7cd66",
+      "bytes": 1308
+    },
+    {
+      "path": "Unity/ProjectSettings/PackageManagerSettings.asset",
+      "sha256": "17db1ad6806d4a64f1101cc942527136b132d19b8d5cef75776de2f0a66ebf04",
+      "bytes": 928
+    },
+    {
+      "path": "Unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json",
+      "sha256": "a40f81b0dcc795e422f5ca0881fe7dad4e26cb8fdb33244a70f110835c1a8d44",
+      "bytes": 64
+    },
+    {
+      "path": "Unity/ProjectSettings/Physics2DSettings.asset",
+      "sha256": "e3cbdbf0be15244b7b67d2f07bdb8e8981911c11a8c7fe8035f5261272fec658",
+      "bytes": 2028
+    },
+    {
+      "path": "Unity/ProjectSettings/PresetManager.asset",
+      "sha256": "29c125923fe6e29f90190d4fce1c82d660e7051546e2c9d02908d18c9cf2436c",
+      "bytes": 146
+    },
+    {
+      "path": "Unity/ProjectSettings/ProjectSettings.asset",
+      "sha256": "65baa6d1bde2f2117bff2dc5e61f88d505d8b851a108ccc30d8d56e7b04e892c",
+      "bytes": 25890
+    },
+    {
+      "path": "Unity/ProjectSettings/ProjectVersion.txt",
+      "sha256": "a717ed4b946e370ce6e6af9dd000b8acf89495b44c84bf8f768159924cfa66c3",
+      "bytes": 85
+    },
+    {
+      "path": "Unity/ProjectSettings/QualitySettings.asset",
+      "sha256": "8f79cec43ec44c265b26e1e52a358302d41b2d229bdd36fc2555ac1ca37a8b70",
+      "bytes": 5264
+    },
+    {
+      "path": "Unity/ProjectSettings/SceneTemplateSettings.json",
+      "sha256": "bb9098b3bfcde78d93e264b96f7b77b5430e64e8c57a7aad7f5a5d9c3945e16a",
+      "bytes": 3535
+    },
+    {
+      "path": "Unity/ProjectSettings/ShaderGraphSettings.asset",
+      "sha256": "cdba1e5d65bcf6e3269d76ed3e60b6c21f98322002996642c9d74f1eb89f6b91",
+      "bytes": 556
+    },
+    {
+      "path": "Unity/ProjectSettings/TagManager.asset",
+      "sha256": "8f134beae46e02f56079905a2852a587bff70eae5b54bdedbdba8131be96f553",
+      "bytes": 687
+    },
+    {
+      "path": "Unity/ProjectSettings/TimeManager.asset",
+      "sha256": "1a83e54adbbda7c9f4851103a0c6ab7f6448a3343d4ea5b7620452fa08416ecd",
+      "bytes": 202
+    },
+    {
+      "path": "Unity/ProjectSettings/UnityConnectSettings.asset",
+      "sha256": "11251dae0356b6f43dd2c67bb511f6b7ecda4e5de425186bba3297e6f3dc1c6f",
+      "bytes": 1063
+    },
+    {
+      "path": "Unity/ProjectSettings/VersionControlSettings.asset",
+      "sha256": "e7bda45bf7a394745fee1316e6c71fa676004d591ad1f3aa247fd3e4ceb86071",
+      "bytes": 188
+    },
+    {
+      "path": "Unity/ProjectSettings/VFXManager.asset",
+      "sha256": "58da3b295484de7648ac4a6f21a11eee30f98e8e370759a2e7f2238e9e668af5",
+      "bytes": 912
+    },
+    {
+      "path": "Unity/ProjectSettings/XRSettings.asset",
+      "sha256": "edd2beb4a2e388312b4b7da241aa51070434005d82c59363f1237dd2e567585f",
+      "bytes": 158
+    }
+  ]
+}

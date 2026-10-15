@@ -1,0 +1,5 @@
+{
+  "name": "Showcase.Environment",
+  "rootNamespace": "NDimensionalShogi.Showcase.Environment",
+  "references": ["Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.HighDefinition.Runtime"]
+}

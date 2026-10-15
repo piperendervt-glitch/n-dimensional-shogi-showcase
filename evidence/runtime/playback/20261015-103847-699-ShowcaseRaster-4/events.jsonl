@@ -1,0 +1,3 @@
+{"kind":"RunStarted","message":"DirectedLive; all rules fixed; official 40-piece initial state","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"ExitDialog","message":"True","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.20163600146770478,"angle":0.0}
+{"kind":"ExitConfirmed","message":"Shared Enter command","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.20163600146770478,"angle":0.0}

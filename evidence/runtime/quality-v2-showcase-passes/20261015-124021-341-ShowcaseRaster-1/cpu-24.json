@@ -1,0 +1,826 @@
+{
+    "ply": 24,
+    "seed": 20261015,
+    "nodeBudget": 5000,
+    "nodesVisited": 4988,
+    "cpu": "Tactical3D/2",
+    "observationHash": "5078b6d4e7c53bf860d753948fa8388e8e0db2f715d8c8afff1037545c044e8c",
+    "fingerprint": "dc8aca8e0f901acb6a4d18f702e1051ee917a5d5027fde1f7b36cce894701693",
+    "preference": "Observation-only ordinary development: develop silver/gold, open a rook file, then advance the rook and opposite pawn; completed or blocked goals are skipped. Disclosed preference: selected observed piece +100000, goal distance -10000/cell; bounded 2-ply material score over every legal root. Preferences may override tactical caution; no hidden-state input is available.",
+    "selected": "B-Pawn--3:2,-3,0,0>1,-3,0,0",
+    "nonPawnRescue": false,
+    "candidates": [
+        {
+            "move": "B-Bishop:3,-3,0,0>-1,-3,-4,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>-1,-3,4,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>0,-3,-3,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>0,-3,3,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>1,-3,-2,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>1,-3,2,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>2,-3,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>2,-3,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,-1,-2,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,-1,2,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,-2,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,-2,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,-4,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,-4,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,0,-3,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,0,3,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,1,-4,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>3,1,4,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>4,-2,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>4,-3,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Bishop:3,-3,0,0>4,-3,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold--1:3,-2,0,0>2,-2,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold--1:3,-2,0,0>2,-2,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold--1:3,-2,0,0>3,-2,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold--1:3,-2,0,0>3,-2,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold--1:3,-2,0,0>4,-2,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold-1:3,0,0,0>2,0,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold-1:3,0,0,0>2,0,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold-1:3,0,0,0>2,0,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold-1:3,0,0,0>3,0,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Gold-1:3,0,0,0>3,0,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>3,-1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>3,-1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>3,0,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>3,0,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>3,1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>3,1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>4,-1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>4,-1,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>4,-1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>4,0,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>4,0,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>4,1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>4,1,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-King-0:4,0,0,0>4,1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Knight--3:4,-3,0,0>2,-3,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Knight--3:4,-3,0,0>2,-3,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Knight-3:4,3,0,0>2,3,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Knight-3:4,3,0,0>2,3,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Lance--4:4,-4,0,0>3,-4,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Lance-4:4,4,0,0>3,4,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--1:2,-1,0,0>1,-1,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--1:2,-1,0,0>2,-1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--1:2,-1,0,0>2,-1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--1:2,-1,0,0>2,0,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--2:2,-2,0,0>1,-2,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--2:2,-2,0,0>2,-2,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--2:2,-2,0,0>2,-2,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--3:2,-3,0,0>1,-3,0,0",
+            "tactical": 0,
+            "preference": 90000,
+            "total": 90000,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--3:2,-3,0,0>2,-3,-1,0",
+            "tactical": 0,
+            "preference": 70000,
+            "total": 70000,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--3:2,-3,0,0>2,-3,1,0",
+            "tactical": 0,
+            "preference": 70000,
+            "total": 70000,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--4:2,-4,0,0>1,-4,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--4:2,-4,0,0>2,-4,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn--4:2,-4,0,0>2,-4,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-0:1,0,3,0>0,0,3,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-0:1,0,3,0>1,-1,3,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-0:1,0,3,0>1,0,2,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-0:1,0,3,0>1,0,4,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-0:1,0,3,0>1,1,3,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-1:2,1,0,0>1,1,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-1:2,1,0,0>2,0,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-1:2,1,0,0>2,1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-1:2,1,0,0>2,1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-2:2,2,0,0>1,2,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-2:2,2,0,0>2,2,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-2:2,2,0,0>2,2,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-2:2,2,0,0>2,3,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-3:0,3,0,0>-1,3,0,0",
+            "tactical": -100,
+            "preference": 0,
+            "total": -100,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-3:0,3,0,0>0,2,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-3:0,3,0,0>0,3,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-3:0,3,0,0>0,3,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-3:0,3,0,0>0,4,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-4:2,4,0,0>1,4,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-4:2,4,0,0>2,3,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-4:2,4,0,0>2,4,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Pawn-4:2,4,0,0>2,4,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,-1,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,-2,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,-3,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,-4,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,0,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,1,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,2,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,3,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,3,-2,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,3,-3,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,3,-4,0",
+            "tactical": -900,
+            "preference": 0,
+            "total": -900,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,3,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,3,2,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,3,3,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,3,4,0",
+            "tactical": -900,
+            "preference": 0,
+            "total": -900,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>1,4,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>2,3,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Rook:1,3,0,0>3,3,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver--2:3,-1,0,0>2,-1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver--2:3,-1,0,0>2,-1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver--2:3,-1,0,0>2,0,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver--2:3,-1,0,0>4,-1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver--2:3,-1,0,0>4,-1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver--2:3,-1,0,0>4,-2,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver-2:3,1,0,0>2,0,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver-2:3,1,0,0>2,1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver-2:3,1,0,0>2,1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver-2:3,1,0,0>4,1,-1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver-2:3,1,0,0>4,1,1,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        },
+        {
+            "move": "B-Silver-2:3,1,0,0>4,2,0,0",
+            "tactical": 0,
+            "preference": 0,
+            "total": 0,
+            "replyNodes": 42
+        }
+    ]
+}

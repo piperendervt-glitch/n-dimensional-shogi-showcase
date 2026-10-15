@@ -1,0 +1,79 @@
+{
+  "status": "PAUSED_BY_USER",
+  "utc": "2026-10-15T13:05:57.387538+00:00",
+  "reason": "User requested a pause after the current videos finished to review them. Both captures completed; subsequent benchmark stopped.",
+  "stoppedOwnedPlayerPid": 35664,
+  "interruptedRun": "quality-v2-benchmark-1080",
+  "notStarted": "quality-v2-benchmark-1440",
+  "videoSampleChecks": [
+    {
+      "profile": "ShowcaseRaster",
+      "frames": 4312,
+      "samples": [
+        {
+          "frame": 0,
+          "decoded": true,
+          "shape": [
+            1080,
+            1920,
+            3
+          ]
+        },
+        {
+          "frame": 2156,
+          "decoded": true,
+          "shape": [
+            1080,
+            1920,
+            3
+          ]
+        },
+        {
+          "frame": 4311,
+          "decoded": true,
+          "shape": [
+            1080,
+            1920,
+            3
+          ]
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "profile": "GeometryReference",
+      "frames": 4322,
+      "samples": [
+        {
+          "frame": 0,
+          "decoded": true,
+          "shape": [
+            1080,
+            1920,
+            3
+          ]
+        },
+        {
+          "frame": 2161,
+          "decoded": true,
+          "shape": [
+            1080,
+            1920,
+            3
+          ]
+        },
+        {
+          "frame": 4321,
+          "decoded": true,
+          "shape": [
+            1080,
+            1920,
+            3
+          ]
+        }
+      ],
+      "status": "PASS"
+    }
+  ],
+  "fullDecodeCheck": "Pending; only beginning, middle and last frame checked before pausing."
+}

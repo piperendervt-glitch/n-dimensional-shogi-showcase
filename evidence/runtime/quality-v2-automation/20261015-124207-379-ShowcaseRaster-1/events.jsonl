@@ -1,0 +1,7 @@
+{"kind":"RunStarted","message":"DirectedLive; all rules fixed; official 40-piece initial state","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":0.0,"angle":0.0}
+{"kind":"MoveReserved","message":"A-Pawn-0:-2,0,0,0>-1,0,0,0","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":9.382569830864668,"angle":0.0}
+{"kind":"MoveAnimationStarted","message":"A-Pawn-0:-2,0,0,0>-1,0,0,0","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":9.382569830864668,"angle":0.0}
+{"kind":"Pause","message":"True","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":9.382569830864668,"angle":0.0}
+{"kind":"DebugToggle","message":"No timeline or camera change","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":9.382569830864668,"angle":0.0}
+{"kind":"DebugToggle","message":"No timeline or camera change","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":9.382569830864668,"angle":0.0}
+{"kind":"Pause","message":"False","stateHash":"68b1ef1c7742d934f392aeeea45b669fed3a3fd9e361e43c00d9815e5d14786a","ply":0,"scene":1,"time":9.382569830864668,"angle":0.0}

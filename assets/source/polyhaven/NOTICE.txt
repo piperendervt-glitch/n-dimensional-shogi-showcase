@@ -1,0 +1,25 @@
+Poly Haven CC0 texture sources — 2026-10-15
+
+Wood Table 001
+https://polyhaven.com/a/wood_table_001
+Photography: Dimitrios Savva; Processing: Rico Cilliers
+
+American Walnut Veneer
+https://polyhaven.com/a/american_walnut_veneer
+Author: Jenelle van Heerden
+
+Sandstone Cracks
+https://polyhaven.com/a/sandstone_cracks
+Author: Rob Tuytel
+
+All three sources are CC0-1.0 / public domain resources from Poly Haven.
+https://polyhaven.com/license
+https://creativecommons.org/publicdomain/zero/1.0/
+
+These source textures remain CC0. They are not original scans made by this
+project. Colour, normal strength, orientation and roughness were adjusted for
+the showcase. The original 2k source-map files, metadata and SHA-256 checksums
+are recorded in provenance.json. The game does not call the Poly Haven API.
+
+Original fixed word images and ceramic/botanical texture code are authored
+within this project. No font files or reference scene images are redistributed.

@@ -1,0 +1,2771 @@
+{
+  "source": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\quality-v2-geometry-passes\\20261015-123835-231-GeometryReference-1",
+  "scope": "Independent EXR decoding, finiteness, ranges, hashes, normal unit lengths, and manifest sampling audit. Shadow/reflection per-piece identity and complete absence are NOT_VALIDATED. Review PNGs use one fixed physical-radiance exposure for every probe face and snapshot; originals are unchanged.",
+  "reflectionPreviewExposure": 0.0001220703125,
+  "captures": [
+    {
+      "file": "scene01-close-passes.json",
+      "sha256": "4085fd5bb14d516366cd5a0fb514c21c17ba5ffb8a3363d8afaa7cf750f821d1",
+      "status": "GPU_READBACK_COMPLETE",
+      "errors": [],
+      "expectedBuffers": 11,
+      "savedBuffers": 11,
+      "requestFrame": 7,
+      "captureFrame": 7,
+      "reflection": "Actual HDProbe.realtimeTexture; 128 px; mode=EveryFrame; timeSlicing=False; texture updateCount=3; position=(0.00, 1.05, 0.00)",
+      "planarReflection": "Actual PlanarReflectionProbe.realtimeTexture; 512x512; mode=EveryFrame; updateCount=3; mirrorPlane=(0.00, 0.82, 0.00)",
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "pixelAudit": {
+        "status": "PASS_SAMPLED_PIXELS",
+        "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes also test selected stale-depth pixels. A former silhouette with hasExpectedSectionSurface=false has no current section ray hit: PASS_FORMER_SURFACE_ABSENT means only that finite actual depth lies more than 1 mm behind the old surface; current background depth/normal agreement is NOT_VALIDATED and does not increment matchedDepth/matchedNormals. Other scene occluders are classified separately. A disagreement within 1/128 pixel of a projected triangle edge is NOT_VALIDATED_RASTER_BOUNDARY, never a passing normal/depth match; it bounds subpixel raster coverage ambiguity. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+        "isolatedReadbackDepthMutation": "PASS_DETECTED: FAIL_DEPTH_BEHIND_CURRENT_MESH; isolated CPU mutation of one actual GPU-readback depth pixel; no GPU render fault was injected; original pixels and baseline probes were preserved",
+        "probes": 529,
+        "matchedDepth": 529,
+        "matchedNormals": 529,
+        "occluded": 0,
+        "stalePixelsExcluded": 0,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 0,
+        "rasterBoundaryUnresolved": 0,
+        "rasterBoundaryMarginPixels": 0.0078125,
+        "depthToleranceMetres": 0.0010000000474974513,
+        "normalDotMinimum": 0.75
+      },
+      "failedSamplesWithZeroExpectedNormal": 0,
+      "maxMatchedDepthAbsoluteErrorMetres": 1.5079975128173828e-05,
+      "independentBoundaryReview": {
+        "status": "RECOMPUTED_FROM_SAVED_GEOMETRY",
+        "oracleSha256": "3ca4c29022decfab10e69d885322218d8c8653c057c061d71c52372092d2416f",
+        "exrRowFlipRequiredForUnityProbeCoordinates": true,
+        "medianDecodedDepthMatchErrorMetres": 0.0,
+        "decodedSampleCount": 529,
+        "maxDecodedDepthVersusManifestErrorMetres": 0.0,
+        "maxDecodedNormalDotVersusManifestError": 7.778656119228344e-08,
+        "disagreements": []
+      }
+    },
+    {
+      "file": "scene01-opening-passes.json",
+      "sha256": "601e7463b758333c91c641fbe08357489c2d4ce503be4f60e4cd8bd0512a9c5b",
+      "status": "GPU_READBACK_COMPLETE",
+      "errors": [],
+      "expectedBuffers": 11,
+      "savedBuffers": 11,
+      "requestFrame": 111,
+      "captureFrame": 111,
+      "reflection": "Actual HDProbe.realtimeTexture; 128 px; mode=EveryFrame; timeSlicing=False; texture updateCount=107; position=(0.00, 1.05, 0.00)",
+      "planarReflection": "Actual PlanarReflectionProbe.realtimeTexture; 512x512; mode=EveryFrame; updateCount=107; mirrorPlane=(0.00, 0.82, 0.00)",
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "pixelAudit": {
+        "status": "PASS_SAMPLED_PIXELS",
+        "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes also test selected stale-depth pixels. A former silhouette with hasExpectedSectionSurface=false has no current section ray hit: PASS_FORMER_SURFACE_ABSENT means only that finite actual depth lies more than 1 mm behind the old surface; current background depth/normal agreement is NOT_VALIDATED and does not increment matchedDepth/matchedNormals. Other scene occluders are classified separately. A disagreement within 1/128 pixel of a projected triangle edge is NOT_VALIDATED_RASTER_BOUNDARY, never a passing normal/depth match; it bounds subpixel raster coverage ambiguity. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+        "isolatedReadbackDepthMutation": "PASS_DETECTED: FAIL_DEPTH_BEHIND_CURRENT_MESH; isolated CPU mutation of one actual GPU-readback depth pixel; no GPU render fault was injected; original pixels and baseline probes were preserved",
+        "probes": 535,
+        "matchedDepth": 535,
+        "matchedNormals": 535,
+        "occluded": 0,
+        "stalePixelsExcluded": 0,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 0,
+        "rasterBoundaryUnresolved": 0,
+        "rasterBoundaryMarginPixels": 0.0078125,
+        "depthToleranceMetres": 0.0010000000474974513,
+        "normalDotMinimum": 0.75
+      },
+      "failedSamplesWithZeroExpectedNormal": 0,
+      "maxMatchedDepthAbsoluteErrorMetres": 6.377696990966797e-05,
+      "independentBoundaryReview": {
+        "status": "RECOMPUTED_FROM_SAVED_GEOMETRY",
+        "oracleSha256": "6347f542d91eb143bbf912af2eafeb1a1133c579c64d81e0a632e4538b5d70f3",
+        "exrRowFlipRequiredForUnityProbeCoordinates": true,
+        "medianDecodedDepthMatchErrorMetres": 0.0,
+        "decodedSampleCount": 535,
+        "maxDecodedDepthVersusManifestErrorMetres": 0.0,
+        "maxDecodedNormalDotVersusManifestError": 9.816477930524314e-08,
+        "disagreements": []
+      }
+    },
+    {
+      "file": "scene01-wide-passes.json",
+      "sha256": "371c9359b1c56ddabfdf6fb759c175e410e7d6cb5633aca050a42727fe549240",
+      "status": "GPU_READBACK_COMPLETE",
+      "errors": [],
+      "expectedBuffers": 11,
+      "savedBuffers": 11,
+      "requestFrame": 3,
+      "captureFrame": 3,
+      "reflection": "Actual HDProbe.realtimeTexture; 128 px; mode=EveryFrame; timeSlicing=False; texture updateCount=0; position=(0.00, 1.05, 0.00)",
+      "planarReflection": "Actual PlanarReflectionProbe.realtimeTexture; 512x512; mode=EveryFrame; updateCount=0; mirrorPlane=(0.00, 0.82, 0.00)",
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "pixelAudit": {
+        "status": "PASS_SAMPLED_PIXELS",
+        "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes also test selected stale-depth pixels. A former silhouette with hasExpectedSectionSurface=false has no current section ray hit: PASS_FORMER_SURFACE_ABSENT means only that finite actual depth lies more than 1 mm behind the old surface; current background depth/normal agreement is NOT_VALIDATED and does not increment matchedDepth/matchedNormals. Other scene occluders are classified separately. A disagreement within 1/128 pixel of a projected triangle edge is NOT_VALIDATED_RASTER_BOUNDARY, never a passing normal/depth match; it bounds subpixel raster coverage ambiguity. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+        "isolatedReadbackDepthMutation": "PASS_DETECTED: FAIL_DEPTH_BEHIND_CURRENT_MESH; isolated CPU mutation of one actual GPU-readback depth pixel; no GPU render fault was injected; original pixels and baseline probes were preserved",
+        "probes": 535,
+        "matchedDepth": 535,
+        "matchedNormals": 535,
+        "occluded": 0,
+        "stalePixelsExcluded": 0,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 0,
+        "rasterBoundaryUnresolved": 0,
+        "rasterBoundaryMarginPixels": 0.0078125,
+        "depthToleranceMetres": 0.0010000000474974513,
+        "normalDotMinimum": 0.75
+      },
+      "failedSamplesWithZeroExpectedNormal": 0,
+      "maxMatchedDepthAbsoluteErrorMetres": 6.377696990966797e-05,
+      "independentBoundaryReview": {
+        "status": "RECOMPUTED_FROM_SAVED_GEOMETRY",
+        "oracleSha256": "639652a93dce82470f91cbb1d400e4c17baca34f67e8314b0ad410e74b417913",
+        "exrRowFlipRequiredForUnityProbeCoordinates": true,
+        "medianDecodedDepthMatchErrorMetres": 0.0,
+        "decodedSampleCount": 535,
+        "maxDecodedDepthVersusManifestErrorMetres": 0.0,
+        "maxDecodedNormalDotVersusManifestError": 9.816477930524314e-08,
+        "disagreements": []
+      }
+    },
+    {
+      "file": "scene02-height-passes.json",
+      "sha256": "6c7a89ee5102fc5c5b204ac754fa35a5da0ba790a8df907afff086513e2044bd",
+      "status": "GPU_READBACK_COMPLETE",
+      "errors": [],
+      "expectedBuffers": 11,
+      "savedBuffers": 11,
+      "requestFrame": 115,
+      "captureFrame": 115,
+      "reflection": "Actual HDProbe.realtimeTexture; 128 px; mode=EveryFrame; timeSlicing=False; texture updateCount=111; position=(0.00, 1.05, 0.00)",
+      "planarReflection": "Actual PlanarReflectionProbe.realtimeTexture; 512x512; mode=EveryFrame; updateCount=111; mirrorPlane=(0.00, 0.82, 0.00)",
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "pixelAudit": {
+        "status": "PARTIAL_SAMPLED_PIXELS_RASTER_BOUNDARIES_UNRESOLVED",
+        "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes also test selected stale-depth pixels. A former silhouette with hasExpectedSectionSurface=false has no current section ray hit: PASS_FORMER_SURFACE_ABSENT means only that finite actual depth lies more than 1 mm behind the old surface; current background depth/normal agreement is NOT_VALIDATED and does not increment matchedDepth/matchedNormals. Other scene occluders are classified separately. A disagreement within 1/128 pixel of a projected triangle edge is NOT_VALIDATED_RASTER_BOUNDARY, never a passing normal/depth match; it bounds subpixel raster coverage ambiguity. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+        "isolatedReadbackDepthMutation": "PASS_DETECTED: FAIL_DEPTH_BEHIND_CURRENT_MESH; isolated CPU mutation of one actual GPU-readback depth pixel; no GPU render fault was injected; original pixels and baseline probes were preserved",
+        "probes": 530,
+        "matchedDepth": 530,
+        "matchedNormals": 529,
+        "occluded": 0,
+        "stalePixelsExcluded": 0,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 0,
+        "rasterBoundaryUnresolved": 1,
+        "rasterBoundaryMarginPixels": 0.0078125,
+        "depthToleranceMetres": 0.0010000000474974513,
+        "normalDotMinimum": 0.75
+      },
+      "failedSamplesWithZeroExpectedNormal": 0,
+      "maxMatchedDepthAbsoluteErrorMetres": 2.4437904357910156e-05,
+      "independentBoundaryReview": {
+        "status": "RECOMPUTED_FROM_SAVED_GEOMETRY",
+        "oracleSha256": "167b2baf215d2c5a35a506ca5061606544cff3b4f3a0841c66ba7565cf1b3a07",
+        "exrRowFlipRequiredForUnityProbeCoordinates": true,
+        "medianDecodedDepthMatchErrorMetres": 0.0,
+        "decodedSampleCount": 530,
+        "maxDecodedDepthVersusManifestErrorMetres": 0.0,
+        "maxDecodedNormalDotVersusManifestError": 9.342714257787321e-08,
+        "disagreements": [
+          {
+            "id": "Board",
+            "x": 763,
+            "y": 388,
+            "runtimeResult": "NOT_VALIDATED_RASTER_BOUNDARY_NORMAL",
+            "cpuHitMarginPixels": 0.6496238112449646,
+            "matchingProjectedEdges": [
+              {
+                "id": "B-King-0",
+                "triangle": 36,
+                "edge": 2,
+                "marginPixels": 0.0011169569831885361,
+                "edgeDepthMetres": 1.1126535821731853,
+                "actualNormalDot": 0.9999921088422514
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "file": "scene03-pressure-passes.json",
+      "sha256": "110098004528d0e72ec9072cf9f47f20936a7d63abdd18475afdbc3262809429",
+      "status": "GPU_READBACK_COMPLETE",
+      "errors": [],
+      "expectedBuffers": 11,
+      "savedBuffers": 11,
+      "requestFrame": 268,
+      "captureFrame": 268,
+      "reflection": "Actual HDProbe.realtimeTexture; 128 px; mode=EveryFrame; timeSlicing=False; texture updateCount=264; position=(0.00, 1.05, 0.00)",
+      "planarReflection": "Actual PlanarReflectionProbe.realtimeTexture; 512x512; mode=EveryFrame; updateCount=264; mirrorPlane=(0.00, 0.82, 0.00)",
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "pixelAudit": {
+        "status": "PARTIAL_SAMPLED_PIXELS_RASTER_BOUNDARIES_UNRESOLVED",
+        "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes also test selected stale-depth pixels. A former silhouette with hasExpectedSectionSurface=false has no current section ray hit: PASS_FORMER_SURFACE_ABSENT means only that finite actual depth lies more than 1 mm behind the old surface; current background depth/normal agreement is NOT_VALIDATED and does not increment matchedDepth/matchedNormals. Other scene occluders are classified separately. A disagreement within 1/128 pixel of a projected triangle edge is NOT_VALIDATED_RASTER_BOUNDARY, never a passing normal/depth match; it bounds subpixel raster coverage ambiguity. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+        "isolatedReadbackDepthMutation": "PASS_DETECTED: FAIL_DEPTH_BEHIND_CURRENT_MESH; isolated CPU mutation of one actual GPU-readback depth pixel; no GPU render fault was injected; original pixels and baseline probes were preserved",
+        "probes": 524,
+        "matchedDepth": 524,
+        "matchedNormals": 523,
+        "occluded": 0,
+        "stalePixelsExcluded": 0,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 0,
+        "rasterBoundaryUnresolved": 1,
+        "rasterBoundaryMarginPixels": 0.0078125,
+        "depthToleranceMetres": 0.0010000000474974513,
+        "normalDotMinimum": 0.75
+      },
+      "failedSamplesWithZeroExpectedNormal": 0,
+      "maxMatchedDepthAbsoluteErrorMetres": 8.243322372436523e-05,
+      "independentBoundaryReview": {
+        "status": "RECOMPUTED_FROM_SAVED_GEOMETRY",
+        "oracleSha256": "745d6a005c79cf105fc74b893d914583f5c81a3884183d80db824181ae2aaa18",
+        "exrRowFlipRequiredForUnityProbeCoordinates": true,
+        "medianDecodedDepthMatchErrorMetres": 0.0,
+        "decodedSampleCount": 524,
+        "maxDecodedDepthVersusManifestErrorMetres": 0.0,
+        "maxDecodedNormalDotVersusManifestError": 9.342714257787321e-08,
+        "disagreements": [
+          {
+            "id": "Board",
+            "x": 763,
+            "y": 388,
+            "runtimeResult": "NOT_VALIDATED_RASTER_BOUNDARY_NORMAL",
+            "cpuHitMarginPixels": 0.6496238112449646,
+            "matchingProjectedEdges": [
+              {
+                "id": "B-King-0",
+                "triangle": 36,
+                "edge": 2,
+                "marginPixels": 0.0011169569831885361,
+                "edgeDepthMetres": 1.1126535821731853,
+                "actualNormalDot": 0.9999921088422514
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "file": "scene04-absence-passes.json",
+      "sha256": "bc3992c3474c021782a8a7d641d0acb56395d82a080259a9fb5fb8ac5978b1af",
+      "status": "GPU_READBACK_COMPLETE",
+      "errors": [],
+      "expectedBuffers": 11,
+      "savedBuffers": 11,
+      "requestFrame": 530,
+      "captureFrame": 530,
+      "reflection": "Actual HDProbe.realtimeTexture; 128 px; mode=EveryFrame; timeSlicing=False; texture updateCount=525; position=(0.00, 1.05, 0.00)",
+      "planarReflection": "Actual PlanarReflectionProbe.realtimeTexture; 512x512; mode=EveryFrame; updateCount=525; mirrorPlane=(0.00, 0.82, 0.00)",
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "pixelAudit": {
+        "status": "PARTIAL_SAMPLED_PIXELS_RASTER_BOUNDARIES_UNRESOLVED",
+        "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes also test selected stale-depth pixels. A former silhouette with hasExpectedSectionSurface=false has no current section ray hit: PASS_FORMER_SURFACE_ABSENT means only that finite actual depth lies more than 1 mm behind the old surface; current background depth/normal agreement is NOT_VALIDATED and does not increment matchedDepth/matchedNormals. Other scene occluders are classified separately. A disagreement within 1/128 pixel of a projected triangle edge is NOT_VALIDATED_RASTER_BOUNDARY, never a passing normal/depth match; it bounds subpixel raster coverage ambiguity. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+        "isolatedReadbackDepthMutation": "PASS_DETECTED: FAIL_POSSIBLE_STALE_DEPTH; isolated CPU mutation of one actual GPU-readback depth pixel; no GPU render fault was injected; original pixels and baseline probes were preserved",
+        "probes": 524,
+        "matchedDepth": 511,
+        "matchedNormals": 510,
+        "occluded": 0,
+        "stalePixelsExcluded": 13,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 13,
+        "rasterBoundaryUnresolved": 1,
+        "rasterBoundaryMarginPixels": 0.0078125,
+        "depthToleranceMetres": 0.0010000000474974513,
+        "normalDotMinimum": 0.75
+      },
+      "failedSamplesWithZeroExpectedNormal": 0,
+      "maxMatchedDepthAbsoluteErrorMetres": 2.4437904357910156e-05,
+      "independentBoundaryReview": {
+        "status": "RECOMPUTED_FROM_SAVED_GEOMETRY",
+        "oracleSha256": "5e6bbc07ebc83921ea570008688735db35912cd01448f1d95b29eb8e4695cef9",
+        "exrRowFlipRequiredForUnityProbeCoordinates": true,
+        "medianDecodedDepthMatchErrorMetres": 0.0,
+        "decodedSampleCount": 524,
+        "maxDecodedDepthVersusManifestErrorMetres": 0.0,
+        "maxDecodedNormalDotVersusManifestError": 9.342714257787321e-08,
+        "disagreements": [
+          {
+            "id": "Board",
+            "x": 763,
+            "y": 388,
+            "runtimeResult": "NOT_VALIDATED_RASTER_BOUNDARY_NORMAL",
+            "cpuHitMarginPixels": 0.6496238112449646,
+            "matchingProjectedEdges": [
+              {
+                "id": "B-King-0",
+                "triangle": 36,
+                "edge": 2,
+                "marginPixels": 0.0011169569831885361,
+                "edgeDepthMetres": 1.1126535821731853,
+                "actualNormalDot": 0.9999921088422514
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "file": "scene04-h90-passes.json",
+      "sha256": "e084354331fbc3670973cfc42a036d15f367685d796707fff8550789e8254b6c",
+      "status": "GPU_READBACK_COMPLETE",
+      "errors": [],
+      "expectedBuffers": 11,
+      "savedBuffers": 11,
+      "requestFrame": 401,
+      "captureFrame": 401,
+      "reflection": "Actual HDProbe.realtimeTexture; 128 px; mode=EveryFrame; timeSlicing=False; texture updateCount=397; position=(0.00, 1.05, 0.00)",
+      "planarReflection": "Actual PlanarReflectionProbe.realtimeTexture; 512x512; mode=EveryFrame; updateCount=397; mirrorPlane=(0.00, 0.82, 0.00)",
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "pixelAudit": {
+        "status": "PASS_SAMPLED_PIXELS",
+        "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes also test selected stale-depth pixels. A former silhouette with hasExpectedSectionSurface=false has no current section ray hit: PASS_FORMER_SURFACE_ABSENT means only that finite actual depth lies more than 1 mm behind the old surface; current background depth/normal agreement is NOT_VALIDATED and does not increment matchedDepth/matchedNormals. Other scene occluders are classified separately. A disagreement within 1/128 pixel of a projected triangle edge is NOT_VALIDATED_RASTER_BOUNDARY, never a passing normal/depth match; it bounds subpixel raster coverage ambiguity. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+        "isolatedReadbackDepthMutation": "PASS_DETECTED: FAIL_POSSIBLE_STALE_DEPTH; isolated CPU mutation of one actual GPU-readback depth pixel; no GPU render fault was injected; original pixels and baseline probes were preserved",
+        "probes": 451,
+        "matchedDepth": 443,
+        "matchedNormals": 443,
+        "occluded": 0,
+        "stalePixelsExcluded": 394,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 8,
+        "rasterBoundaryUnresolved": 0,
+        "rasterBoundaryMarginPixels": 0.0078125,
+        "depthToleranceMetres": 0.0010000000474974513,
+        "normalDotMinimum": 0.75
+      },
+      "failedSamplesWithZeroExpectedNormal": 0,
+      "maxMatchedDepthAbsoluteErrorMetres": 8.243322372436523e-05,
+      "independentBoundaryReview": {
+        "status": "RECOMPUTED_FROM_SAVED_GEOMETRY",
+        "oracleSha256": "8e261bf139972e1d1ec60536be29c7787b06126a2a2dd7712c3dbb4bb4aa1ea4",
+        "exrRowFlipRequiredForUnityProbeCoordinates": true,
+        "medianDecodedDepthMatchErrorMetres": 0.0,
+        "decodedSampleCount": 451,
+        "maxDecodedDepthVersusManifestErrorMetres": 0.0,
+        "maxDecodedNormalDotVersusManifestError": 8.165395382064844e-08,
+        "disagreements": []
+      }
+    },
+    {
+      "file": "scene05-before-capture-passes.json",
+      "sha256": "7468e0e88e5f4fdff1274cfa43d8a8bc8376c11b9cf571625a8d09df02d38995",
+      "status": "GPU_READBACK_COMPLETE",
+      "errors": [],
+      "expectedBuffers": 11,
+      "savedBuffers": 11,
+      "requestFrame": 2523,
+      "captureFrame": 2523,
+      "reflection": "Actual HDProbe.realtimeTexture; 128 px; mode=EveryFrame; timeSlicing=False; texture updateCount=2511; position=(0.00, 1.05, 0.00)",
+      "planarReflection": "Actual PlanarReflectionProbe.realtimeTexture; 512x512; mode=EveryFrame; updateCount=2511; mirrorPlane=(0.00, 0.82, 0.00)",
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "pixelAudit": {
+        "status": "PASS_SAMPLED_PIXELS",
+        "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes also test selected stale-depth pixels. A former silhouette with hasExpectedSectionSurface=false has no current section ray hit: PASS_FORMER_SURFACE_ABSENT means only that finite actual depth lies more than 1 mm behind the old surface; current background depth/normal agreement is NOT_VALIDATED and does not increment matchedDepth/matchedNormals. Other scene occluders are classified separately. A disagreement within 1/128 pixel of a projected triangle edge is NOT_VALIDATED_RASTER_BOUNDARY, never a passing normal/depth match; it bounds subpixel raster coverage ambiguity. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+        "isolatedReadbackDepthMutation": "PASS_DETECTED: FAIL_POSSIBLE_STALE_DEPTH; isolated CPU mutation of one actual GPU-readback depth pixel; no GPU render fault was injected; original pixels and baseline probes were preserved",
+        "probes": 440,
+        "matchedDepth": 432,
+        "matchedNormals": 432,
+        "occluded": 0,
+        "stalePixelsExcluded": 376,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 8,
+        "rasterBoundaryUnresolved": 0,
+        "rasterBoundaryMarginPixels": 0.0078125,
+        "depthToleranceMetres": 0.0010000000474974513,
+        "normalDotMinimum": 0.75
+      },
+      "failedSamplesWithZeroExpectedNormal": 0,
+      "maxMatchedDepthAbsoluteErrorMetres": 7.987022399902344e-06,
+      "independentBoundaryReview": {
+        "status": "RECOMPUTED_FROM_SAVED_GEOMETRY",
+        "oracleSha256": "e1a25a265ddc9c7019259ed23818ee6e388c610ced31a682a5f775c329c367f4",
+        "exrRowFlipRequiredForUnityProbeCoordinates": true,
+        "medianDecodedDepthMatchErrorMetres": 0.0,
+        "decodedSampleCount": 440,
+        "maxDecodedDepthVersusManifestErrorMetres": 0.0,
+        "maxDecodedNormalDotVersusManifestError": 8.165395382064844e-08,
+        "disagreements": []
+      }
+    },
+    {
+      "file": "scene05-ending-passes.json",
+      "sha256": "b9d5538c50db65529c0b14c95ca70037ae8f9607d5f03cdda75a95ef6266a0ff",
+      "status": "GPU_READBACK_COMPLETE",
+      "errors": [],
+      "expectedBuffers": 11,
+      "savedBuffers": 11,
+      "requestFrame": 2643,
+      "captureFrame": 2643,
+      "reflection": "Actual HDProbe.realtimeTexture; 128 px; mode=EveryFrame; timeSlicing=False; texture updateCount=2630; position=(0.00, 1.05, 0.00)",
+      "planarReflection": "Actual PlanarReflectionProbe.realtimeTexture; 512x512; mode=EveryFrame; updateCount=2630; mirrorPlane=(0.00, 0.82, 0.00)",
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "pixelAudit": {
+        "status": "PASS_SAMPLED_PIXELS",
+        "scope": "Actual HDRP depth/normal readback versus current uploaded mesh ray intersections at sampled interior/near-edge pixels. Historical Empty silhouettes also test selected stale-depth pixels. A former silhouette with hasExpectedSectionSurface=false has no current section ray hit: PASS_FORMER_SURFACE_ABSENT means only that finite actual depth lies more than 1 mm behind the old surface; current background depth/normal agreement is NOT_VALIDATED and does not increment matchedDepth/matchedNormals. Other scene occluders are classified separately. A disagreement within 1/128 pixel of a projected triangle edge is NOT_VALIDATED_RASTER_BOUNDARY, never a passing normal/depth match; it bounds subpixel raster coverage ambiguity. This does not validate every pixel, final color, shadows, reflections, or temporal history.",
+        "isolatedReadbackDepthMutation": "PASS_DETECTED: FAIL_DEPTH_BEHIND_CURRENT_MESH; isolated CPU mutation of one actual GPU-readback depth pixel; no GPU render fault was injected; original pixels and baseline probes were preserved",
+        "probes": 515,
+        "matchedDepth": 515,
+        "matchedNormals": 515,
+        "occluded": 0,
+        "stalePixelsExcluded": 0,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 0,
+        "rasterBoundaryUnresolved": 0,
+        "rasterBoundaryMarginPixels": 0.0078125,
+        "depthToleranceMetres": 0.0010000000474974513,
+        "normalDotMinimum": 0.75
+      },
+      "failedSamplesWithZeroExpectedNormal": 0,
+      "maxMatchedDepthAbsoluteErrorMetres": 1.9609928131103516e-05,
+      "independentBoundaryReview": {
+        "status": "RECOMPUTED_FROM_SAVED_GEOMETRY",
+        "oracleSha256": "278f45e5b5760541ae721062e79c055498c4ce059f18fb9204be365ebbeaeaa2",
+        "exrRowFlipRequiredForUnityProbeCoordinates": true,
+        "medianDecodedDepthMatchErrorMetres": 0.0,
+        "decodedSampleCount": 515,
+        "maxDecodedDepthVersusManifestErrorMetres": 0.0,
+        "maxDecodedNormalDotVersusManifestError": 8.528492445591951e-08,
+        "disagreements": []
+      }
+    }
+  ],
+  "buffers": [
+    {
+      "file": "scene01-close-camera-hdr.exr",
+      "sha256": "d5e80b45450d63cee0bb2c250365d4eaa6a7d1c1a47849e631d24f96c3947700",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        29.0,
+        23.75,
+        16.0
+      ]
+    },
+    {
+      "file": "scene01-close-depth-metres.exr",
+      "sha256": "cd66652c400c6bfd39a6f2d51bb1f6da9a71f197f51d390468c6ba20bea2419d",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.3101266622543335,
+        0.3101266622543335,
+        0.3101266622543335
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene01-close-normal-world.exr",
+      "sha256": "5eccfe790409be0609f72450b79e4428f5d6e468d035facdeb06408f151e3bbd",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        -0.9585778117179871,
+        -0.9999894499778748,
+        -1.0
+      ],
+      "maxRGB": [
+        0.9999997019767761,
+        0.9999997019767761,
+        0.9999708533287048
+      ],
+      "validPixels": 918860,
+      "maxUnitLengthError": 1.7881393432617188e-07
+    },
+    {
+      "file": "scene01-close-reflection-negative-x.exr",
+      "sha256": "69f5bbf0010be5826781c9e4ae7c3d539a67072627a9cbc38c1c844be7473b71",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        18.5,
+        23.0,
+        5.25
+      ],
+      "maxRGB": [
+        16896.0,
+        15744.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene01-close-reflection-negative-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3538.515625,
+        3233.820068359375,
+        3232.0234375
+      ]
+    },
+    {
+      "file": "scene01-close-reflection-negative-y.exr",
+      "sha256": "48008fa7127206f4b9279623a9449da3aa8a641231dd0552bb7b8fd636d4bf6e",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        1248.0,
+        928.0,
+        344.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene01-close-reflection-negative-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3859.423828125,
+        2750.944091796875,
+        1945.1619873046875
+      ]
+    },
+    {
+      "file": "scene01-close-reflection-negative-z.exr",
+      "sha256": "fac9ed8251b1efa3fc581cadc91c5a18db49860ede7718d6c2e5f4d648afc6f8",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        210.0,
+        66.0,
+        30.5
+      ],
+      "maxRGB": [
+        19712.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene01-close-reflection-negative-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3628.465576171875,
+        2986.594970703125,
+        2802.98583984375
+      ]
+    },
+    {
+      "file": "scene01-close-reflection-planar.exr",
+      "sha256": "d3d0d6c85be1dc4ea49a639115b5c4da0605e7f13bcc069ec33cf2f63b9cd0bd",
+      "width": 512,
+      "height": 512,
+      "allFinite": true,
+      "minRGB": [
+        17.75,
+        20.25,
+        2.4375
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        48128.0
+      ],
+      "fixedExposurePreview": "scene01-close-reflection-planar-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        2933.3564453125,
+        3419.008544921875,
+        4174.4423828125
+      ]
+    },
+    {
+      "file": "scene01-close-reflection-positive-x.exr",
+      "sha256": "8e8de619e41fcd6630f2329099f59bd849f8725611b9fa0ce108e2c13109d535",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        21.0,
+        7.125
+      ],
+      "maxRGB": [
+        19200.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene01-close-reflection-positive-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3376.48046875,
+        3039.4951171875,
+        2940.080322265625
+      ]
+    },
+    {
+      "file": "scene01-close-reflection-positive-y.exr",
+      "sha256": "394f107cfdfa22eae80af460fa02febc98ee6fb523884ea4768338a279958521",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        54.5,
+        144.0,
+        8.5
+      ],
+      "maxRGB": [
+        10496.0,
+        10624.0,
+        10496.0
+      ],
+      "fixedExposurePreview": "scene01-close-reflection-positive-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        1662.3341064453125,
+        1595.0655517578125,
+        1408.0
+      ]
+    },
+    {
+      "file": "scene01-close-reflection-positive-z.exr",
+      "sha256": "1e807aff92053eded83dcba392f52e1d17fbb7479b231951dd7c2d13e365bda1",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        44.0,
+        6.375
+      ],
+      "maxRGB": [
+        60928.0,
+        47104.0,
+        30208.0
+      ],
+      "fixedExposurePreview": "scene01-close-reflection-positive-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3403.53173828125,
+        3059.51708984375,
+        2997.850830078125
+      ]
+    },
+    {
+      "file": "scene01-close-shadow-atlas.exr",
+      "sha256": "7282f197fb2eff0051de2b42feb450ba0bdbd7e028afd1d5ed3f1b5b185c95ba",
+      "width": 1024,
+      "height": 1024,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        8192.0,
+        8192.0
+      ],
+      "maxRGB": [
+        0.3348162770271301,
+        8192.0,
+        8192.0
+      ],
+      "varyingDepthPixels": 729762,
+      "expectedNativeSizeFromManifest": [
+        8192,
+        8192
+      ],
+      "nativeSizeChannelsConstant": true
+    },
+    {
+      "file": "scene01-opening-camera-hdr.exr",
+      "sha256": "a89363b666fb026dc82f03562dade1d32e1ff48a960d46305ccf937d83e0d3d5",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        82.0,
+        68.0,
+        47.0
+      ]
+    },
+    {
+      "file": "scene01-opening-depth-metres.exr",
+      "sha256": "513fea5d898f0f05d1643ef6694c1ff2892e9b92128a3dfdb615916a79658664",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.5869652628898621,
+        0.5869652628898621,
+        0.5869652628898621
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene01-opening-normal-world.exr",
+      "sha256": "b3653adcb7908e871d640283aacfad858ebcb77a460f3a0e7fcd818d413fdb7f",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        -0.999998152256012,
+        -0.9999963641166687,
+        -1.0
+      ],
+      "maxRGB": [
+        0.9999997019767761,
+        0.9999997019767761,
+        0.9375662803649902
+      ],
+      "validPixels": 912307,
+      "maxUnitLengthError": 2.384185791015625e-07
+    },
+    {
+      "file": "scene01-opening-reflection-negative-x.exr",
+      "sha256": "432a16b4b62d439233f2dcf05ee02579baa115d705c0596cc65ba5270da52605",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        18.5,
+        23.0,
+        5.25
+      ],
+      "maxRGB": [
+        16896.0,
+        15744.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene01-opening-reflection-negative-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3479.9794921875,
+        3217.594970703125,
+        3231.884033203125
+      ]
+    },
+    {
+      "file": "scene01-opening-reflection-negative-y.exr",
+      "sha256": "6b798975496037ba655be8188e33696df939a7f9bd0116cd40e90b5033cf5992",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        1264.0,
+        944.0,
+        352.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene01-opening-reflection-negative-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3805.664794921875,
+        2731.0625,
+        1942.4034423828125
+      ]
+    },
+    {
+      "file": "scene01-opening-reflection-negative-z.exr",
+      "sha256": "abb8718603d79dae7abe03ace25ea73ff19cf14b5ca70e3bd1637130b0683b76",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        210.0,
+        66.0,
+        30.5
+      ],
+      "maxRGB": [
+        19712.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene01-opening-reflection-negative-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3629.55078125,
+        2987.497802734375,
+        2803.073486328125
+      ]
+    },
+    {
+      "file": "scene01-opening-reflection-planar.exr",
+      "sha256": "dc19951a4b1f5aded1ce7cb6ba51ee461fb3f20cba33623a3ee454215407584e",
+      "width": 512,
+      "height": 512,
+      "allFinite": true,
+      "minRGB": [
+        18.0,
+        16.5,
+        1.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene01-opening-reflection-planar-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        2898.690185546875,
+        3583.59130859375,
+        4256.32958984375
+      ]
+    },
+    {
+      "file": "scene01-opening-reflection-positive-x.exr",
+      "sha256": "35ad5feee9e39c15d45c2dbc60c4348950c264d5ecd8381bf011fc68ad39818b",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        21.0,
+        7.125
+      ],
+      "maxRGB": [
+        19200.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene01-opening-reflection-positive-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3353.3359375,
+        3036.296630859375,
+        2941.32421875
+      ]
+    },
+    {
+      "file": "scene01-opening-reflection-positive-y.exr",
+      "sha256": "394f107cfdfa22eae80af460fa02febc98ee6fb523884ea4768338a279958521",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        54.5,
+        144.0,
+        8.5
+      ],
+      "maxRGB": [
+        10496.0,
+        10624.0,
+        10496.0
+      ],
+      "fixedExposurePreview": "scene01-opening-reflection-positive-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        1662.3341064453125,
+        1595.0655517578125,
+        1408.0
+      ]
+    },
+    {
+      "file": "scene01-opening-reflection-positive-z.exr",
+      "sha256": "c6349dc0d59c4158b014ec5b129291237b34aebdb8e3b3905bb80fbc8ca9c968",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        44.0,
+        6.375
+      ],
+      "maxRGB": [
+        60928.0,
+        47104.0,
+        30208.0
+      ],
+      "fixedExposurePreview": "scene01-opening-reflection-positive-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3515.805908203125,
+        3091.5791015625,
+        2996.690673828125
+      ]
+    },
+    {
+      "file": "scene01-opening-shadow-atlas.exr",
+      "sha256": "29968266d0724082a68fdcc4c3b155b0b79e8dfab2da6fcdeebb5d4511365c5a",
+      "width": 1024,
+      "height": 1024,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        8192.0,
+        8192.0
+      ],
+      "maxRGB": [
+        0.33465805649757385,
+        8192.0,
+        8192.0
+      ],
+      "varyingDepthPixels": 707173,
+      "expectedNativeSizeFromManifest": [
+        8192,
+        8192
+      ],
+      "nativeSizeChannelsConstant": true
+    },
+    {
+      "file": "scene01-wide-camera-hdr.exr",
+      "sha256": "2ff8046a84a3a357c267b56429b500b2d3576684bf61cb49c3535d9919bd51e3",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        82.0,
+        68.0,
+        47.0
+      ]
+    },
+    {
+      "file": "scene01-wide-depth-metres.exr",
+      "sha256": "8cbc3e879ae91f57bc07782f8388b5eeccadcf27049270caf20e64b8890687b1",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.5869652628898621,
+        0.5869652628898621,
+        0.5869652628898621
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene01-wide-normal-world.exr",
+      "sha256": "d7ec2388816120370db442a4c38eb6d3b93b94a9b5e70d9c1b438683ca84bf58",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        -0.999998152256012,
+        -0.9999963641166687,
+        -1.0
+      ],
+      "maxRGB": [
+        0.9999997019767761,
+        0.9999997019767761,
+        0.9375662803649902
+      ],
+      "validPixels": 912307,
+      "maxUnitLengthError": 2.384185791015625e-07
+    },
+    {
+      "file": "scene01-wide-reflection-negative-x.exr",
+      "sha256": "ff5ffe5c658a894f7dc8a6fa84377087c005be0500ff885e9ce1db250dae62aa",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        16896.0,
+        15744.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene01-wide-reflection-negative-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3346.85986328125,
+        3251.89990234375,
+        3322.376953125
+      ]
+    },
+    {
+      "file": "scene01-wide-reflection-negative-y.exr",
+      "sha256": "3be877f63fa9d5bdf477444425512ad86651772f3472f6cae41e73e6e0a183a5",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene01-wide-reflection-negative-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3842.262939453125,
+        2728.052734375,
+        1939.6275634765625
+      ]
+    },
+    {
+      "file": "scene01-wide-reflection-negative-z.exr",
+      "sha256": "0a6023cab0c51d40c2075f5f06605d3168f4849aec5284de01bd53092e64a70a",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        16896.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene01-wide-reflection-negative-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3374.9912109375,
+        2945.57421875,
+        2931.6279296875
+      ]
+    },
+    {
+      "file": "scene01-wide-reflection-planar.exr",
+      "sha256": "a4cfd3ddef97ae74e340e456aeadd76e9f821e9ec426ed5352fa4a8a4fcd8fab",
+      "width": 512,
+      "height": 512,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene01-wide-reflection-planar-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        2980.2099609375,
+        3832.033935546875,
+        4343.15771484375
+      ]
+    },
+    {
+      "file": "scene01-wide-reflection-positive-x.exr",
+      "sha256": "8c52b34e3022d8b9baa4214c10f26abddb81ace4ab9a4c975620d9575b4a983e",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        16384.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene01-wide-reflection-positive-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3207.915283203125,
+        3054.947998046875,
+        3040.9755859375
+      ]
+    },
+    {
+      "file": "scene01-wide-reflection-positive-y.exr",
+      "sha256": "794fe8cae6d31ae2501273a3c68d715e8d8b7a1c70535095cb17d4d251306f3f",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        10496.0,
+        10624.0,
+        10496.0
+      ],
+      "fixedExposurePreview": "scene01-wide-reflection-positive-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        1662.6474609375,
+        1595.9183349609375,
+        1408.0537109375
+      ]
+    },
+    {
+      "file": "scene01-wide-reflection-positive-z.exr",
+      "sha256": "b56fc803606196e2089e8f77f1003e3f71056953f7490c492c0e50001439cdb8",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        59392.0,
+        46080.0,
+        29696.0
+      ],
+      "fixedExposurePreview": "scene01-wide-reflection-positive-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3430.685546875,
+        3199.6015625,
+        3139.572998046875
+      ]
+    },
+    {
+      "file": "scene01-wide-shadow-atlas.exr",
+      "sha256": "08d5aab8de2573815724949f1c28f19314f9fc3d03f751a3f10d0bf1b1f06a7c",
+      "width": 1024,
+      "height": 1024,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        8192.0,
+        8192.0
+      ],
+      "maxRGB": [
+        0.33465805649757385,
+        8192.0,
+        8192.0
+      ],
+      "varyingDepthPixels": 707173,
+      "expectedNativeSizeFromManifest": [
+        8192,
+        8192
+      ],
+      "nativeSizeChannelsConstant": true
+    },
+    {
+      "file": "scene02-height-camera-hdr.exr",
+      "sha256": "640de1a21f2215538f4b1f6ed88a56eb62d3fa2edaf77a387e074ae194b82ffc",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        81.0,
+        67.0,
+        46.0
+      ]
+    },
+    {
+      "file": "scene02-height-depth-metres.exr",
+      "sha256": "0938f3868b3a8987030df8248d9f57f390f0e300416e55eea0dcbd4d376ed76b",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.6329150199890137,
+        0.6329150199890137,
+        0.6329150199890137
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene02-height-normal-world.exr",
+      "sha256": "e992391af772707e770a5e2a4794fe2cf2541a156144c9e90bc0e188f1a538d3",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        -0.9999997019767761,
+        -0.9999860525131226,
+        -1.0
+      ],
+      "maxRGB": [
+        0.9999997019767761,
+        0.9999997019767761,
+        0.9561174511909485
+      ],
+      "validPixels": 916888,
+      "maxUnitLengthError": 1.7881393432617188e-07
+    },
+    {
+      "file": "scene02-height-reflection-negative-x.exr",
+      "sha256": "ef5c3b08dedbbe30313b61df5e9640462764dd7174c84580f84ca8bf0350817b",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        18.5,
+        23.0,
+        5.25
+      ],
+      "maxRGB": [
+        16896.0,
+        15744.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene02-height-reflection-negative-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3516.94921875,
+        3225.94970703125,
+        3231.47216796875
+      ]
+    },
+    {
+      "file": "scene02-height-reflection-negative-y.exr",
+      "sha256": "a5384fbf98cfd6e43629d8ef73b33310bff2d8ae03a8f336ca5b95cd9dd2e7c2",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        1056.0,
+        904.0,
+        376.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene02-height-reflection-negative-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3854.550048828125,
+        2749.1943359375,
+        1944.9644775390625
+      ]
+    },
+    {
+      "file": "scene02-height-reflection-negative-z.exr",
+      "sha256": "1d463ae78edd17ead1429ec9fe7a6eb32c3b39631f6b0be0913e090cbe4d94ec",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        204.0,
+        64.0,
+        30.5
+      ],
+      "maxRGB": [
+        19712.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene02-height-reflection-negative-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3628.306396484375,
+        2987.337646484375,
+        2803.107666015625
+      ]
+    },
+    {
+      "file": "scene02-height-reflection-planar.exr",
+      "sha256": "b406b810d52c57d288bc221f9c3ecc8ec8a95db52564071f2c4996699e84d8dd",
+      "width": 512,
+      "height": 512,
+      "allFinite": true,
+      "minRGB": [
+        17.75,
+        19.0,
+        3.6875
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene02-height-reflection-planar-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        2801.4013671875,
+        3417.572265625,
+        4166.2978515625
+      ]
+    },
+    {
+      "file": "scene02-height-reflection-positive-x.exr",
+      "sha256": "98489606b89a7ad3685e35bc49ef8370b745d2554760ff3015e988e44234a817",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        21.0,
+        7.125
+      ],
+      "maxRGB": [
+        19200.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene02-height-reflection-positive-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3381.941162109375,
+        3039.814697265625,
+        2939.865234375
+      ]
+    },
+    {
+      "file": "scene02-height-reflection-positive-y.exr",
+      "sha256": "394f107cfdfa22eae80af460fa02febc98ee6fb523884ea4768338a279958521",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        54.5,
+        144.0,
+        8.5
+      ],
+      "maxRGB": [
+        10496.0,
+        10624.0,
+        10496.0
+      ],
+      "fixedExposurePreview": "scene02-height-reflection-positive-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        1662.3341064453125,
+        1595.0655517578125,
+        1408.0
+      ]
+    },
+    {
+      "file": "scene02-height-reflection-positive-z.exr",
+      "sha256": "9461bc9efdd36c4ae586967e56c12747780d45a139737501434fe5799168b89b",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        44.0,
+        6.375
+      ],
+      "maxRGB": [
+        60928.0,
+        47104.0,
+        30208.0
+      ],
+      "fixedExposurePreview": "scene02-height-reflection-positive-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3515.620361328125,
+        3089.676025390625,
+        2996.02197265625
+      ]
+    },
+    {
+      "file": "scene02-height-shadow-atlas.exr",
+      "sha256": "7685341ac33c539334235c71df9d9c1babd12b4607cda8b897792c05abdb16cb",
+      "width": 1024,
+      "height": 1024,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        8192.0,
+        8192.0
+      ],
+      "maxRGB": [
+        0.33763641119003296,
+        8192.0,
+        8192.0
+      ],
+      "varyingDepthPixels": 699470,
+      "expectedNativeSizeFromManifest": [
+        8192,
+        8192
+      ],
+      "nativeSizeChannelsConstant": true
+    },
+    {
+      "file": "scene03-pressure-camera-hdr.exr",
+      "sha256": "5573793cb142fac458024a8d8a8dfa4093bdd9c76201d1b1f213d735d05537a3",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        81.0,
+        67.0,
+        46.0
+      ]
+    },
+    {
+      "file": "scene03-pressure-depth-metres.exr",
+      "sha256": "3f8ce9df53667c82a1a34c720f9cba69221c452aa7ecbbf3dfdbe32322f7992e",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.6329150199890137,
+        0.6329150199890137,
+        0.6329150199890137
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene03-pressure-normal-world.exr",
+      "sha256": "1693ef1ca1b805f72d14219d766210955af1dc0d4f8773991a0f714f41476b58",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        -0.9999997019767761,
+        -0.9999860525131226,
+        -1.0
+      ],
+      "maxRGB": [
+        0.9999997019767761,
+        0.9999997019767761,
+        0.9561174511909485
+      ],
+      "validPixels": 916888,
+      "maxUnitLengthError": 1.7881393432617188e-07
+    },
+    {
+      "file": "scene03-pressure-reflection-negative-x.exr",
+      "sha256": "56a97cd933f19127528649b31c512431e44cdd73cb0fbabd24a588c45d9e91fd",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        18.5,
+        23.0,
+        5.25
+      ],
+      "maxRGB": [
+        16896.0,
+        15744.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene03-pressure-reflection-negative-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3571.74951171875,
+        3228.005615234375,
+        3226.05517578125
+      ]
+    },
+    {
+      "file": "scene03-pressure-reflection-negative-y.exr",
+      "sha256": "c324fdb5598988f45f4f4fac13624172f1336ef1b634f9e66a8a0d0d491e4009",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        388.0,
+        304.0,
+        196.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene03-pressure-reflection-negative-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3830.508544921875,
+        2726.50048828125,
+        1931.5675048828125
+      ]
+    },
+    {
+      "file": "scene03-pressure-reflection-negative-z.exr",
+      "sha256": "20cd5d0b80301755d5586a259d4be8ae654d3ea704b5b35ba83c6e1a06bfeef7",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        166.0,
+        53.0,
+        30.0
+      ],
+      "maxRGB": [
+        19712.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene03-pressure-reflection-negative-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3621.591796875,
+        2989.995361328125,
+        2805.0791015625
+      ]
+    },
+    {
+      "file": "scene03-pressure-reflection-planar.exr",
+      "sha256": "1a9d6a3a5b04c7918e56c33f81e045fc4d4ba7a45517ee7b2ad97c53f204c73e",
+      "width": 512,
+      "height": 512,
+      "allFinite": true,
+      "minRGB": [
+        17.75,
+        19.0,
+        3.6875
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene03-pressure-reflection-planar-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        2804.710693359375,
+        3419.87841796875,
+        4164.34619140625
+      ]
+    },
+    {
+      "file": "scene03-pressure-reflection-positive-x.exr",
+      "sha256": "d4a82fc7656812419912508d46ba8b41c6da231c330de1de823a31a513ab0029",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        21.0,
+        7.125
+      ],
+      "maxRGB": [
+        19200.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene03-pressure-reflection-positive-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3427.122802734375,
+        3044.59521484375,
+        2937.028076171875
+      ]
+    },
+    {
+      "file": "scene03-pressure-reflection-positive-y.exr",
+      "sha256": "394f107cfdfa22eae80af460fa02febc98ee6fb523884ea4768338a279958521",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        54.5,
+        144.0,
+        8.5
+      ],
+      "maxRGB": [
+        10496.0,
+        10624.0,
+        10496.0
+      ],
+      "fixedExposurePreview": "scene03-pressure-reflection-positive-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        1662.3341064453125,
+        1595.0655517578125,
+        1408.0
+      ]
+    },
+    {
+      "file": "scene03-pressure-reflection-positive-z.exr",
+      "sha256": "1cae87f286b05873edfffe331cd004c112b9b545667bfcd3e0ebca4e5fb999da",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        44.0,
+        6.375
+      ],
+      "maxRGB": [
+        60928.0,
+        47104.0,
+        30208.0
+      ],
+      "fixedExposurePreview": "scene03-pressure-reflection-positive-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3754.9658203125,
+        3065.227294921875,
+        2950.5029296875
+      ]
+    },
+    {
+      "file": "scene03-pressure-shadow-atlas.exr",
+      "sha256": "c4dcb52e2fc648db486eb55042fe811e37c592d7bf7d5b20bb05db12942e3fbd",
+      "width": 1024,
+      "height": 1024,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        8192.0,
+        8192.0
+      ],
+      "maxRGB": [
+        0.33763641119003296,
+        8192.0,
+        8192.0
+      ],
+      "varyingDepthPixels": 699470,
+      "expectedNativeSizeFromManifest": [
+        8192,
+        8192
+      ],
+      "nativeSizeChannelsConstant": true
+    },
+    {
+      "file": "scene04-absence-camera-hdr.exr",
+      "sha256": "e6d3dfdafc9f59a1eea209a39fff7a784e5ff802b0b44f97d624090cd7a0cb01",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        81.0,
+        67.0,
+        46.0
+      ]
+    },
+    {
+      "file": "scene04-absence-depth-metres.exr",
+      "sha256": "d0e229bd74b43f2c8b7b53840fb6706e77faf8a98e250d9ce8794be72f54d6e4",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.6329150199890137,
+        0.6329150199890137,
+        0.6329150199890137
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene04-absence-gpu-stale-depth-fault.exr",
+      "sha256": "5aaf953f490bc30b407c9d0dd81afd28655d466acd20e7361d93feff52a4e2ad",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.6329150199890137,
+        0.6329150199890137,
+        0.6329150199890137
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene04-absence-normal-world.exr",
+      "sha256": "21c3f7123e1943de38157245b0c8727f365c9864c2423dc14c18484df4ca3ad6",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        -0.9999997019767761,
+        -0.9999860525131226,
+        -1.0
+      ],
+      "maxRGB": [
+        0.9999997019767761,
+        0.9999997019767761,
+        0.9561174511909485
+      ],
+      "validPixels": 916888,
+      "maxUnitLengthError": 1.7881393432617188e-07
+    },
+    {
+      "file": "scene04-absence-reflection-negative-x.exr",
+      "sha256": "cb0723884a3e5e2cb03ce6058a6e9fd5555338a85de14021efc373cfeff3b336",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        18.5,
+        23.0,
+        5.25
+      ],
+      "maxRGB": [
+        16896.0,
+        15744.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene04-absence-reflection-negative-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3582.24267578125,
+        3231.43212890625,
+        3226.26025390625
+      ]
+    },
+    {
+      "file": "scene04-absence-reflection-negative-y.exr",
+      "sha256": "77b7cc98f592cbaa0a6dc7bec98b2c1c30440bcc80040deb93c681e8ef0506cd",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        1136.0,
+        992.0,
+        424.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene04-absence-reflection-negative-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3578.59033203125,
+        2639.097900390625,
+        1923.0982666015625
+      ]
+    },
+    {
+      "file": "scene04-absence-reflection-negative-z.exr",
+      "sha256": "cf52e2883e7cdd2baf33667921e02924a4338d9790f4a104a54b3c009aac4991",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        166.0,
+        53.0,
+        30.0
+      ],
+      "maxRGB": [
+        19712.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene04-absence-reflection-negative-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3620.835693359375,
+        2988.818603515625,
+        2804.091552734375
+      ]
+    },
+    {
+      "file": "scene04-absence-reflection-planar.exr",
+      "sha256": "528f2f0d51eb1c9b683c2fb09b8cbcf6f200e08dc30224d790647ab8151a0915",
+      "width": 512,
+      "height": 512,
+      "allFinite": true,
+      "minRGB": [
+        17.75,
+        19.0,
+        3.6875
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene04-absence-reflection-planar-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        2808.903564453125,
+        3424.746826171875,
+        4170.35986328125
+      ]
+    },
+    {
+      "file": "scene04-absence-reflection-positive-x.exr",
+      "sha256": "6d4165fd801623e97a9af5e94239bf76e5ff903f83a243b617bf0762d3ef44dd",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        21.0,
+        7.125
+      ],
+      "maxRGB": [
+        19200.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene04-absence-reflection-positive-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3447.949462890625,
+        3047.5576171875,
+        2935.97509765625
+      ]
+    },
+    {
+      "file": "scene04-absence-reflection-positive-y.exr",
+      "sha256": "394f107cfdfa22eae80af460fa02febc98ee6fb523884ea4768338a279958521",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        54.5,
+        144.0,
+        8.5
+      ],
+      "maxRGB": [
+        10496.0,
+        10624.0,
+        10496.0
+      ],
+      "fixedExposurePreview": "scene04-absence-reflection-positive-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        1662.3341064453125,
+        1595.0655517578125,
+        1408.0
+      ]
+    },
+    {
+      "file": "scene04-absence-reflection-positive-z.exr",
+      "sha256": "677f95b9945787f38bfed2e255d01090208bec332662997655c91cadafd92318",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        44.0,
+        6.375
+      ],
+      "maxRGB": [
+        60928.0,
+        47104.0,
+        30208.0
+      ],
+      "fixedExposurePreview": "scene04-absence-reflection-positive-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3748.723876953125,
+        3061.845458984375,
+        2949.53564453125
+      ]
+    },
+    {
+      "file": "scene04-absence-shadow-atlas.exr",
+      "sha256": "86e363b7a68a1584209a334b7238466e3fcc4119aa76c9209a45758b107fccee",
+      "width": 1024,
+      "height": 1024,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        8192.0,
+        8192.0
+      ],
+      "maxRGB": [
+        0.33763641119003296,
+        8192.0,
+        8192.0
+      ],
+      "varyingDepthPixels": 699470,
+      "expectedNativeSizeFromManifest": [
+        8192,
+        8192
+      ],
+      "nativeSizeChannelsConstant": true
+    },
+    {
+      "file": "scene04-h90-camera-hdr.exr",
+      "sha256": "888def1caf9744ac8eba34903abddb94efaec90931adc519a10143442d24a2ab",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        81.0,
+        67.0,
+        46.0
+      ]
+    },
+    {
+      "file": "scene04-h90-depth-metres.exr",
+      "sha256": "a7ac7d6f3ec2feb265b88a3af32c299e2a250b3659a32dd65a098c1f5693d938",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.6329150199890137,
+        0.6329150199890137,
+        0.6329150199890137
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene04-h90-normal-world.exr",
+      "sha256": "b2690094b99d07af24090ea47ae314a4338c3b1b61fda45445cf88e9d36bcf5f",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        -0.9999997019767761,
+        -0.9999860525131226,
+        -1.0
+      ],
+      "maxRGB": [
+        0.9999997019767761,
+        0.9999997019767761,
+        0.9561174511909485
+      ],
+      "validPixels": 916888,
+      "maxUnitLengthError": 1.7881393432617188e-07
+    },
+    {
+      "file": "scene04-h90-reflection-negative-x.exr",
+      "sha256": "42bd59e82f6aa1b953f0b38c1c812c71aeab656c8f1397eb26a62a42f275c52a",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        18.5,
+        23.0,
+        5.25
+      ],
+      "maxRGB": [
+        16896.0,
+        15744.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene04-h90-reflection-negative-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3625.663818359375,
+        3237.374267578125,
+        3220.141357421875
+      ]
+    },
+    {
+      "file": "scene04-h90-reflection-negative-y.exr",
+      "sha256": "6068169693da607036e11a0ec185c6fbf94e17123b6df5bfaad5ac1e1a3f5076",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        388.0,
+        304.0,
+        196.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene04-h90-reflection-negative-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3461.899169921875,
+        2616.11083984375,
+        1932.669677734375
+      ]
+    },
+    {
+      "file": "scene04-h90-reflection-negative-z.exr",
+      "sha256": "c58a1259061c2ed00c5aa4a124a514b0418bc4ae0e472d77de486b757fd9dbb3",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        166.0,
+        53.0,
+        30.0
+      ],
+      "maxRGB": [
+        13952.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene04-h90-reflection-negative-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3588.816162109375,
+        2997.90673828125,
+        2809.883056640625
+      ]
+    },
+    {
+      "file": "scene04-h90-reflection-planar.exr",
+      "sha256": "2a28e4dcd104980444f041dbced4ebe29b81ce8a10e9661b4bed4003d93eacfd",
+      "width": 512,
+      "height": 512,
+      "allFinite": true,
+      "minRGB": [
+        17.75,
+        19.0,
+        3.6875
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene04-h90-reflection-planar-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        2815.58349609375,
+        3470.937744140625,
+        4196.68408203125
+      ]
+    },
+    {
+      "file": "scene04-h90-reflection-positive-x.exr",
+      "sha256": "6d4d9247c6340104f4daaede4819b8d55b0a9cedb6a5d1c883eeabe9e0216026",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        21.0,
+        7.125
+      ],
+      "maxRGB": [
+        14336.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene04-h90-reflection-positive-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3422.44189453125,
+        3041.02490234375,
+        2934.474853515625
+      ]
+    },
+    {
+      "file": "scene04-h90-reflection-positive-y.exr",
+      "sha256": "394f107cfdfa22eae80af460fa02febc98ee6fb523884ea4768338a279958521",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        54.5,
+        144.0,
+        8.5
+      ],
+      "maxRGB": [
+        10496.0,
+        10624.0,
+        10496.0
+      ],
+      "fixedExposurePreview": "scene04-h90-reflection-positive-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        1662.3341064453125,
+        1595.0655517578125,
+        1408.0
+      ]
+    },
+    {
+      "file": "scene04-h90-reflection-positive-z.exr",
+      "sha256": "7ac34e9125fb602ea19a64595edd1c25787816bf873ef04775a488069036556c",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        44.0,
+        6.375
+      ],
+      "maxRGB": [
+        18944.0,
+        16000.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene04-h90-reflection-positive-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3718.552490234375,
+        3016.299072265625,
+        2920.633056640625
+      ]
+    },
+    {
+      "file": "scene04-h90-shadow-atlas.exr",
+      "sha256": "2230c0bee186698bcd250ef34b7b66d4498eae455c6706fc503fb6e5150a0364",
+      "width": 1024,
+      "height": 1024,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        8192.0,
+        8192.0
+      ],
+      "maxRGB": [
+        0.33763641119003296,
+        8192.0,
+        8192.0
+      ],
+      "varyingDepthPixels": 699470,
+      "expectedNativeSizeFromManifest": [
+        8192,
+        8192
+      ],
+      "nativeSizeChannelsConstant": true
+    },
+    {
+      "file": "scene05-before-capture-camera-hdr.exr",
+      "sha256": "972e4ec1a65250f6dcbd48716996c9f398341042c097978351f6ea66027757a3",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        46.0,
+        38.0,
+        26.0
+      ]
+    },
+    {
+      "file": "scene05-before-capture-depth-metres.exr",
+      "sha256": "61492d20ce7cf89e5a329b8873386950e558ac02f71783497460d5ea2f8a7fa1",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.4997675120830536,
+        0.4997675120830536,
+        0.4997675120830536
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene05-before-capture-normal-world.exr",
+      "sha256": "07284919f48c7dc2e661c776c11ca476bc226257226043fa86d3d8ba1f62c59f",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        -0.9999987483024597,
+        -0.9999911189079285,
+        -1.0
+      ],
+      "maxRGB": [
+        0.9999997019767761,
+        0.9999997019767761,
+        0.959773600101471
+      ],
+      "validPixels": 914492,
+      "maxUnitLengthError": 1.7881393432617188e-07
+    },
+    {
+      "file": "scene05-before-capture-reflection-negative-x.exr",
+      "sha256": "68569e5ae8949a4d68c4dc7793e1657c37e0cd75ae077f0b8985587ec5a723ec",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        18.5,
+        23.0,
+        5.25
+      ],
+      "maxRGB": [
+        17152.0,
+        15744.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene05-before-capture-reflection-negative-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3843.5205078125,
+        3297.2060546875,
+        3221.982421875
+      ]
+    },
+    {
+      "file": "scene05-before-capture-reflection-negative-y.exr",
+      "sha256": "9de2f58afe2a11f91e9f51b97d50ce254ad546f70ca7eb79af648bc36576fca0",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        1136.0,
+        992.0,
+        488.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene05-before-capture-reflection-negative-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3627.635986328125,
+        2700.710205078125,
+        1958.1085205078125
+      ]
+    },
+    {
+      "file": "scene05-before-capture-reflection-negative-z.exr",
+      "sha256": "0448699d18ae0b8dc2c6503f763217d930ea41e93a49c1613a005e9b14eedf07",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        204.0,
+        64.0,
+        31.5
+      ],
+      "maxRGB": [
+        17920.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene05-before-capture-reflection-negative-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3596.6611328125,
+        2993.11572265625,
+        2806.837646484375
+      ]
+    },
+    {
+      "file": "scene05-before-capture-reflection-planar.exr",
+      "sha256": "7256cd387a789ed1464ec774189babacad4fc6641bbf601c0814bef0f7c0a74b",
+      "width": 512,
+      "height": 512,
+      "allFinite": true,
+      "minRGB": [
+        17.5,
+        21.25,
+        2.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene05-before-capture-reflection-planar-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        2953.64453125,
+        3630.168212890625,
+        4251.89794921875
+      ]
+    },
+    {
+      "file": "scene05-before-capture-reflection-positive-x.exr",
+      "sha256": "b573cb07de8ebf581ea78830b2faeb7f101ba5fc3779bb956cdd5fe598fe11cf",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        21.0,
+        7.125
+      ],
+      "maxRGB": [
+        14336.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene05-before-capture-reflection-positive-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3439.078125,
+        3045.685546875,
+        2935.279296875
+      ]
+    },
+    {
+      "file": "scene05-before-capture-reflection-positive-y.exr",
+      "sha256": "394f107cfdfa22eae80af460fa02febc98ee6fb523884ea4768338a279958521",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        54.5,
+        144.0,
+        8.5
+      ],
+      "maxRGB": [
+        10496.0,
+        10624.0,
+        10496.0
+      ],
+      "fixedExposurePreview": "scene05-before-capture-reflection-positive-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        1662.3341064453125,
+        1595.0655517578125,
+        1408.0
+      ]
+    },
+    {
+      "file": "scene05-before-capture-reflection-positive-z.exr",
+      "sha256": "f727adbfde832c386e8a0a47084d966ed2b2e659a19163846c0ebd65ee06f371",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        44.0,
+        6.375
+      ],
+      "maxRGB": [
+        18944.0,
+        16000.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene05-before-capture-reflection-positive-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3833.458740234375,
+        3079.646728515625,
+        2937.806884765625
+      ]
+    },
+    {
+      "file": "scene05-before-capture-shadow-atlas.exr",
+      "sha256": "cf361d549d5e01bddfde1ab6eec90b4b475612a1e620e3dd14f233357e8fb785",
+      "width": 1024,
+      "height": 1024,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        8192.0,
+        8192.0
+      ],
+      "maxRGB": [
+        0.3324979245662689,
+        8192.0,
+        8192.0
+      ],
+      "varyingDepthPixels": 715991,
+      "expectedNativeSizeFromManifest": [
+        8192,
+        8192
+      ],
+      "nativeSizeChannelsConstant": true
+    },
+    {
+      "file": "scene05-ending-camera-hdr.exr",
+      "sha256": "1aa110b8ab0850ed339cee9ebb11cc79944d72e4b697037a21fb998e7e32f70e",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxRGB": [
+        46.0,
+        38.0,
+        26.0
+      ]
+    },
+    {
+      "file": "scene05-ending-depth-metres.exr",
+      "sha256": "e02962909838372cae72e2c348081d331d4f21bede615ff0972d90e2903a0b06",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        0.4997667372226715,
+        0.4997667372226715,
+        0.4997667372226715
+      ],
+      "maxRGB": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "file": "scene05-ending-normal-world.exr",
+      "sha256": "163546ef737e4ec8a3baa0abe01c2787130dfd0699b070aa61c185a672063cc5",
+      "width": 1280,
+      "height": 720,
+      "allFinite": true,
+      "minRGB": [
+        -0.9999987483024597,
+        -0.9999990463256836,
+        -1.0
+      ],
+      "maxRGB": [
+        0.9999997019767761,
+        0.9999997019767761,
+        0.959773600101471
+      ],
+      "validPixels": 914491,
+      "maxUnitLengthError": 1.7881393432617188e-07
+    },
+    {
+      "file": "scene05-ending-reflection-negative-x.exr",
+      "sha256": "94b349c80eb70262f848902481e9d8cff4b47bd3382d99d2dc225702a0e08db5",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        18.5,
+        23.0,
+        5.25
+      ],
+      "maxRGB": [
+        16896.0,
+        15744.0,
+        12032.0
+      ],
+      "fixedExposurePreview": "scene05-ending-reflection-negative-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3717.774658203125,
+        3269.390380859375,
+        3228.220703125
+      ]
+    },
+    {
+      "file": "scene05-ending-reflection-negative-y.exr",
+      "sha256": "c63cd21a59653dd539b19dfeeb5f54c1d7ac8a6094d1609065010aba1b30338c",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        1136.0,
+        992.0,
+        400.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene05-ending-reflection-negative-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3453.421875,
+        2247.697265625,
+        1385.390380859375
+      ]
+    },
+    {
+      "file": "scene05-ending-reflection-negative-z.exr",
+      "sha256": "8f18308fc41ecf390ba7d621ac3d512dd6ebc7a455a31d55f78a217600a6f4e5",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        204.0,
+        64.0,
+        31.5
+      ],
+      "maxRGB": [
+        19712.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene05-ending-reflection-negative-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3634.04931640625,
+        2987.32080078125,
+        2802.1103515625
+      ]
+    },
+    {
+      "file": "scene05-ending-reflection-planar.exr",
+      "sha256": "6a2d7dcba3b132a488249bab785e6790d96b49fef58ea6a415919353cf6f3ca1",
+      "width": 512,
+      "height": 512,
+      "allFinite": true,
+      "minRGB": [
+        17.5,
+        21.25,
+        2.0
+      ],
+      "maxRGB": [
+        65024.0,
+        65024.0,
+        64512.0
+      ],
+      "fixedExposurePreview": "scene05-ending-reflection-planar-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        2952.230224609375,
+        3569.916748046875,
+        4215.6279296875
+      ]
+    },
+    {
+      "file": "scene05-ending-reflection-positive-x.exr",
+      "sha256": "43b6137e5f698cf1e4b1d9b3c636261c319c35fae1369d1531d655303c1ab26e",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        21.0,
+        7.125
+      ],
+      "maxRGB": [
+        19200.0,
+        13312.0,
+        10752.0
+      ],
+      "fixedExposurePreview": "scene05-ending-reflection-positive-x-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3440.803466796875,
+        3048.36767578125,
+        2937.63720703125
+      ]
+    },
+    {
+      "file": "scene05-ending-reflection-positive-y.exr",
+      "sha256": "394f107cfdfa22eae80af460fa02febc98ee6fb523884ea4768338a279958521",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        54.5,
+        144.0,
+        8.5
+      ],
+      "maxRGB": [
+        10496.0,
+        10624.0,
+        10496.0
+      ],
+      "fixedExposurePreview": "scene05-ending-reflection-positive-y-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        1662.3341064453125,
+        1595.0655517578125,
+        1408.0
+      ]
+    },
+    {
+      "file": "scene05-ending-reflection-positive-z.exr",
+      "sha256": "cb56a4fd7d75e34b9946b650111062025fe338be64f93bbf42226a6ccf62f49b",
+      "width": 128,
+      "height": 128,
+      "allFinite": true,
+      "minRGB": [
+        19.75,
+        44.0,
+        6.375
+      ],
+      "maxRGB": [
+        60928.0,
+        47104.0,
+        30208.0
+      ],
+      "fixedExposurePreview": "scene05-ending-reflection-positive-z-exposure-1over8192.png",
+      "radianceStdDevRGB": [
+        3818.628173828125,
+        3103.096435546875,
+        2962.4892578125
+      ]
+    },
+    {
+      "file": "scene05-ending-shadow-atlas.exr",
+      "sha256": "2abffb0952849500a7c89d12032a097a9c39afa63ee11eceff0a01f822d3a3a9",
+      "width": 1024,
+      "height": 1024,
+      "allFinite": true,
+      "minRGB": [
+        0.0,
+        8192.0,
+        8192.0
+      ],
+      "maxRGB": [
+        0.33249783515930176,
+        8192.0,
+        8192.0
+      ],
+      "varyingDepthPixels": 715991,
+      "expectedNativeSizeFromManifest": [
+        8192,
+        8192
+      ],
+      "nativeSizeChannelsConstant": true
+    }
+  ],
+  "gpuFaultFixtures": [
+    {
+      "file": "scene04-absence-gpu-stale-depth-fault.json",
+      "sha256": "c84760435cded231a3aa962d43683343728ff3f067d6deab5fa52f5d2b624230",
+      "status": "PASS_GPU_STALE_DEPTH_DETECTED",
+      "scope": "Isolated actual GPU stale-one-pass fault test on selected former Empty silhouette pixels. Baseline passing probes include current-section depth/normal matches and separately counted absence-only probes whose rays miss current section meshes. Absence-only probes validate finite actual depth farther than 1 mm behind the former surface, not background depth/normal agreement. Rasterized historical triangles must trigger the same FAIL_POSSIBLE_STALE_DEPTH while current normal/color and real renderer state remain unchanged. This does not validate every pixel, shadow, reflection or temporal history.",
+      "baselinePassingProbes": 13,
+      "changedSelectedDepthPixels": 13,
+      "detectedStaleDepthPixels": 13,
+      "baselineStatus": "PASS_SAMPLED_FORMER_SURFACE_ABSENCE_ONLY",
+      "injectedStatus": "FAIL_SAMPLED_PIXELS",
+      "historicalMeshIds": [
+        "A-Pawn-0"
+      ],
+      "independentExrVerification": {
+        "status": "RECOMPUTED_FROM_ORIGINAL_AND_FAULT_EXR",
+        "samples": [
+          {
+            "id": "A-Pawn-0",
+            "x": 613,
+            "y": 465,
+            "baselineDepthMetres": 1.459242582321167,
+            "faultDepthMetres": 0.8843387961387634,
+            "depthChangeMetres": -0.5749037861824036,
+            "errorFromFormerMeshMetres": -1.8477439880371094e-06
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 606,
+            "y": 468,
+            "baselineDepthMetres": 1.4709155559539795,
+            "faultDepthMetres": 0.8879583477973938,
+            "depthChangeMetres": -0.5829572081565857,
+            "errorFromFormerMeshMetres": -1.0132789611816406e-06
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 641,
+            "y": 469,
+            "baselineDepthMetres": 1.474846601486206,
+            "faultDepthMetres": 0.8864864110946655,
+            "depthChangeMetres": -0.5883601903915405,
+            "errorFromFormerMeshMetres": -9.5367431640625e-07
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 639,
+            "y": 470,
+            "baselineDepthMetres": 1.4788002967834473,
+            "faultDepthMetres": 0.883142352104187,
+            "depthChangeMetres": -0.5956579446792603,
+            "errorFromFormerMeshMetres": 1.430511474609375e-06
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 613,
+            "y": 472,
+            "baselineDepthMetres": 1.4867727756500244,
+            "faultDepthMetres": 0.8822984099388123,
+            "depthChangeMetres": -0.6044743657112122,
+            "errorFromFormerMeshMetres": 3.0994415283203125e-06
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 606,
+            "y": 473,
+            "baselineDepthMetres": 1.4907909631729126,
+            "faultDepthMetres": 0.886063277721405,
+            "depthChangeMetres": -0.6047276854515076,
+            "errorFromFormerMeshMetres": 1.8477439880371094e-06
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 631,
+            "y": 464,
+            "baselineDepthMetres": 1.455391764640808,
+            "faultDepthMetres": 0.8738376498222351,
+            "depthChangeMetres": -0.581554114818573,
+            "errorFromFormerMeshMetres": -7.748603820800781e-07
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 631,
+            "y": 467,
+            "baselineDepthMetres": 1.4670029878616333,
+            "faultDepthMetres": 0.8726871013641357,
+            "depthChangeMetres": -0.5943158864974976,
+            "errorFromFormerMeshMetres": 1.430511474609375e-06
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 635,
+            "y": 461,
+            "baselineDepthMetres": 1.4439630508422852,
+            "faultDepthMetres": 0.8808000087738037,
+            "depthChangeMetres": -0.5631630420684814,
+            "errorFromFormerMeshMetres": -2.2649765014648438e-06
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 635,
+            "y": 470,
+            "baselineDepthMetres": 1.4788004159927368,
+            "faultDepthMetres": 0.878650426864624,
+            "depthChangeMetres": -0.6001499891281128,
+            "errorFromFormerMeshMetres": 1.0132789611816406e-06
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 631,
+            "y": 468,
+            "baselineDepthMetres": 1.470914602279663,
+            "faultDepthMetres": 0.8733299970626831,
+            "depthChangeMetres": -0.59758460521698,
+            "errorFromFormerMeshMetres": 2.4437904357910156e-06
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 644,
+            "y": 476,
+            "baselineDepthMetres": 1.5029780864715576,
+            "faultDepthMetres": 0.8966732621192932,
+            "depthChangeMetres": -0.6063048243522644,
+            "errorFromFormerMeshMetres": 4.023313522338867e-05
+          },
+          {
+            "id": "A-Pawn-0",
+            "x": 645,
+            "y": 475,
+            "baselineDepthMetres": 1.4988934993743896,
+            "faultDepthMetres": 0.8956430554389954,
+            "depthChangeMetres": -0.6032504439353943,
+            "errorFromFormerMeshMetres": -2.8371810913085938e-05
+          }
+        ],
+        "changedOverOneMillimetre": 13,
+        "matchingFormerDepthWithinOneMillimetre": 13
+      }
+    }
+  ],
+  "summary": {
+    "captures": 9,
+    "buffers": 100,
+    "allFinite": true,
+    "allReadbacksComplete": true,
+    "allShadowNativeSizesMatchManifests": true,
+    "actualPlanarBufferCount": 9,
+    "pixelAuditStatuses": [
+      "PASS_SAMPLED_PIXELS",
+      "PASS_SAMPLED_PIXELS",
+      "PASS_SAMPLED_PIXELS",
+      "PARTIAL_SAMPLED_PIXELS_RASTER_BOUNDARIES_UNRESOLVED",
+      "PARTIAL_SAMPLED_PIXELS_RASTER_BOUNDARIES_UNRESOLVED",
+      "PARTIAL_SAMPLED_PIXELS_RASTER_BOUNDARIES_UNRESOLVED",
+      "PASS_SAMPLED_PIXELS",
+      "PASS_SAMPLED_PIXELS",
+      "PASS_SAMPLED_PIXELS"
+    ],
+    "gpuFaultFixtureStatuses": [
+      "PASS_GPU_STALE_DEPTH_DETECTED"
+    ]
+  }
+}

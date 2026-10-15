@@ -1,0 +1,49 @@
+{
+  "schema": "showcase-gpu-recovery-validation/1",
+  "originalLogHashesUnchanged": true,
+  "originalLogs": {
+    "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\candidate-pass-smoke\\process-memory.jsonl": "f9c0b7d3478cd8f67eec43cb6c5a3a62a9f68a5398abc5e0a22e1074834ed074",
+    "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\final-smoke\\process-memory.jsonl": "75fc5dcc3b8c6a878a863a79ab571da90d51315fe3f75cf5116ee905b66052d8"
+  },
+  "recovered": [
+    {
+      "run": "evidence/runtime/candidate-pass-smoke/20261015-104859-162-ShowcaseRaster-1",
+      "correctedSamples": 76,
+      "firstCorrection": {
+        "recordedUtc": "2026-10-15T10:48:59.9518997Z",
+        "reportedTotals": {
+          "gpuDedicatedBytes": 0,
+          "gpuSharedBytes": 0,
+          "gpuCommittedBytes": 0
+        },
+        "derivedTotals": {
+          "gpuDedicatedBytes": 76591104,
+          "gpuSharedBytes": 24801280,
+          "gpuCommittedBytes": 110841856
+        },
+        "uniqueAdapterInstances": 1,
+        "reason": "Reported totals disagree with preserved per-adapter raw gauges; analysis recomputes sums. Original log is unchanged."
+      }
+    },
+    {
+      "run": "evidence/runtime/final-smoke/20261015-105817-056-ShowcaseRaster-1",
+      "correctedSamples": 11,
+      "firstCorrection": {
+        "recordedUtc": "2026-10-15T10:58:17.9775689Z",
+        "reportedTotals": {
+          "gpuDedicatedBytes": 0,
+          "gpuSharedBytes": 0,
+          "gpuCommittedBytes": 0
+        },
+        "derivedTotals": {
+          "gpuDedicatedBytes": 595304448,
+          "gpuSharedBytes": 121913344,
+          "gpuCommittedBytes": 772657152
+        },
+        "uniqueAdapterInstances": 1,
+        "reason": "Reported totals disagree with preserved per-adapter raw gauges; analysis recomputes sums. Original log is unchanged."
+      }
+    }
+  ],
+  "analyzerSha256": "b2f1791fae8142bdfc88bde567c1f7de9ac33fe35519241c1fdf3214120441e0"
+}

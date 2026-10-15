@@ -1,0 +1,2272 @@
+{
+  "schema": "showcase-preflight-analysis/1",
+  "role": "INTERMEDIATE_PREFLIGHT_NOT_FINAL_DELIVERY",
+  "generatedUtc": "2026-10-15T11:16:30.965710+00:00",
+  "run": "evidence/runtime/preflight-benchmark-1080/20261015-111220-651-ShowcaseRaster-1",
+  "provenance": {
+    "buildSource": "92466464aea84d4db753fd1ae537df07 / uncommitted-local-source; see build manifest",
+    "buildGUID": "92466464aea84d4db753fd1ae537df07",
+    "sourceHash": "5a9326ae5ff46ca9fe6cd42ae336d58473b31ffa47ffee70b7a248d011c899d2",
+    "sourceManifestSha256": "b53140f6aebfbd833fb5980b5924c708b12f19d9d899df4581fb3ad6a45e4d50",
+    "buildUtc": "2026-10-15T11:04:58.7415912Z",
+    "status": "EXACT_MANIFEST_MATCH",
+    "matches": [
+      {
+        "manifest": "evidence/environment/source-manifest.json",
+        "manifestSha256": "b53140f6aebfbd833fb5980b5924c708b12f19d9d899df4581fb3ad6a45e4d50",
+        "matchingBuildGUID": null,
+        "matchingSourceManifestSha256": "b53140f6aebfbd833fb5980b5924c708b12f19d9d899df4581fb3ad6a45e4d50",
+        "sourceHashes": [
+          "5a9326ae5ff46ca9fe6cd42ae336d58473b31ffa47ffee70b7a248d011c899d2"
+        ],
+        "gitCommits": []
+      },
+      {
+        "manifest": "evidence/environment/source-manifests/b53140f6aebfbd833fb5980b5924c708b12f19d9d899df4581fb3ad6a45e4d50.json",
+        "manifestSha256": "b53140f6aebfbd833fb5980b5924c708b12f19d9d899df4581fb3ad6a45e4d50",
+        "matchingBuildGUID": null,
+        "matchingSourceManifestSha256": "b53140f6aebfbd833fb5980b5924c708b12f19d9d899df4581fb3ad6a45e4d50",
+        "sourceHashes": [
+          "5a9326ae5ff46ca9fe6cd42ae336d58473b31ffa47ffee70b7a248d011c899d2"
+        ],
+        "gitCommits": []
+      }
+    ],
+    "limitation": null
+  },
+  "completion": {
+    "transcriptPlies": 19,
+    "independentVerificationEvents": [
+      {
+        "kind": "IndependentVerificationPassed",
+        "message": "0360cee4b45ee3d959d5ed14af4bf997c7398d40b2d4b9a99e9b9b6d5b212eec",
+        "stateHash": "c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00",
+        "ply": 19,
+        "scene": 5,
+        "time": 91.85912352986634,
+        "angle": 0.0
+      }
+    ],
+    "gameEndedEvents": [
+      {
+        "kind": "GameEnded",
+        "message": "KingCapture; winner=A; commits=19",
+        "stateHash": "c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00",
+        "ply": 19,
+        "scene": 5,
+        "time": 91.85912352986634,
+        "angle": 0.0
+      }
+    ],
+    "failureEvents": [],
+    "performanceClosed": true,
+    "status": "RECORDED_COMPLETE"
+  },
+  "all": {
+    "frames": 5789,
+    "timers": {
+      "frameDeltaMs": {
+        "samples": 5789,
+        "availability": "MEASURED",
+        "median": 16.666702926158905,
+        "p95": 16.67110249400139,
+        "p99": 34.43869575858116,
+        "worst": 706.3078880310059,
+        "excludedOrUnavailableSamples": 0
+      },
+      "cpuMainMs": {
+        "samples": 5785,
+        "availability": "MEASURED",
+        "median": 4.6366,
+        "p95": 12.9074,
+        "p99": 34.4297,
+        "worst": 705.9644,
+        "excludedOrUnavailableSamples": 4
+      },
+      "cpuRenderMs": {
+        "samples": 5785,
+        "availability": "MEASURED",
+        "median": 1.7911,
+        "p95": 2.2542,
+        "p99": 2.861,
+        "worst": 9.0564,
+        "excludedOrUnavailableSamples": 4
+      },
+      "cpuPresentWaitMs": {
+        "samples": 5785,
+        "availability": "MEASURED",
+        "median": 12.0273,
+        "p95": 12.9603,
+        "p99": 13.1236,
+        "worst": 14.8229,
+        "excludedOrUnavailableSamples": 4
+      },
+      "gpuMs": {
+        "samples": 5768,
+        "availability": "MEASURED",
+        "median": 6.095872,
+        "p95": 6.626304,
+        "p99": 7.3856,
+        "worst": 26.642944,
+        "excludedOrUnavailableSamples": 21
+      },
+      "lastSectionUpdateMs": {
+        "samples": 5789,
+        "availability": "MEASURED",
+        "median": 0.6588,
+        "p95": 42.5683,
+        "p99": 42.5683,
+        "worst": 42.5683,
+        "excludedOrUnavailableSamples": 0
+      }
+    },
+    "measuredFrameDurationSeconds": 99.19256552681327,
+    "framesOver16_6667ms": 3132,
+    "over16_6667Fraction": 0.5410260839523233,
+    "monoUsedMemory": {
+      "availability": "MEASURED",
+      "samples": 5789,
+      "firstBytes": 5816320,
+      "lastBytes": 10878976,
+      "minBytes": 5816320,
+      "maxBytes": 12177408,
+      "lastMinusFirstBytes": 5062656,
+      "linearTrendBytesPerMeasuredSecond": 797.2729013902195,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "unityTotalAllocatedMemory": {
+      "availability": "MEASURED",
+      "samples": 5789,
+      "firstBytes": 136579696,
+      "lastBytes": 188079647,
+      "minBytes": 136579696,
+      "maxBytes": 188082607,
+      "lastMinusFirstBytes": 51499951,
+      "linearTrendBytesPerMeasuredSecond": 34831.24916723184,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "garbageCollectionCounters": {
+      "schema": "separate-generation-counters/1",
+      "generation0": {
+        "samples": 5789,
+        "first": 40,
+        "last": 4495,
+        "max": 4495,
+        "lastMinusFirst": 4455
+      },
+      "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+      "generation1": {
+        "samples": 5789,
+        "first": 40,
+        "last": 4495,
+        "max": 4495,
+        "lastMinusFirst": 4455
+      },
+      "generation2": {
+        "samples": 5789,
+        "first": 40,
+        "last": 4495,
+        "max": 4495,
+        "lastMinusFirst": 4455
+      }
+    }
+  },
+  "cold": {
+    "frames": 254,
+    "timers": {
+      "frameDeltaMs": {
+        "samples": 254,
+        "availability": "MEASURED",
+        "median": 16.666602343320847,
+        "p95": 16.669005155563354,
+        "p99": 43.783701956272125,
+        "worst": 706.3078880310059,
+        "excludedOrUnavailableSamples": 0
+      },
+      "cpuMainMs": {
+        "samples": 250,
+        "availability": "MEASURED",
+        "median": 4.3290500000000005,
+        "p95": 5.8618,
+        "p99": 43.7776,
+        "worst": 705.9644,
+        "excludedOrUnavailableSamples": 4
+      },
+      "cpuRenderMs": {
+        "samples": 250,
+        "availability": "MEASURED",
+        "median": 1.9184999999999999,
+        "p95": 2.4775,
+        "p99": 3.6449,
+        "worst": 9.0564,
+        "excludedOrUnavailableSamples": 4
+      },
+      "cpuPresentWaitMs": {
+        "samples": 250,
+        "availability": "MEASURED",
+        "median": 12.326049999999999,
+        "p95": 12.8617,
+        "p99": 13.0414,
+        "worst": 13.3339,
+        "excludedOrUnavailableSamples": 4
+      },
+      "gpuMs": {
+        "samples": 249,
+        "availability": "MEASURED",
+        "median": 6.350848,
+        "p95": 7.051008,
+        "p99": 8.608256,
+        "worst": 26.642944,
+        "excludedOrUnavailableSamples": 5
+      },
+      "lastSectionUpdateMs": {
+        "samples": 254,
+        "availability": "MEASURED",
+        "median": 42.5683,
+        "p95": 42.5683,
+        "p99": 42.5683,
+        "worst": 42.5683,
+        "excludedOrUnavailableSamples": 0
+      }
+    },
+    "measuredFrameDurationSeconds": 5.005756977945566,
+    "framesOver16_6667ms": 125,
+    "over16_6667Fraction": 0.4921259842519685,
+    "monoUsedMemory": {
+      "availability": "MEASURED",
+      "samples": 254,
+      "firstBytes": 5816320,
+      "lastBytes": 10158080,
+      "minBytes": 5816320,
+      "maxBytes": 10432512,
+      "lastMinusFirstBytes": 4341760,
+      "linearTrendBytesPerMeasuredSecond": 59587.14791913662,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "unityTotalAllocatedMemory": {
+      "availability": "MEASURED",
+      "samples": 254,
+      "firstBytes": 136579696,
+      "lastBytes": 179751823,
+      "minBytes": 136579696,
+      "maxBytes": 179752303,
+      "lastMinusFirstBytes": 43172127,
+      "linearTrendBytesPerMeasuredSecond": 358741.52579010243,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "garbageCollectionCounters": {
+      "schema": "separate-generation-counters/1",
+      "generation0": {
+        "samples": 254,
+        "first": 40,
+        "last": 51,
+        "max": 51,
+        "lastMinusFirst": 11
+      },
+      "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+      "generation1": {
+        "samples": 254,
+        "first": 40,
+        "last": 51,
+        "max": 51,
+        "lastMinusFirst": 11
+      },
+      "generation2": {
+        "samples": 254,
+        "first": 40,
+        "last": 51,
+        "max": 51,
+        "lastMinusFirst": 11
+      }
+    }
+  },
+  "warm": {
+    "frames": 5535,
+    "timers": {
+      "frameDeltaMs": {
+        "samples": 5535,
+        "availability": "MEASURED",
+        "median": 16.666702926158905,
+        "p95": 16.671201214194298,
+        "p99": 34.32920202612877,
+        "worst": 41.706301271915436,
+        "excludedOrUnavailableSamples": 0
+      },
+      "cpuMainMs": {
+        "samples": 5535,
+        "availability": "MEASURED",
+        "median": 4.6581,
+        "p95": 13.0748,
+        "p99": 34.3226,
+        "worst": 41.6982,
+        "excludedOrUnavailableSamples": 0
+      },
+      "cpuRenderMs": {
+        "samples": 5535,
+        "availability": "MEASURED",
+        "median": 1.786,
+        "p95": 2.2449,
+        "p99": 2.7868,
+        "worst": 4.7792,
+        "excludedOrUnavailableSamples": 0
+      },
+      "cpuPresentWaitMs": {
+        "samples": 5535,
+        "availability": "MEASURED",
+        "median": 12.005,
+        "p95": 12.9642,
+        "p99": 13.1257,
+        "worst": 14.8229,
+        "excludedOrUnavailableSamples": 0
+      },
+      "gpuMs": {
+        "samples": 5519,
+        "availability": "MEASURED",
+        "median": 6.08512,
+        "p95": 6.601728,
+        "p99": 7.330816,
+        "worst": 9.762816,
+        "excludedOrUnavailableSamples": 16
+      },
+      "lastSectionUpdateMs": {
+        "samples": 5535,
+        "availability": "MEASURED",
+        "median": 0.6507000000000001,
+        "p95": 22.405,
+        "p99": 42.5683,
+        "worst": 42.5683,
+        "excludedOrUnavailableSamples": 0
+      }
+    },
+    "measuredFrameDurationSeconds": 94.1868085488677,
+    "framesOver16_6667ms": 3007,
+    "over16_6667Fraction": 0.5432700993676604,
+    "monoUsedMemory": {
+      "availability": "MEASURED",
+      "samples": 5535,
+      "firstBytes": 10166272,
+      "lastBytes": 10878976,
+      "minBytes": 9535488,
+      "maxBytes": 12177408,
+      "lastMinusFirstBytes": 712704,
+      "linearTrendBytesPerMeasuredSecond": -1220.4390107640784,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "unityTotalAllocatedMemory": {
+      "availability": "MEASURED",
+      "samples": 5535,
+      "firstBytes": 179752463,
+      "lastBytes": 188079647,
+      "minBytes": 179752463,
+      "maxBytes": 188082607,
+      "lastMinusFirstBytes": 8327184,
+      "linearTrendBytesPerMeasuredSecond": 35943.57564914041,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "garbageCollectionCounters": {
+      "schema": "separate-generation-counters/1",
+      "generation0": {
+        "samples": 5535,
+        "first": 51,
+        "last": 4495,
+        "max": 4495,
+        "lastMinusFirst": 4444
+      },
+      "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+      "generation1": {
+        "samples": 5535,
+        "first": 51,
+        "last": 4495,
+        "max": 4495,
+        "lastMinusFirst": 4444
+      },
+      "generation2": {
+        "samples": 5535,
+        "first": 51,
+        "last": 4495,
+        "max": 4495,
+        "lastMinusFirst": 4444
+      }
+    }
+  },
+  "byScene": {
+    "1": {
+      "all": {
+        "frames": 1029,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 1029,
+            "availability": "MEASURED",
+            "median": 16.666702926158905,
+            "p95": 16.668997704982758,
+            "p99": 16.85139536857605,
+            "worst": 706.3078880310059,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 1025,
+            "availability": "MEASURED",
+            "median": 4.5322,
+            "p95": 6.3038,
+            "p99": 8.4474,
+            "worst": 705.9644,
+            "excludedOrUnavailableSamples": 4
+          },
+          "cpuRenderMs": {
+            "samples": 1025,
+            "availability": "MEASURED",
+            "median": 1.8519,
+            "p95": 2.2445,
+            "p99": 2.861,
+            "worst": 9.0564,
+            "excludedOrUnavailableSamples": 4
+          },
+          "cpuPresentWaitMs": {
+            "samples": 1025,
+            "availability": "MEASURED",
+            "median": 12.1314,
+            "p95": 12.8688,
+            "p99": 13.04,
+            "worst": 13.3339,
+            "excludedOrUnavailableSamples": 4
+          },
+          "gpuMs": {
+            "samples": 1023,
+            "availability": "MEASURED",
+            "median": 6.096896,
+            "p95": 6.846464,
+            "p99": 7.598336,
+            "worst": 26.642944,
+            "excludedOrUnavailableSamples": 6
+          },
+          "lastSectionUpdateMs": {
+            "samples": 1029,
+            "availability": "MEASURED",
+            "median": 1.5117,
+            "p95": 42.5683,
+            "p99": 42.5683,
+            "worst": 42.5683,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 17.9361345525831,
+        "framesOver16_6667ms": 539,
+        "over16_6667Fraction": 0.5238095238095238,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 1029,
+          "firstBytes": 5816320,
+          "lastBytes": 10715136,
+          "minBytes": 5816320,
+          "maxBytes": 11837440,
+          "lastMinusFirstBytes": 4898816,
+          "linearTrendBytesPerMeasuredSecond": 78018.96422193151,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 1029,
+          "firstBytes": 136579696,
+          "lastBytes": 180350391,
+          "minBytes": 136579696,
+          "maxBytes": 180351415,
+          "lastMinusFirstBytes": 43770695,
+          "linearTrendBytesPerMeasuredSecond": 69488.04394569984,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 1029,
+            "first": 40,
+            "last": 297,
+            "max": 297,
+            "lastMinusFirst": 257
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 1029,
+            "first": 40,
+            "last": 297,
+            "max": 297,
+            "lastMinusFirst": 257
+          },
+          "generation2": {
+            "samples": 1029,
+            "first": 40,
+            "last": 297,
+            "max": 297,
+            "lastMinusFirst": 257
+          }
+        }
+      },
+      "cold": {
+        "frames": 254,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 254,
+            "availability": "MEASURED",
+            "median": 16.666602343320847,
+            "p95": 16.669005155563354,
+            "p99": 43.783701956272125,
+            "worst": 706.3078880310059,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 250,
+            "availability": "MEASURED",
+            "median": 4.3290500000000005,
+            "p95": 5.8618,
+            "p99": 43.7776,
+            "worst": 705.9644,
+            "excludedOrUnavailableSamples": 4
+          },
+          "cpuRenderMs": {
+            "samples": 250,
+            "availability": "MEASURED",
+            "median": 1.9184999999999999,
+            "p95": 2.4775,
+            "p99": 3.6449,
+            "worst": 9.0564,
+            "excludedOrUnavailableSamples": 4
+          },
+          "cpuPresentWaitMs": {
+            "samples": 250,
+            "availability": "MEASURED",
+            "median": 12.326049999999999,
+            "p95": 12.8617,
+            "p99": 13.0414,
+            "worst": 13.3339,
+            "excludedOrUnavailableSamples": 4
+          },
+          "gpuMs": {
+            "samples": 249,
+            "availability": "MEASURED",
+            "median": 6.350848,
+            "p95": 7.051008,
+            "p99": 8.608256,
+            "worst": 26.642944,
+            "excludedOrUnavailableSamples": 5
+          },
+          "lastSectionUpdateMs": {
+            "samples": 254,
+            "availability": "MEASURED",
+            "median": 42.5683,
+            "p95": 42.5683,
+            "p99": 42.5683,
+            "worst": 42.5683,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 5.005756977945566,
+        "framesOver16_6667ms": 125,
+        "over16_6667Fraction": 0.4921259842519685,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 254,
+          "firstBytes": 5816320,
+          "lastBytes": 10158080,
+          "minBytes": 5816320,
+          "maxBytes": 10432512,
+          "lastMinusFirstBytes": 4341760,
+          "linearTrendBytesPerMeasuredSecond": 59587.14791913662,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 254,
+          "firstBytes": 136579696,
+          "lastBytes": 179751823,
+          "minBytes": 136579696,
+          "maxBytes": 179752303,
+          "lastMinusFirstBytes": 43172127,
+          "linearTrendBytesPerMeasuredSecond": 358741.52579010243,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 254,
+            "first": 40,
+            "last": 51,
+            "max": 51,
+            "lastMinusFirst": 11
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 254,
+            "first": 40,
+            "last": 51,
+            "max": 51,
+            "lastMinusFirst": 11
+          },
+          "generation2": {
+            "samples": 254,
+            "first": 40,
+            "last": 51,
+            "max": 51,
+            "lastMinusFirst": 11
+          }
+        }
+      },
+      "warm": {
+        "frames": 775,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 775,
+            "availability": "MEASURED",
+            "median": 16.666702926158905,
+            "p95": 16.66889898478985,
+            "p99": 16.827097162604332,
+            "worst": 27.413804084062576,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 775,
+            "availability": "MEASURED",
+            "median": 4.6251,
+            "p95": 6.3826,
+            "p99": 7.9344,
+            "worst": 27.4096,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 775,
+            "availability": "MEASURED",
+            "median": 1.8372,
+            "p95": 2.1938,
+            "p99": 2.4932,
+            "worst": 3.4166,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 775,
+            "availability": "MEASURED",
+            "median": 12.037,
+            "p95": 12.8769,
+            "p99": 13.04,
+            "worst": 13.1648,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 774,
+            "availability": "MEASURED",
+            "median": 6.030848,
+            "p95": 6.750976,
+            "p99": 7.479552,
+            "worst": 8.865792,
+            "excludedOrUnavailableSamples": 1
+          },
+          "lastSectionUpdateMs": {
+            "samples": 775,
+            "availability": "MEASURED",
+            "median": 0.6823,
+            "p95": 42.5683,
+            "p99": 42.5683,
+            "worst": 42.5683,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 12.930377574637532,
+        "framesOver16_6667ms": 414,
+        "over16_6667Fraction": 0.5341935483870968,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 775,
+          "firstBytes": 10166272,
+          "lastBytes": 10715136,
+          "minBytes": 9592832,
+          "maxBytes": 11837440,
+          "lastMinusFirstBytes": 548864,
+          "linearTrendBytesPerMeasuredSecond": 70972.97031230424,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 775,
+          "firstBytes": 179752463,
+          "lastBytes": 180350391,
+          "minBytes": 179752463,
+          "maxBytes": 180351415,
+          "lastMinusFirstBytes": 597928,
+          "linearTrendBytesPerMeasuredSecond": 66861.36786494145,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 775,
+            "first": 51,
+            "last": 297,
+            "max": 297,
+            "lastMinusFirst": 246
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 775,
+            "first": 51,
+            "last": 297,
+            "max": 297,
+            "lastMinusFirst": 246
+          },
+          "generation2": {
+            "samples": 775,
+            "first": 51,
+            "last": 297,
+            "max": 297,
+            "lastMinusFirst": 246
+          }
+        }
+      }
+    },
+    "2": {
+      "all": {
+        "frames": 211,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 16.666702926158905,
+            "p95": 16.66860096156597,
+            "p99": 16.67150668799877,
+            "worst": 16.7968962341547,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 5.0199,
+            "p95": 6.555,
+            "p99": 7.8363,
+            "worst": 10.1765,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 1.8541,
+            "p95": 2.3031,
+            "p99": 2.9976,
+            "worst": 3.1951,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 11.6427,
+            "p95": 12.5894,
+            "p99": 12.7928,
+            "worst": 12.8647,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 6.04672,
+            "p95": 6.69184,
+            "p99": 7.088384,
+            "worst": 7.551744,
+            "excludedOrUnavailableSamples": 0
+          },
+          "lastSectionUpdateMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 0.6814,
+            "p95": 1.7341,
+            "p99": 2.9099,
+            "worst": 3.1235,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 3.516807597130537,
+        "framesOver16_6667ms": 110,
+        "over16_6667Fraction": 0.5213270142180095,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 211,
+          "firstBytes": 10723328,
+          "lastBytes": 11489280,
+          "minBytes": 10129408,
+          "maxBytes": 11665408,
+          "lastMinusFirstBytes": 765952,
+          "linearTrendBytesPerMeasuredSecond": 147365.06236277928,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 211,
+          "firstBytes": 180350279,
+          "lastBytes": 180352119,
+          "minBytes": 180350279,
+          "maxBytes": 180352663,
+          "lastMinusFirstBytes": 1840,
+          "linearTrendBytesPerMeasuredSecond": 206.06728707365633,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 211,
+            "first": 297,
+            "last": 350,
+            "max": 350,
+            "lastMinusFirst": 53
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 211,
+            "first": 297,
+            "last": 350,
+            "max": 350,
+            "lastMinusFirst": 53
+          },
+          "generation2": {
+            "samples": 211,
+            "first": 297,
+            "last": 350,
+            "max": 350,
+            "lastMinusFirst": 53
+          }
+        }
+      },
+      "cold": {
+        "frames": 0,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "lastSectionUpdateMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 0.0,
+        "framesOver16_6667ms": 0,
+        "over16_6667Fraction": null,
+        "monoUsedMemory": {
+          "availability": "NOT_AVAILABLE"
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "NOT_AVAILABLE"
+        },
+        "garbageCollectionCounters": {
+          "schema": "NOT_AVAILABLE",
+          "legacyGenerationSum": {
+            "samples": 0,
+            "first": null,
+            "last": null,
+            "max": null,
+            "lastMinusFirst": null
+          },
+          "warning": "Legacy sum of GC.CollectionCount(0/1/2) deltas may duplicate collection counts. Do not compare with newer generation0 counters or treat as allocation throughput."
+        }
+      },
+      "warm": {
+        "frames": 211,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 16.666702926158905,
+            "p95": 16.66860096156597,
+            "p99": 16.67150668799877,
+            "worst": 16.7968962341547,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 5.0199,
+            "p95": 6.555,
+            "p99": 7.8363,
+            "worst": 10.1765,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 1.8541,
+            "p95": 2.3031,
+            "p99": 2.9976,
+            "worst": 3.1951,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 11.6427,
+            "p95": 12.5894,
+            "p99": 12.7928,
+            "worst": 12.8647,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 6.04672,
+            "p95": 6.69184,
+            "p99": 7.088384,
+            "worst": 7.551744,
+            "excludedOrUnavailableSamples": 0
+          },
+          "lastSectionUpdateMs": {
+            "samples": 211,
+            "availability": "MEASURED",
+            "median": 0.6814,
+            "p95": 1.7341,
+            "p99": 2.9099,
+            "worst": 3.1235,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 3.516807597130537,
+        "framesOver16_6667ms": 110,
+        "over16_6667Fraction": 0.5213270142180095,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 211,
+          "firstBytes": 10723328,
+          "lastBytes": 11489280,
+          "minBytes": 10129408,
+          "maxBytes": 11665408,
+          "lastMinusFirstBytes": 765952,
+          "linearTrendBytesPerMeasuredSecond": 147365.06236277928,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 211,
+          "firstBytes": 180350279,
+          "lastBytes": 180352119,
+          "minBytes": 180350279,
+          "maxBytes": 180352663,
+          "lastMinusFirstBytes": 1840,
+          "linearTrendBytesPerMeasuredSecond": 206.06728707365633,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 211,
+            "first": 297,
+            "last": 350,
+            "max": 350,
+            "lastMinusFirst": 53
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 211,
+            "first": 297,
+            "last": 350,
+            "max": 350,
+            "lastMinusFirst": 53
+          },
+          "generation2": {
+            "samples": 211,
+            "first": 297,
+            "last": 350,
+            "max": 350,
+            "lastMinusFirst": 53
+          }
+        }
+      }
+    },
+    "3": {
+      "all": {
+        "frames": 332,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 16.666695475578308,
+            "p95": 16.669904813170433,
+            "p99": 16.814902424812317,
+            "worst": 20.41560411453247,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 4.43825,
+            "p95": 5.9654,
+            "p99": 7.0721,
+            "worst": 8.6236,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 1.81945,
+            "p95": 2.2061,
+            "p99": 2.5114,
+            "worst": 4.1234,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 12.230149999999998,
+            "p95": 12.92,
+            "p99": 13.0338,
+            "worst": 13.2189,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 331,
+            "availability": "MEASURED",
+            "median": 5.994752,
+            "p95": 6.669568,
+            "p99": 7.341312,
+            "worst": 8.83968,
+            "excludedOrUnavailableSamples": 1
+          },
+          "lastSectionUpdateMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 0.0067,
+            "p95": 1.6102,
+            "p99": 1.8258,
+            "worst": 2.9859,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 5.538000788539648,
+        "framesOver16_6667ms": 170,
+        "over16_6667Fraction": 0.5120481927710844,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 332,
+          "firstBytes": 11501568,
+          "lastBytes": 11300864,
+          "minBytes": 10084352,
+          "maxBytes": 11702272,
+          "lastMinusFirstBytes": -200704,
+          "linearTrendBytesPerMeasuredSecond": 35001.720157267235,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 332,
+          "firstBytes": 180350983,
+          "lastBytes": 180382743,
+          "minBytes": 180349343,
+          "maxBytes": 180383703,
+          "lastMinusFirstBytes": 31760,
+          "linearTrendBytesPerMeasuredSecond": 7985.266023278086,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 332,
+            "first": 350,
+            "last": 442,
+            "max": 442,
+            "lastMinusFirst": 92
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 332,
+            "first": 350,
+            "last": 442,
+            "max": 442,
+            "lastMinusFirst": 92
+          },
+          "generation2": {
+            "samples": 332,
+            "first": 350,
+            "last": 442,
+            "max": 442,
+            "lastMinusFirst": 92
+          }
+        }
+      },
+      "cold": {
+        "frames": 0,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "lastSectionUpdateMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 0.0,
+        "framesOver16_6667ms": 0,
+        "over16_6667Fraction": null,
+        "monoUsedMemory": {
+          "availability": "NOT_AVAILABLE"
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "NOT_AVAILABLE"
+        },
+        "garbageCollectionCounters": {
+          "schema": "NOT_AVAILABLE",
+          "legacyGenerationSum": {
+            "samples": 0,
+            "first": null,
+            "last": null,
+            "max": null,
+            "lastMinusFirst": null
+          },
+          "warning": "Legacy sum of GC.CollectionCount(0/1/2) deltas may duplicate collection counts. Do not compare with newer generation0 counters or treat as allocation throughput."
+        }
+      },
+      "warm": {
+        "frames": 332,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 16.666695475578308,
+            "p95": 16.669904813170433,
+            "p99": 16.814902424812317,
+            "worst": 20.41560411453247,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 4.43825,
+            "p95": 5.9654,
+            "p99": 7.0721,
+            "worst": 8.6236,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 1.81945,
+            "p95": 2.2061,
+            "p99": 2.5114,
+            "worst": 4.1234,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 12.230149999999998,
+            "p95": 12.92,
+            "p99": 13.0338,
+            "worst": 13.2189,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 331,
+            "availability": "MEASURED",
+            "median": 5.994752,
+            "p95": 6.669568,
+            "p99": 7.341312,
+            "worst": 8.83968,
+            "excludedOrUnavailableSamples": 1
+          },
+          "lastSectionUpdateMs": {
+            "samples": 332,
+            "availability": "MEASURED",
+            "median": 0.0067,
+            "p95": 1.6102,
+            "p99": 1.8258,
+            "worst": 2.9859,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 5.538000788539648,
+        "framesOver16_6667ms": 170,
+        "over16_6667Fraction": 0.5120481927710844,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 332,
+          "firstBytes": 11501568,
+          "lastBytes": 11300864,
+          "minBytes": 10084352,
+          "maxBytes": 11702272,
+          "lastMinusFirstBytes": -200704,
+          "linearTrendBytesPerMeasuredSecond": 35001.720157267235,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 332,
+          "firstBytes": 180350983,
+          "lastBytes": 180382743,
+          "minBytes": 180349343,
+          "maxBytes": 180383703,
+          "lastMinusFirstBytes": 31760,
+          "linearTrendBytesPerMeasuredSecond": 7985.266023278086,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 332,
+            "first": 350,
+            "last": 442,
+            "max": 442,
+            "lastMinusFirst": 92
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 332,
+            "first": 350,
+            "last": 442,
+            "max": 442,
+            "lastMinusFirst": 92
+          },
+          "generation2": {
+            "samples": 332,
+            "first": 350,
+            "last": 442,
+            "max": 442,
+            "lastMinusFirst": 92
+          }
+        }
+      }
+    },
+    "4": {
+      "all": {
+        "frames": 1467,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 16.666801646351814,
+            "p95": 19.396599382162094,
+            "p99": 36.937300115823746,
+            "worst": 39.2225980758667,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 5.8916,
+            "p95": 19.4766,
+            "p99": 36.9318,
+            "worst": 39.2115,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 1.8454,
+            "p95": 2.384,
+            "p99": 3.067,
+            "worst": 4.3533,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 10.7672,
+            "p95": 12.8597,
+            "p99": 13.0983,
+            "worst": 13.3101,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 1459,
+            "availability": "MEASURED",
+            "median": 6.18752,
+            "p95": 6.76608,
+            "p99": 7.567616,
+            "worst": 9.365248,
+            "excludedOrUnavailableSamples": 8
+          },
+          "lastSectionUpdateMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 1.5184,
+            "p95": 15.074300000000001,
+            "p99": 32.4553,
+            "worst": 34.559000000000005,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 25.57282984443009,
+        "framesOver16_6667ms": 816,
+        "over16_6667Fraction": 0.556237218813906,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 1467,
+          "firstBytes": 10981376,
+          "lastBytes": 10887168,
+          "minBytes": 9535488,
+          "maxBytes": 12177408,
+          "lastMinusFirstBytes": -94208,
+          "linearTrendBytesPerMeasuredSecond": 46080.007442172275,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 1467,
+          "firstBytes": 180422503,
+          "lastBytes": 180654031,
+          "minBytes": 179985903,
+          "maxBytes": 180694607,
+          "lastMinusFirstBytes": 231528,
+          "linearTrendBytesPerMeasuredSecond": 33475.260900884605,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 1467,
+            "first": 455,
+            "last": 2639,
+            "max": 2639,
+            "lastMinusFirst": 2184
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 1467,
+            "first": 455,
+            "last": 2639,
+            "max": 2639,
+            "lastMinusFirst": 2184
+          },
+          "generation2": {
+            "samples": 1467,
+            "first": 455,
+            "last": 2639,
+            "max": 2639,
+            "lastMinusFirst": 2184
+          }
+        }
+      },
+      "cold": {
+        "frames": 0,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "lastSectionUpdateMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 0.0,
+        "framesOver16_6667ms": 0,
+        "over16_6667Fraction": null,
+        "monoUsedMemory": {
+          "availability": "NOT_AVAILABLE"
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "NOT_AVAILABLE"
+        },
+        "garbageCollectionCounters": {
+          "schema": "NOT_AVAILABLE",
+          "legacyGenerationSum": {
+            "samples": 0,
+            "first": null,
+            "last": null,
+            "max": null,
+            "lastMinusFirst": null
+          },
+          "warning": "Legacy sum of GC.CollectionCount(0/1/2) deltas may duplicate collection counts. Do not compare with newer generation0 counters or treat as allocation throughput."
+        }
+      },
+      "warm": {
+        "frames": 1467,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 16.666801646351814,
+            "p95": 19.396599382162094,
+            "p99": 36.937300115823746,
+            "worst": 39.2225980758667,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 5.8916,
+            "p95": 19.4766,
+            "p99": 36.9318,
+            "worst": 39.2115,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 1.8454,
+            "p95": 2.384,
+            "p99": 3.067,
+            "worst": 4.3533,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 10.7672,
+            "p95": 12.8597,
+            "p99": 13.0983,
+            "worst": 13.3101,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 1459,
+            "availability": "MEASURED",
+            "median": 6.18752,
+            "p95": 6.76608,
+            "p99": 7.567616,
+            "worst": 9.365248,
+            "excludedOrUnavailableSamples": 8
+          },
+          "lastSectionUpdateMs": {
+            "samples": 1467,
+            "availability": "MEASURED",
+            "median": 1.5184,
+            "p95": 15.074300000000001,
+            "p99": 32.4553,
+            "worst": 34.559000000000005,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 25.57282984443009,
+        "framesOver16_6667ms": 816,
+        "over16_6667Fraction": 0.556237218813906,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 1467,
+          "firstBytes": 10981376,
+          "lastBytes": 10887168,
+          "minBytes": 9535488,
+          "maxBytes": 12177408,
+          "lastMinusFirstBytes": -94208,
+          "linearTrendBytesPerMeasuredSecond": 46080.007442172275,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 1467,
+          "firstBytes": 180422503,
+          "lastBytes": 180654031,
+          "minBytes": 179985903,
+          "maxBytes": 180694607,
+          "lastMinusFirstBytes": 231528,
+          "linearTrendBytesPerMeasuredSecond": 33475.260900884605,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 1467,
+            "first": 455,
+            "last": 2639,
+            "max": 2639,
+            "lastMinusFirst": 2184
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 1467,
+            "first": 455,
+            "last": 2639,
+            "max": 2639,
+            "lastMinusFirst": 2184
+          },
+          "generation2": {
+            "samples": 1467,
+            "first": 455,
+            "last": 2639,
+            "max": 2639,
+            "lastMinusFirst": 2184
+          }
+        }
+      }
+    },
+    "5": {
+      "all": {
+        "frames": 2750,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 16.666702926158905,
+            "p95": 16.67040027678013,
+            "p99": 32.3868989944458,
+            "worst": 41.706301271915436,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 4.4051,
+            "p95": 10.604,
+            "p99": 32.3831,
+            "worst": 41.6982,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 1.7365499999999998,
+            "p95": 2.1162,
+            "p99": 2.5853,
+            "worst": 4.7792,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 12.25655,
+            "p95": 13.0098,
+            "p99": 13.1744,
+            "worst": 14.8229,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 2744,
+            "availability": "MEASURED",
+            "median": 6.061312,
+            "p95": 6.459392,
+            "p99": 6.924544,
+            "worst": 9.762816,
+            "excludedOrUnavailableSamples": 6
+          },
+          "lastSectionUpdateMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 0.07200000000000001,
+            "p95": 6.4622,
+            "p99": 28.204800000000002,
+            "worst": 37.435300000000005,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 46.628792744129896,
+        "framesOver16_6667ms": 1497,
+        "over16_6667Fraction": 0.5443636363636364,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 2750,
+          "firstBytes": 11010048,
+          "lastBytes": 10878976,
+          "minBytes": 9637888,
+          "maxBytes": 11915264,
+          "lastMinusFirstBytes": -131072,
+          "linearTrendBytesPerMeasuredSecond": 2702.2012789756604,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 2750,
+          "firstBytes": 180694543,
+          "lastBytes": 188079647,
+          "minBytes": 180268439,
+          "maxBytes": 188082607,
+          "lastMinusFirstBytes": 7385104,
+          "linearTrendBytesPerMeasuredSecond": 118485.67239944928,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 2750,
+            "first": 2651,
+            "last": 4495,
+            "max": 4495,
+            "lastMinusFirst": 1844
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 2750,
+            "first": 2651,
+            "last": 4495,
+            "max": 4495,
+            "lastMinusFirst": 1844
+          },
+          "generation2": {
+            "samples": 2750,
+            "first": 2651,
+            "last": 4495,
+            "max": 4495,
+            "lastMinusFirst": 1844
+          }
+        }
+      },
+      "cold": {
+        "frames": 0,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          },
+          "lastSectionUpdateMs": {
+            "samples": 0,
+            "availability": "NOT_AVAILABLE",
+            "median": null,
+            "p95": null,
+            "p99": null,
+            "worst": null,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 0.0,
+        "framesOver16_6667ms": 0,
+        "over16_6667Fraction": null,
+        "monoUsedMemory": {
+          "availability": "NOT_AVAILABLE"
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "NOT_AVAILABLE"
+        },
+        "garbageCollectionCounters": {
+          "schema": "NOT_AVAILABLE",
+          "legacyGenerationSum": {
+            "samples": 0,
+            "first": null,
+            "last": null,
+            "max": null,
+            "lastMinusFirst": null
+          },
+          "warning": "Legacy sum of GC.CollectionCount(0/1/2) deltas may duplicate collection counts. Do not compare with newer generation0 counters or treat as allocation throughput."
+        }
+      },
+      "warm": {
+        "frames": 2750,
+        "timers": {
+          "frameDeltaMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 16.666702926158905,
+            "p95": 16.67040027678013,
+            "p99": 32.3868989944458,
+            "worst": 41.706301271915436,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuMainMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 4.4051,
+            "p95": 10.604,
+            "p99": 32.3831,
+            "worst": 41.6982,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuRenderMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 1.7365499999999998,
+            "p95": 2.1162,
+            "p99": 2.5853,
+            "worst": 4.7792,
+            "excludedOrUnavailableSamples": 0
+          },
+          "cpuPresentWaitMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 12.25655,
+            "p95": 13.0098,
+            "p99": 13.1744,
+            "worst": 14.8229,
+            "excludedOrUnavailableSamples": 0
+          },
+          "gpuMs": {
+            "samples": 2744,
+            "availability": "MEASURED",
+            "median": 6.061312,
+            "p95": 6.459392,
+            "p99": 6.924544,
+            "worst": 9.762816,
+            "excludedOrUnavailableSamples": 6
+          },
+          "lastSectionUpdateMs": {
+            "samples": 2750,
+            "availability": "MEASURED",
+            "median": 0.07200000000000001,
+            "p95": 6.4622,
+            "p99": 28.204800000000002,
+            "worst": 37.435300000000005,
+            "excludedOrUnavailableSamples": 0
+          }
+        },
+        "measuredFrameDurationSeconds": 46.628792744129896,
+        "framesOver16_6667ms": 1497,
+        "over16_6667Fraction": 0.5443636363636364,
+        "monoUsedMemory": {
+          "availability": "MEASURED",
+          "samples": 2750,
+          "firstBytes": 11010048,
+          "lastBytes": 10878976,
+          "minBytes": 9637888,
+          "maxBytes": 11915264,
+          "lastMinusFirstBytes": -131072,
+          "linearTrendBytesPerMeasuredSecond": 2702.2012789756604,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "unityTotalAllocatedMemory": {
+          "availability": "MEASURED",
+          "samples": 2750,
+          "firstBytes": 180694543,
+          "lastBytes": 188079647,
+          "minBytes": 180268439,
+          "maxBytes": 188082607,
+          "lastMinusFirstBytes": 7385104,
+          "linearTrendBytesPerMeasuredSecond": 118485.67239944928,
+          "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+        },
+        "garbageCollectionCounters": {
+          "schema": "separate-generation-counters/1",
+          "generation0": {
+            "samples": 2750,
+            "first": 2651,
+            "last": 4495,
+            "max": 4495,
+            "lastMinusFirst": 1844
+          },
+          "warning": "Generation counters are reported separately and must not be summed; occupancy is not allocation throughput.",
+          "generation1": {
+            "samples": 2750,
+            "first": 2651,
+            "last": 4495,
+            "max": 4495,
+            "lastMinusFirst": 1844
+          },
+          "generation2": {
+            "samples": 2750,
+            "first": 2651,
+            "last": 4495,
+            "max": 4495,
+            "lastMinusFirst": 1844
+          }
+        }
+      }
+    }
+  },
+  "rotationAngleBins": [
+    {
+      "angleRangeDegrees": [
+        0,
+        2
+      ],
+      "frames": 57,
+      "frameMs": {
+        "samples": 57,
+        "availability": "MEASURED",
+        "median": 35.66989675164223,
+        "p95": 39.18749839067459,
+        "p99": 41.706301271915436,
+        "worst": 41.706301271915436
+      },
+      "sectionUpdateMs": {
+        "samples": 57,
+        "availability": "MEASURED",
+        "median": 31.3699,
+        "p95": 34.559000000000005,
+        "p99": 37.435300000000005,
+        "worst": 37.435300000000005
+      },
+      "cpuMainMs": {
+        "samples": 57,
+        "availability": "MEASURED",
+        "median": 35.5573,
+        "p95": 39.1665,
+        "p99": 41.6982,
+        "worst": 41.6982
+      },
+      "gpuMs": {
+        "samples": 54,
+        "availability": "MEASURED",
+        "median": 6.089600000000001,
+        "p95": 6.418432,
+        "p99": 6.981376,
+        "worst": 6.981376
+      },
+      "recordedGen0Increment": 655
+    },
+    {
+      "angleRangeDegrees": [
+        2,
+        10
+      ],
+      "frames": 97,
+      "frameMs": {
+        "samples": 97,
+        "availability": "MEASURED",
+        "median": 23.212194442749023,
+        "p95": 36.44639998674393,
+        "p99": 37.29189932346344,
+        "worst": 37.29189932346344
+      },
+      "sectionUpdateMs": {
+        "samples": 97,
+        "availability": "MEASURED",
+        "median": 18.8012,
+        "p95": 32.032900000000005,
+        "p99": 32.6863,
+        "worst": 32.6863
+      },
+      "cpuMainMs": {
+        "samples": 97,
+        "availability": "MEASURED",
+        "median": 23.2046,
+        "p95": 36.1823,
+        "p99": 37.2883,
+        "worst": 37.2883
+      },
+      "gpuMs": {
+        "samples": 91,
+        "availability": "MEASURED",
+        "median": 6.12992,
+        "p95": 6.501376,
+        "p99": 7.173632,
+        "worst": 7.173632
+      },
+      "recordedGen0Increment": 776
+    },
+    {
+      "angleRangeDegrees": [
+        10,
+        40
+      ],
+      "frames": 321,
+      "frameMs": {
+        "samples": 321,
+        "availability": "MEASURED",
+        "median": 16.666702926158905,
+        "p95": 16.669798642396927,
+        "p99": 17.535395920276642,
+        "worst": 18.54880154132843
+      },
+      "sectionUpdateMs": {
+        "samples": 321,
+        "availability": "MEASURED",
+        "median": 6.588,
+        "p95": 11.6155,
+        "p99": 12.9707,
+        "worst": 13.5785
+      },
+      "cpuMainMs": {
+        "samples": 321,
+        "availability": "MEASURED",
+        "median": 10.9791,
+        "p95": 16.3816,
+        "p99": 18.5244,
+        "worst": 19.7482
+      },
+      "gpuMs": {
+        "samples": 316,
+        "availability": "MEASURED",
+        "median": 6.1585920000000005,
+        "p95": 6.537728,
+        "p99": 7.205376,
+        "worst": 7.893248
+      },
+      "recordedGen0Increment": 833
+    },
+    {
+      "angleRangeDegrees": [
+        40,
+        50
+      ],
+      "frames": 95,
+      "frameMs": {
+        "samples": 95,
+        "availability": "MEASURED",
+        "median": 16.666794195771217,
+        "p95": 16.668204218149185,
+        "p99": 16.77529700100422,
+        "worst": 16.77529700100422
+      },
+      "sectionUpdateMs": {
+        "samples": 95,
+        "availability": "MEASURED",
+        "median": 5.0749,
+        "p95": 6.7339,
+        "p99": 7.647200000000001,
+        "worst": 7.647200000000001
+      },
+      "cpuMainMs": {
+        "samples": 95,
+        "availability": "MEASURED",
+        "median": 9.1302,
+        "p95": 10.6778,
+        "p99": 12.9382,
+        "worst": 12.9382
+      },
+      "gpuMs": {
+        "samples": 95,
+        "availability": "MEASURED",
+        "median": 6.172416,
+        "p95": 6.503168,
+        "p99": 6.5728,
+        "worst": 6.5728
+      },
+      "recordedGen0Increment": 155
+    },
+    {
+      "angleRangeDegrees": [
+        50,
+        80
+      ],
+      "frames": 322,
+      "frameMs": {
+        "samples": 322,
+        "availability": "MEASURED",
+        "median": 16.666702926158905,
+        "p95": 16.66869968175888,
+        "p99": 16.679400578141212,
+        "worst": 16.77830144762993
+      },
+      "sectionUpdateMs": {
+        "samples": 322,
+        "availability": "MEASURED",
+        "median": 5.15545,
+        "p95": 6.9024,
+        "p99": 7.6622,
+        "worst": 8.9673
+      },
+      "cpuMainMs": {
+        "samples": 322,
+        "availability": "MEASURED",
+        "median": 9.20115,
+        "p95": 11.6121,
+        "p99": 13.0198,
+        "worst": 15.3025
+      },
+      "gpuMs": {
+        "samples": 322,
+        "availability": "MEASURED",
+        "median": 6.170368,
+        "p95": 6.679552,
+        "p99": 7.229696,
+        "worst": 7.445504
+      },
+      "recordedGen0Increment": 538
+    },
+    {
+      "angleRangeDegrees": [
+        80,
+        90.01
+      ],
+      "frames": 264,
+      "frameMs": {
+        "samples": 264,
+        "availability": "MEASURED",
+        "median": 16.666702926158905,
+        "p95": 16.66819676756859,
+        "p99": 16.670195385813713,
+        "worst": 16.681596636772156
+      },
+      "sectionUpdateMs": {
+        "samples": 264,
+        "availability": "MEASURED",
+        "median": 5.2866,
+        "p95": 6.9575000000000005,
+        "p99": 7.6436,
+        "worst": 8.922500000000001
+      },
+      "cpuMainMs": {
+        "samples": 264,
+        "availability": "MEASURED",
+        "median": 9.4149,
+        "p95": 11.4968,
+        "p99": 12.4969,
+        "worst": 13.7541
+      },
+      "gpuMs": {
+        "samples": 264,
+        "availability": "MEASURED",
+        "median": 6.11904,
+        "p95": 6.524416,
+        "p99": 6.679296,
+        "worst": 6.801152
+      },
+      "recordedGen0Increment": 473
+    }
+  ],
+  "externalWarmOccupancy": {
+    "privateBytes": {
+      "availability": "MEASURED",
+      "samples": 95,
+      "firstBytes": 1278124032,
+      "lastBytes": 1206083584,
+      "minBytes": 1206083584,
+      "maxBytes": 1278124032,
+      "lastMinusFirstBytes": -72040448,
+      "linearTrendBytesPerMeasuredSecond": -37634.2669569177,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "workingSetBytes": {
+      "availability": "MEASURED",
+      "samples": 95,
+      "firstBytes": 446722048,
+      "lastBytes": 376455168,
+      "minBytes": 376455168,
+      "maxBytes": 446930944,
+      "lastMinusFirstBytes": -70266880,
+      "linearTrendBytesPerMeasuredSecond": -45435.88002888951,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "gpuDedicatedBytes": {
+      "availability": "MEASURED",
+      "samples": 95,
+      "firstBytes": 723607552,
+      "lastBytes": 723554304,
+      "minBytes": 723255296,
+      "maxBytes": 723693568,
+      "lastMinusFirstBytes": -53248,
+      "linearTrendBytesPerMeasuredSecond": -3122.8529492755124,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "gpuSharedBytes": {
+      "availability": "MEASURED",
+      "samples": 95,
+      "firstBytes": 12058624,
+      "lastBytes": 12681216,
+      "minBytes": 11501568,
+      "maxBytes": 13139968,
+      "lastMinusFirstBytes": 622592,
+      "linearTrendBytesPerMeasuredSecond": 605.1501800256002,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    },
+    "gpuCommittedBytes": {
+      "availability": "MEASURED",
+      "samples": 95,
+      "firstBytes": 786448384,
+      "lastBytes": 786911232,
+      "minBytes": 785432576,
+      "maxBytes": 787615744,
+      "lastMinusFirstBytes": 462848,
+      "linearTrendBytesPerMeasuredSecond": -4167.882344867317,
+      "meaning": "Sampled memory occupancy trend, NOT allocated bytes per second or proof of a leak."
+    }
+  },
+  "externalLast10SecondOccupancy": {
+    "privateBytes": {
+      "samples": 11,
+      "availability": "MEASURED",
+      "median": 1248985088.0,
+      "p95": 1248985088.0,
+      "p99": 1248985088.0,
+      "worst": 1248985088.0
+    },
+    "workingSetBytes": {
+      "samples": 11,
+      "availability": "MEASURED",
+      "median": 415969280.0,
+      "p95": 416002048.0,
+      "p99": 416002048.0,
+      "worst": 416002048.0
+    },
+    "gpuDedicatedBytes": {
+      "samples": 11,
+      "availability": "MEASURED",
+      "median": 723554304.0,
+      "p95": 723554304.0,
+      "p99": 723554304.0,
+      "worst": 723554304.0
+    },
+    "gpuSharedBytes": {
+      "samples": 11,
+      "availability": "MEASURED",
+      "median": 12681216.0,
+      "p95": 12681216.0,
+      "p99": 12681216.0,
+      "worst": 12681216.0
+    },
+    "gpuCommittedBytes": {
+      "samples": 11,
+      "availability": "MEASURED",
+      "median": 786911232.0,
+      "p95": 786911232.0,
+      "p99": 786911232.0,
+      "worst": 786911232.0
+    }
+  },
+  "warnings": [
+    "FrameTimingManager timers may correspond to preceding frames. Angle bin associations are interval-level evidence, not exact causal attribution.",
+    "GC.CollectionCount counters are separately recorded and identical under this Mono runtime; no generation sum or allocation-byte rate inferred.",
+    "One loop cannot establish absence of a memory leak.",
+    "The first5 seconds are process startup here; future repeated loops must be distinguished from full cold launches."
+  ],
+  "findingsJa": [
+    "warmのp99 34.33ms、最悪41.71ms。GPU warm p99 7.33ms、最悪9.76msなので主な遅延はCPU側。",
+    "0〜2度の回転中は断面更新に30ms前後を要する一方、40〜50度は軽い。可視断面数が多い区間を最適化候補にする。",
+    "起動frame2に706.31msのcoldスパイク。全体中央値16.67msだけで60fps達成と判定しない。",
+    "新WDDM合計値は保存済みraw100samplesと一致し補正不要。"
+  ]
+}

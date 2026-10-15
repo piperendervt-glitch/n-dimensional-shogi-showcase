@@ -1,0 +1,219 @@
+{
+  "schema": "independent-gpu-buffer-review/2",
+  "status": "READBACK_AND_SELECTED_SAMPLE_CHECKS_COMPLETE_WITH_RASTER_BOUNDARIES_UNRESOLVED",
+  "scope": "Independent OpenCV EXR decoding and selected manifest/geometry sample recomputation only. No performance result, aesthetic approval, per-piece shadow/reflection identity, complete pixel absence, or temporal-history validation. 8192 is the native cascade atlas dimension; it does not replace the 4096 per-cascade resolution.",
+  "profiles": {
+    "geometry": {
+      "review": "evidence/geometry/quality-v2-geometry-buffer-review/buffer-review.json",
+      "reviewSha256": "7609bd7f93a2df22aeb12bbcb0cfe76e24d17571c1efae4a1e4002c3c14741b7",
+      "source": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\quality-v2-geometry-passes\\20261015-123835-231-GeometryReference-1",
+      "captureCount": 9,
+      "mainBufferCount": 99,
+      "totalDecodedExrs": 100,
+      "allFinite": true,
+      "allReadbacksComplete": true,
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "allShadowNativeSizesMatchManifests": true,
+      "planarCount": 9,
+      "allPlanar512x512": true,
+      "allPlanarNonconstant": true,
+      "samples": {
+        "probes": 4583,
+        "matchedDepth": 4554,
+        "matchedNormals": 4551,
+        "stalePixelsExcluded": 783,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 29,
+        "rasterBoundaryUnresolved": 3
+      },
+      "maxSampledDepthErrorMetres": 8.243322372436523e-05,
+      "maxDecodedDepthVersusManifestErrorMetres": 0,
+      "maxDecodedNormalDotVersusManifestError": 9.816477930524314e-08,
+      "maxNormalUnitLengthError": 2.384185791015625e-07,
+      "gpuFault": {
+        "status": "PASS_GPU_STALE_DEPTH_DETECTED",
+        "baselinePassingAbsenceOnlyProbes": 13,
+        "detectedStaleDepthPixels": 13,
+        "independentChangedOverOneMillimetre": 13,
+        "independentMatchingFormerDepthWithinOneMillimetre": 13
+      },
+      "unresolvedBoundaries": [
+        {
+          "capture": "scene02-height-passes.json",
+          "samples": [
+            {
+              "id": "Board",
+              "x": 763,
+              "y": 388,
+              "runtimeResult": "NOT_VALIDATED_RASTER_BOUNDARY_NORMAL",
+              "cpuHitMarginPixels": 0.6496238112449646,
+              "matchingProjectedEdges": [
+                {
+                  "id": "B-King-0",
+                  "triangle": 36,
+                  "edge": 2,
+                  "marginPixels": 0.0011169569831885361,
+                  "edgeDepthMetres": 1.1126535821731853,
+                  "actualNormalDot": 0.9999921088422514
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "capture": "scene03-pressure-passes.json",
+          "samples": [
+            {
+              "id": "Board",
+              "x": 763,
+              "y": 388,
+              "runtimeResult": "NOT_VALIDATED_RASTER_BOUNDARY_NORMAL",
+              "cpuHitMarginPixels": 0.6496238112449646,
+              "matchingProjectedEdges": [
+                {
+                  "id": "B-King-0",
+                  "triangle": 36,
+                  "edge": 2,
+                  "marginPixels": 0.0011169569831885361,
+                  "edgeDepthMetres": 1.1126535821731853,
+                  "actualNormalDot": 0.9999921088422514
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "capture": "scene04-absence-passes.json",
+          "samples": [
+            {
+              "id": "Board",
+              "x": 763,
+              "y": 388,
+              "runtimeResult": "NOT_VALIDATED_RASTER_BOUNDARY_NORMAL",
+              "cpuHitMarginPixels": 0.6496238112449646,
+              "matchingProjectedEdges": [
+                {
+                  "id": "B-King-0",
+                  "triangle": 36,
+                  "edge": 2,
+                  "marginPixels": 0.0011169569831885361,
+                  "edgeDepthMetres": 1.1126535821731853,
+                  "actualNormalDot": 0.9999921088422514
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "showcase": {
+      "review": "evidence/geometry/quality-v2-showcase-buffer-review/buffer-review.json",
+      "reviewSha256": "bcbcb59adae9218868feedd6fe8a46588aba479990b6bcbd6888260dfa7574b3",
+      "source": "C:\\dev\\n-dimensional-shogi-showcase\\evidence\\runtime\\quality-v2-showcase-passes\\20261015-124021-341-ShowcaseRaster-1",
+      "captureCount": 9,
+      "mainBufferCount": 99,
+      "totalDecodedExrs": 100,
+      "allFinite": true,
+      "allReadbacksComplete": true,
+      "shadowNativeSize": [
+        8192,
+        8192
+      ],
+      "allShadowNativeSizesMatchManifests": true,
+      "planarCount": 9,
+      "allPlanar512x512": true,
+      "allPlanarNonconstant": true,
+      "samples": {
+        "probes": 4583,
+        "matchedDepth": 4554,
+        "matchedNormals": 4551,
+        "stalePixelsExcluded": 783,
+        "failures": 0,
+        "formerSurfaceAbsenceOnly": 29,
+        "rasterBoundaryUnresolved": 3
+      },
+      "maxSampledDepthErrorMetres": 8.243322372436523e-05,
+      "maxDecodedDepthVersusManifestErrorMetres": 0,
+      "maxDecodedNormalDotVersusManifestError": 9.816477930524314e-08,
+      "maxNormalUnitLengthError": 2.384185791015625e-07,
+      "gpuFault": {
+        "status": "PASS_GPU_STALE_DEPTH_DETECTED",
+        "baselinePassingAbsenceOnlyProbes": 13,
+        "detectedStaleDepthPixels": 13,
+        "independentChangedOverOneMillimetre": 13,
+        "independentMatchingFormerDepthWithinOneMillimetre": 13
+      },
+      "unresolvedBoundaries": [
+        {
+          "capture": "scene02-height-passes.json",
+          "samples": [
+            {
+              "id": "Board",
+              "x": 763,
+              "y": 388,
+              "runtimeResult": "NOT_VALIDATED_RASTER_BOUNDARY_NORMAL",
+              "cpuHitMarginPixels": 0.6496238112449646,
+              "matchingProjectedEdges": [
+                {
+                  "id": "B-King-0",
+                  "triangle": 36,
+                  "edge": 2,
+                  "marginPixels": 0.0011169569831885361,
+                  "edgeDepthMetres": 1.1126535821731853,
+                  "actualNormalDot": 0.9999921088422514
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "capture": "scene03-pressure-passes.json",
+          "samples": [
+            {
+              "id": "Board",
+              "x": 763,
+              "y": 388,
+              "runtimeResult": "NOT_VALIDATED_RASTER_BOUNDARY_NORMAL",
+              "cpuHitMarginPixels": 0.6496238112449646,
+              "matchingProjectedEdges": [
+                {
+                  "id": "B-King-0",
+                  "triangle": 36,
+                  "edge": 2,
+                  "marginPixels": 0.0011169569831885361,
+                  "edgeDepthMetres": 1.1126535821731853,
+                  "actualNormalDot": 0.9999921088422514
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "capture": "scene04-absence-passes.json",
+          "samples": [
+            {
+              "id": "Board",
+              "x": 763,
+              "y": 388,
+              "runtimeResult": "NOT_VALIDATED_RASTER_BOUNDARY_NORMAL",
+              "cpuHitMarginPixels": 0.6496238112449646,
+              "matchingProjectedEdges": [
+                {
+                  "id": "B-King-0",
+                  "triangle": 36,
+                  "edge": 2,
+                  "marginPixels": 0.0011169569831885361,
+                  "edgeDepthMetres": 1.1126535821731853,
+                  "actualNormalDot": 0.9999921088422514
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

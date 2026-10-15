@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "ruleset": "showcase-asymmetric-4d-king-capture/0.1",
+  "occlusion": "lattice-line/1",
+  "livePlies": 19,
+  "TranscriptHash": "0360cee4b45ee3d959d5ed14af4bf997c7398d40b2d4b9a99e9b9b6d5b212eec",
+  "Hash": "c24a2a9620edddc47bf1ab2103f9289c31d113700eba61980b0bd3506424aa00",
+  "winner": "A",
+  "independentVerification": true,
+  "replayHashMatch": true,
+  "nonPawnRescues": 0,
+  "totalNodes": 44972,
+  "elapsedMilliseconds": 622
+}

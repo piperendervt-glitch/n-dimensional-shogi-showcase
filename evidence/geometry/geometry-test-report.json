@@ -1,0 +1,1684 @@
+{
+  "status": "TECHNICAL_PASS",
+  "testVersion": "geometry-tests/0.1",
+  "geometryVersion": "geometry/0.1",
+  "checks": 3372857,
+  "elapsedMilliseconds": 898,
+  "runtime": "9.0.19",
+  "provenance": {
+    "sourceFiles": [
+      {
+        "path": "scenarios/geometry-v1.json",
+        "sha256": "98b945e595212eeacc90377e7e73b6d1c28934ec20cfbece53d89a425e69fd67",
+        "bytes": 1288
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/Showcase.Geometry.asmdef",
+        "sha256": "de4a5979e4a73d9210bb2096dff7f71a93442ea87247d8591495193af645483a",
+        "bytes": 294
+      },
+      {
+        "path": "src/Showcase.Geometry/Showcase.Geometry.csproj",
+        "sha256": "638a3410d6ac9437be3140edade500ffc5ac8977113544d5a96b8f7c655ab2c6",
+        "bytes": 667
+      },
+      {
+        "path": "src/Showcase.Geometry/package.json",
+        "sha256": "452d0ac93bc23e85249399419725b12ac197c39d865164f71635fad619fc7b59",
+        "bytes": 172
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs",
+        "sha256": "1dcd57cd9df7073c195d31f41e53eb5bbeddb6cb38ae7a1c267eb2429f0fabb1",
+        "bytes": 7067
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs",
+        "sha256": "e1898e837f886b7b02b0a14984168105866adbb10a7d9b23742c9d9e884381bd",
+        "bytes": 11990
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs",
+        "sha256": "9fa23152a55edf706d1a5f9b44f2253abdd091ed88ae7385029f3f1e2160a664",
+        "bytes": 3840
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs",
+        "sha256": "ebde7b160c7e435b97845ea00082a99660ee05289c5fea9940e246fc911931c4",
+        "bytes": 2908
+      },
+      {
+        "path": "tests/Showcase.Geometry.Tests/Program.cs",
+        "sha256": "7092742982d02ae5112d5f11086ad147bf31b65bcf0176c68c2194c6a2d0ebfb",
+        "bytes": 19586
+      },
+      {
+        "path": "tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj",
+        "sha256": "0ea7b175044f63dfc4bc4d6ca88b81885aed5b08e0e1397343a172d46efc62b3",
+        "bytes": 307
+      }
+    ],
+    "testAssemblySha256": "2a94c0695e75d0d7ddaf9ed322dbcbcb50d939d498967a82d8240c1513890420",
+    "geometryAssemblySha256": "fce1079536fd9066a09ea48eaa88e5d7afcec8619b4c6088990c44767b99e521",
+    "command": "dotnet run --project tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj --configuration Release -- evidence/geometry"
+  },
+  "primary": "Incremental convex polyhedron clipping",
+  "independentOracle": "Triple-plane intersections, all-halfspace feasibility, independent Gram-Schmidt rank",
+  "toleranceCells": 1E-09,
+  "oracleComparisonToleranceCells": 2E-06,
+  "materialFields": {
+    "referenceA": "M3(local.f, local.u, local.v)",
+    "visualC": "M3(local.f, local.u \u002B local.w, local.v)",
+    "approval": "Fixed material coordinates only. Visual quality remains HUMAN_PENDING."
+  },
+  "cases": [
+    {
+      "name": "box_H0",
+      "status": "Volume3D",
+      "vertices": 24,
+      "triangles": 12,
+      "volume": 8,
+      "oracleVertices": 8
+    },
+    {
+      "name": "box_H90",
+      "status": "Volume3D",
+      "vertices": 24,
+      "triangles": 12,
+      "volume": 1.5999999999999999,
+      "oracleVertices": 8
+    },
+    {
+      "name": "exact_w_endpoint_-0.2",
+      "status": "Volume3D",
+      "vertices": 24,
+      "triangles": 12,
+      "volume": 8,
+      "oracleVertices": 8
+    },
+    {
+      "name": "exact_w_endpoint_0.2",
+      "status": "Volume3D",
+      "vertices": 24,
+      "triangles": 12,
+      "volume": 8,
+      "oracleVertices": 8
+    },
+    {
+      "name": "beyond_endpoint",
+      "status": "Empty",
+      "vertices": 0,
+      "triangles": 0,
+      "volume": 0,
+      "oracleVertices": 0
+    },
+    {
+      "name": "inside_endpoint",
+      "status": "Volume3D",
+      "vertices": 24,
+      "triangles": 12,
+      "volume": 8,
+      "oracleVertices": 8
+    },
+    {
+      "name": "contact_dimension_2",
+      "status": "ContactLowerDimensional",
+      "vertices": 4,
+      "triangles": 0,
+      "volume": 0,
+      "oracleVertices": 4
+    },
+    {
+      "name": "contact_dimension_1",
+      "status": "ContactLowerDimensional",
+      "vertices": 2,
+      "triangles": 0,
+      "volume": 0,
+      "oracleVertices": 2
+    },
+    {
+      "name": "contact_dimension_0",
+      "status": "ContactLowerDimensional",
+      "vertices": 1,
+      "triangles": 0,
+      "volume": 0,
+      "oracleVertices": 1
+    },
+    {
+      "name": "component_left",
+      "status": "Empty",
+      "vertices": 0,
+      "triangles": 0,
+      "volume": 0,
+      "oracleVertices": 0
+    },
+    {
+      "name": "component_right",
+      "status": "Empty",
+      "vertices": 0,
+      "triangles": 0,
+      "volume": 0,
+      "oracleVertices": 0
+    },
+    {
+      "name": "pawn_A_0",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184847,
+      "oracleVertices": 40
+    },
+    {
+      "name": "pawn_C_0",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184848,
+      "oracleVertices": 40
+    },
+    {
+      "name": "pawn_C_90",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184848,
+      "oracleVertices": 40
+    },
+    {
+      "name": "pawn_C_45",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.07986398898209693,
+      "oracleVertices": 40
+    },
+    {
+      "name": "pawn_A_45",
+      "status": "Volume3D",
+      "vertices": 72,
+      "triangles": 44,
+      "volume": 0.06191459359895279,
+      "oracleVertices": 24
+    },
+    {
+      "name": "pawn_A_90",
+      "status": "Volume3D",
+      "vertices": 48,
+      "triangles": 28,
+      "volume": 0.04809524791760924,
+      "oracleVertices": 16
+    },
+    {
+      "name": "returned_A",
+      "status": "Empty",
+      "vertices": 0,
+      "triangles": 0,
+      "volume": 0,
+      "oracleVertices": 0
+    },
+    {
+      "name": "escaped_H90_A",
+      "status": "Volume3D",
+      "vertices": 48,
+      "triangles": 28,
+      "volume": 0.04809524791760923,
+      "oracleVertices": 16
+    },
+    {
+      "name": "returned_C",
+      "status": "Empty",
+      "vertices": 0,
+      "triangles": 0,
+      "volume": 0,
+      "oracleVertices": 0
+    },
+    {
+      "name": "escaped_H90_C",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184825,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_-90",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.05098287383034628,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_-45",
+      "status": "Volume3D",
+      "vertices": 110,
+      "triangles": 68,
+      "volume": 0.027774520136645952,
+      "oracleVertices": 36
+    },
+    {
+      "name": "translated_oriented_-1E-05",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.05472543273724016,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_0",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.054725433830346476,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_1E-05",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.05472543492345362,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_37",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.07022115924010122,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_89.99999",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.050982874951602426,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_90",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.05098287383034643,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_90.00001",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.05098287270909146,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_180",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.054725433830346344,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_270",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.050982873830346484,
+      "oracleVertices": 40
+    },
+    {
+      "name": "translated_oriented_360",
+      "status": "Volume3D",
+      "vertices": 124,
+      "triangles": 76,
+      "volume": 0.05472543383034661,
+      "oracleVertices": 40
+    },
+    {
+      "name": "initial_layout_geometry_only",
+      "atZero": [
+        "back_-1_-4",
+        "pawn_-1_-4",
+        "back_-1_-3",
+        "pawn_-1_-3",
+        "back_-1_-2",
+        "pawn_-1_-2",
+        "back_-1_-1",
+        "pawn_-1_-1",
+        "back_-1_0",
+        "pawn_-1_0",
+        "back_-1_1",
+        "pawn_-1_1",
+        "back_-1_2",
+        "pawn_-1_2",
+        "back_-1_3",
+        "pawn_-1_3",
+        "back_-1_4",
+        "pawn_-1_4",
+        "rook_-1",
+        "bishop_-1",
+        "back_1_-4",
+        "pawn_1_-4",
+        "back_1_-3",
+        "pawn_1_-3",
+        "back_1_-2",
+        "pawn_1_-2",
+        "back_1_-1",
+        "pawn_1_-1",
+        "back_1_0",
+        "pawn_1_0",
+        "back_1_1",
+        "pawn_1_1",
+        "back_1_2",
+        "pawn_1_2",
+        "back_1_3",
+        "pawn_1_3",
+        "back_1_4",
+        "pawn_1_4",
+        "rook_1",
+        "bishop_1"
+      ],
+      "atNinety": [
+        "back_-1_0",
+        "pawn_-1_0",
+        "back_1_0",
+        "pawn_1_0"
+      ],
+      "note": "Dimensions / coordinates fixture only, not evidence of the full legal CPU scenario."
+    },
+    {
+      "name": "float_transfer",
+      "maxErrorCells": 1.1610968082478191E-07,
+      "maxErrorMetres": 5.805484041239096E-09
+    },
+    {
+      "name": "parallel_serial_exact_equivalence",
+      "jobs": 270,
+      "maxDegreeOfParallelism": 8,
+      "angles": [
+        0,
+        1,
+        2,
+        45,
+        90
+      ],
+      "comparison": "Exact status, volume, ordered indices, positions, normals, local4D, and provenance; shared immutable shapes, no shared options."
+    }
+  ],
+  "sweep": [
+    {
+      "degrees": 0,
+      "boardVolume": 64.74022400000001,
+      "boardWidth": 9,
+      "pawnAVolume": 0.0564723681818486,
+      "pawnCVolume": 0.05647236818184859
+    },
+    {
+      "degrees": 1,
+      "boardVolume": 64.75008575168405,
+      "boardWidth": 9.00137095239517,
+      "pawnAVolume": 0.05648097050722844,
+      "pawnCVolume": 0.05648097050722852
+    },
+    {
+      "degrees": 2,
+      "boardVolume": 64.77968603444366,
+      "boardWidth": 9.005485898689397,
+      "pawnAVolume": 0.056506790591914616,
+      "pawnCVolume": 0.05650679059191467
+    },
+    {
+      "degrees": 3,
+      "boardVolume": 64.8290699873109,
+      "boardWidth": 9.012351113981289,
+      "pawnAVolume": 0.05654986781031594,
+      "pawnCVolume": 0.056549867810315964
+    },
+    {
+      "degrees": 4,
+      "boardVolume": 64.89831302876024,
+      "boardWidth": 9.021977082730551,
+      "pawnAVolume": 0.05661026794935107,
+      "pawnCVolume": 0.056610267949350916
+    },
+    {
+      "degrees": 5,
+      "boardVolume": 64.98752113819994,
+      "boardWidth": 9.034378537890126,
+      "pawnAVolume": 0.05668808345399116,
+      "pawnCVolume": 0.056688083453991296
+    },
+    {
+      "degrees": 6,
+      "boardVolume": 65.09683125279669,
+      "boardWidth": 9.049574516071647,
+      "pawnAVolume": 0.05678343377340796,
+      "pawnCVolume": 0.056783433773407756
+    },
+    {
+      "degrees": 7,
+      "boardVolume": 65.22641178240676,
+      "boardWidth": 9.067588429129636,
+      "pawnAVolume": 0.056896465810141905,
+      "pawnCVolume": 0.05689646581014182
+    },
+    {
+      "degrees": 8,
+      "boardVolume": 65.3764632462316,
+      "boardWidth": 9.088448152667562,
+      "pawnAVolume": 0.05702735447545375,
+      "pawnCVolume": 0.057027354475453915
+    },
+    {
+      "degrees": 9,
+      "boardVolume": 65.54721903570348,
+      "boardWidth": 9.112186132092027,
+      "pawnAVolume": 0.05717630335478165,
+      "pawnCVolume": 0.05717630335478178
+    },
+    {
+      "degrees": 10,
+      "boardVolume": 65.73894630904418,
+      "boardWidth": 9.138839506971705,
+      "pawnAVolume": 0.05734354548805869,
+      "pawnCVolume": 0.05734354548805869
+    },
+    {
+      "degrees": 11,
+      "boardVolume": 65.95194702394022,
+      "boardWidth": 9.16845025459693,
+      "pawnAVolume": 0.05752934427050656,
+      "pawnCVolume": 0.05752934427050669
+    },
+    {
+      "degrees": 12,
+      "boardVolume": 66.18655911585523,
+      "boardWidth": 9.201065353785264,
+      "pawnAVolume": 0.057733994480467836,
+      "pawnCVolume": 0.05773399448046771
+    },
+    {
+      "degrees": 13,
+      "boardVolume": 66.44315783066436,
+      "boardWidth": 9.236736970140527,
+      "pawnAVolume": 0.05795782344185192,
+      "pawnCVolume": 0.05795782344185194
+    },
+    {
+      "degrees": 14,
+      "boardVolume": 66.72215722156538,
+      "boardWidth": 9.275522664149083,
+      "pawnAVolume": 0.058201192329878526,
+      "pawnCVolume": 0.05820119232987847
+    },
+    {
+      "degrees": 15,
+      "boardVolume": 67.02401182161316,
+      "boardWidth": 9.317485623690747,
+      "pawnAVolume": 0.058464497630015974,
+      "pawnCVolume": 0.05846449763001594
+    },
+    {
+      "degrees": 16,
+      "boardVolume": 67.34921850475376,
+      "boardWidth": 9.362694922754418,
+      "pawnAVolume": 0.05874817276134556,
+      "pawnCVolume": 0.05874817276134566
+    },
+    {
+      "degrees": 17,
+      "boardVolume": 67.69831854993149,
+      "boardWidth": 9.411225808384334,
+      "pawnAVolume": 0.05905268987706619,
+      "pawnCVolume": 0.05905268987706615
+    },
+    {
+      "degrees": 18,
+      "boardVolume": 68.07189992472374,
+      "boardWidth": 9.463160018144407,
+      "pawnAVolume": 0.05937856185648881,
+      "pawnCVolume": 0.0593785618564888
+    },
+    {
+      "degrees": 19,
+      "boardVolume": 68.47059980705762,
+      "boardWidth": 9.518586130680035,
+      "pawnAVolume": 0.059726344504710864,
+      "pawnCVolume": 0.05972634450471104
+    },
+    {
+      "degrees": 20,
+      "boardVolume": 68.89510736591161,
+      "boardWidth": 9.577599952283208,
+      "pawnAVolume": 0.06009663897819902,
+      "pawnCVolume": 0.060096638978199106
+    },
+    {
+      "degrees": 21,
+      "boardVolume": 69.34616682453982,
+      "boardWidth": 9.64030494273326,
+      "pawnAVolume": 0.06049009445681425,
+      "pawnCVolume": 0.060490094456814136
+    },
+    {
+      "degrees": 22,
+      "boardVolume": 69.82458083272915,
+      "boardWidth": 9.706812684098253,
+      "pawnAVolume": 0.060907411085403804,
+      "pawnCVolume": 0.06090741108540382
+    },
+    {
+      "degrees": 23,
+      "boardVolume": 70.33121417794341,
+      "boardWidth": 9.777243396647666,
+      "pawnAVolume": 0.061349343211003875,
+      "pawnCVolume": 0.061349343211003785
+    },
+    {
+      "degrees": 24,
+      "boardVolume": 70.86699786900783,
+      "boardWidth": 9.85172650655442,
+      "pawnAVolume": 0.061816702945001835,
+      "pawnCVolume": 0.06181670294500209
+    },
+    {
+      "degrees": 25,
+      "boardVolume": 71.43293363028555,
+      "boardWidth": 9.930401270662427,
+      "pawnAVolume": 0.0623103640833715,
+      "pawnCVolume": 0.06231036408337163
+    },
+    {
+      "degrees": 26,
+      "boardVolume": 72.0300988491984,
+      "boardWidth": 10.0134174642767,
+      "pawnAVolume": 0.062831266422354,
+      "pawnCVolume": 0.062831266422354
+    },
+    {
+      "degrees": 27,
+      "boardVolume": 72.65965202552586,
+      "boardWidth": 10.100936138709248,
+      "pawnAVolume": 0.06338042051183641,
+      "pawnCVolume": 0.06338042051183645
+    },
+    {
+      "degrees": 28,
+      "boardVolume": 73.3228387772997,
+      "boardWidth": 10.193130456201352,
+      "pawnAVolume": 0.0639589128942462,
+      "pawnCVolume": 0.06395891289424624
+    },
+    {
+      "degrees": 29,
+      "boardVolume": 74.02099846542997,
+      "boardWidth": 10.29018661085988,
+      "pawnAVolume": 0.0645679118831563,
+      "pawnCVolume": 0.06456791188315625
+    },
+    {
+      "degrees": 30,
+      "boardVolume": 74.75557150759327,
+      "boardWidth": 10.392304845413262,
+      "pawnAVolume": 0.06520867394313169,
+      "pawnCVolume": 0.06520867394313165
+    },
+    {
+      "degrees": 31,
+      "boardVolume": 75.5281074616015,
+      "boardWidth": 10.499700574937973,
+      "pawnAVolume": 0.0658825507407847,
+      "pawnCVolume": 0.06588255074078495
+    },
+    {
+      "degrees": 32,
+      "boardVolume": 76.34027396962448,
+      "boardWidth": 10.612605630258868,
+      "pawnAVolume": 0.06659099694674862,
+      "pawnCVolume": 0.06659099694674868
+    },
+    {
+      "degrees": 33,
+      "boardVolume": 77.19386666757687,
+      "boardWidth": 10.731269635523528,
+      "pawnAVolume": 0.06733557887955277,
+      "pawnCVolume": 0.06733557887955285
+    },
+    {
+      "degrees": 34,
+      "boardVolume": 78.09082017896328,
+      "boardWidth": 10.855961536535148,
+      "pawnAVolume": 0.06811798409546647,
+      "pawnCVolume": 0.06811798409546642
+    },
+    {
+      "degrees": 35,
+      "boardVolume": 79.03322032992452,
+      "boardWidth": 10.986971298853106,
+      "pawnAVolume": 0.06891388864505729,
+      "pawnCVolume": 0.06894003204358168
+    },
+    {
+      "degrees": 36,
+      "boardVolume": 80.0233177425633,
+      "boardWidth": 11.124611797498108,
+      "pawnAVolume": 0.06929345023651678,
+      "pawnCVolume": 0.06980368592316098
+    },
+    {
+      "degrees": 37,
+      "boardVolume": 81.06354298742147,
+      "boardWidth": 11.269220923406031,
+      "pawnAVolume": 0.06914025160875494,
+      "pawnCVolume": 0.0707110659010194
+    },
+    {
+      "degrees": 38,
+      "boardVolume": 82.15652350387883,
+      "boardWidth": 11.421163935653208,
+      "pawnAVolume": 0.06853594830820849,
+      "pawnCVolume": 0.07166446387105087
+    },
+    {
+      "degrees": 39,
+      "boardVolume": 83.30510253006639,
+      "boardWidth": 11.580836093038508,
+      "pawnAVolume": 0.06759740981047195,
+      "pawnCVolume": 0.07266635996663456
+    },
+    {
+      "degrees": 40,
+      "boardVolume": 84.51236032260456,
+      "boardWidth": 11.74866560399051,
+      "pawnAVolume": 0.06659365889294876,
+      "pawnCVolume": 0.07371944107044139
+    },
+    {
+      "degrees": 41,
+      "boardVolume": 85.7816379923126,
+      "boardWidth": 11.925116940139302,
+      "pawnAVolume": 0.06558725045858953,
+      "pawnCVolume": 0.07482662160612721
+    },
+    {
+      "degrees": 42,
+      "boardVolume": 87.11656433644822,
+      "boardWidth": 12.110694566457385,
+      "pawnAVolume": 0.06460524550825908,
+      "pawnCVolume": 0.07599106694387706
+    },
+    {
+      "degrees": 43,
+      "boardVolume": 88.52108611287436,
+      "boardWidth": 12.305947149887357,
+      "pawnAVolume": 0.06366602664034782,
+      "pawnCVolume": 0.07721621980831195
+    },
+    {
+      "degrees": 44,
+      "boardVolume": 89.99950227906422,
+      "boardWidth": 12.511472319150108,
+      "pawnAVolume": 0.06276982149576384,
+      "pawnCVolume": 0.07850583014489383
+    },
+    {
+      "degrees": 45,
+      "boardVolume": 91.18226041967041,
+      "boardWidth": 12.671353518862931,
+      "pawnAVolume": 0.061914593598952794,
+      "pawnCVolume": 0.07986398898209687
+    },
+    {
+      "degrees": 46,
+      "boardVolume": 89.99950227906415,
+      "boardWidth": 12.51147231915011,
+      "pawnAVolume": 0.06109843369361919,
+      "pawnCVolume": 0.07850583014489478
+    },
+    {
+      "degrees": 47,
+      "boardVolume": 88.52108611287439,
+      "boardWidth": 12.30594714988736,
+      "pawnAVolume": 0.06031955241579186,
+      "pawnCVolume": 0.07721621980831207
+    },
+    {
+      "degrees": 48,
+      "boardVolume": 87.11656433644819,
+      "boardWidth": 12.110694566457386,
+      "pawnAVolume": 0.05957627314060788,
+      "pawnCVolume": 0.07599106694387696
+    },
+    {
+      "degrees": 49,
+      "boardVolume": 85.78163799231261,
+      "boardWidth": 11.925116940139302,
+      "pawnAVolume": 0.058867025084761083,
+      "pawnCVolume": 0.07482662160612717
+    },
+    {
+      "degrees": 50,
+      "boardVolume": 84.51236032260455,
+      "boardWidth": 11.74866560399051,
+      "pawnAVolume": 0.05819033671626488,
+      "pawnCVolume": 0.073719441070441
+    },
+    {
+      "degrees": 51,
+      "boardVolume": 83.30510253006646,
+      "boardWidth": 11.580836093038508,
+      "pawnAVolume": 0.05754482950119468,
+      "pawnCVolume": 0.07266635996663448
+    },
+    {
+      "degrees": 52,
+      "boardVolume": 82.15652350387887,
+      "boardWidth": 11.421163935653208,
+      "pawnAVolume": 0.05692921200123383,
+      "pawnCVolume": 0.07166446387105099
+    },
+    {
+      "degrees": 53,
+      "boardVolume": 81.06354298742147,
+      "boardWidth": 11.269220923406031,
+      "pawnAVolume": 0.05634227432453253,
+      "pawnCVolume": 0.07071106590101946
+    },
+    {
+      "degrees": 54,
+      "boardVolume": 80.02331774256331,
+      "boardWidth": 11.124611797498108,
+      "pawnAVolume": 0.05578288292439357,
+      "pawnCVolume": 0.06980368592316094
+    },
+    {
+      "degrees": 55,
+      "boardVolume": 79.03322032992456,
+      "boardWidth": 10.986971298853106,
+      "pawnAVolume": 0.05524997573472422,
+      "pawnCVolume": 0.06894003204358183
+    },
+    {
+      "degrees": 56,
+      "boardVolume": 78.09082017896327,
+      "boardWidth": 10.855961536535148,
+      "pawnAVolume": 0.054742557627394765,
+      "pawnCVolume": 0.06811798409546649
+    },
+    {
+      "degrees": 57,
+      "boardVolume": 77.19386666757687,
+      "boardWidth": 10.731269635523528,
+      "pawnAVolume": 0.05425969617407276,
+      "pawnCVolume": 0.06733557887955292
+    },
+    {
+      "degrees": 58,
+      "boardVolume": 76.34027396962449,
+      "boardWidth": 10.612605630258866,
+      "pawnAVolume": 0.05380051769340665,
+      "pawnCVolume": 0.06659099694674848
+    },
+    {
+      "degrees": 59,
+      "boardVolume": 75.52810746160154,
+      "boardWidth": 10.499700574937975,
+      "pawnAVolume": 0.05336420356327309,
+      "pawnCVolume": 0.06588255074078479
+    },
+    {
+      "degrees": 60,
+      "boardVolume": 74.7555715075932,
+      "boardWidth": 10.392304845413264,
+      "pawnAVolume": 0.05294998677695339,
+      "pawnCVolume": 0.06520867394313194
+    },
+    {
+      "degrees": 61,
+      "boardVolume": 74.02099846542995,
+      "boardWidth": 10.29018661085988,
+      "pawnAVolume": 0.05255714872133349,
+      "pawnCVolume": 0.06456791188315626
+    },
+    {
+      "degrees": 62,
+      "boardVolume": 73.32283877729974,
+      "boardWidth": 10.193130456201356,
+      "pawnAVolume": 0.052185016154320626,
+      "pawnCVolume": 0.06395891289424625
+    },
+    {
+      "degrees": 63,
+      "boardVolume": 72.65965202552584,
+      "boardWidth": 10.10093613870925,
+      "pawnAVolume": 0.05183295835743312,
+      "pawnCVolume": 0.06338042051183648
+    },
+    {
+      "degrees": 64,
+      "boardVolume": 72.03009884919837,
+      "boardWidth": 10.013417464276701,
+      "pawnAVolume": 0.051500384437689506,
+      "pawnCVolume": 0.06283126642235401
+    },
+    {
+      "degrees": 65,
+      "boardVolume": 71.43293363028553,
+      "boardWidth": 9.930401270662427,
+      "pawnAVolume": 0.05118674075017641,
+      "pawnCVolume": 0.06231036408337162
+    },
+    {
+      "degrees": 66,
+      "boardVolume": 70.86699786900792,
+      "boardWidth": 9.85172650655442,
+      "pawnAVolume": 0.050891508408593564,
+      "pawnCVolume": 0.061816702945002
+    },
+    {
+      "degrees": 67,
+      "boardVolume": 70.33121417794342,
+      "boardWidth": 9.777243396647666,
+      "pawnAVolume": 0.05061420084502113,
+      "pawnCVolume": 0.06134934321100369
+    },
+    {
+      "degrees": 68,
+      "boardVolume": 69.82458083272917,
+      "boardWidth": 9.706812684098253,
+      "pawnAVolume": 0.050354361371252314,
+      "pawnCVolume": 0.060907411085403707
+    },
+    {
+      "degrees": 69,
+      "boardVolume": 69.34616682453982,
+      "boardWidth": 9.64030494273326,
+      "pawnAVolume": 0.050111560680891856,
+      "pawnCVolume": 0.06049009445681408
+    },
+    {
+      "degrees": 70,
+      "boardVolume": 68.89510736591158,
+      "boardWidth": 9.57759995228321,
+      "pawnAVolume": 0.04988539421194888,
+      "pawnCVolume": 0.060096638978199
+    },
+    {
+      "degrees": 71,
+      "boardVolume": 68.47059980705762,
+      "boardWidth": 9.518586130680038,
+      "pawnAVolume": 0.0496754792605292,
+      "pawnCVolume": 0.05972634450471095
+    },
+    {
+      "degrees": 72,
+      "boardVolume": 68.07189992472374,
+      "boardWidth": 9.463160018144409,
+      "pawnAVolume": 0.04948145169209532,
+      "pawnCVolume": 0.05937856185648886
+    },
+    {
+      "degrees": 73,
+      "boardVolume": 67.69831854993149,
+      "boardWidth": 9.411225808384335,
+      "pawnAVolume": 0.0493029620288529,
+      "pawnCVolume": 0.05905268987706607
+    },
+    {
+      "degrees": 74,
+      "boardVolume": 67.34921850475375,
+      "boardWidth": 9.362694922754418,
+      "pawnAVolume": 0.049139670585236286,
+      "pawnCVolume": 0.058748172761345474
+    },
+    {
+      "degrees": 75,
+      "boardVolume": 67.02401182161313,
+      "boardWidth": 9.317485623690748,
+      "pawnAVolume": 0.04899124115252813,
+      "pawnCVolume": 0.058464497630015884
+    },
+    {
+      "degrees": 76,
+      "boardVolume": 66.72215722156537,
+      "boardWidth": 9.275522664149083,
+      "pawnAVolume": 0.048857332452339745,
+      "pawnCVolume": 0.058201192329878616
+    },
+    {
+      "degrees": 77,
+      "boardVolume": 66.44315783066433,
+      "boardWidth": 9.236736970140527,
+      "pawnAVolume": 0.04873758610221251,
+      "pawnCVolume": 0.057957823441852074
+    },
+    {
+      "degrees": 78,
+      "boardVolume": 66.18655911585523,
+      "boardWidth": 9.201065353785266,
+      "pawnAVolume": 0.04863160900228627,
+      "pawnCVolume": 0.057733994480467905
+    },
+    {
+      "degrees": 79,
+      "boardVolume": 65.9519470239402,
+      "boardWidth": 9.168450254596928,
+      "pawnAVolume": 0.04853894653461769,
+      "pawnCVolume": 0.0575293442705066
+    },
+    {
+      "degrees": 80,
+      "boardVolume": 65.73894630904415,
+      "boardWidth": 9.138839506971706,
+      "pawnAVolume": 0.04845904008322381,
+      "pawnCVolume": 0.05734354548805881
+    },
+    {
+      "degrees": 81,
+      "boardVolume": 65.54721903570349,
+      "boardWidth": 9.112186132092026,
+      "pawnAVolume": 0.048391156615423175,
+      "pawnCVolume": 0.057176303354781584
+    },
+    {
+      "degrees": 82,
+      "boardVolume": 65.37646324623162,
+      "boardWidth": 9.088448152667565,
+      "pawnAVolume": 0.04833426580854402,
+      "pawnCVolume": 0.0570273544754537
+    },
+    {
+      "degrees": 83,
+      "boardVolume": 65.22641178240676,
+      "boardWidth": 9.067588429129636,
+      "pawnAVolume": 0.048286812190595926,
+      "pawnCVolume": 0.05689646581014198
+    },
+    {
+      "degrees": 84,
+      "boardVolume": 65.09683125279668,
+      "boardWidth": 9.049574516071647,
+      "pawnAVolume": 0.04824625972417173,
+      "pawnCVolume": 0.05678343377340787
+    },
+    {
+      "degrees": 85,
+      "boardVolume": 64.98752113819988,
+      "boardWidth": 9.034378537890126,
+      "pawnAVolume": 0.04820809015189576,
+      "pawnCVolume": 0.05668808345399129
+    },
+    {
+      "degrees": 86,
+      "boardVolume": 64.89831302876026,
+      "boardWidth": 9.02197708273055,
+      "pawnAVolume": 0.04816467740640152,
+      "pawnCVolume": 0.05661026794935102
+    },
+    {
+      "degrees": 87,
+      "boardVolume": 64.82906998731092,
+      "boardWidth": 9.01235111398129,
+      "pawnAVolume": 0.048127757020341486,
+      "pawnCVolume": 0.05654986781031595
+    },
+    {
+      "degrees": 88,
+      "boardVolume": 64.77968603444363,
+      "boardWidth": 9.005485898689397,
+      "pawnAVolume": 0.04810389284758157,
+      "pawnCVolume": 0.05650679059191474
+    },
+    {
+      "degrees": 89,
+      "boardVolume": 64.75008575168407,
+      "boardWidth": 9.00137095239517,
+      "pawnAVolume": 0.048093059742960194,
+      "pawnCVolume": 0.05648097050722854
+    },
+    {
+      "degrees": 90,
+      "boardVolume": 64.74022400000001,
+      "boardWidth": 9,
+      "pawnAVolume": 0.048095247917609205,
+      "pawnCVolume": 0.05647236818184863
+    },
+    {
+      "degrees": 91,
+      "boardVolume": 64.75008575168407,
+      "boardWidth": 9.00137095239517,
+      "pawnAVolume": 0.04809305974296042,
+      "pawnCVolume": 0.05648097050722849
+    },
+    {
+      "degrees": 92,
+      "boardVolume": 64.77968603444369,
+      "boardWidth": 9.005485898689399,
+      "pawnAVolume": 0.04810389284758161,
+      "pawnCVolume": 0.0565067905919147
+    },
+    {
+      "degrees": 93,
+      "boardVolume": 64.82906998731093,
+      "boardWidth": 9.01235111398129,
+      "pawnAVolume": 0.04812775702034142,
+      "pawnCVolume": 0.05654986781031613
+    },
+    {
+      "degrees": 94,
+      "boardVolume": 64.89831302876028,
+      "boardWidth": 9.021977082730551,
+      "pawnAVolume": 0.04816467740640151,
+      "pawnCVolume": 0.05661026794935101
+    },
+    {
+      "degrees": 95,
+      "boardVolume": 64.98752113819991,
+      "boardWidth": 9.034378537890126,
+      "pawnAVolume": 0.0482080901518958,
+      "pawnCVolume": 0.056688083453991324
+    },
+    {
+      "degrees": 96,
+      "boardVolume": 65.09683125279668,
+      "boardWidth": 9.049574516071647,
+      "pawnAVolume": 0.04824625972417187,
+      "pawnCVolume": 0.0567834337734079
+    },
+    {
+      "degrees": 97,
+      "boardVolume": 65.22641178240674,
+      "boardWidth": 9.067588429129636,
+      "pawnAVolume": 0.04828681219059586,
+      "pawnCVolume": 0.05689646581014194
+    },
+    {
+      "degrees": 98,
+      "boardVolume": 65.3764632462316,
+      "boardWidth": 9.088448152667562,
+      "pawnAVolume": 0.04833426580854404,
+      "pawnCVolume": 0.057027354475453707
+    },
+    {
+      "degrees": 99,
+      "boardVolume": 65.54721903570346,
+      "boardWidth": 9.112186132092027,
+      "pawnAVolume": 0.04839115661542315,
+      "pawnCVolume": 0.05717630335478149
+    },
+    {
+      "degrees": 100,
+      "boardVolume": 65.73894630904415,
+      "boardWidth": 9.138839506971705,
+      "pawnAVolume": 0.04845904008322363,
+      "pawnCVolume": 0.05734354548805888
+    },
+    {
+      "degrees": 101,
+      "boardVolume": 65.9519470239402,
+      "boardWidth": 9.16845025459693,
+      "pawnAVolume": 0.04853894653461772,
+      "pawnCVolume": 0.0575293442705066
+    },
+    {
+      "degrees": 102,
+      "boardVolume": 66.18655911585523,
+      "boardWidth": 9.201065353785264,
+      "pawnAVolume": 0.04863160900228625,
+      "pawnCVolume": 0.05773399448046794
+    },
+    {
+      "degrees": 103,
+      "boardVolume": 66.44315783066433,
+      "boardWidth": 9.236736970140527,
+      "pawnAVolume": 0.04873758610221243,
+      "pawnCVolume": 0.05795782344185194
+    },
+    {
+      "degrees": 104,
+      "boardVolume": 66.72215722156538,
+      "boardWidth": 9.275522664149083,
+      "pawnAVolume": 0.04885733245233969,
+      "pawnCVolume": 0.0582011923298785
+    },
+    {
+      "degrees": 105,
+      "boardVolume": 67.02401182161317,
+      "boardWidth": 9.317485623690747,
+      "pawnAVolume": 0.04899124115252805,
+      "pawnCVolume": 0.05846449763001586
+    },
+    {
+      "degrees": 106,
+      "boardVolume": 67.34921850475378,
+      "boardWidth": 9.362694922754418,
+      "pawnAVolume": 0.04913967058523625,
+      "pawnCVolume": 0.05874817276134547
+    },
+    {
+      "degrees": 107,
+      "boardVolume": 67.69831854993143,
+      "boardWidth": 9.411225808384334,
+      "pawnAVolume": 0.04930296202885295,
+      "pawnCVolume": 0.059052689877066106
+    },
+    {
+      "degrees": 108,
+      "boardVolume": 68.07189992472372,
+      "boardWidth": 9.463160018144404,
+      "pawnAVolume": 0.0494814516920953,
+      "pawnCVolume": 0.05937856185648877
+    },
+    {
+      "degrees": 109,
+      "boardVolume": 68.47059980705765,
+      "boardWidth": 9.518586130680035,
+      "pawnAVolume": 0.049675479260529246,
+      "pawnCVolume": 0.05972634450471085
+    },
+    {
+      "degrees": 110,
+      "boardVolume": 68.89510736591156,
+      "boardWidth": 9.577599952283208,
+      "pawnAVolume": 0.049885394211948965,
+      "pawnCVolume": 0.06009663897819925
+    },
+    {
+      "degrees": 111,
+      "boardVolume": 69.34616682453982,
+      "boardWidth": 9.64030494273326,
+      "pawnAVolume": 0.05011156068089173,
+      "pawnCVolume": 0.06049009445681404
+    },
+    {
+      "degrees": 112,
+      "boardVolume": 69.82458083272917,
+      "boardWidth": 9.706812684098253,
+      "pawnAVolume": 0.05035436137125226,
+      "pawnCVolume": 0.06090741108540369
+    },
+    {
+      "degrees": 113,
+      "boardVolume": 70.33121417794338,
+      "boardWidth": 9.777243396647666,
+      "pawnAVolume": 0.05061420084502118,
+      "pawnCVolume": 0.06134934321100387
+    },
+    {
+      "degrees": 114,
+      "boardVolume": 70.86699786900778,
+      "boardWidth": 9.851726506554419,
+      "pawnAVolume": 0.05089150840859348,
+      "pawnCVolume": 0.06181670294500184
+    },
+    {
+      "degrees": 115,
+      "boardVolume": 71.43293363028556,
+      "boardWidth": 9.930401270662426,
+      "pawnAVolume": 0.051186740750176346,
+      "pawnCVolume": 0.06231036408337169
+    },
+    {
+      "degrees": 116,
+      "boardVolume": 72.03009884919842,
+      "boardWidth": 10.013417464276701,
+      "pawnAVolume": 0.051500384437689575,
+      "pawnCVolume": 0.06283126642235419
+    },
+    {
+      "degrees": 117,
+      "boardVolume": 72.65965202552584,
+      "boardWidth": 10.100936138709248,
+      "pawnAVolume": 0.051832958357433095,
+      "pawnCVolume": 0.06338042051183627
+    },
+    {
+      "degrees": 118,
+      "boardVolume": 73.32283877729964,
+      "boardWidth": 10.19313045620135,
+      "pawnAVolume": 0.0521850161543206,
+      "pawnCVolume": 0.06395891289424616
+    },
+    {
+      "degrees": 119,
+      "boardVolume": 74.02099846542993,
+      "boardWidth": 10.29018661085988,
+      "pawnAVolume": 0.052557148721333435,
+      "pawnCVolume": 0.06456791188315611
+    },
+    {
+      "degrees": 120,
+      "boardVolume": 74.75557150759326,
+      "boardWidth": 10.392304845413264,
+      "pawnAVolume": 0.05294998677695331,
+      "pawnCVolume": 0.06520867394313175
+    },
+    {
+      "degrees": 121,
+      "boardVolume": 75.52810746160151,
+      "boardWidth": 10.499700574937973,
+      "pawnAVolume": 0.05336420356327316,
+      "pawnCVolume": 0.0658825507407848
+    },
+    {
+      "degrees": 122,
+      "boardVolume": 76.34027396962449,
+      "boardWidth": 10.612605630258866,
+      "pawnAVolume": 0.05380051769340683,
+      "pawnCVolume": 0.06659099694674868
+    },
+    {
+      "degrees": 123,
+      "boardVolume": 77.19386666757686,
+      "boardWidth": 10.731269635523528,
+      "pawnAVolume": 0.05425969617407282,
+      "pawnCVolume": 0.06733557887955303
+    },
+    {
+      "degrees": 124,
+      "boardVolume": 78.09082017896327,
+      "boardWidth": 10.855961536535148,
+      "pawnAVolume": 0.054742557627394654,
+      "pawnCVolume": 0.06811798409546646
+    },
+    {
+      "degrees": 125,
+      "boardVolume": 79.03322032992457,
+      "boardWidth": 10.986971298853103,
+      "pawnAVolume": 0.055249975734724364,
+      "pawnCVolume": 0.06894003204358172
+    },
+    {
+      "degrees": 126,
+      "boardVolume": 80.0233177425633,
+      "boardWidth": 11.124611797498108,
+      "pawnAVolume": 0.05578288292439353,
+      "pawnCVolume": 0.06980368592316097
+    },
+    {
+      "degrees": 127,
+      "boardVolume": 81.06354298742154,
+      "boardWidth": 11.269220923406033,
+      "pawnAVolume": 0.05634227432453252,
+      "pawnCVolume": 0.07071106590101962
+    },
+    {
+      "degrees": 128,
+      "boardVolume": 82.15652350387887,
+      "boardWidth": 11.421163935653208,
+      "pawnAVolume": 0.056929212001233714,
+      "pawnCVolume": 0.07166446387105099
+    },
+    {
+      "degrees": 129,
+      "boardVolume": 83.3051025300664,
+      "boardWidth": 11.580836093038506,
+      "pawnAVolume": 0.05754482950119483,
+      "pawnCVolume": 0.0726663599666345
+    },
+    {
+      "degrees": 130,
+      "boardVolume": 84.51236032260454,
+      "boardWidth": 11.74866560399051,
+      "pawnAVolume": 0.05819033671626487,
+      "pawnCVolume": 0.07371944107044141
+    },
+    {
+      "degrees": 131,
+      "boardVolume": 85.78163799231262,
+      "boardWidth": 11.925116940139306,
+      "pawnAVolume": 0.05886702508476106,
+      "pawnCVolume": 0.07482662160612723
+    },
+    {
+      "degrees": 132,
+      "boardVolume": 87.11656433644818,
+      "boardWidth": 12.110694566457385,
+      "pawnAVolume": 0.05957627314060809,
+      "pawnCVolume": 0.07599106694387721
+    },
+    {
+      "degrees": 133,
+      "boardVolume": 88.52108611287441,
+      "boardWidth": 12.30594714988736,
+      "pawnAVolume": 0.06031955241579201,
+      "pawnCVolume": 0.07721621980831192
+    },
+    {
+      "degrees": 134,
+      "boardVolume": 89.99950227906415,
+      "boardWidth": 12.511472319150105,
+      "pawnAVolume": 0.06109843369361922,
+      "pawnCVolume": 0.0785058301448944
+    },
+    {
+      "degrees": 135,
+      "boardVolume": 91.18226041967043,
+      "boardWidth": 12.671353518862936,
+      "pawnAVolume": 0.061914593598952794,
+      "pawnCVolume": 0.07986398898209696
+    },
+    {
+      "degrees": 136,
+      "boardVolume": 89.99950227906415,
+      "boardWidth": 12.511472319150107,
+      "pawnAVolume": 0.06276982149576411,
+      "pawnCVolume": 0.07850583014489448
+    },
+    {
+      "degrees": 137,
+      "boardVolume": 88.52108611287443,
+      "boardWidth": 12.30594714988736,
+      "pawnAVolume": 0.06366602664034786,
+      "pawnCVolume": 0.07721621980831206
+    },
+    {
+      "degrees": 138,
+      "boardVolume": 87.1165643364482,
+      "boardWidth": 12.110694566457386,
+      "pawnAVolume": 0.06460524550825907,
+      "pawnCVolume": 0.07599106694387706
+    },
+    {
+      "degrees": 139,
+      "boardVolume": 85.78163799231261,
+      "boardWidth": 11.925116940139302,
+      "pawnAVolume": 0.06558725045858954,
+      "pawnCVolume": 0.07482662160612698
+    },
+    {
+      "degrees": 140,
+      "boardVolume": 84.51236032260456,
+      "boardWidth": 11.74866560399051,
+      "pawnAVolume": 0.0665936588929484,
+      "pawnCVolume": 0.07371944107044139
+    },
+    {
+      "degrees": 141,
+      "boardVolume": 83.30510253006642,
+      "boardWidth": 11.58083609303851,
+      "pawnAVolume": 0.06759740981047185,
+      "pawnCVolume": 0.07266635996663431
+    },
+    {
+      "degrees": 142,
+      "boardVolume": 82.1565235038789,
+      "boardWidth": 11.42116393565321,
+      "pawnAVolume": 0.0685359483082088,
+      "pawnCVolume": 0.07166446387105091
+    },
+    {
+      "degrees": 143,
+      "boardVolume": 81.06354298742147,
+      "boardWidth": 11.269220923406031,
+      "pawnAVolume": 0.06914025160875538,
+      "pawnCVolume": 0.07071106590101958
+    },
+    {
+      "degrees": 144,
+      "boardVolume": 80.0233177425633,
+      "boardWidth": 11.124611797498108,
+      "pawnAVolume": 0.06929345023651656,
+      "pawnCVolume": 0.06980368592316089
+    },
+    {
+      "degrees": 145,
+      "boardVolume": 79.03322032992453,
+      "boardWidth": 10.98697129885311,
+      "pawnAVolume": 0.06891388864505753,
+      "pawnCVolume": 0.06894003204358179
+    },
+    {
+      "degrees": 146,
+      "boardVolume": 78.09082017896328,
+      "boardWidth": 10.85596153653515,
+      "pawnAVolume": 0.0681179840954666,
+      "pawnCVolume": 0.06811798409546647
+    },
+    {
+      "degrees": 147,
+      "boardVolume": 77.19386666757687,
+      "boardWidth": 10.731269635523525,
+      "pawnAVolume": 0.0673355788795529,
+      "pawnCVolume": 0.06733557887955272
+    },
+    {
+      "degrees": 148,
+      "boardVolume": 76.34027396962449,
+      "boardWidth": 10.612605630258868,
+      "pawnAVolume": 0.06659099694674865,
+      "pawnCVolume": 0.06659099694674851
+    },
+    {
+      "degrees": 149,
+      "boardVolume": 75.52810746160155,
+      "boardWidth": 10.499700574937975,
+      "pawnAVolume": 0.06588255074078488,
+      "pawnCVolume": 0.06588255074078496
+    },
+    {
+      "degrees": 150,
+      "boardVolume": 74.75557150759326,
+      "boardWidth": 10.392304845413262,
+      "pawnAVolume": 0.06520867394313169,
+      "pawnCVolume": 0.06520867394313178
+    },
+    {
+      "degrees": 151,
+      "boardVolume": 74.02099846542997,
+      "boardWidth": 10.29018661085988,
+      "pawnAVolume": 0.06456791188315622,
+      "pawnCVolume": 0.06456791188315616
+    },
+    {
+      "degrees": 152,
+      "boardVolume": 73.32283877729972,
+      "boardWidth": 10.193130456201354,
+      "pawnAVolume": 0.06395891289424635,
+      "pawnCVolume": 0.06395891289424625
+    },
+    {
+      "degrees": 153,
+      "boardVolume": 72.6596520255258,
+      "boardWidth": 10.10093613870925,
+      "pawnAVolume": 0.06338042051183632,
+      "pawnCVolume": 0.06338042051183651
+    },
+    {
+      "degrees": 154,
+      "boardVolume": 72.0300988491984,
+      "boardWidth": 10.0134174642767,
+      "pawnAVolume": 0.06283126642235413,
+      "pawnCVolume": 0.0628312664223538
+    },
+    {
+      "degrees": 155,
+      "boardVolume": 71.43293363028553,
+      "boardWidth": 9.930401270662427,
+      "pawnAVolume": 0.06231036408337182,
+      "pawnCVolume": 0.06231036408337168
+    },
+    {
+      "degrees": 156,
+      "boardVolume": 70.8669978690079,
+      "boardWidth": 9.851726506554424,
+      "pawnAVolume": 0.06181670294500194,
+      "pawnCVolume": 0.061816702945002105
+    },
+    {
+      "degrees": 157,
+      "boardVolume": 70.33121417794344,
+      "boardWidth": 9.777243396647668,
+      "pawnAVolume": 0.06134934321100367,
+      "pawnCVolume": 0.061349343211003646
+    },
+    {
+      "degrees": 158,
+      "boardVolume": 69.82458083272917,
+      "boardWidth": 9.706812684098251,
+      "pawnAVolume": 0.06090741108540367,
+      "pawnCVolume": 0.060907411085403734
+    },
+    {
+      "degrees": 159,
+      "boardVolume": 69.34616682453982,
+      "boardWidth": 9.64030494273326,
+      "pawnAVolume": 0.06049009445681395,
+      "pawnCVolume": 0.060490094456813956
+    },
+    {
+      "degrees": 160,
+      "boardVolume": 68.8951073659116,
+      "boardWidth": 9.57759995228321,
+      "pawnAVolume": 0.06009663897819909,
+      "pawnCVolume": 0.06009663897819912
+    },
+    {
+      "degrees": 161,
+      "boardVolume": 68.47059980705767,
+      "boardWidth": 9.518586130680038,
+      "pawnAVolume": 0.05972634450471099,
+      "pawnCVolume": 0.059726344504710815
+    },
+    {
+      "degrees": 162,
+      "boardVolume": 68.07189992472372,
+      "boardWidth": 9.463160018144407,
+      "pawnAVolume": 0.05937856185648894,
+      "pawnCVolume": 0.05937856185648857
+    },
+    {
+      "degrees": 163,
+      "boardVolume": 67.69831854993147,
+      "boardWidth": 9.411225808384334,
+      "pawnAVolume": 0.05905268987706606,
+      "pawnCVolume": 0.059052689877066175
+    },
+    {
+      "degrees": 164,
+      "boardVolume": 67.34921850475382,
+      "boardWidth": 9.362694922754422,
+      "pawnAVolume": 0.05874817276134545,
+      "pawnCVolume": 0.0587481727613455
+    },
+    {
+      "degrees": 165,
+      "boardVolume": 67.02401182161319,
+      "boardWidth": 9.317485623690748,
+      "pawnAVolume": 0.05846449763001607,
+      "pawnCVolume": 0.05846449763001586
+    },
+    {
+      "degrees": 166,
+      "boardVolume": 66.72215722156537,
+      "boardWidth": 9.275522664149083,
+      "pawnAVolume": 0.05820119232987847,
+      "pawnCVolume": 0.058201192329878595
+    },
+    {
+      "degrees": 167,
+      "boardVolume": 66.44315783066438,
+      "boardWidth": 9.236736970140525,
+      "pawnAVolume": 0.057957823441851956,
+      "pawnCVolume": 0.05795782344185188
+    },
+    {
+      "degrees": 168,
+      "boardVolume": 66.18655911585523,
+      "boardWidth": 9.201065353785264,
+      "pawnAVolume": 0.05773399448046783,
+      "pawnCVolume": 0.05773399448046781
+    },
+    {
+      "degrees": 169,
+      "boardVolume": 65.9519470239402,
+      "boardWidth": 9.168450254596928,
+      "pawnAVolume": 0.05752934427050654,
+      "pawnCVolume": 0.05752934427050658
+    },
+    {
+      "degrees": 170,
+      "boardVolume": 65.73894630904417,
+      "boardWidth": 9.138839506971705,
+      "pawnAVolume": 0.057343545488058846,
+      "pawnCVolume": 0.057343545488058915
+    },
+    {
+      "degrees": 171,
+      "boardVolume": 65.54721903570345,
+      "boardWidth": 9.112186132092027,
+      "pawnAVolume": 0.05717630335478164,
+      "pawnCVolume": 0.057176303354781535
+    },
+    {
+      "degrees": 172,
+      "boardVolume": 65.37646324623161,
+      "boardWidth": 9.088448152667564,
+      "pawnAVolume": 0.057027354475453734,
+      "pawnCVolume": 0.05702735447545362
+    },
+    {
+      "degrees": 173,
+      "boardVolume": 65.22641178240676,
+      "boardWidth": 9.067588429129636,
+      "pawnAVolume": 0.056896465810141926,
+      "pawnCVolume": 0.05689646581014188
+    },
+    {
+      "degrees": 174,
+      "boardVolume": 65.09683125279669,
+      "boardWidth": 9.049574516071647,
+      "pawnAVolume": 0.05678343377340804,
+      "pawnCVolume": 0.05678343377340786
+    },
+    {
+      "degrees": 175,
+      "boardVolume": 64.98752113819994,
+      "boardWidth": 9.034378537890127,
+      "pawnAVolume": 0.05668808345399118,
+      "pawnCVolume": 0.05668808345399143
+    },
+    {
+      "degrees": 176,
+      "boardVolume": 64.89831302876026,
+      "boardWidth": 9.02197708273055,
+      "pawnAVolume": 0.05661026794935111,
+      "pawnCVolume": 0.05661026794935117
+    },
+    {
+      "degrees": 177,
+      "boardVolume": 64.8290699873109,
+      "boardWidth": 9.012351113981289,
+      "pawnAVolume": 0.05654986781031591,
+      "pawnCVolume": 0.05654986781031583
+    },
+    {
+      "degrees": 178,
+      "boardVolume": 64.7796860344437,
+      "boardWidth": 9.005485898689397,
+      "pawnAVolume": 0.05650679059191458,
+      "pawnCVolume": 0.05650679059191464
+    },
+    {
+      "degrees": 179,
+      "boardVolume": 64.75008575168405,
+      "boardWidth": 9.00137095239517,
+      "pawnAVolume": 0.05648097050722846,
+      "pawnCVolume": 0.05648097050722858
+    },
+    {
+      "degrees": 180,
+      "boardVolume": 64.74022400000001,
+      "boardWidth": 9,
+      "pawnAVolume": 0.056472368181848503,
+      "pawnCVolume": 0.05647236818184846
+    }
+  ],
+  "limitations": [
+    "Geometry CPU tests do not certify Unity render passes, GPU performance, visual appearance, or human acceptance.",
+    "Near-zero numerical tolerance bands classify equivalent boundary points; they are not a thick viewing slab.",
+    "Runtime implementation allocates managed lists; zero-GC optimization requires profiling and is not claimed."
+  ]
+}

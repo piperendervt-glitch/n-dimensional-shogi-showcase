@@ -1,0 +1,55 @@
+{
+  "schema": "showcase-artifact-manifest/1",
+  "packagedUtc": "2026-10-15T12:39:38.099509+00:00",
+  "buildGuid": "e8e4c9e3ab2e4135b94c136d211da430",
+  "sourceManifestSha256": "acaf5f707027513b9abe65bf25bd5e6cbb84408e464fa59064ea8631fdcc1491",
+  "sourceHash": "3ac11d60d51bc512b346497fc7776f5e35145b8079ac275affb05d8d849d2cbc",
+  "builtUtc": "2026-10-15T12:35:59.8330286Z",
+  "artifact": "builds/NDShogiShowcase-Windows.zip",
+  "sha256": "b6c9b9e17f028d6a78ef8317bb37979f9f029245da76d65518e2dd696c356dd4",
+  "bytes": 192928936,
+  "distributionDirectory": "builds/Showcase-Windows",
+  "zipRoot": "Showcase-Windows",
+  "fileCount": 187,
+  "uncompressedBytes": 613158122,
+  "inventory": "builds/Showcase-Windows/SHA256SUMS.json",
+  "inventorySha256": "9eff3d2c3fc883e190114a92e20e1e905a30f990a87f726f1a19ecd7963a7234",
+  "sourceManifestFiles": 318,
+  "validation": {
+    "zipCRC": "PASS",
+    "allArchivedFileSHA256": "PASS",
+    "uniqueSafeEntryPaths": "PASS",
+    "requiredRuntimeFiles": "PASS",
+    "embeddedStampArchiveHashMatch": "PASS",
+    "currentSourceMatchesArchivedManifest": "PASS",
+    "requiredEntries": [
+      "NDShogiShowcase.exe",
+      "UnityPlayer.dll",
+      "NDShogiShowcase_Data/globalgamemanagers",
+      "NDShogiShowcase_Data/Managed/Showcase.Runtime.dll",
+      "MonoBleedingEdge/EmbedRuntime/mono-2.0-bdwgc.dll",
+      "MonoBleedingEdge/EmbedRuntime/MonoPosixHelper.dll",
+      "D3D12/D3D12Core.dll",
+      "build-report.json",
+      "showcase-build.json",
+      "source-manifest.json",
+      "BUILD_INFO.json",
+      "README_JA.md",
+      "SHA256SUMS.json",
+      "Notices/notice-provenance.json",
+      "Notices/PolyHaven/NOTICE.txt",
+      "Notices/PolyHaven/provenance.json"
+    ]
+  },
+  "officialNoticeFiles": 11,
+  "cc0AssetNoticeFiles": 2,
+  "cc0Assets": [
+    "american_walnut_veneer",
+    "sandstone_cracks",
+    "wood_table_001"
+  ],
+  "materialVersion": "pbr-courtyard/3.0",
+  "debugArtifactsPreservedOutsideDistribution": [
+    "artifacts/packaging/burst-debug/e8e4c9e3ab2e4135b94c136d211da430/N-dimensional Shogi — Showcase_BurstDebugInformation_DoNotShip"
+  ]
+}
