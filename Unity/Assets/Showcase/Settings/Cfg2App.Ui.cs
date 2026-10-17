@@ -1,0 +1,262 @@
+using System;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using NDShogi.Showcase.Core;
+using NDShogi.Showcase.Core.Settings;
+using NDShogi.Showcase.Core.Match;
+using Showcase.Geometry.Interaction;
+
+namespace Showcase.Unity.Settings
+{
+    public sealed partial class Cfg2App
+    {
+        static readonly Color Gold=new Color(.95f,.79f,.49f),Dark=new Color(.025f,.045f,.065f,.83f),Muted=new Color(.62f,.69f,.76f);
+        readonly System.Collections.Generic.List<Cfg2PlaneView> planeMinis=new System.Collections.Generic.List<Cfg2PlaneView>();
+        readonly System.Collections.Generic.List<Cfg2AxisGizmo> gizmos=new System.Collections.Generic.List<Cfg2AxisGizmo>();
+        void CreateCanvas()
+        {
+            var go=new GameObject("CFG2 Canvas",typeof(RectTransform),typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster));
+            canvas=go.GetComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;
+            var scaler=go.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(1536,1024);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
+            root=CfgUi.Rect(go.transform,"Responsive stage",0,0,1536,1024);root.anchorMin=root.anchorMax=new Vector2(.5f,.5f);root.pivot=new Vector2(.5f,.5f);root.anchoredPosition=Vector2.zero;inputGate=root.gameObject.AddComponent<CanvasGroup>();
+            new GameObject("CFG2 EventSystem",typeof(EventSystem),typeof(StandaloneInputModule)).GetComponent<StandaloneInputModule>().forceModuleActive=true;
+        }
+        Button Button(Transform parent,string id,string title,float x,float y,float w,float h,Action action,bool accent=false)
+        {
+            var b=Cfg2Ui.Button(parent,title,x,y,w,h,()=>{if(ownership.Owner!=InputOwner.None){Record("UiRejectedDuringGesture",id);return;}Record("UI",id);try{action();}catch(Exception e){Notice(e.Message);Debug.LogException(e);}},accent);
+            b.GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
+            b.GetComponent<Image>().color=accent?CfgUi.Blue:Dark;actions[id]=b;return b;
+        }
+        void CreateMenu()
+        {
+            menu=CfgUi.Rect(root,"Main menu",0,0,1536,1024);
+            Cfg2Ui.Panel(menu,"Title contrast",66,78,657,180,new Color(.01f,.015f,.02f,.43f));
+            var title=CfgUi.Label(menu,"四 次 元 将 棋",80,94,740,98,66,Gold);var shadow=title.gameObject.AddComponent<Shadow>();shadow.effectColor=new Color(0,0,0,.8f);shadow.effectDistance=new Vector2(2,-2);
+            CfgUi.Label(menu,"F O U R  D I M E N S I O N A L  S H O G I",88,195,680,40,22,Gold);
+            CfgUi.Line(menu,new Vector2(80,245),new Vector2(700,245),Gold,1);
+            string[] labels={"人間 vs 人間","人間 vs CPU","CPU vs CPU","オプション","終了"};
+            string[] symbols={"PvP","PvC","CvC","設 定","終 了"};
+            for(int i=0;i<5;i++)
+            {
+                int mode=i;var b=Button(menu,"menu-"+i,labels[i],86,290+i*110,550,98,()=>{if(mode<3)StartMatch((MatchMode)mode);else if(mode==3)OpenSettings();else Quit();},i==0);
+                var t=b.GetComponentInChildren<Text>();t.fontSize=27;t.alignment=TextAnchor.MiddleLeft;t.rectTransform.anchoredPosition=new Vector2(130,-3);t.rectTransform.sizeDelta=new Vector2(405,92);
+                CfgUi.Label(b.transform,symbols[i],16,27,105,42,18,Gold).alignment=TextAnchor.MiddleCenter;
+            }
+        }
+        void CreateSettings()
+        {
+            settings=CfgUi.Rect(root,"Six settings categories",0,0,1536,1024);
+            var heading=Cfg2Ui.Panel(settings,"Header",0,0,1536,88,new Color(.02f,.035f,.05f,.69f));
+            CfgUi.Label(heading,"四次元将棋",22,9,370,45,34,Gold);CfgUi.Label(heading,"FOUR DIMENSIONAL SHOGI",24,57,360,23,14,Gold);
+            CfgUi.Label(heading,"設定（オプション）",560,15,570,48,32);
+            Button(heading,"back","戻る",1423,18,94,43,()=>{if((!settingsDirty||AutoSave())&&SaveStableView())ShowMenu();});
+            var nav=Cfg2Ui.Panel(settings,"Categories",6,100,196,694,Dark);
+            for(int i=0;i<6;i++){int c=i;Button(nav,"category-"+i,categories[i],5,5+i*113,186,108,()=>SelectCategory(c),i==category);}
+            pieceHost=Cfg2Ui.Panel(settings,"Piece list",212,100,186,888,Dark);BuildPieces();
+            var center=Cfg2Ui.Panel(settings,"Movement preview",408,100,730,888,Dark);
+            CfgUi.Label(center,"駒の動きプレビュー",14,10,440,36,22);
+            string[] names={"4Dビュー","XY平面","XZ平面","XW平面","YZ平面"};
+            for(int i=0;i<5;i++){int tab=i;Button(center,"plane-"+i,names[i],12+i*143,51,137,43,()=>SelectPlane(tab),i==0);}
+            previewRect=CfgUi.Rect(center,"Actual section surface",10,104,526,584);previewImage=previewRect.gameObject.AddComponent<RawImage>();previewImage.color=Color.white;
+            AttachPointer(previewRect);
+            planeRect=Cfg2Ui.Panel(center,"2D confirmation",10,104,526,584,new Color(.025f,.04f,.07f,.98f),true);planeView=planeRect.gameObject.AddComponent<Cfg2PlaneView>();
+            planeView.Initialize(Cfg2Plane.XY,(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);planeRect.gameObject.SetActive(false);
+            CreateGizmo(center,356,109,"settings-",174,130);
+            for(int i=0;i<4;i++)
+            {
+                var r=Cfg2Ui.Panel(center,"Selected-cell plane "+(Cfg2Plane)i,546,104+i*146,174,140,new Color(.025f,.04f,.065f,.8f),true);
+                var diagram=r.gameObject.AddComponent<Cfg2PlaneView>();diagram.Initialize((Cfg2Plane)i,null,ownership,()=>preview.Revision,()=>draft.Revision);planeMinis.Add(diagram);
+            }
+            counts=CfgUi.Label(center,"",12,696,700,48,16,Muted);
+            var tools=Cfg2Ui.Panel(center,"Trial controls",10,754,438,124,new Color(.04f,.065f,.09f,.7f));
+            CfgUi.Label(tools,"試し配置",10,5,200,27,19);
+            Button(tools,"tool-select","選択",8,38,75,35,()=>SetTool("選択"));
+            Button(tools,"tool-place","置く",88,38,75,35,()=>SetTool("配置"));
+            Button(tools,"tool-erase","消す",168,38,75,35,()=>SetTool("消去"));
+            Button(tools,"trial-clear","クリア",248,38,82,35,()=>{preview.Clear();AfterTrial();});
+            Button(tools,"trial-reset","試験配置",336,38,94,35,()=>{preview.Place(new TrialPiece("subject",selectedDefinition,Side.A,default));selectedPiece="subject";AfterTrial();});
+            Button(tools,"side","陣営 A / B",8,81,119,34,()=>{placementSide=placementSide==Side.A?Side.B:Side.A;Notice("配置陣営 "+placementSide);});
+            Button(tools,"trial-undo","Undo",135,81,86,34,()=>{preview.Undo();AfterTrial();});Button(tools,"trial-redo","Redo",229,81,86,34,()=>{preview.Redo();AfterTrial();});
+            var toggles=Cfg2Ui.Panel(center,"Display options",458,754,262,124,new Color(.04f,.065f,.09f,.7f));
+            Toggle(toggles,"移動候補",showCandidates,8,4,244,v=>showCandidates=v);Toggle(toggles,"攻撃範囲",showAttacks,8,42,244,v=>showAttacks=v);Toggle(toggles,"座標グリッド",showGrid,8,80,244,v=>showGrid=v);
+            detailHost=Cfg2Ui.Panel(settings,"Independent details",1148,100,380,888,Dark);BuildDetails();
+            headerStatus=CfgUi.Label(settings,"",16,807,181,130,16,Muted);
+            statusText=CfgUi.Label(settings,"",410,995,1100,25,15,Gold);UpdateHeader();
+        }
+        void Toggle(Transform parent,string text,bool value,float x,float y,float w,Action<bool> action)
+        {CfgUi.Toggle(parent,text,value,x,y,w,v=>{action(v);geometryDirty=true;});}
+        void CreateGizmo(Transform parent,float x,float y,string prefix,float width=174,float height=150)
+        {
+            var r=Cfg2Ui.Panel(parent,"Camera-linked XYZW gizmo",x,y,width,height,new Color(.025f,.04f,.065f,.18f));helperPanels.Add(r);
+            var gizmo=r.gameObject.AddComponent<Cfg2AxisGizmo>();gizmo.Initialize(axis=>{Record("UI",prefix+"axis-"+axis);RequestView(axis.ToString());},()=>slice,ownership,()=>{geometryDirty=true;stableDirty=true;Record("AxisTranslation",slice.Center.ToString());},()=>canvas.scaleFactor);
+            foreach(var entry in gizmo.Buttons)actions[prefix+"axis-"+entry.Key]=entry.Value;gizmos.Add(gizmo);
+        }
+        void CreateMini(Transform parent,float x,float y,float w,float h,ReferenceView view)
+        {
+            var r=Cfg2Ui.Panel(parent,"Hyperplane "+view,x,y,w,h,new Color(.03f,.05f,.10f,.38f),true);
+            var glass=r.GetComponentInChildren<Cfg2PanelBorder>();glass.color=new Color(.80f,.87f,1,.55f);glass.Glow=true;
+            helperPanels.Add(r);
+            var mini=r.gameObject.AddComponent<Cfg2MiniView>();mini.Initialize(slice,ownership,view,()=>{geometryDirty=true;stableDirty=true;},v=>{slice.Request(v);geometryDirty=true;},()=>canvas.scaleFactor);minis.Add(mini);
+        }
+        void RefreshAuxiliaryViews()
+        {
+            if(slice==null||rig?.Camera==null)return;var frame=slice.Frame;var rotation=rig.Camera.transform.rotation;
+            foreach(var gizmo in gizmos)gizmo.Refresh(frame,rotation,slice.ViewRevision,cameraRevision);
+            // Panels are drawn around the start pivot P, so a move of C along any axis shows up as a shifted plane.
+            foreach(var mini in minis)mini.Refresh(frame,rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding);
+            if(!opened)return;
+            var ps=preview.Pieces.Select(p=>new CfgVisualPiece{Id=p.Id,DefinitionId=p.DefinitionId,Position=p.Position,Side=p.Side}).ToArray();
+            var selected=preview.Find(selectedPiece)?.Position??planeReferenceCell;
+            foreach(var diagram in planeMinis)diagram.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
+            if(planeTab>0)planeView.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
+        }
+        void BuildPieces()
+        {
+            CfgUi.Clear(pieceHost);CfgUi.Label(pieceHost,"駒の一覧",12,10,162,34,22);
+            var ds=draft.Current.Definitions.Where(d=>!d.Id.StartsWith("promoted")).ToArray();
+            for(int i=0;i<Math.Min(8,ds.Length);i++)
+            {
+                var d=ds[i];string[] shortNames={"王（玉将）","飛車","角行","金将","銀将","桂馬","香車","歩兵"};var b=Button(pieceHost,"piece-"+d.Id,shortNames[i],9,52+i*65,168,59,()=>SelectDefinition(d.Id),d.Id==selectedDefinition);
+                var label=b.GetComponentInChildren<Text>();label.fontSize=17;label.alignment=TextAnchor.MiddleLeft;label.rectTransform.anchoredPosition=new Vector2(53,-3);label.rectTransform.sizeDelta=new Vector2(108,53);
+                Cfg2Ui.PieceIcon(b.transform,d.Id,Side.A,7,6,37,46);
+            }
+            CfgUi.Label(pieceHost,"成りなし",12,607,162,30,18,Muted);
+            CfgUi.Label(pieceHost,"と金・成銀・成桂\n成香・龍王・龍馬\n\nこのデモでは無効",12,648,162,160,16,Muted);
+        }
+        void SelectCategory(int index)
+        {RememberScroll();category=index;for(int i=0;i<6;i++)actions["category-"+i].GetComponent<Image>().color=i==index?CfgUi.Blue:Dark;BuildDetails();Record("Category",index.ToString());}
+        void SelectDefinition(string id)
+        {
+            RememberScroll();selectedDefinition=id;
+            if(preview.Find(selectedPiece)!=null)preview.ReplaceDefinition(selectedPiece,id);
+            else{preview.Place(new TrialPiece("subject",id,Side.A,selectedCell));selectedPiece="subject";}
+            BuildPieces();BuildDetails();AfterTrial();Record("Definition",id);
+        }
+        void SelectPlane(int tab)
+        {
+            planeTab=tab;previewRect.gameObject.SetActive(tab==0);planeRect.gameObject.SetActive(tab!=0);
+            if(tab>0)planeView.Initialize((Cfg2Plane)(tab-1),(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);
+            for(int i=0;i<5;i++)actions["plane-"+i].GetComponent<Image>().color=i==tab?CfgUi.Blue:Dark;
+            geometryDirty=true;Record("Plane",tab.ToString());
+        }
+        void RememberScroll(){if(detailScroll!=null)detailPositions[detailContext]=detailScroll.verticalNormalizedPosition;}
+        void BuildDetails()
+        {
+            if(detailHost==null)return;RememberScroll();CfgUi.Clear(detailHost);inputs.Clear();
+            detailContext=category+"/"+selectedDefinition+"/"+detailTab;
+            CfgUi.Label(detailHost,category==2?"駒の動きを設定":categories[category],14,12,350,35,22);
+            if(category==2)
+            {
+                string[] tabs={"基本設定","詳細設定","表示設定"};
+                for(int i=0;i<3;i++){int t=i;Button(detailHost,"detail-tab-"+i,tabs[i],12+i*119,59,115,42,()=>{RememberScroll();detailTab=t;BuildDetails();},i==detailTab);}
+            }
+            detailScroll=CfgUi.Scroll(detailHost,"Details only scroll",10,category==2?114:64,360,category==2?760:810,out var c,850);
+            if(category==2)BuildPieceDetails(c);
+            else if(category==0)
+            {
+                CfgUi.Label(c,"王捕獲 4Dデモ",8,7,330,44,26,Gold);
+                CfgUi.Label(c,"N=4 · 対称4D\n\n王の捕獲で勝ち。\n着手できる手がなければ引分。\n時計が0になると負け。\n\n成り・打ち・反復判定なし。\n自玉安全による着手制限なし。",8,73,330,375,20);
+                CfgUi.Label(c,"今回のデモ用ルールです。\n正式ルールの確定ではありません。",8,473,330,89,17,Muted);
+                Field(c,"name","表示名",draft.Name,585,v=>{draft.Edit(d=>d.Name=v);AfterEdit();});
+                if(startupLoadError!="")Button(c,"recover-default","元保存を保持して新しい設定で復旧",8,720,330,58,RecoverToNewBundle);
+            }
+            else if(category==1)
+            {
+                CfgUi.Label(c,"初期配置：40駒",8,7,330,44,25,Gold);
+                CfgUi.Label(c,"論理盤：各軸 −4〜4\nX / Y / Z / W\n\n先手 A：+Z方向\n後手 B：−Z方向\n\n初期配置は両側20駒。\n表示の駒配置面はY=h、W=0。\n開始中心Pは駒配置面の中央。\n先手Aから開始します。\n\n試し配置は対局に入りません。",8,71,330,450,20);
+                CfgUi.Label(c,"試し配置セル X,Y,Z,W",8,562,330,30,18);
+                var coordinate=CfgUi.Input(c,"0,0,0,0",8,606,330,41,value=>{var p=value.Split(',');if(p.Length==4&&p.All(s=>int.TryParse(s,out _))){selectedCell=new Q4(int.Parse(p[2]),int.Parse(p[0]),int.Parse(p[1]),int.Parse(p[3]));if(!selectedCell.InBounds)Notice("各軸 −4〜4で指定してください。");}else Notice("4つの整数を入力してください。");});inputs["coordinate"]=coordinate;
+                Button(c,"place-coordinate","指定セルに置く",8,660,330,42,()=>PlaceAt(selectedCell));
+            }
+            else if(category==3)
+            {
+                CfgUi.Label(c,"走り駒の遮蔽",8,8,330,35,21);
+                Button(c,"occlusion-lattice","格子直線 / 1",8,58,330,44,()=>{draft.Edit(d=>d.Occlusion="lattice-line/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="lattice-line/1");
+                Button(c,"occlusion-supercover","閉Supercover / 1",8,111,330,44,()=>{draft.Edit(d=>d.Occlusion="supercover-closed/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="supercover-closed/1");
+                Field(c,"time","双方の持ち時間（秒）",options.TimeSeconds,211,v=>{options.TimeSeconds=v;AfterEdit();});
+                CfgUi.Label(c,"加算・秒読みなし\n\n王捕獲／手なし／時間切れ\n成り・打ちなし\n自玉安全による制限なし",8,333,330,238,20);
+            }
+            else if(category==4)
+            {
+                CfgUi.Label(c,"共通4D CPU",8,8,330,42,25,Gold);
+                CfgUi.Label(c,"全4Dの着手可能手から\n捕獲を優先します。\n\n両側が同じ規則で動きます。",8,69,330,165,20);
+                Field(c,"seed","同点処理 seed",options.CpuSeed,264,v=>{options.CpuSeed=v;AfterEdit();});
+                Field(c,"budget","照会予算",options.CpuBudget,389,v=>{options.CpuBudget=v;AfterEdit();});
+                CfgUi.Label(c,"CPU戦の演出",8,514,330,34,21,Gold);
+                CfgUi.Toggle(c,"着手前に4D回転で超平面を見せる",CpuShowEnabled,8,554,330,v=>{CpuShowEnabled=v;Record("Pref",CpuShowKey+"="+v);});
+                CfgUi.Toggle(c,"手番交代ごとに初期表示へ戻す",TurnResetEnabled,8,596,330,v=>{TurnResetEnabled=v;Record("Pref",TurnResetKey+"="+v);});
+                int delay=int.TryParse(options.CpuDelayMilliseconds,out var parsed)?parsed:500;
+                var delayLabel=CfgUi.Label(c,"",8,644,330,30,18);void ShowDelay(float ms)=>delayLabel.text="画面切り替えの待ち時間："+(ms/1000f).ToString("0.0")+" 秒";ShowDelay(delay);
+                Cfg2Ui.Slider(c,8,682,330,0,5000,Mathf.Clamp(delay,0,5000),v=>{int ms=Mathf.RoundToInt(v/100f)*100;ShowDelay(ms);options.CpuDelayMilliseconds=ms.ToString(System.Globalization.CultureInfo.InvariantCulture);AfterEdit();});
+                CfgUi.Label(c,"演出中と待ち時間の間は、CPUの\n持ち時間を消費しません。",8,718,330,52,16,Muted);
+                CfgUi.Label(c,"強さの段階設定はありません。",8,782,330,40,17,Muted);
+            }
+            else BuildDisplay(c);
+            detailScroll.verticalNormalizedPosition=detailPositions.TryGetValue(detailContext,out var value)?value:1;
+        }
+        void Field(RectTransform c,string id,string label,string value,float y,Action<string> edited)
+        {
+            CfgUi.Label(c,label,8,y,330,32,18);var error=CfgUi.Label(c,"",8,y+80,330,36,15,new Color(1,.61f,.47f));
+            var input=CfgUi.Input(c,value,8,y+37,330,40,v=>{edited(v);error.text=config==null?"値を確認してください":"";},true);inputs[id]=input;
+            if(config==null)error.text="値を確認してください";
+        }
+        void BuildPieceDetails(RectTransform c)
+        {
+            var d=draft.Current.Definitions.Single(p=>p.Id==selectedDefinition);bool editable=d.Kind=="step/1"||d.Kind=="h11/1"||d.Kind=="h22/1";
+            CfgUi.Label(c,d.Name,8,0,330,43,25,Gold);
+            if(detailTab==2){BuildDisplay(c,67);return;}
+            if(!editable){CfgUi.Label(c,"既存の移動定義を使用\n\nこの駒の動きは固定です。\n両側の全4Dに適用します。\n\n成り・打ちはありません。",8,71,330,290,20);return;}
+            if(detailTab==0)
+            {
+                if(d.Kind=="step/1")
+                {
+                    CfgUi.Label(c,"1手で動ける最大距離：1",8,65,330,37,20);
+                    Field(c,"max-axes","同時に動かす最大軸数",d.MaxAxes,130,v=>Edit(x=>x.MaxAxes=v,false));
+                    CfgUi.Label(c,"移動パターン",8,259,330,32,19);
+                    Button(c,"pattern-all","全方向（全近傍）",8,302,330,42,()=>Edit(x=>x.MaxAxes="4"),d.MaxAxes=="4");
+                    Button(c,"pattern-axis","軸方向のみ",8,353,330,42,()=>Edit(x=>x.MaxAxes="1"),d.MaxAxes=="1");
+                }
+                else {CfgUi.Label(c,d.Kind=="h11/1"?"軸方向の走り H(1,1)":"2軸の走り H(2,2)",8,65,330,45,20);Field(c,"distance","最大距離",d.MaxDistance,130,v=>Edit(x=>x.MaxDistance=v,false));}
+                CfgUi.Label(c,"使用する軸",8,431,330,32,19);int.TryParse(d.AxesMask,out var mask);
+                string[] axes={"X","Y","Z","W"};int[] ids={1,2,0,3};
+                for(int i=0;i<4;i++){int bit=1<<ids[i];Toggle(c,axes[i],(mask&bit)!=0,8+i*83,476,82,v=>Edit(x=>{int.TryParse(x.AxesMask,out int m);x.AxesMask=(v?m|bit:m&~bit).ToString();}));}
+                CfgUi.Label(c,"青：移動候補   赤：攻撃範囲\n金：選択中の駒\n\n全4Dで照会し、表示内を描きます。",8,548,330,146,18,Muted);
+            }
+            else
+            {
+                Toggle(c,"前（陣営のZ方向）",d.Forward,8,77,330,v=>Edit(x=>x.Forward=v));
+                Toggle(c,"横（Zの変位なし）",d.Sideways,8,127,330,v=>Edit(x=>x.Sideways=v));
+                Toggle(c,"後",d.Backward,8,177,330,v=>Edit(x=>x.Backward=v));
+                Toggle(c,"空セルへ移動",d.AllowEmpty,8,258,330,v=>Edit(x=>x.AllowEmpty=v));
+                Toggle(c,"敵駒を捕獲",d.AllowCapture,8,308,330,v=>Edit(x=>x.AllowCapture=v));
+                CfgUi.Label(c,"味方のセルへは移動できません。\n\n王捕獲デモの着手候補です。\n完全合法性L・詰みは未評価。\n\n変更は試し盤と次局へ反映します。",8,389,330,217,18,Muted);
+            }
+        }
+        void BuildDisplay(RectTransform c,float y=8)
+        {
+            Toggle(c,"移動候補を表示",showCandidates,8,y,330,v=>showCandidates=v);Toggle(c,"攻撃範囲を表示",showAttacks,8,y+49,330,v=>showAttacks=v);Toggle(c,"座標グリッドを表示",showGrid,8,y+98,330,v=>showGrid=v);
+            Toggle(c,"断面補助を表示",showHelpers,8,y+147,330,v=>showHelpers=v);
+            CfgUi.Label(c,"左／右ドラッグ：視点回転\n中／Shift＋左：平行移動\nホイール：拡大・縮小\nCtrl＋左：XW／YW回転\nCtrl＋Shift＋左：ZW／YW回転\n\nXYZWクリック：基準断面へ\n軸ドラッグ：4D中心移動\nShift／Ctrl＋軸ドラッグ：1マス吸着\nR：初期位置・回転なしへ戻す\nプレビュー・軸・小窓上で\nHome：原点Oへ\nShift＋Home：開始中心Pへ\nEsc：戻る／操作取消",8,y+220,330,410,17);
+        }
+        void ShowMenu()
+        {
+            CancelActiveInput();
+            opened=false;settings.gameObject.SetActive(false);matchHud.gameObject.SetActive(false);menu.gameObject.SetActive(true);
+            backgroundCamera.enabled=false;
+            rig.Camera.targetTexture=null;rig.Camera.transform.position=new Vector3(.58f,1.38f,-.8f);rig.Camera.transform.LookAt(new Vector3(-.14f,1.02f,0));cameraRevision++;
+            geometryDirty=true;result=null;attackCells=Array.Empty<Q4>();visuals.RefreshCaptured(Array.Empty<Cfg2CapturedPiece>());Record("Menu");
+            WritePlayerIdentity("Menu");
+        }
+        void OpenSettings()
+        {
+            CancelActiveInput();
+            opened=true;menu.gameObject.SetActive(false);matchHud.gameObject.SetActive(false);settings.gameObject.SetActive(true);
+            backgroundCamera.transform.position=new Vector3(.58f,1.38f,-.8f);backgroundCamera.transform.LookAt(new Vector3(-.14f,1.02f,0));backgroundCamera.enabled=true;
+            if(previewTexture==null){previewTexture=new RenderTexture(1052,1168,24){name="CFG2 live section"};previewTexture.Create();previewImage.texture=previewTexture;}
+            rig.Camera.targetTexture=previewTexture;UpdateCamera();QueueQuery();BuildPieces();BuildDetails();UpdateHeader();Record("OptionsOpened");
+            WritePlayerIdentity("Settings");
+        }
+    }
+}

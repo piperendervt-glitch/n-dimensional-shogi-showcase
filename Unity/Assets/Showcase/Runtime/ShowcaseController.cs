@@ -30,7 +30,7 @@ namespace Showcase.Unity
         ShapeVariant variant=ShapeVariant.C;
         string profile="ShowcaseRaster",mode="DirectedLive",outputRoot,failed="";
         OcclusionKind occlusion=OcclusionKind.LatticeLine;
-        bool paused,debug,exitDialog,previousPause,helpers=true,quitting,recordFrames,exitAtEnd;
+        bool paused,debug,exitDialog,previousPause,helpers=true,quitting,recordFrames,exitAtEnd,startPaused;
         int scene=1,runIndex,frameIndex,loopCount=1,seed=ScenarioRunner.DefaultSeed,targetFps=30;
         double angle,elapsed,sectionMs,lastCapture,previousGuideAngle=double.NaN;
         long sectionVersion;
@@ -47,8 +47,10 @@ namespace Showcase.Unity
         PassEvidenceCapture passCapture;
         GameObject endingGlowObject;
         DimensionalTransition transition;
+        ShowcaseRenderOutput renderOutput;
         bool transitionAllowed=true;
-        float transitionPhase;
+        float transitionPhase,endingGlowLumens;
+        int requestedWidth,requestedHeight;
         readonly ParallelOptions sectionWorkers=new ParallelOptions{MaxDegreeOfParallelism=Math.Max(1,Math.Min(8,System.Environment.ProcessorCount-2))};
         struct SectionJob {public SectionView view;public Vec4 q;public int forward;public SectionResult result;}
         readonly List<SectionJob> sectionJobs=new List<SectionJob>(41);
@@ -61,6 +63,7 @@ namespace Showcase.Unity
             {
                 ParseArguments();Application.runInBackground=true;Application.targetFrameRate=targetFps;QualitySettings.vSyncCount=0;
                 rig=ShowcaseEnvironment.Build();rig.SetGeometryReference(profile=="GeometryReference");
+                renderOutput=gameObject.AddComponent<ShowcaseRenderOutput>();renderOutput.Initialize(rig.Camera,noScreenshots);
                 transition=gameObject.AddComponent<DimensionalTransition>();transition.Bind(rig.Camera);
                 transition.EffectEnabled=profile=="ShowcaseRaster"&&transitionAllowed;
                 rig.Debug.Changed+=message=>Event("LightingDebugChanged",message);
@@ -83,8 +86,11 @@ namespace Showcase.Unity
             speed=float.Parse(Value("--speed","1"),System.Globalization.CultureInfo.InvariantCulture);if(speed<=0||speed>20)throw new ArgumentOutOfRangeException("speed");
             loopCount=int.Parse(Value("--loops","1"));if(loopCount<1||loopCount>20)throw new ArgumentOutOfRangeException("loops");
             targetFps=int.Parse(Value("--target-fps","30"));if(targetFps<1||targetFps>240)throw new ArgumentOutOfRangeException("target-fps");
+            requestedWidth=int.Parse(Value("-screen-width",Screen.width.ToString()));
+            requestedHeight=int.Parse(Value("-screen-height",Screen.height.ToString()));
             outputRoot=Value("--evidence",Path.Combine(Application.persistentDataPath,"evidence"));
             recordFrames=args.Contains("--capture-video");exitAtEnd=args.Contains("--exit-after-run");helpers=!args.Contains("--helpers-off");
+            startPaused=args.Contains("--start-paused");
             diagnosticComparison=args.Contains("--shape-comparison");
             diagnosticLighting=args.Contains("--lighting-audit");diagnosticGpu=args.Contains("--gpu-ablation");
             capturePasses=args.Contains("--capture-passes");noScreenshots=args.Contains("--benchmark-no-captures");
@@ -108,8 +114,8 @@ namespace Showcase.Unity
             passCapture?.CancelPending("RestartRun");
             StopAllCoroutines();tx?.Cancel();evidence?.Dispose();foreach(var p in pieces.Values)p.Dispose();pieces.Clear();
             if(endingGlowObject!=null){Destroy(endingGlowObject);endingGlowObject=null;}
-            transition?.Set(0,0,0);transitionPhase=0;
-            movingId=null;angle=0;elapsed=0;frameIndex=0;lastCapture=-1;scene=1;failed="";paused=false;exitDialog=false;captureFinished=false;
+            transition?.Set(0,0,0);transitionPhase=0;endingGlowLumens=0;
+            movingId=null;angle=0;elapsed=0;frameIndex=0;lastCapture=-1;scene=1;failed="";paused=startPaused&&runIndex==0;exitDialog=false;captureFinished=false;
             records.Clear();guideCells.Clear();previousGuideAngle=double.NaN;
             runner=Bootstrap.CreateScenario(occlusion,seed);tx=new MoveTransaction(runner.Core,runner.Core.InitialState());
             initialState=tx.State;
@@ -132,6 +138,8 @@ namespace Showcase.Unity
             var stamp=stampAsset==null?new BuildStamp():JsonUtility.FromJson<BuildStamp>(stampAsset.text);
             evidence=new RuntimeEvidence(Path.Combine(outputRoot,id),new RunHeader{runId=id,startedUtc=DateTime.UtcNow.ToString("O"),unity=Application.unityVersion,
                 device=SystemInfo.graphicsDeviceName,driver=SystemInfo.graphicsDeviceVersion,graphicsApi=SystemInfo.graphicsDeviceType.ToString(),profile=profile,mode=mode,occlusion=tx.State.Rules.OcclusionId,
+                requestedWidth=requestedWidth,requestedHeight=requestedHeight,
+                requestedRenderWidth=renderOutput.RequestedWidth,requestedRenderHeight=renderOutput.RequestedHeight,renderingSurface=renderOutput.Surface,
                 shape="geometry/0.1 "+variant,material=(variant==ShapeVariant.C?"fixed-affine-f-uplusw/1":"fixed-extruded-f-u/1")+" | "+EnvironmentMaterials.Version,width=Screen.width,height=Screen.height,graphicsMemoryMB=SystemInfo.graphicsMemorySize,seed=seed,
                 buildSource=Application.buildGUID+" / uncommitted-local-source; see build manifest",sourceManifestSha256=stamp.sourceManifestSha256,sourceHash=stamp.sourceHash,buildUtc=stamp.builtUtc,
                 quality=QualitySettings.names[QualitySettings.GetQualityLevel()]+" / HDRP photographic / PCSS",cpuModel=SystemInfo.processorType,
@@ -141,6 +149,7 @@ namespace Showcase.Unity
             if(recordFrames)Directory.CreateDirectory(Path.Combine(evidence.DirectoryPath,"video-frames"));
             SetCameraGoal();rig.Camera.transform.position=cameraGoal;rig.Camera.transform.LookAt(lookGoal);
             Event("RunStarted",mode+"; all rules fixed; official 40-piece initial state");RefreshGeometry();
+            if(paused)Event("StartupPaused","Waiting for Space before advancing the first scene; R explicitly restarts playback.");
             StartCoroutine(Sequence());if(recordFrames)StartCoroutine(CaptureFrames());
         }
         IEnumerator Sequence()
@@ -236,8 +245,8 @@ namespace Showcase.Unity
             var go=new GameObject("Confirmed king-capture light");endingGlowObject=go;go.transform.position=SectionView.Anchor+new Vector3(0,.065f,.20f);
             var light=go.AddComponent<Light>();light.type=LightType.Point;light.range=.45f;light.color=new Color(1,.73f,.30f);light.shadows=LightShadows.None;
             var hd=go.AddComponent<HDAdditionalLightData>();double t=0;
-            while(t<1.8){if(!paused)t+=Time.unscaledDeltaTime*speed;hd.SetIntensity((float)(55*Math.Sin(Math.PI*Math.Min(1,t/1.8))),LightUnit.Lumen);yield return null;}
-            Destroy(go);endingGlowObject=null;
+            while(t<1.8){if(!paused)t+=Time.unscaledDeltaTime*speed;endingGlowLumens=(float)(55*Math.Sin(Math.PI*Math.Min(1,t/1.8)));hd.SetIntensity(endingGlowLumens,LightUnit.Lumen);yield return null;}
+            endingGlowLumens=0;Destroy(go);endingGlowObject=null;
         }
         IEnumerator CompareShapes()
         {
@@ -372,7 +381,10 @@ namespace Showcase.Unity
             }
             evidence.Frame(new FrameEvidence{frame=Time.frameCount,ply=tx.State.Ply,scene=scene,elapsed=elapsed,angle=angle,frameMs=Time.unscaledDeltaTime*1000,sectionMs=sectionMs,
                 visiblePieces=visibleCount,stateHash=tx.State.Hash,
-                transitionStrength=transition.Strength,transitionEnabled=transition.EffectEnabled,visibleIds=visibleIds});
+                transitionStrength=transition.Strength,transitionEnabled=transition.EffectEnabled,visibleIds=visibleIds,
+                outputWidth=Screen.width,outputHeight=Screen.height,internalWidth=rig.Camera.scaledPixelWidth,internalHeight=rig.Camera.scaledPixelHeight,
+                renderedInternalWidth=renderOutput.RenderedWidth,renderedInternalHeight=renderOutput.RenderedHeight,renderedCameraFrame=renderOutput.RenderedFrame,
+                endingGlowLumens=endingGlowLumens});
         }
         void RefreshGeometry()
         {
@@ -446,9 +458,10 @@ namespace Showcase.Unity
                 File.AppendAllText(Path.Combine(evidence.DirectoryPath,"video-frames","timestamps.csv"),frameName+","+Time.unscaledTimeAsDouble.ToString("R",System.Globalization.CultureInfo.InvariantCulture)+"\n");
             }
         }
-        void Fail(Exception e){StopAllCoroutines();captureFinished=true;transition?.Set(0,0,0);tx?.Cancel();movingId=null;failed=e?.ToString()??"Unknown error";Debug.LogError(failed);paused=true;if(endingGlowObject!=null){Destroy(endingGlowObject);endingGlowObject=null;}Event("ScenarioMismatch",failed);if(exitAtEnd){evidence?.Dispose();quitting=true;Application.Quit(1);}}
+        void Fail(Exception e){StopAllCoroutines();captureFinished=true;transition?.Set(0,0,0);endingGlowLumens=0;tx?.Cancel();movingId=null;failed=e?.ToString()??"Unknown error";Debug.LogError(failed);paused=true;if(endingGlowObject!=null){Destroy(endingGlowObject);endingGlowObject=null;}Event("ScenarioMismatch",failed);if(exitAtEnd){evidence?.Dispose();quitting=true;Application.Quit(1);}}
         void OnGUI()
         {
+            renderOutput?.DrawPreview();
             if(overlay==null){overlay=new GUIStyle(GUI.skin.box){fontSize=16,alignment=TextAnchor.UpperLeft,padding=new RectOffset(16,16,12,12)};labelStyle=new GUIStyle(GUI.skin.label){fontSize=20,alignment=TextAnchor.MiddleCenter};}
             if(debug&&tx!=null)GUI.Box(new Rect(16,16,660,195),"SHOWCASE • "+mode+" / "+profile+"\nScene "+scene+"   ply "+tx.State.Ply+"   u–w "+angle.ToString("F1")+"°   "+variant+"\n"+tx.State.Rules.OcclusionId+"  /  "+tx.State.Hash.Substring(0,16)+"\nSpace pause · R restart · H guides · F9 capture · Esc exit\nF2–F8 lighting · Shift+F4/F5 diagnostics · T dimensional effect\n"+(paused?"PAUSED":"PLAYING")+"   section "+sectionMs.ToString("F2")+" ms  / target "+targetFps+"fps",overlay);
             if(exitDialog)GUI.Box(new Rect(Screen.width/2-240,Screen.height/2-55,480,110),"Exit Showcase?\nEnter: exit    Esc: return",labelStyle);

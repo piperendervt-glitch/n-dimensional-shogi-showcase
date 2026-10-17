@@ -96,10 +96,15 @@ public static class ShowcaseBuild
     [MenuItem("Showcase/Build Windows x64")]
     public static void BuildWindows()
     {
+        string[] args=System.Environment.GetCommandLineArgs();
+        int outputArgument=Array.IndexOf(args,"--showcase-output");
+        if(outputArgument>=0&&outputArgument+1>=args.Length)throw new ArgumentException("--showcase-output requires a new executable path.");
+        var output=Path.GetFullPath(outputArgument>=0?args[outputArgument+1]:Path.Combine(Application.dataPath,"../../builds/Showcase-Windows/NDShogiShowcase.exe"));
+        if(outputArgument>=0&&Directory.Exists(Path.GetDirectoryName(output))&&Directory.EnumerateFileSystemEntries(Path.GetDirectoryName(output)).Any())
+            throw new InvalidOperationException("Explicit showcase output directory must be empty to preserve previous builds.");
         if(Resources.Load<TextAsset>("verified-replay")==null)throw new InvalidOperationException("Resources/verified-replay.json is required for the distributable.");
         PrepareProject();
         WriteBuildStamp();
-        var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../../builds/Showcase-Windows/NDShogiShowcase.exe"));
         Directory.CreateDirectory(Path.GetDirectoryName(output));
         var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions
         {scenes=new[]{ScenePath},locationPathName=output,target=BuildTarget.StandaloneWindows64,options=BuildOptions.None});

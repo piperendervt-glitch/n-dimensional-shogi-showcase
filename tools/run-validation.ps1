@@ -10,6 +10,8 @@ param(
     [ValidateSet('A','C')][string]$Shape = 'C',
     [int]$Width = 1920,
     [int]$Height = 1080,
+    [int]$RenderWidth = 0,
+    [int]$RenderHeight = 0,
     [ValidateRange(1,20)][int]$Loops = 1,
     [ValidateRange(0.01,20)][double]$Speed = 1,
     [ValidateRange(1,240)][int]$TargetFps = 30,
@@ -21,6 +23,8 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 if($Width -lt 320 -or $Height -lt 240){throw 'Resolution is invalid.'}
+if(($RenderWidth -eq 0) -ne ($RenderHeight -eq 0)){throw 'Specify both RenderWidth and RenderHeight.'}
+if($RenderWidth -ne 0 -and ($RunKind -ne 'Benchmark' -or $RenderWidth -lt 320 -or $RenderHeight -lt 320 -or $RenderWidth -gt 8192 -or $RenderHeight -gt 8192)){throw 'Explicit offscreen render dimensions require Benchmark and dimensions 320..8192.'}
 if($RunKind -eq 'Benchmark' -and ($CaptureVideo -or $CapturePasses)){throw 'Clean benchmark cannot enable capture.'}
 if($RunKind -eq 'Automation' -and $Loops -lt 3){throw 'Playback automation requires -Loops 3 or more.'}
 $taskExe = [System.IO.Path]::GetFullPath($Executable)
@@ -33,6 +37,7 @@ if(Test-Path -LiteralPath (Join-Path $taskOutput 'launcher.json')){throw 'Output
 $taskArgs = [System.Collections.Generic.List[string]]::new()
 foreach($value in @('-screen-fullscreen','0','-screen-width',"$Width",'-screen-height',"$Height",'--profile',$Profile,'--mode',$Mode,'--occlusion',$Occlusion,'--shape',$Shape,'--loops',"$Loops",'--speed',$Speed.ToString([Globalization.CultureInfo]::InvariantCulture),'--evidence',$taskOutput,'-logFile',(Join-Path $taskOutput 'player.log'))){$taskArgs.Add([string]$value)}
 if($RunKind -eq 'Benchmark'){$taskArgs.Add('--benchmark-no-captures')}
+if($RenderWidth -ne 0){foreach($value in @('--benchmark-render-width',"$RenderWidth",'--benchmark-render-height',"$RenderHeight")){$taskArgs.Add($value)}}
 if($RunKind -eq 'ShapeComparison'){$taskArgs.Add('--shape-comparison')}
 if($RunKind -eq 'LightingAudit'){$taskArgs.Add('--lighting-audit')}
 if($RunKind -eq 'GpuAblation'){$taskArgs.Add('--gpu-ablation')}
@@ -53,6 +58,8 @@ $taskMeta = [ordered]@{
     executableSha256=(Get-FileHash -LiteralPath $taskExe -Algorithm SHA256).Hash.ToLowerInvariant();
     arguments=$taskArgs.ToArray();outputRoot=$taskOutput;width=$Width;height=$Height;mode=$Mode;profile=$Profile;occlusion=$Occlusion;
     loops=$Loops;speed=$Speed;sampleSeconds=$SampleSeconds;timeoutSeconds=$TimeoutSeconds;
+    requestedRenderWidth=$RenderWidth;requestedRenderHeight=$RenderHeight;targetFrameRate=$TargetFps;
+    renderingSurface=$(if($RenderWidth -ne 0){'Offscreen HDRP target with scaled window preview; not native-resolution monitor presentation.'}else{'Native window; actual dimensions must be verified from runtime records.'});
     gpuCounterClass=$taskGpuClass;gpuCounterAvailable=$taskGpuAvailable;gpuCounterAvailabilityError=$taskGpuAvailabilityError;
     gpuCounterMeaning='Per-process WDDM DedicatedUsage/SharedUsage/TotalCommitted gauges, summed across unique adapter instances. Not a claim of exact instantaneous physical VRAM residency.';
     gpuAggregation='explicit Int64 sum of unique PSCustomObject adapter records /2';

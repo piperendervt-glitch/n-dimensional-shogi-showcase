@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Showcase.Geometry;
+using Showcase.Geometry.Interaction;
 
 namespace Showcase.Unity
 {
@@ -29,6 +30,9 @@ namespace Showcase.Unity
         Vec4 previous;
         double previousAngle = double.NaN;
         int previousForward;
+        SliceFrame previousFrame;
+        bool frameMode;
+        double? previousHalfExtent;
 
         public SectionView(string id, ConvexShape shape, Material topMaterial, Material sideMaterial, bool isBoard=false, float scale=1, bool useSymmetricMaterial=true)
         {
@@ -50,11 +54,31 @@ namespace Showcase.Unity
         {
             SectionVersion=version;
             if(previousAngle==angle&&previousForward==forward&&Vec4.Dot(q-previous,q-previous)<1e-22)return false;
-            previous=q;previousAngle=angle;previousForward=forward;SectionVersion=version;
+            previous=q;previousAngle=angle;previousForward=forward;SectionVersion=version;frameMode=false;
             return true;
         }
         public SectionResult ComputeSection(Vec4 q,int forward,double angle)
             =>SectionBuilder.Build(new Instance4D(shape,q,forward,Id),SliceFrame.AtAngle(angle));
+        // CFG-1 uses a shared 4D frame. The legacy angle overloads above remain unchanged.
+        public void UpdateSection(Vec4 q,int forward,SliceFrame frame,long version,double? halfExtent=null)
+        {
+            if(PrepareSection(q,forward,frame,version,halfExtent))ApplySection(ComputeSection(q,forward,frame,halfExtent));
+        }
+        public bool PrepareSection(Vec4 q,int forward,SliceFrame frame,long version,double? halfExtent=null)
+        {
+            SectionVersion=version;
+            if(frameMode&&previousForward==forward&&previousHalfExtent==halfExtent&&Same(q,previous)&&
+                Same(frame.Center,previousFrame.Center)&&Same(frame.AxisX,previousFrame.AxisX)&&
+                Same(frame.AxisY,previousFrame.AxisY)&&Same(frame.AxisZ,previousFrame.AxisZ)&&Same(frame.Normal,previousFrame.Normal))return false;
+            previous=q;previousForward=forward;previousFrame=frame;previousHalfExtent=halfExtent;frameMode=true;previousAngle=double.NaN;
+            return true;
+        }
+        public SectionResult ComputeSection(Vec4 q,int forward,SliceFrame frame,double? halfExtent=null)
+        {
+            var instance=new Instance4D(shape,q,forward,Id);
+            return halfExtent.HasValue?FiniteSliceWindow.Build(instance,frame,halfExtent.Value):SectionBuilder.Build(instance,frame);
+        }
+        static bool Same(Vec4 a,Vec4 b)=>Vec4.Dot(a-b,a-b)<1e-22;
         public void ApplySection(SectionResult result)
         {
             Last=result;
@@ -94,6 +118,7 @@ namespace Showcase.Unity
         }
         public static Vector3 MapVector(Vec3 p)=>new Vector3((float)p.Y,(float)p.Z,(float)p.X);
         public static Vector3 MapPoint(Vec4 p,double angle)=>Anchor+MapVector(SliceFrame.AtAngle(angle).Project(p))*Cell;
+        public static Vector3 MapPoint(Vec4 p,SliceFrame frame,Vector3 anchor)=>anchor+MapVector(frame.Project(p))*Cell;
         public void Dispose(){UnityEngine.Object.Destroy(Object);UnityEngine.Object.Destroy(mesh);}
     }
 }

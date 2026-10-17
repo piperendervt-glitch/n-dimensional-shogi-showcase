@@ -317,6 +317,129 @@ def utc_datetime(value):
         return None
 
 
+def angle_windows(rows: list[dict], target_fps: int) -> dict:
+    """Partition measured angles, without assuming the middle is the worst case."""
+    epsilon = 1e-6
+    zero, ninety, bins, excluded = [], [], [[] for _ in range(18)], 0
+    for row in rows:
+        angle = row.get("angle")
+        if not finite_number(angle):
+            excluded += 1
+        elif abs(angle) <= epsilon:
+            zero.append(row)
+        elif abs(angle - 90) <= epsilon:
+            ninety.append(row)
+        elif 0 < angle < 90:
+            bins[min(17, int(angle // 5))].append(row)
+        else:
+            excluded += 1
+    return {"binWidthDegrees": 5, "endpointToleranceDegrees": epsilon,
+            "zeroDegreeHold": summarize(zero, target_fps),
+            "ninetyDegreeHold": summarize(ninety, target_fps),
+            "bins": [{"lowerInclusive": i * 5, "upperExclusive": (i + 1) * 5,
+                      "summary": summarize(group, target_fps)} for i, group in enumerate(bins)],
+            "excludedOrUnavailableSamples": excluded,
+            "meaning": "Endpoint-angle samples are separate from interior 5-degree bins. All recorded scenes/plies are included; this is an observed path distribution, not a global worst-angle proof. Latest CPU/GPU timers may refer to an earlier frame; sectionMs repeats the last update on idle frames."}
+
+
+def return_h0_windows(rows: list[dict], events: list[dict], target_fps: int) -> list[dict]:
+    """Keep each return, including the final reappearance and missing observations."""
+    result = []
+    for index, event in enumerate(events):
+        if event.get("kind") != "ReturnedH0":
+            continue
+        anchor = next((r for r in rows if finite_number(event.get("time")) and
+                       finite_number(r.get("elapsed")) and r["elapsed"] >= event["time"] and
+                       r.get("ply") == event.get("ply") and finite_number(r.get("angle")) and
+                       abs(r["angle"]) <= .05), None)
+        window = [] if anchor is None else [r for r in rows if
+                  anchor["_measuredSeconds"] <= r["_measuredSeconds"] < anchor["_measuredSeconds"] + 1]
+        known = [r for r in window if isinstance(r.get("visibleIds"), str)]
+        absent = [r for r in known if "A-Pawn-0" not in r["visibleIds"].split(",")]
+        present = [r for r in known if "A-Pawn-0" in r["visibleIds"].split(",")]
+        visibility = ("NOT_AVAILABLE" if not known else "PARTIALLY_RECORDED" if len(known) != len(window)
+                      else "MIXED" if absent and present else "HERO_ABSENT" if absent else "HERO_PRESENT")
+        result.append({"sourceEventIndex": index, "event": event, "firstMatchingFrame": anchor,
+                       "anchorStateMatchesEvent": None if anchor is None or not event.get("stateHash") or not anchor.get("stateHash") else anchor["stateHash"] == event["stateHash"],
+                       "visibility": visibility, "heroAbsentSamples": len(absent), "heroPresentSamples": len(present),
+                       "visibilityUnavailableSamples": len(window) - len(known),
+                       "summary": summarize(window, target_fps), "visibleSets": visible_sets(known),
+                       "definition": "Each event separately: first observed H0 frame of that ply at/after the event, then a half-open one-second cumulative unscaled window. HERO_PRESENT includes final reappearance and is not disappearance evidence."})
+    return result
+
+
+def transition_peak(rows: list[dict], target_fps: int) -> dict:
+    eligible = [r for r in rows if r.get("transitionEnabled") is True and
+                r.get("transitionSuppressed") is not True and finite_number(r.get("transitionStrength")) and
+                r["transitionStrength"] > 0]
+    maximum = max((r["transitionStrength"] for r in eligible), default=None)
+    selected = [r for r in eligible if abs(r["transitionStrength"] - maximum) <= 1e-6] if maximum is not None else []
+    return {"status": "MEASURED" if selected else "NO_ENABLED_POSITIVE_STRENGTH_SAMPLES",
+            "observedPeakStrength": maximum, "strengthTolerance": 1e-6,
+            "eligibleFrames": len(eligible), "summary": summarize(selected, target_fps),
+            "suppressionRecordedForAllEligibleFrames": bool(eligible) and all(isinstance(r.get("transitionSuppressed"), bool) for r in eligible),
+            "meaning": "Observed maximum of enabled, positive dimensional-transition strength; explicitly suppressed frames excluded. Older records do not prove suppression state. This is separate from the ending light, whose measurements are reported independently."}
+
+
+def ending_glow_peak(rows: list[dict], target_fps: int) -> dict:
+    recorded = [r for r in rows if finite_number(r.get("endingGlowLumens")) and r["endingGlowLumens"] >= 0]
+    maximum = max((r["endingGlowLumens"] for r in recorded), default=None)
+    selected = [r for r in recorded if maximum > 0 and r["endingGlowLumens"] >= maximum * .95] if maximum is not None else []
+    return {"status": "MEASURED" if selected else "NO_POSITIVE_LUMENS" if recorded else "NOT_RECORDED",
+            "observedPeakLumens": maximum, "peakWindowMinimumFraction": .95,
+            "recordedFrames": len(recorded), "unavailableSamples": len(rows) - len(recorded),
+            "summary": summarize(selected, target_fps),
+            "meaning": "Frames whose recorded applied ending-light lumens reach at least 95% of the observed positive maximum. No intensity or peak is inferred for old logs from GameEnded time or the source-code sine function."}
+
+
+def resolution_evidence(header: dict, rows: list[dict], external: dict, warnings: list[str]) -> dict:
+    def pair(width, height):
+        return {"width": width, "height": height} if all(isinstance(v, int) and not isinstance(v, bool) and v > 0 for v in (width, height)) else None
+    requested_data = external.get("requestedResolution") or {}
+    launcher_request = pair(requested_data.get("width"), requested_data.get("height"))
+    header_request = pair(header.get("requestedWidth"), header.get("requestedHeight"))
+    requested = launcher_request or header_request
+    if launcher_request is not None and header_request is not None and launcher_request != header_request:
+        warnings.append("Launcher and runtime-header requested dimensions disagree; both requests are retained and launcher request is used for comparison.")
+    recorded = pair(header.get("width"), header.get("height"))
+    mismatch = requested != recorded if requested is not None and recorded is not None else None
+    if mismatch:
+        warnings.append(f"Requested output {requested['width']}x{requested['height']} differs from runtime header {recorded['width']}x{recorded['height']}; requested resolution is not proven by this header.")
+    def series(prefix):
+        observations, changes, previous, mismatches = [], [], None, 0
+        for row in rows:
+            dimensions = pair(row.get(prefix + "Width"), row.get(prefix + "Height"))
+            if dimensions is None:
+                continue
+            observations.append(dimensions)
+            if dimensions != previous:
+                changes.append({"frame": row.get("frame"), "sampleIndex": row.get("_sampleIndex"),
+                                "measuredSeconds": row.get("_measuredSeconds"), **dimensions})
+                previous = dimensions
+            if prefix == "output" and requested is not None and dimensions != requested:
+                mismatches += 1
+        return {"status": "MEASURED" if observations else "NOT_AVAILABLE", "samples": len(observations),
+                "unavailableSamples": len(rows) - len(observations), "changes": changes,
+                "requestedMismatchSamples": mismatches if prefix == "output" and requested is not None else None}
+    output, internal = series("output"), series("internal")
+    if output["requestedMismatchSamples"]:
+        warnings.append(f"Runtime per-frame output dimensions disagree with launcher request in {output['requestedMismatchSamples']} measured frames.")
+    return {"requestedOutput": requested, "requestedSource": "launcher" if launcher_request else "header" if header_request else None,
+            "launcherRequest": launcher_request, "headerRequest": header_request,
+            "headerOutput": recorded, "headerRequestMismatch": mismatch,
+            "outputFrames": output, "internalFrames": internal,
+            "meaning": "Launcher dimensions are requests. Header dimensions are a startup observation, not proof they stayed fixed. Future outputWidth/outputHeight and internalWidth/internalHeight fields provide measured changes. Missing internal dimensions are not inferred from the 100% label."}
+
+
+def startup_classification(external: dict) -> dict:
+    ordinal, pid = external.get("processRunIndex"), external.get("processId")
+    known = isinstance(ordinal, int) and ordinal > 0 and isinstance(pid, int) and pid > 0
+    return {"status": ("FIRST_RECORDED_RUN_IN_PROCESS" if ordinal == 1 else "WARM_RESTART_SAME_PROCESS") if known else "PROCESS_START_UNKNOWN",
+            "processId": pid, "processRunIndex": ordinal, "processStartedUtc": external.get("processStartedUtc"),
+            "recordedRunsInProcess": external.get("recordedRunsInProcess"),
+            "meaning": "Ordered runtime headers under one launcher's child PID distinguish the first recorded run from later same-process runs. Per-run cold/warm summaries remain compatible; later runs' initial intervals are not process-cold. OS, disk, driver and shader cache coldness is not established."}
+
+
 def external_measurements(path: Path, header: dict, runtime_root: Path) -> dict:
     launcher_path = None
     for parent in (path, *path.parents):
@@ -335,13 +458,17 @@ def external_measurements(path: Path, header: dict, runtime_root: Path) -> dict:
     memory_path = launcher_path.parent / launch.get("memoryFile", "process-memory.jsonl")
     samples = read_jsonl(memory_path, warnings)
     start = utc_datetime(header.get("startedUtc"))
-    following = []
+    following, siblings = [], []
     if start:
         for other in launcher_path.parent.rglob("header.json"):
             other_header = read_json(other, warnings)
             timestamp = utc_datetime(other_header.get("startedUtc")) if isinstance(other_header, dict) else None
+            if timestamp:
+                siblings.append((timestamp, str(other.resolve())))
             if timestamp and timestamp > start:
                 following.append(timestamp)
+    siblings.sort()
+    run_index = next((i + 1 for i, (_, filename) in enumerate(siblings) if filename == str((path / "header.json").resolve())), None)
     end = min(following) if following else utc_datetime(launch.get("endedUtc"))
     selected = []
     gpu_corrections = []
@@ -372,6 +499,8 @@ def external_measurements(path: Path, header: dict, runtime_root: Path) -> dict:
             "launcherSha256": digest(launcher_path), "memoryPath": relative(memory_path),
             "memorySha256": digest(memory_path) if memory_path.is_file() else None,
             "processId": launch.get("processId"), "launchKind": launch.get("runKind"), "launchStatus": launch.get("status"),
+            "processStartedUtc": launch.get("startedUtc"), "processRunIndex": run_index, "recordedRunsInProcess": len(siblings),
+            "requestedResolution": {"width": launch.get("width"), "height": launch.get("height")},
             "exitCode": launch.get("exitCode"), "executableSha256": launch.get("executableSha256"),
             "runWindowStartUtc": start.isoformat() if start else None, "runWindowEndUtc": end.isoformat() if end else None,
             "windowDefinition": "Run header startedUtc through next run header or launcher end; samples must match launcher child PID.",
@@ -414,6 +543,7 @@ def analyze_run(path: Path, args, manifests: list[dict]) -> dict:
         definition = f"Frames beginning in first {args.cold_seconds:g} cumulative unscaled frame-duration seconds; remaining frames warm. Playback elapsed is not used."
     category, category_reasons = classify(path, header, events)
     external = external_measurements(path, header, args.runtime)
+    resolution = resolution_evidence(header, frames, external, warnings)
     if external.get("launchKind") == "Automation":
         category, category_reasons = "automation", ["Launcher explicitly records Automation."]
     elif external.get("launchKind") == "Smoke":
@@ -443,7 +573,13 @@ def analyze_run(path: Path, args, manifests: list[dict]) -> dict:
             "completion": {"transcriptPlies": record_count, "expectedPlies": contract["expectedPlies"], "independentVerificationEvents": independent, "gameEndedEvents": ended,
                            "failureEvents": failures, "performanceClosed": performance is not None,
                            "status": "RECORDED_COMPLETE" if record_count == contract["expectedPlies"] and independent and ended and not failures else "INCOMPLETE_OR_DIAGNOSTIC"},
-            "coldWarmDefinition": definition, "all": stats(frames), "cold": stats(cold), "warm": stats(warm),
+            "coldWarmDefinition": definition, "startupClassification": startup_classification(external),
+            "resolutionEvidence": resolution,
+            "all": stats(frames), "cold": stats(cold), "warm": stats(warm),
+            "angleWindows": angle_windows(frames, contract["targetFrameRate"]),
+            "returnH0Windows": return_h0_windows(frames, events, contract["targetFrameRate"]),
+            "transitionPeak": transition_peak(frames, contract["targetFrameRate"]),
+            "endingGlowPeak": ending_glow_peak(frames, contract["targetFrameRate"]),
             "byScene": by_scene, "stressWindows": {"angles40to50Degrees": stats([r for r in frames if 40 <= r.get("angle", -1) <= 50]),
                 "firstSecondAfterReturnH0": stats(list({r["_sampleIndex"]:r for r in disappearance}.values())),
                 "firstTwoSecondsAfterGameEnded": stats(final_window),
@@ -467,10 +603,13 @@ def markdown(report: dict) -> str:
              "- 中央値は通常の中央値、p95/p99はnearest-rank、最悪値は最大値です。CPU/GPUの0値・未記録値は欠測とします。present waitの0値はCPUタイミングが同時取得されている場合のみ有効です。",
              f"- cold/warm: {report['coldWarmMethodJa']}",
              "- cold/warmは各run内の区分です。同一プロセスの再生ループでは、先頭区間をプロセスの完全なcold起動と呼べません。",
+             "- 起動区分はlauncherのPIDと記録開始順で判定します。最初の記録runでもOS・GPU・シェーダーキャッシュのcold状態は証明しません。出力解像度は要求値・開始時header・フレーム実測を区別します。",
              "- frameMsは実描画フレーム間隔。CPU main/render、GPU、CPU present waitは取得できたタイマーだけを表示し、加算しません。present waitがない旧runは未取得です。",
              "- sectionMsは最後に行った断面更新の所要時間です。更新がないフレームにも同じ値が記録されるため、毎フレームの実作業時間として加算できません。",
              "- 目標のフレーム予算はheaderに従い、30fpsなら33.333ms、旧60fpsなら16.667msです。厳密境界の超過には微小な描画周期の揺れも含まれます。JSONには両基準と、明示した小さい許容幅を加えた超過数を別々に保存します。",
              "- 終局VFXの窓はGameEndedイベント以後の実時間2秒です。王捕獲commitからH0へ帰還する演出時間をVFXの計測へ混ぜません。",
+             "- 全角度の5°区分と0°/90°の端点を別集計します。40–50°は従来の比較窓で、最悪角の証明ではありません。各H0帰還は個別に記録し、最終再出現を消失と区別します。",
+             "- 次元効果のpeakは有効な実測strengthの最大値です。終局光は記録lumensが観測最大の95%以上のフレームを別集計し、旧runの未記録強度は推測しません。",
              "- monoBytes/totalAllocatedBytesはメモリー占有値。傾きは占有量の推移で、割当バイト/秒ではありません。新runのGCは世代0/1/2を分離して表示し、合計しません。旧smokeの世代合計は重複を含む可能性があり、新runの世代0カウンターと比較しません。",
              "- ヘッダーのVRAM値はハードウェア容量です。外部WDDMカウンターがある場合はプロセス専用/共有GPUメモリー使用量を別表示し、厳密な物理常駐VRAMと同一視しません。",
              "- build GUID/sourceHash/sourceManifestSha256の完全一致があるmanifestのみ関連付けます。新しいmanifestを古いrunへ推測で割り当てません。", "",
@@ -493,11 +632,16 @@ def markdown(report: dict) -> str:
                   f"GPU: {h.get('device','未取得')} / API: {h.get('graphicsApi','未取得')} / 記録driver欄: {h.get('driver','未取得')}。",
                   f"AA: {h.get('antialiasing','未取得')}、内部解像度: {h.get('internalResolution','未取得')}、出力: {h.get('width','?')}×{h.get('height','?')}、VRAM容量: {h.get('graphicsMemoryMB','未取得')} MB。",
                   f"撮影設定: {h.get('captureMode','未記録')}。build/source対応: {run['provenance']['status']}。",
+                  f"起動区分: {run['startupClassification']['status']}、同じlauncher PIDで記録順 {run['startupClassification']['processRunIndex']}。",
                   f"目標: {contract['targetFrameRate']}fps / {budget_ms:.3f}ms、予定{contract['expectedPlies']}手、scenario {contract['scenarioVersion']}。", "",
                   f"| 区間 | n | frame median/p95/p99/worst ms | CPU main median/p95 ms | GPU median/p95 ms | 目標{budget_ms:.3f}ms超の割合 |",
                   "|---|---:|---|---|---|---|"]
         sections = [("全体", run["all"]), ("cold", run["cold"]), ("warm", run["warm"])]
         sections += [(f"Scene {scene}", data["all"]) for scene, data in run["byScene"].items()]
+        sections += [("0°端点", run["angleWindows"]["zeroDegreeHold"]),
+                     ("90°端点", run["angleWindows"]["ninetyDegreeHold"]),
+                     ("次元効果の観測peak", run["transitionPeak"]["summary"]),
+                     ("終局光の観測peak付近", run["endingGlowPeak"]["summary"])]
         sections += [("40–50°", run["stressWindows"]["angles40to50Degrees"]),
                      ("H0帰還後1秒", run["stressWindows"]["firstSecondAfterReturnH0"]),
                      ("GameEnded後のVFX2秒", run["stressWindows"]["firstTwoSecondsAfterGameEnded"])]
@@ -506,6 +650,12 @@ def markdown(report: dict) -> str:
             over = data["targetFrameBudget"]["overBudgetFraction"]
             lines.append(f"| {label} | {data['frames']} | {' / '.join(fmt(f[k]) for k in ('median','p95','p99','worst'))} | {fmt(c['median'])} / {fmt(c['p95'])} | {fmt(g['median'])} / {fmt(g['p95'])} | {fmt(over*100 if over is not None else None)}% |")
         memory = run["all"]["unityTotalAllocatedMemory"]; mono = run["all"]["monoUsedMemory"]; gc = run["all"]["garbageCollectionCounters"]
+        resolution = run["resolutionEvidence"]
+        lines += ["", f"解像度の要求: {resolution['requestedOutput']}、開始時header: {resolution['headerOutput']}、不一致: {resolution['headerRequestMismatch']}。",
+                  f"出力寸法のフレーム実測: {resolution['outputFrames']['status']}、内部寸法: {resolution['internalFrames']['status']}。変更履歴はJSONに保存。",
+                  f"次元効果の観測最大strength: {run['transitionPeak']['observedPeakStrength']}。終局光: {run['endingGlowPeak']['status']} / 観測最大 {run['endingGlowPeak']['observedPeakLumens']} lm。"]
+        for returned in run["returnH0Windows"]:
+            lines.append(f"H0帰還 event #{returned['sourceEventIndex']} / ply {returned['event'].get('ply')}: {returned['visibility']}、{returned['summary']['frames']}フレーム。")
         lines += ["", f"Unityメモリー占有の先頭→末尾: {memory.get('firstBytes','未取得')} → {memory.get('lastBytes','未取得')} bytes、最大 {memory.get('maxBytes','未取得')} bytes。",
                   f"Mono占有の先頭→末尾: {mono.get('firstBytes','未取得')} → {mono.get('lastBytes','未取得')} bytes。"]
         if gc["schema"] == "separate-generation-counters/1":

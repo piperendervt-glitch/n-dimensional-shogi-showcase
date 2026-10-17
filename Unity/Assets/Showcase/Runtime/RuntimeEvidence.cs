@@ -13,6 +13,10 @@ namespace Showcase.Unity
         public string runId, startedUtc, unity, device, driver, graphicsApi, profile, mode, occlusion, shape, material, buildSource;
         public string sourceManifestSha256,sourceHash,buildUtc;
         public int width,height,graphicsMemoryMB,seed;
+        public int requestedWidth,requestedHeight;
+        public int requestedRenderWidth,requestedRenderHeight;
+        public string renderingSurface;
+        public string resolutionMeasurement="Header width/height are startup Screen dimensions; each frame records actual screen and camera scaled pixel dimensions.";
         public string rules="showcase-asymmetric-4d-king-capture/0.1", observation="logical-w-zero/1", slice="uw-observer-rotation/1";
         public string antialiasing="SMAA", internalResolution="100%", frameGeneration="off", cpuBudget="5000 nodes";
         public string quality,cpuModel;
@@ -29,6 +33,9 @@ namespace Showcase.Unity
         public int frame,ply,scene,visiblePieces; public double elapsed,angle,frameMs,cpuMainMs,cpuRenderMs,cpuPresentWaitMs,gpuMs,sectionMs;
         public long monoBytes,totalAllocatedBytes,gcDelta,gcGen1Delta,gcGen2Delta; public string stateHash,visibleIds;
         public float transitionStrength;public bool transitionEnabled;
+        public int outputWidth,outputHeight,internalWidth,internalHeight;
+        public int renderedInternalWidth,renderedInternalHeight,renderedCameraFrame;
+        public float endingGlowLumens;
     }
     [Serializable] public sealed class EventEvidence
     {

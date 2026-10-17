@@ -35,6 +35,12 @@ namespace Showcase.Unity
         public bool HasAuditFailures { get=>auditFailures||(gpuFault!=null&&gpuFault.HasFailures);private set=>auditFailures=value; }
         public void BindReflection(Func<HDAdditionalReflectionData> probe)=>reflectionProvider=probe;
         public void BindPlanar(Func<PlanarReflectionProbe> probe)=>planarProvider=probe;
+        // Read-only diagnostic access. The opt-in section regression owns its own
+        // captures and restores every scene change; normal playback never calls it.
+        public Camera BoundCamera=>targetCamera;
+        public SectionView[] SnapshotSections()=>sectionProvider==null?Array.Empty<SectionView>():sectionProvider().Where(v=>v!=null).ToArray();
+        public HDAdditionalReflectionData BoundReflection=>reflectionProvider==null?null:reflectionProvider();
+        public PlanarReflectionProbe BoundPlanar=>planarProvider==null?null:planarProvider();
 
         public void Bind(Camera camera,Func<IEnumerable<SectionView>> sections,Func<long> sectionVersion)
         {

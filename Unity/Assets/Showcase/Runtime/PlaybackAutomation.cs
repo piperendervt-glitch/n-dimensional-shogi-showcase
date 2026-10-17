@@ -71,6 +71,14 @@ namespace Showcase.Unity
             if(failed){Finish();yield break;}
             var initial=controller.InspectPlayback();string initialHash=initial.stateHash;
             Record("initial-state",initial.ply==0&&initial.commitCount==0&&initial.pieceViews==40,"Initial snapshot has 40 views and zero committed moves.",initial);
+            if(args.Contains("--start-paused"))
+            {
+                Record("startup-paused",initial.paused&&initial.elapsed==0&&!initial.reserved,"Explicit startup pause waits before the first scene advances.",initial);
+                yield return HoldAndCheckFrozen(initial,.4f,"startup-pause-stable");
+                if(failed){Finish();yield break;}
+                controller.CommandTogglePause();
+                Record("startup-pause-resume",!controller.InspectPlayback().paused,"Shared Space command starts the paused startup.",controller.InspectPlayback());
+            }
 
             yield return WaitFor(s=>s.reserved,"pending-move-observed",120);
             if(failed){Finish();yield break;}
@@ -103,7 +111,8 @@ namespace Showcase.Unity
 
             // --loops 3 provides two natural completed loops after the deliberate first-run restart.
             var terminalRuns=new HashSet<int>();string finalHash=null;int lastRun=controller.InspectPlayback().runIndex,lastPly=controller.InspectPlayback().ply;
-            bool naturalLoopSeen=false;deadline=Time.realtimeSinceStartup+360;
+            // Two natural v2 loops take roughly 570 seconds at the default speed.
+            bool naturalLoopSeen=false;deadline=Time.realtimeSinceStartup+900;
             while(terminalRuns.Count<2&&Time.realtimeSinceStartup<deadline&&!failed)
             {
                 var s=controller.InspectPlayback();
