@@ -14,14 +14,16 @@ namespace Showcase.Unity.Settings
     // 投影ビュー: every direction a piece can slide in, drawn around the piece at the origin after a perspective projection of the
     // N-dimensional board down to three dimensions (one hidden axis at a time) and then to the screen. The XYZ grids through
     // the origin are projected the same way, so they bend with the hidden-axis rotation. All rays are faint until a cell of the
-    // rotation-plane table or a ±axis button is chosen. The table and the sliders live in a controller panel beside the view:
-    // a cell names a plane (a pair of axes); the plane last clicked is the one the angle slider turns.
+    // rotation-plane table or ±axis buttons are chosen (cells: any of them; ±axes: all of them). The table and the dials live in a
+    // controller panel beside the view: a cell names a plane (a pair of axes); the plane last clicked is the one the big dial turns.
     internal sealed class Cfg2ProjectionView : MonoBehaviour
     {
         Cfg2ProjectionGraphic graphic;Cfg2ProjectionTableGraphic tableGraphic;RectTransform controls,tableRect,listHost;InputOwnership ownership;Func<float> uiScale;Action<string,string> record;
         readonly List<Text> axisLabels=new List<Text>();readonly List<Text> rowLabels=new List<Text>(),columnLabels=new List<Text>();
-        Text countLabel,rotationLabel,axisHint,tableTitle,tableHint,turnTitle,activeLabel,listTitle,listMore,zoomTitle,zoomLabel;Slider angleSlider,zoomSlider;
-        readonly List<Button> axisButtons=new List<Button>(),stepButtons=new List<Button>(),listButtons=new List<Button>();readonly List<Slider> listSliders=new List<Slider>();readonly List<Text> listValues=new List<Text>();
+        Text countLabel,rotationLabel,axisHint,tableTitle,tableHint,turnTitle,activeLabel,dialLabelA,dialLabelB,listTitle,listMore,zoomTitle,zoomLabel;Slider zoomSlider;
+        readonly List<Button> axisButtons=new List<Button>(),stepButtons=new List<Button>();readonly List<Cfg2ProjectionDial> listDials=new List<Cfg2ProjectionDial>();readonly List<Text> listValues=new List<Text>();
+        // The big dial of the active plane, the dial being dragged and the pointer's last position around its centre.
+        Cfg2ProjectionDial activeDial,dragDial;Camera dragCamera;Vector2 dialLast;
         readonly List<(int a,int b)> listedPlanes=new List<(int a,int b)>();Button resetButton,clearButton;
         // Board and piece shown.
         int dimensions=4;string pieceName="",refreshKey;
@@ -52,7 +54,7 @@ namespace Showcase.Unity.Settings
         {
             controls=controller;ownership=input;uiScale=scale;record=recorder;
             Cfg2Ui.ClearOwned(transform,true);Cfg2Ui.ClearOwned(controls,true);
-            axisLabels.Clear();rowLabels.Clear();columnLabels.Clear();axisButtons.Clear();stepButtons.Clear();listButtons.Clear();listSliders.Clear();listValues.Clear();listedPlanes.Clear();
+            axisLabels.Clear();rowLabels.Clear();columnLabels.Clear();axisButtons.Clear();stepButtons.Clear();listDials.Clear();listValues.Clear();listedPlanes.Clear();activeDial=dragDial=null;
             // Rays near a hidden-axis camera project far outside the panel: everything in the view is clipped to it.
             if(!TryGetComponent<RectMask2D>(out _))gameObject.AddComponent<RectMask2D>();
             var rect=CfgUi.Rect(transform,"Projected directions",0,0,1,1);CfgUi.Fill(rect);
@@ -60,7 +62,7 @@ namespace Showcase.Unity.Settings
             var surface=rect.gameObject.AddComponent<CfgPointerSurface>();surface.Down=OnViewDown;surface.Drag=OnDrag;surface.Up=OnUp;surface.Scroll=OnScroll;
             countLabel=CfgUi.Label(transform,"",10,6,400,22,14,Cfg2Ui.Gold);
             rotationLabel=CfgUi.Label(transform,"",10,28,400,20,12,new Color(.75f,.80f,.86f));
-            axisHint=CfgUi.Label(transform,"方向で選ぶ（＋側・−側）　背景ドラッグ：視点　ホイール：ズーム",10,0,400,18,11,new Color(.62f,.68f,.76f));
+            axisHint=CfgUi.Label(transform,"方向で選ぶ（＋側・−側、複数押すと全部を満たす方向だけ）　背景ドラッグ：視点　ホイール：ズーム",10,0,400,18,11,new Color(.62f,.68f,.76f));
             // Controller: table, angle slider of the active plane, list of turned planes, zoom, reset.
             CfgUi.Label(controls,"回転コントローラー",12,8,300,26,17,Cfg2Ui.Gold);
             tableTitle=CfgUi.Label(controls,"① 面を選ぶ",12,36,300,18,13);
@@ -69,11 +71,13 @@ namespace Showcase.Unity.Settings
             tableGraphic=tableRect.gameObject.AddComponent<Cfg2ProjectionTableGraphic>();tableGraphic.View=this;tableGraphic.color=Color.white;tableGraphic.raycastTarget=true;
             var tableSurface=tableRect.gameObject.AddComponent<CfgPointerSurface>();tableSurface.Down=OnTableDown;tableSurface.Drag=OnDrag;tableSurface.Up=OnUp;
             tableHint=CfgUi.Label(controls,"クリック＝強調＋回す面に。もう一度で解除。\nドラッグ＝その面で回転。右クリック＝全解除。",12,0,320,32,11,new Color(.62f,.68f,.76f));
-            turnTitle=CfgUi.Label(controls,"② 選んだ面を回す",12,0,300,18,13);
+            turnTitle=CfgUi.Label(controls,"② 選んだ面を回す（図をドラッグ）",12,0,300,18,13);
             activeLabel=CfgUi.Label(controls,"",12,0,300,22,15,Cfg2Ui.Gold);
-            angleSlider=Cfg2Ui.Slider(controls,12,0,100,-180,180,0,v=>{if(syncing)return;SetAngle(active,v);UpdateTexts();graphic.SetVerticesDirty();},()=>record?.Invoke("ProjectionTurn","slider "+CellName(active)));
+            activeDial=MakeDial(controls,active,true);
+            dialLabelA=CfgUi.Label(controls,"",0,0,24,20,14);dialLabelB=CfgUi.Label(controls,"",0,0,24,20,14);dialLabelA.alignment=dialLabelB.alignment=TextAnchor.MiddleCenter;
+            Cfg2Glow.GlowText(dialLabelA,Color.white);Cfg2Glow.GlowText(dialLabelB,Color.white);
             foreach(var step in new[]{-15,0,15}){int s=step;stepButtons.Add(Cfg2Ui.Button(controls,s==0?"0°":(s>0?"+":"−")+Math.Abs(s)+"°",0,0,50,26,()=>{if(s==0)SetAngle(active,0);else AddAngle(active.a,active.b,s);record?.Invoke("ProjectionTurn","step "+CellName(active)+" "+s);UpdateTexts();graphic.SetVerticesDirty();}));}
-            listTitle=CfgUi.Label(controls,"③ 回した面（名前を押すと選び直し）",12,0,320,18,13);
+            listTitle=CfgUi.Label(controls,"③ 回した面（図をドラッグで回す・押すと②に）",12,0,320,18,13);
             listHost=CfgUi.Rect(controls,"Turned planes",12,0,100,10);listMore=CfgUi.Label(controls,"",12,0,300,18,11,new Color(.62f,.68f,.76f));
             zoomTitle=CfgUi.Label(controls,"④ ズーム",12,0,120,18,13);zoomLabel=CfgUi.Label(controls,"",0,0,80,18,13,Cfg2Ui.Gold);zoomLabel.alignment=TextAnchor.MiddleRight;
             zoomSlider=Cfg2Ui.Slider(controls,12,0,100,MinZoom,MaxZoom,1,v=>{if(syncing)return;zoom=v;UpdateTexts();graphic.SetVerticesDirty();},()=>record?.Invoke("ProjectionZoom",zoom.ToString("0.00",CultureInfo.InvariantCulture)));
@@ -89,7 +93,7 @@ namespace Showcase.Unity.Settings
             // The list only changes with the rules or the piece; a view change (the usual reason for a refresh) keeps it.
             string key=(preset?.RuleHash??"")+"/"+definitionId+"/"+n;
             if(key==refreshKey&&pieceName==displayName)return;refreshKey=key;
-            if(n!=dimensions){dimensions=n;selected.RemoveWhere(c=>c.a>=n||c.b>=n);axisSelected.RemoveWhere(c=>c.axis>=n);hovered=null;ResetRotation(false);EnsureLabels();EnsureAxisButtons();Layout();}
+            if(n!=dimensions){dimensions=n;selected.RemoveWhere(c=>c.a>=n||c.b>=n);axisSelected.RemoveWhere(c=>c.axis>=n);hovered=null;ResetRotation(false);EnsureLabels();EnsureAxisButtons();Layout();UpdateTexts();}
             pieceName=displayName;directions.Clear();rayLength=1;
             if(definition!=null&&definition.IsSupported)
             {
@@ -173,17 +177,24 @@ namespace Showcase.Unity.Settings
         internal IReadOnlyList<int[]> Directions=>directions;
         internal int Dimensions=>dimensions;
         internal const double AxisLength=5;
-        // Highlight level of a direction: 2 chosen (by a cell or a ±axis button), 1 hovered, 0 faint; 1 for every ray while nothing is chosen.
+        // Highlight level of a direction: 2 chosen, 1 hovered, 0 faint; 1 for every ray while nothing is chosen. A direction is chosen
+        // when it lies in any chosen cell's plane AND moves towards every chosen ±axis (+X and −X together light nothing).
         internal int Level(int[] d)
         {
             if(!AnyChoice)return 1;
-            foreach(var c in selected)if(d[c.a]!=0&&d[c.b]!=0)return 2;
-            foreach(var s in axisSelected)if(Math.Sign(d[s.axis])==s.sign)return 2;
+            if(selected.Count>0||axisSelected.Count>0)
+            {
+                bool planes=selected.Count==0;if(!planes)foreach(var c in selected)if(d[c.a]!=0&&d[c.b]!=0){planes=true;break;}
+                bool axes=planes;if(axes)foreach(var s in axisSelected)if(Math.Sign(d[s.axis])!=s.sign){axes=false;break;}
+                if(planes&&axes)return 2;
+            }
             if(hovered.HasValue&&d[hovered.Value.a]!=0&&d[hovered.Value.b]!=0)return 1;
             return 0;
         }
         internal bool AnyChoice=>selected.Count>0||axisSelected.Count>0||hovered.HasValue;
         internal (int a,int b)? Dragging=>dragging;
+        // The plane being turned by a table cell or a dial.
+        internal (int a,int b)? Turning=>dragging??(dragDial!=null?dragDial.Plane:((int a,int b)?)null);
         // ---- table geometry (inside tableRect; cell (row,column) with row<=column) ----
         internal float CellSize{get{float room=controls==null?100:controls.rect.width-52;return Mathf.Clamp(Mathf.Floor(room/Math.Max(1,dimensions)),10,40);}}
         internal Rect CellRect(int row,int column){float cs=CellSize;return new Rect(column*cs,-row*cs-cs,cs,cs);}
@@ -200,8 +211,8 @@ namespace Showcase.Unity.Settings
             if(pressed||ownership.Owner!=InputOwner.None||CfgUi.EditingText)return false;
             if(e.button==PointerEventData.InputButton.Right){ClearSelection();return false;}
             if(e.button!=PointerEventData.InputButton.Left)return false;
-            if(!ownership.TryBegin(InputOwner.Rotation4D,e.pointerId,()=>{pressed=false;dragging=null;orbiting=false;}))return false;
-            pressed=true;moved=false;pointer=e.pointerId;downPosition=lastPosition=e.position;orbiting=false;dragging=null;return true;
+            if(!ownership.TryBegin(InputOwner.Rotation4D,e.pointerId,()=>{pressed=false;dragging=null;dragDial=null;orbiting=false;}))return false;
+            pressed=true;moved=false;pointer=e.pointerId;downPosition=lastPosition=e.position;orbiting=false;dragging=null;dragDial=null;return true;
         }
         void OnViewDown(PointerEventData e){if(Begin(e))orbiting=true;}
         void OnTableDown(PointerEventData e)
@@ -209,13 +220,33 @@ namespace Showcase.Unity.Settings
             if(!TableLocal(e.position,e.pressEventCamera,out var local)||!TryCell(local,out var cell)){if(e.button==PointerEventData.InputButton.Right)ClearSelection();return;}
             if(Begin(e))dragging=cell;
         }
+        void OnDialDown(Cfg2ProjectionDial dial,PointerEventData e)
+        {
+            if(!Begin(e))return;dragDial=dial;dragCamera=e.pressEventCamera;DialLocal(dial,e.position,out dialLast);
+        }
+        bool DialLocal(Cfg2ProjectionDial dial,Vector2 screen,out Vector2 local)
+        {
+            if(!RectTransformUtility.ScreenPointToLocalPointInRectangle(dial.rectTransform,screen,dragCamera,out local))return false;
+            var r=dial.rectTransform.rect;local-=new Vector2(r.width*.5f,-r.height*.5f);return true;
+        }
         void OnDrag(PointerEventData e)
         {
             if(!pressed||e.pointerId!=pointer||!ownership.IsOwner(InputOwner.Rotation4D,pointer))return;
             float scale=Mathf.Max(.01f,uiScale?.Invoke()??1);var delta=(e.position-lastPosition)/scale;lastPosition=e.position;
             if(!moved&&(e.position-downPosition).magnitude/scale<5)return;moved=true;
-            if(dragging.HasValue&&dragging.Value.a!=dragging.Value.b){active=dragging.Value;AddAngle(dragging.Value.a,dragging.Value.b,delta.x*.6f);}
-            else if(dragging.HasValue){int other=dragging.Value.a==0?1:0;active=(other,dragging.Value.a);AddAngle(other,dragging.Value.a,delta.x*.6f);}
+            if(dragDial!=null)
+            {
+                // Around the centre the pointer's angle turns the plane; close to the centre a sideways drag does, so nothing spins wildly.
+                var plane=dragDial.Plane;active=plane;
+                if(DialLocal(dragDial,e.position,out var now))
+                {
+                    if(now.magnitude>8&&dialLast.magnitude>8)AddAngle(plane.a,plane.b,Mathf.DeltaAngle(Mathf.Atan2(dialLast.y,dialLast.x)*Mathf.Rad2Deg,Mathf.Atan2(now.y,now.x)*Mathf.Rad2Deg));
+                    else AddAngle(plane.a,plane.b,delta.x*.6f);
+                    dialLast=now;
+                }
+            }
+            else if(dragging.HasValue&&dragging.Value.a!=dragging.Value.b){active=dragging.Value;AddAngle(dragging.Value.a,dragging.Value.b,delta.x*.6f);}
+            else if(dragging.HasValue){int other=dragging.Value.a==0?1:0;active=other<dragging.Value.a?(other,dragging.Value.a):(dragging.Value.a,other);AddAngle(other,dragging.Value.a,delta.x*.6f);}
             else if(orbiting){yaw+=delta.x*.4f;pitch=Mathf.Clamp(pitch-delta.y*.4f,-80,80);}
             UpdateTexts();graphic.SetVerticesDirty();
         }
@@ -223,14 +254,15 @@ namespace Showcase.Unity.Settings
         {
             if(!pressed||e.pointerId!=pointer)return;pressed=false;
             bool owned=ownership.IsOwner(InputOwner.Rotation4D,pointer);if(owned)ownership.Release(InputOwner.Rotation4D,pointer);
-            if(!moved&&dragging.HasValue)
+            if(!moved&&dragDial!=null){SetActive(dragDial.Plane);record?.Invoke("ProjectionActive",CellName(dragDial.Plane));}
+            else if(!moved&&dragging.HasValue)
             {
                 var cell=dragging.Value;bool on=!selected.Remove(cell);if(on)selected.Add(cell);
                 if(on&&cell.a!=cell.b)active=cell;
                 record?.Invoke("ProjectionSelect",CellName(cell)+"="+on);
             }
-            else if(moved)record?.Invoke("ProjectionTurn",dragging.HasValue?CellName(dragging.Value):"orbit");
-            dragging=null;orbiting=false;UpdateTexts();graphic.SetVerticesDirty();
+            else if(moved)record?.Invoke("ProjectionTurn",dragDial!=null?"dial "+CellName(dragDial.Plane):dragging.HasValue?CellName(dragging.Value):"orbit");
+            dragging=null;dragDial=null;orbiting=false;UpdateTexts();graphic.SetVerticesDirty();
         }
         void OnScroll(PointerEventData e)
         {
@@ -239,17 +271,30 @@ namespace Showcase.Unity.Settings
         }
         void Update()
         {
-            if(pressed&&!ownership.IsOwner(InputOwner.Rotation4D,pointer)){pressed=false;dragging=null;orbiting=false;}
-            // Hover: the cell under the mouse while no gesture is running.
+            if(pressed&&!ownership.IsOwner(InputOwner.Rotation4D,pointer)){pressed=false;dragging=null;dragDial=null;orbiting=false;}
+            // Hover: the cell or the dial under the mouse while no gesture is running.
             (int a,int b)? over=null;
-            if(!pressed&&tableRect!=null&&tableRect.gameObject.activeInHierarchy&&TableLocal(Input.mousePosition,null,out var local)&&TryCell(local,out var cell))over=cell;
+            if(!pressed&&tableRect!=null&&tableRect.gameObject.activeInHierarchy)
+            {
+                if(TableLocal(Input.mousePosition,null,out var local)&&TryCell(local,out var cell))over=cell;
+                else if(activeDial!=null&&RectTransformUtility.RectangleContainsScreenPoint(activeDial.rectTransform,Input.mousePosition,null))over=activeDial.Plane;
+                else foreach(var dial in listDials)if(dial.gameObject.activeSelf&&RectTransformUtility.RectangleContainsScreenPoint(dial.rectTransform,Input.mousePosition,null)){over=dial.Plane;break;}
+            }
             if(!Nullable.Equals(over,hovered)){hovered=over;UpdateTexts();graphic.SetVerticesDirty();}
         }
-        void OnDisable(){if(pressed&&ownership!=null&&ownership.IsOwner(InputOwner.Rotation4D,pointer))ownership.Cancel();pressed=false;dragging=null;orbiting=false;hovered=null;}
+        void OnDisable(){if(pressed&&ownership!=null&&ownership.IsOwner(InputOwner.Rotation4D,pointer))ownership.Cancel();pressed=false;dragging=null;dragDial=null;orbiting=false;hovered=null;}
         void ClearSelection(){if(selected.Count==0&&axisSelected.Count==0)return;selected.Clear();axisSelected.Clear();record?.Invoke("ProjectionSelect","clear");UpdateTexts();graphic.SetVerticesDirty();}
         internal void SetSelected(IEnumerable<(int a,int b)> cells){selected.Clear();foreach(var c in cells)if(c.a<=c.b&&c.b<dimensions)selected.Add(c);UpdateTexts();graphic?.SetVerticesDirty();}
         internal void SetAxisSelected(int axis,int sign,bool on){var key=(axis,Math.Sign(sign));if(on)axisSelected.Add(key);else axisSelected.Remove(key);UpdateTexts();graphic?.SetVerticesDirty();}
-        internal void SetActive((int a,int b) plane){if(plane.a!=plane.b&&plane.b<dimensions)active=plane.a<plane.b?plane:(plane.b,plane.a);UpdateTexts();}
+        internal void SetActive((int a,int b) plane){if(plane.a!=plane.b&&plane.a<dimensions&&plane.b<dimensions)active=plane.a<plane.b?plane:(plane.b,plane.a);UpdateTexts();}
+        // One Graphic per GameObject: the dial draws itself and takes the pointer; the pointer surface beside it reports to the view.
+        Cfg2ProjectionDial MakeDial(Transform parent,(int a,int b) plane,bool large)
+        {
+            var r=CfgUi.Rect(parent,"Plane dial "+CellName(plane),0,0,60,60);
+            var dial=r.gameObject.AddComponent<Cfg2ProjectionDial>();dial.View=this;dial.Plane=plane;dial.Large=large;dial.color=Color.white;dial.raycastTarget=true;
+            var surface=r.gameObject.AddComponent<CfgPointerSurface>();surface.Down=e=>OnDialDown(dial,e);surface.Drag=OnDrag;surface.Up=OnUp;
+            return dial;
+        }
         internal string AxisName(int uiAxis)=>SliceAxes.AxisName(SliceAxes.Axes(Math.Max(dimensions,uiAxis+1))[uiAxis]);
         internal Color AxisColor(int uiAxis)=>Cfg2Projection.AxisColor(SliceAxes.Axes(Math.Max(dimensions,uiAxis+1))[uiAxis]);
         string CellName((int a,int b) c)=>c.a==c.b?AxisName(c.a):AxisName(c.a)+"-"+AxisName(c.b);
@@ -291,24 +336,25 @@ namespace Showcase.Unity.Settings
                 columnLabels[i].rectTransform.anchoredPosition=new Vector2(34+i*cs,-(y+n*cs));columnLabels[i].rectTransform.sizeDelta=new Vector2(cs,16);
             }
             y+=n*cs+20;float hintHeight=cw<260?48:32;tableHint.rectTransform.anchoredPosition=new Vector2(12,-y);tableHint.rectTransform.sizeDelta=new Vector2(cw-24,hintHeight);y+=hintHeight+8;
-            turnTitle.rectTransform.anchoredPosition=new Vector2(12,-y);y+=20;activeLabel.rectTransform.anchoredPosition=new Vector2(12,-y);activeLabel.rectTransform.sizeDelta=new Vector2(cw-24,22);y+=26;
-            var slider=(RectTransform)angleSlider.transform;slider.anchoredPosition=new Vector2(12,-y);slider.sizeDelta=new Vector2(cw-24,24);ResizeSlider(angleSlider,cw-24);y+=32;
+            turnTitle.rectTransform.anchoredPosition=new Vector2(12,-y);turnTitle.rectTransform.sizeDelta=new Vector2(cw-24,18);y+=20;activeLabel.rectTransform.anchoredPosition=new Vector2(12,-y);activeLabel.rectTransform.sizeDelta=new Vector2(cw-24,22);y+=24;
+            // The big dial: as wide as the panel allows, with the axis names floating at its arrow tips (placed in UpdateTexts).
+            float ds=Mathf.Clamp(cw-24-40,100,150);activeDial.rectTransform.anchoredPosition=new Vector2(12+(cw-24-ds)*.5f,-y);activeDial.rectTransform.sizeDelta=new Vector2(ds,ds);y+=ds+8;
             float sw=(cw-24-8)/3;for(int i=0;i<stepButtons.Count;i++){var r=(RectTransform)stepButtons[i].transform;r.anchoredPosition=new Vector2(12+i*(sw+4),-y);r.sizeDelta=new Vector2(sw,26);}y+=40;
             listTitle.rectTransform.anchoredPosition=new Vector2(12,-y);listTitle.rectTransform.sizeDelta=new Vector2(cw-24,18);y+=22;
-            // Rows only as far as the zoom section (58) and the buttons (50) leave room; the rest is named in listMore.
-            // Narrow panels stack the two buttons; rows only as far as the zoom section (58) and the buttons leave room.
-            bool stacked=cw<260;float buttons=stacked?2*30+6:30;const float RowPitch=32;float nameWidth=stacked?46:54;
-            listCapacity=Mathf.Clamp(Mathf.FloorToInt((ch-y-20-58-buttons-20)/RowPitch),0,8);int rows=Math.Min(listedPlanes.Count,listCapacity);
-            listHost.anchoredPosition=new Vector2(12,-y);listHost.sizeDelta=new Vector2(cw-24,Math.Max(10,rows*RowPitch));
+            // Small dials in a grid, as many as fit above the zoom section (58) and the buttons; the rest is named in listMore.
+            bool stacked=cw<260;float buttons=stacked?2*30+6:30;
+            int columns=Math.Max(1,Mathf.FloorToInt((cw-24)/DialCell));int rowsAvailable=Mathf.FloorToInt((ch-y-20-58-buttons-20)/DialRow);
+            listCapacity=Mathf.Clamp(columns*rowsAvailable,0,MaxListed);int shownCount=Math.Min(listedPlanes.Count,listCapacity);int rows=(shownCount+columns-1)/columns;
+            listHost.anchoredPosition=new Vector2(12,-y);listHost.sizeDelta=new Vector2(cw-24,Math.Max(10,rows*DialRow));
+            float cellX=(cw-24-columns*DialCell)*.5f;
             for(int i=0;i<listedPlanes.Count;i++)
             {
-                bool shown=i<rows;listButtons[i].gameObject.SetActive(shown);listSliders[i].gameObject.SetActive(shown);listValues[i].gameObject.SetActive(shown);
-                var r=(RectTransform)listButtons[i].transform;r.anchoredPosition=new Vector2(0,-i*RowPitch);r.sizeDelta=new Vector2(nameWidth,26);
-                float sliderWidth=cw-24-nameWidth-6-40;
-                var s=(RectTransform)listSliders[i].transform;s.anchoredPosition=new Vector2(nameWidth+6,-(i*RowPitch+1));s.sizeDelta=new Vector2(sliderWidth,24);ResizeSlider(listSliders[i],sliderWidth);
-                listValues[i].rectTransform.anchoredPosition=new Vector2(cw-24-38,-(i*RowPitch+3));listValues[i].rectTransform.sizeDelta=new Vector2(38,20);
+                bool shown=i<shownCount;listDials[i].gameObject.SetActive(shown);listValues[i].gameObject.SetActive(shown);
+                int column=i%columns,row=i/columns;float x=cellX+column*DialCell;
+                listDials[i].rectTransform.anchoredPosition=new Vector2(x+(DialCell-DialSize)*.5f,-row*DialRow);listDials[i].rectTransform.sizeDelta=new Vector2(DialSize,DialSize);
+                listValues[i].rectTransform.anchoredPosition=new Vector2(x,-(row*DialRow+DialSize+2));listValues[i].rectTransform.sizeDelta=new Vector2(DialCell,18);
             }
-            y+=rows*RowPitch;listMore.rectTransform.anchoredPosition=new Vector2(12,-y);if(listMore.text!="")y+=20;y+=12;
+            y+=rows*DialRow;listMore.rectTransform.anchoredPosition=new Vector2(12,-y);if(listMore.text!="")y+=20;y+=12;
             zoomTitle.rectTransform.anchoredPosition=new Vector2(12,-y);zoomLabel.rectTransform.anchoredPosition=new Vector2(cw-12-80,-y);y+=22;
             var zs=(RectTransform)zoomSlider.transform;zs.anchoredPosition=new Vector2(12,-y);zs.sizeDelta=new Vector2(cw-24,24);ResizeSlider(zoomSlider,cw-24);
             float by=Math.Max(y+40,ch-12-buttons);
@@ -341,8 +387,9 @@ namespace Showcase.Unity.Settings
             if(graphic==null)return;
             for(int i=0;i<dimensions&&i<axisLabels.Count;i++){var p=new double[dimensions];p[i]=AxisLength;var k=ToScreen(Project(p,out _));axisLabels[i].rectTransform.anchoredPosition=new Vector2(k.x+8,k.y+12);}
         }
-        // The list shows every plane that has been turned, the active one framed. A row stays once added (a slider being
+        // The list shows every plane that has been turned, the active one ringed in blue. A dial stays once added (one being
         // dragged through 0° must not vanish under the pointer); the list empties only on a reset or a change of N.
+        const float DialCell=72,DialSize=56,DialRow=80;const int MaxListed=12;
         bool listReset;int listCapacity=8;
         void RefreshList()
         {
@@ -352,25 +399,22 @@ namespace Showcase.Unity.Settings
             int shown=Math.Min(planes.Count,Math.Max(listCapacity,1));
             if(!planes.Take(shown).SequenceEqual(listedPlanes))
             {
-                foreach(var b in listButtons)Destroy(b.gameObject);foreach(var s in listSliders)Destroy(s.gameObject);foreach(var t in listValues)Destroy(t.gameObject);
-                listButtons.Clear();listSliders.Clear();listValues.Clear();listedPlanes.Clear();listedPlanes.AddRange(planes.Take(shown));
+                if(dragDial!=null&&listDials.Contains(dragDial)){pressed=false;dragDial=null;ownership.Cancel();}
+                foreach(var d in listDials)Destroy(d.gameObject);foreach(var t in listValues)Destroy(t.gameObject);
+                listDials.Clear();listValues.Clear();listedPlanes.Clear();listedPlanes.AddRange(planes.Take(shown));
                 foreach(var plane in listedPlanes)
                 {
-                    var p=plane;
-                    var b=Cfg2Ui.Button(listHost,CellName(p),0,0,54,26,()=>{SetActive(p);record?.Invoke("ProjectionActive",CellName(p));});var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=12;listButtons.Add(b);
-                    listSliders.Add(Cfg2Ui.Slider(listHost,60,1,100,-180,180,(float)Angle(p.a,p.b),v=>{if(syncing)return;SetAngle(p,v);if(active!=p)active=p;UpdateTexts();graphic.SetVerticesDirty();},()=>record?.Invoke("ProjectionTurn","list "+CellName(p))));
-                    var value=CfgUi.Label(listHost,"",0,0,40,20,12,Cfg2Ui.Gold);value.alignment=TextAnchor.MiddleRight;listValues.Add(value);
+                    listDials.Add(MakeDial(listHost,plane,false));
+                    var value=CfgUi.Label(listHost,"",0,0,72,18,12,Cfg2Ui.Gold);value.alignment=TextAnchor.MiddleCenter;listValues.Add(value);
                 }
                 listMore.text=planes.Count>shown?"ほか "+(planes.Count-shown)+" 面（表から選べます）":"";
                 Layout();
             }
-            syncing=true;
             for(int i=0;i<listedPlanes.Count;i++)
             {
-                double v=Angle(listedPlanes[i].a,listedPlanes[i].b);listSliders[i].value=(float)v;listValues[i].text=v.ToString("0",CultureInfo.InvariantCulture)+"°";
-                MarkSelected(listButtons[i],listedPlanes[i]==active);
+                var p=listedPlanes[i];double v=Angle(p.a,p.b);listValues[i].text=CellName(p)+" "+v.ToString("0",CultureInfo.InvariantCulture)+"°";
+                listValues[i].color=p==active?Cfg2Ui.Gold:new Color(.75f,.80f,.86f);listDials[i].SetVerticesDirty();
             }
-            syncing=false;
         }
         void UpdateTexts()
         {
@@ -385,7 +429,17 @@ namespace Showcase.Unity.Settings
             rotationLabel.text="回転："+(parts.Count==0?"なし":string.Join("  ",parts))+"　ズーム "+Mathf.RoundToInt(zoom*100)+"%"+(chosen.Count>0?"　選択："+string.Join(" ",chosen):"");
             activeLabel.text=CellName(active)+" の回転　"+Angle(active.a,active.b).ToString("0",CultureInfo.InvariantCulture)+"°";
             zoomLabel.text=Mathf.RoundToInt(zoom*100)+"%";
-            syncing=true;angleSlider.value=(float)Angle(active.a,active.b);zoomSlider.value=zoom;syncing=false;
+            syncing=true;zoomSlider.value=zoom;syncing=false;
+            if(activeDial!=null)
+            {
+                activeDial.Plane=active;activeDial.SetVerticesDirty();
+                // Axis names just beyond the arrow tips of the big dial.
+                var r=activeDial.rectTransform;var center=r.anchoredPosition+new Vector2(r.sizeDelta.x*.5f,-r.sizeDelta.y*.5f);float reach=r.sizeDelta.x*.5f-3;
+                float th=(float)(Angle(active.a,active.b)*Math.PI/180);var ea=new Vector2(Mathf.Cos(th),Mathf.Sin(th));var eb=new Vector2(-Mathf.Sin(th),Mathf.Cos(th));
+                dialLabelA.text=AxisName(active.a);dialLabelA.color=AxisColor(active.a);dialLabelA.GetComponent<Outline>().effectColor=Cfg2Glow.Alpha(AxisColor(active.a),.45f);
+                dialLabelB.text=AxisName(active.b);dialLabelB.color=AxisColor(active.b);dialLabelB.GetComponent<Outline>().effectColor=Cfg2Glow.Alpha(AxisColor(active.b),.45f);
+                dialLabelA.rectTransform.anchoredPosition=center+ea*(reach-9)-new Vector2(12,-10);dialLabelB.rectTransform.anchoredPosition=center+eb*(reach-9)-new Vector2(12,-10);
+            }
             for(int i=0;i<axisButtons.Count;i++)MarkSelected(axisButtons[i],axisSelected.Contains((i/2,i%2==0?1:-1)));
             RefreshList();LayoutLabels();tableGraphic?.SetVerticesDirty();
         }
@@ -464,6 +518,31 @@ namespace Showcase.Unity.Settings
             Cfg2Glow.Blob(vh,origin,14,new Color(1,.86f,.55f,.75f));Cfg2Glow.Blob(vh,origin,5,new Color(1,.97f,.88f,1));
         }
     }
+    // A rotation plane as a dial: its two axes drawn as arrows turned by the plane's angle over the faint unturned cross, with the
+    // swept arc between them. Dragging around the centre turns the plane; a click makes it the plane the big dial shows.
+    internal sealed class Cfg2ProjectionDial : MaskableGraphic
+    {
+        public Cfg2ProjectionView View;public (int a,int b) Plane;public bool Large;
+        public override Texture mainTexture=>Cfg2Glow.Texture;
+        static readonly Color Face=new Color(.03f,.045f,.07f,.92f),Edge=new Color(.30f,.34f,.42f),HoverEdge=new Color(.67f,.78f,.94f),ActiveEdge=new Color(.40f,.60f,.93f),Arc=new Color(.91f,.79f,.52f,.85f);
+        protected override void OnPopulateMesh(VertexHelper vh)
+        {
+            vh.Clear();if(View==null||Plane.a==Plane.b||Plane.b>=View.Dimensions)return;var r=rectTransform.rect;var c=new Vector2(r.width*.5f,-r.height*.5f);float radius=Mathf.Min(r.width,r.height)*.5f-3;
+            bool active=View.Active==Plane,turning=View.Turning.HasValue&&View.Turning.Value==Plane,hover=View.Hovered.HasValue&&View.Hovered.Value==Plane;
+            Cfg2Glow.Blob(vh,c,radius*1.3f,Face);
+            var edge=turning||active?ActiveEdge:hover?HoverEdge:Edge;
+            Cfg2Glow.Circle(vh,c,radius,edge,turning?1.4f:active?1.1f:.7f,turning||active?6:3,Large?64:32);
+            for(int i=0;i<12;i++){float t=i*Mathf.PI/6;var d=new Vector2(Mathf.Cos(t),Mathf.Sin(t));Cfg2Glow.Line(vh,c+d*(radius-(i%3==0?6:3)),c+d*(radius-1),Edge,1);}
+            var ca=View.AxisColor(Plane.a);var cb=View.AxisColor(Plane.b);float reach=radius*.78f;
+            Cfg2Glow.Dashed(vh,c,c+new Vector2(reach,0),Cfg2Glow.Alpha(ca,.4f),1.2f,3,3);Cfg2Glow.Dashed(vh,c,c+new Vector2(0,reach),Cfg2Glow.Alpha(cb,.4f),1.2f,3,3);
+            float th=(float)(View.Angle(Plane.a,Plane.b)*Math.PI/180);
+            float arc=radius*.42f;int steps=Mathf.Max(1,Mathf.CeilToInt(Mathf.Abs(th)/(Mathf.PI/24)));
+            for(int i=0;i<steps;i++){float t0=th*i/steps,t1=th*(i+1)/steps;Cfg2Glow.Line(vh,c+new Vector2(Mathf.Cos(t0),Mathf.Sin(t0))*arc,c+new Vector2(Mathf.Cos(t1),Mathf.Sin(t1))*arc,Arc,Large?2.4f:1.6f);}
+            var ea=new Vector2(Mathf.Cos(th),Mathf.Sin(th));var eb=new Vector2(-Mathf.Sin(th),Mathf.Cos(th));
+            Cfg2Glow.Arrow(vh,c,c+ea*reach,ca,Large?1.6f:1.1f);Cfg2Glow.Arrow(vh,c,c+eb*reach,cb,Large?1.6f:1.1f);
+            Cfg2Glow.Blob(vh,c,Large?5:3.5f,new Color(1,.97f,.88f,1));
+        }
+    }
     // Rotation-plane table in the controller: upper triangle incl. the diagonal; the diagonal cell means "directions using this axis".
     internal sealed class Cfg2ProjectionTableGraphic : MaskableGraphic
     {
@@ -477,7 +556,7 @@ namespace Showcase.Unity.Settings
             for(int row=0;row<n;row++)for(int column=row;column<n;column++)
             {
                 var cell=(row,column);var rect=View.CellRect(row,column);
-                bool isSelected=View.Selected.Contains(cell),isHovered=View.Hovered.HasValue&&View.Hovered.Value==cell,isActive=row!=column&&View.Active==cell,rotating=View.Dragging.HasValue&&View.Dragging.Value==cell;
+                bool isSelected=View.Selected.Contains(cell),isHovered=View.Hovered.HasValue&&View.Hovered.Value==cell,isActive=row!=column&&View.Active==cell,rotating=View.Turning.HasValue&&View.Turning.Value==cell;
                 var fill=isSelected?SelectedCell:isHovered?HoverCell:PlainCell;var edge=isHovered?HoverEdge:isSelected?SelectedEdge:PlainEdge;
                 float x=rect.x+1.5f,y=rect.y+rect.height-1.5f,w=rect.width-3,h=rect.height-3;
                 Cfg2Glow.Rect(vh,x,y,w,h,fill);

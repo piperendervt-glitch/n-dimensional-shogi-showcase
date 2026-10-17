@@ -36,7 +36,8 @@ namespace Showcase.Unity.Settings
         }
         void PreviewDown(PointerEventData e)
         {
-            if(session!=null&&session.PresentationPaused)return;
+            // The hand-over presentation and a CPU's shown move do not lock the camera: orbit, pan and zoom stay available in every
+            // match mode (CPU vs CPU included); a cell pick during them is still refused by CommitCell.
             bool control=Input.GetKey(KeyCode.LeftControl)||Input.GetKey(KeyCode.RightControl),shift=Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift);
             BeginPointer(e,control,shift);
         }
@@ -113,7 +114,7 @@ namespace Showcase.Unity.Settings
             Record("CellPick",q+";view="+viewRevision);
         }
         void PreviewScroll(PointerEventData e)
-        {if(ownership.Owner!=InputOwner.None||session?.PresentationPaused==true)return;distance=Mathf.Clamp(distance-e.scrollDelta.y*.035f,.24f,2);manualCamera=true;UpdateCamera();Record("CameraZoom",distance.ToString());}
+        {if(ownership.Owner!=InputOwner.None)return;distance=Mathf.Clamp(distance-e.scrollDelta.y*.035f,.24f,2);manualCamera=true;UpdateCamera();Record("CameraZoom",distance.ToString());}
         void SetTool(string value){tool=value;historyOwner="trial";Notice("試し配置："+value+" / 陣営 "+placementSide);}
         void PlaceAt(QN q)
         {preview.Place(new TrialPiece("trial-"+Guid.NewGuid().ToString("N"),selectedDefinition,placementSide,q));AfterTrial();}

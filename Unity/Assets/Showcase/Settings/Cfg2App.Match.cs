@@ -229,6 +229,8 @@ namespace Showcase.Unity.Settings
             geometryDirty=true;
         }
         bool PresentingMove=>cpuShowResult!=null||resetStage!=0||glide!=null;
+        // Only a 4D rotation gesture holds the section view; camera gestures (orbit, pan, click) leave the CPU's shown move and the turn reset running.
+        bool SectionHeld=>ownership.Owner==InputOwner.Rotation4D;
         float GlideProgress=>glide==null?1:Mathf.Clamp01((Time.unscaledTime-glide.Start)/glide.Seconds);
         CfgVisualPiece[] WithGlide(CfgVisualPiece[] pieces)
         {
@@ -238,7 +240,7 @@ namespace Showcase.Unity.Settings
         }
         bool BeginCpuShow(CpuResult cpu)
         {
-            if(!CpuShowEnabled||cpu.Status!=MatchQueryStatus.Complete||!cpu.Move.HasValue||ownership.Owner!=InputOwner.None)return false;
+            if(!CpuShowEnabled||cpu.Status!=MatchQueryStatus.Complete||!cpu.Move.HasValue||SectionHeld)return false;
             var move=cpu.Move.Value;var embedding=slice.DisplayState.Embedding;
             var from=CfgPreviewRenderer.V(move.From)+embedding;var to=CfgPreviewRenderer.V(move.To)+embedding;
             cpuShowView=SliceAxes.SectionContaining(from,to,slice.StableSection??ReferenceSection.Initial(slice.Frame.Dimensions));
@@ -250,7 +252,7 @@ namespace Showcase.Unity.Settings
         {
             if(cpuShowResult==null)return;
             // The player took the view mid-show: keep their view and commit at once.
-            if(ownership.Owner!=InputOwner.None){FinishCpuShow();return;}
+            if(SectionHeld){FinishCpuShow();return;}
             if(cpuShowStage==1)
             {
                 if(slice.IsAnimating||slice.QueuedSection.HasValue)return;
@@ -309,7 +311,7 @@ namespace Showcase.Unity.Settings
             // The hand-over waits until the moving piece has arrived.
             if(session.PresentationPaused&&glide==null)
             {
-                if(ownership.Owner!=InputOwner.None)
+                if(SectionHeld)
                 {CancelTurnReset();session.CompletePresentation();presentationStart=-1;Record("PresentationCompleted","input owner retained the view");}
                 else
                 {
