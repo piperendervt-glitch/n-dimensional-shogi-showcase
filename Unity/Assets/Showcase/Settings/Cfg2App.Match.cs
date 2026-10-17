@@ -48,6 +48,12 @@ namespace Showcase.Unity.Settings
         bool MagnifierDotsEnabled{get=>Pref(MagnifierDotsKey);set=>SetPref(MagnifierDotsKey,value);}
         bool PanelDotsEnabled{get=>Pref(PanelDotsKey);set=>SetPref(PanelDotsKey,value);}
         Text selectionText;
+        // Off (default): the right column keeps the panels of the start section in place and marks whichever one the board shows.
+        // On: the column is rebuilt around the board's section, the panels gliding to their new places.
+        const string PanelsFollowKey="cfg2.panels-follow-section";
+        bool PanelsFollowSection{get=>PlayerPrefs.GetInt(PanelsFollowKey,0)!=0;set=>SetPref(PanelsFollowKey,value);}
+        ReferenceSection LayoutSection=>PanelsFollowSection?slice.TargetSection:ReferenceSection.Initial(slice.Frame.Dimensions);
+        readonly List<Color?> minisBorders=new List<Color?>();
         // The pieces handed to the panels with their last redraw; the magnifier redraws when they change.
         List<(VecN world,Side side,bool selected)> panelPieces;long panelPiecesRevision;
         void CreateMatchHud()
@@ -102,14 +108,15 @@ namespace Showcase.Unity.Settings
             WritePlayerIdentity("Play");
         }
         // In 4D the four panels are the four reference views, as always. In higher N the column reaches the right edge of the
-        // screen: the section the display is heading to on top, then the three sections that swap in the Ctrl-rotation axis
+        // screen: on top the start section (or, when the column follows the board, the section the display is heading to), then the three sections that swap in the Ctrl-rotation axis
         // (the only ones that stay planes while Ctrl+drag turns the view), then every other swap section small, one row of
         // three per hidden axis. Hovering a small panel shows it magnified to the left of the column. A 3D board hides no axis:
         // its column is the current section alone. When only the sections change (same N, same places) the panels are kept
         // and shown the new sections; rebuild forces new panels.
         void RebuildMinis(bool rebuild=false)
         {
-            int n=slice.Frame.Dimensions;var current=slice.TargetSection;float right=MinisRight();
+            int n=slice.Frame.Dimensions;var current=LayoutSection;bool follow=PanelsFollowSection;float right=MinisRight();
+            foreach(var mini in minis)mini.EndGlide();
             var panels=new List<(float x,float y,float w,float h,ReferenceSection view,Color? border,bool small)>();var labels=new List<(float x,float y,float w,string text,Color color)>();
             var gizmo=new Vector2(1310,-70);
             if(n==4)for(int i=0;i<4;i++)panels.Add((1310,MinisTop+i*133,200,125,ReferenceSection.Of((ReferenceView)i),null,false));
@@ -122,14 +129,15 @@ namespace Showcase.Unity.Settings
                 if(hidden.Length>0)
                 {
                     var neighbours=current.Neighbours;var activeColor=Cfg2Projection.AxisColor(hidden[active]);
-                    labels.Add((left,y,width,"Ctrl回転軸 "+SliceAxes.AxisName(SliceAxes.AxisOfCore(hidden[active]))+" で行ける断面",activeColor));y+=20;
+                    string activeName=SliceAxes.AxisName(SliceAxes.AxisOfCore(hidden[active]));
+                    labels.Add((left,y,width,follow?"Ctrl回転軸 "+activeName+" で行ける断面":activeName+" を入れた断面（Ctrl回転軸 "+activeName+"）",activeColor));y+=20;
                     float activeWidth=(width-2*gap)/3,activeHeight=Mathf.Min(140,activeWidth);
                     for(int j=0;j<3;j++)panels.Add((left+j*(activeWidth+gap),y,activeWidth,activeHeight,neighbours[active*3+j],activeColor,false));
                     y+=activeHeight+gap;
                     int groups=hidden.Length-1;
                     if(groups>0)
                     {
-                        labels.Add((left,y,width,"ほかの軸（4〜9・0・−キーで上に表示）",new Color(.75f,.79f,.85f)));y+=19;
+                        labels.Add((left,y,width,follow?"ほかの軸（4〜9・0・−キーで上に表示）":"ほかの軸を入れた断面（4〜9・0・−キーで上に表示）",new Color(.75f,.79f,.85f)));y+=19;
                         int perRow=groups<=4?1:2,rows=(groups+perRow-1)/perRow,columns=3*perRow;const float smallGap=5;
                         float cellWidth=(width-(columns-1)*smallGap)/columns,cellHeight=Mathf.Min(activeHeight,(MinisBottom-y-(rows-1)*smallGap)/rows);
                         for(int g=0,slot=0;g<hidden.Length;g++)
@@ -141,11 +149,20 @@ namespace Showcase.Unity.Settings
                 }
             }
             minisDimensions=n;minisSection=current;minisActive=RotationCoreAxis;minisRight=right;HideMagnifier();
+            minisBorders.Clear();minisBorders.AddRange(panels.Select(p=>p.border));
             if(matchGizmo!=null)matchGizmo.anchoredPosition=gizmo;
             bool Same(RectTransform r,float x,float y,float w,float h)=>r!=null&&r.anchoredPosition==new Vector2(x,-y)&&r.sizeDelta==new Vector2(w,h);
             if(!rebuild&&minis.Count==panels.Count&&minisLabels.Count==labels.Count&&minis.Select((m,i)=>Same((RectTransform)m.transform,panels[i].x,panels[i].y,panels[i].w,panels[i].h)).All(x=>x)&&minisLabels.Select((l,i)=>Same(l,labels[i].x,labels[i].y,labels[i].w,19)).All(x=>x))
             {
-                for(int i=0;i<panels.Count;i++){minis[i].Retarget(panels[i].view);PanelFrame(minis[i].transform,panels[i].border);}
+                // A section that stays in the column glides from its old place to its new one; a new section grows in where it lands.
+                var was=new Dictionary<ReferenceSection,(Vector2 position,Vector2 size)>();
+                foreach(var mini in minis){var r=(RectTransform)mini.transform;if(!was.ContainsKey(mini.Reference))was.Add(mini.Reference,(r.anchoredPosition,r.sizeDelta));}
+                for(int i=0;i<panels.Count;i++)
+                {
+                    var from=minis[i].Reference;minis[i].Retarget(panels[i].view);PanelFrame(minis[i].transform,panels[i].border);minis[i].Highlighted=false;
+                    if(from==panels[i].view)continue;
+                    if(was.TryGetValue(panels[i].view,out var old))minis[i].GlideFrom(old.position,old.size);else minis[i].GlideFrom(null,null);
+                }
                 for(int i=0;i<labels.Count;i++){var text=minisLabels[i].GetComponentInChildren<Text>();text.text=labels[i].text;text.color=labels[i].color;}
                 Record("MinisRetargeted",current.Name);return;
             }
@@ -173,7 +190,7 @@ namespace Showcase.Unity.Settings
         void EnsureMinis()
         {
             if(matchHud==null||!matchHud.gameObject.activeInHierarchy)return;int n=slice.Frame.Dimensions;
-            if(minis.Count>0&&minisDimensions==n&&(n==4||minisSection==slice.TargetSection&&minisActive==RotationCoreAxis&&Mathf.Abs(minisRight-MinisRight())<.5f))return;
+            if(minis.Count>0&&minisDimensions==n&&(n==4||minisSection==LayoutSection&&minisActive==RotationCoreAxis&&Mathf.Abs(minisRight-MinisRight())<.5f))return;
             RebuildMinis();
         }
         // One magnified copy of the small panel under the pointer, drawn left of the column; it never takes input.
@@ -198,7 +215,7 @@ namespace Showcase.Unity.Settings
                 float y=Mathf.Clamp(-source.anchoredPosition.y+source.sizeDelta.y*.5f-size*.5f,MinisTop,MinisBottom-size);
                 rect.anchoredPosition=new Vector2(MinisLeft(minisRight)-14-size,-y);
                 magnifier.Initialize(()=>slice,ownership,hovered.Reference,()=>{},v=>{},()=>canvas.scaleFactor);
-                var glass=Cfg2Ui.Frame(rect);var added=hovered.Reference.Shown.First(axis=>!slice.TargetSection.Shows(axis));
+                var glass=Cfg2Ui.Frame(rect);var added=hovered.Reference.Shown.First(axis=>!minisSection.Shows(axis));
                 if(glass!=null){var color=Cfg2Projection.AxisColor(added);glass.color=new Color(color.r,color.g,color.b,.85f);glass.Glow=true;glass.SetVerticesDirty();}
             }
             if(changed||magnifier.ViewRevision!=slice.ViewRevision||magnifier.CameraRevision!=cameraRevision||magnifier.PiecesRevision!=panelPiecesRevision)
@@ -224,6 +241,17 @@ namespace Showcase.Unity.Settings
             var q=piece.Position.ToArray();int n=session.Config.Dimensions;
             string cell=string.Join(" ",SliceAxes.Axes(n).Select(axis=>{int core=SliceAxes.CoreAxis(axis);return SliceAxes.AxisName(axis)+"="+(core<q.Length?q[core]:0);}));
             return "選択中：<color=#"+ColorUtility.ToHtmlStringRGB(Cfg2PanelDot.Of(piece.Side))+">"+name+"</color>（"+(piece.Side==Side.A?"先手 A":"後手 B")+"）\n<size=14>"+cell+"</size>";
+        }
+        // With the column held in place the board's section can be any panel: that one gets a gold frame (the top panel keeps its glass,
+        // as it does whenever the column follows the board).
+        void MarkBoardSection()
+        {
+            for(int i=0;i<minis.Count&&i<minisBorders.Count;i++)
+            {
+                bool mark=i>0&&minis[i].IsCoincident;if(mark==minis[i].Highlighted)continue;minis[i].Highlighted=mark;
+                if(!mark){PanelFrame(minis[i].transform,minisBorders[i]);continue;}
+                var glass=Cfg2Ui.Frame(minis[i].transform);if(glass!=null){glass.color=new Color(Gold.r,Gold.g,Gold.b,.95f);glass.Glow=true;glass.SetVerticesDirty();}
+            }
         }
         void HideMagnifier(){magnifiedSource=null;if(magnifier!=null&&magnifier.gameObject.activeSelf)magnifier.gameObject.SetActive(false);}
         void ReturnFromMatch()

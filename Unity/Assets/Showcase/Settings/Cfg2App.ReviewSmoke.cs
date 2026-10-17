@@ -106,7 +106,7 @@ namespace Showcase.Unity.Settings
             var target=minis[1].Reference;int before=reviewExceptions;
             ReviewClick(minis[1].GetComponentsInChildren<Button>().First(),"panel title "+target.Name);
             yield return SmokeWait(()=>!slice.IsAnimating&&!slice.QueuedSection.HasValue&&slice.TargetSection==target,"section "+target.Name,10);
-            SmokeCheck(minis.SequenceEqual(built)&&minis[0].Reference==target&&ReviewNothingSelected,"a panel title click turns to its section, keeps the panels and selects nothing (H1, L8)","simulated uGUI pointer down/up/click");
+            SmokeCheck(minis.SequenceEqual(built)&&(PanelsFollowSection?minis[0].Reference==target:minis[0].Reference==ReferenceSection.Initial(5)&&minis[1].Reference==target)&&ReviewNothingSelected,"a panel title click turns to its section, keeps the panels (in place unless they follow the board) and selects nothing (H1, L8)","simulated uGUI pointer down/up/click");
             ReviewNoExceptions(before,"no exception after the panel title click (H1)");
             EventSystem.current.SetSelectedGameObject(minis[2].GetComponentsInChildren<Button>().First().gameObject);RebuildMinis(true);
             SmokeCheck(ReviewNothingSelected&&!minis.Intersect(built).Any(),"a forced rebuild drops a selection held inside the panels it destroys (H1)","explicit fixture selection");

@@ -21,6 +21,8 @@ namespace Showcase.Unity.Settings
         public long ViewRevision {get;private set;}
         public long CameraRevision {get;private set;}
         public long PiecesRevision {get;private set;}
+        // Gold-framed as the board's own section while the column is held in place (the owner sets the frame).
+        public bool Highlighted {get;set;}
         public bool IsCoincident=>graphic!=null&&graphic.Relation!=null&&graphic.Relation.IsCoincident;
         public string FixedCoordinates {get;private set;}="";
         public HyperplaneRelation Relation=>graphic!=null?graphic.Relation:null;
@@ -104,13 +106,34 @@ namespace Showcase.Unity.Settings
             }
             if(legend!=null)legend.gameObject.SetActive(show);
         }
+        // A panel handed a section from another place in the column glides from that place (position and size) to its own;
+        // one with a section new to the column grows in. The layout itself never moves: EndGlide snaps back to it.
+        const float GlideSeconds=.45f;
+        Vector2 glideFrom,glideHome,glideScale;float glideStart=-1;
+        public void GlideFrom(Vector2? position,Vector2? size)
+        {
+            EndGlide();var r=(RectTransform)transform;glideHome=r.anchoredPosition;
+            glideFrom=position??glideHome+r.sizeDelta*new Vector2(.1f,-.1f);
+            var start=size??r.sizeDelta*.8f;glideScale=new Vector2(start.x/Mathf.Max(1,r.sizeDelta.x),start.y/Mathf.Max(1,r.sizeDelta.y));
+            glideStart=Time.unscaledTime;StepGlide();
+        }
+        public void EndGlide()
+        {
+            if(glideStart<0)return;glideStart=-1;var r=(RectTransform)transform;r.anchoredPosition=glideHome;r.localScale=Vector3.one;
+        }
+        void StepGlide()
+        {
+            float t=Mathf.Clamp01((Time.unscaledTime-glideStart)/GlideSeconds),s=t*t*(3-2*t);if(t>=1){EndGlide();return;}
+            var r=(RectTransform)transform;r.anchoredPosition=Vector2.Lerp(glideFrom,glideHome,s);var k=Vector2.Lerp(glideScale,Vector2.one,s);r.localScale=new Vector3(k.x,k.y,1);
+        }
         public bool IsPointerOver(Vector2 screen)=>gameObject.activeInHierarchy&&RectTransformUtility.RectangleContainsScreenPoint((RectTransform)transform,screen,null);
         void Update()
         {
             drag?.Update();
+            if(glideStart>=0)StepGlide();
             if(fade!=null)fade.alpha=Mathf.MoveTowards(fade.alpha,DimWhenFlat&&IsFlat?.45f:1,Time.unscaledDeltaTime*4);
         }
         public void CancelDrag()=>drag?.Cancel();
-        void OnDisable(){CancelDrag();}
+        void OnDisable(){CancelDrag();EndGlide();}
     }
 }
