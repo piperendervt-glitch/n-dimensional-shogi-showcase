@@ -60,7 +60,7 @@ namespace Showcase.Unity.Settings
         void SetMenuIndex(int index,bool sound)
         {
             index=(index%MenuEntries+MenuEntries)%MenuEntries;bool moved=index!=menuIndex;menuIndex=index;
-            for(int i=0;i<MenuEntries;i++)actions["menu-"+i].GetComponent<Image>().color=i==menuIndex?CfgUi.Blue:Dark;
+            for(int i=0;i<MenuEntries;i++)MarkSelected(actions["menu-"+i],i==menuIndex);
             if(moved&&sound)PlayMenuSelect();
         }
         void UpdateMenuKeys(bool typing)
@@ -218,7 +218,7 @@ namespace Showcase.Unity.Settings
             planeTab=7;
             previewRect.gameObject.SetActive(false);projectionRect.gameObject.SetActive(false);planeRect.gameObject.SetActive(false);subspaceRect.gameObject.SetActive(true);
             subspaceView.Initialize(axes,ownership,()=>canvas.scaleFactor,true);subspaceView.Dimensions=CurrentDimensions;
-            for(int i=0;i<6;i++)actions["plane-"+i].GetComponent<Image>().color=Dark;
+            for(int i=0;i<6;i++)MarkSelected(actions["plane-"+i],false);
             ShowSectionAids(true);geometryDirty=true;Record("Subspace",subspaceView.Name);
         }
         // Shows one coordinate plane in the centre. The four fixed tabs are XY XZ XW YZ; any other plane lights no tab.
@@ -228,7 +228,7 @@ namespace Showcase.Unity.Settings
             int tab=Array.IndexOf(TabPlanes,(h,v));planeTab=tab>=0?tab+2:6;
             previewRect.gameObject.SetActive(false);projectionRect.gameObject.SetActive(false);planeRect.gameObject.SetActive(true);subspaceRect.gameObject.SetActive(false);
             planeView.Initialize(h,v,(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);
-            for(int i=0;i<6;i++)actions["plane-"+i].GetComponent<Image>().color=i==planeTab?CfgUi.Blue:Dark;
+            for(int i=0;i<6;i++)MarkSelected(actions["plane-"+i],i==planeTab);
             ShowSectionAids(true);geometryDirty=true;Record("Plane",planeTab.ToString()+";"+planeView.Name);
         }
         // Trial tools, counts, gizmo and the plane diagrams belong to the section tabs; the projection tab hides them.
@@ -306,7 +306,7 @@ namespace Showcase.Unity.Settings
         static readonly System.Collections.Generic.Dictionary<string,string> ShortNames=new System.Collections.Generic.Dictionary<string,string>
         {{"king-step","王（玉将）"},{"rook-h11","飛車"},{"bishop-h22","角行"},{"gold-legacy","金将"},{"silver-legacy","銀将"},{"knight-legacy","桂馬"},{"lance-legacy","香車"},{"pawn-step","歩兵"}};
         void SelectCategory(int index)
-        {RememberScroll();category=index;for(int i=0;i<6;i++)actions["category-"+i].GetComponent<Image>().color=i==index?CfgUi.Blue:Dark;LayoutCategory();BuildDetails();Record("Category",index.ToString());}
+        {RememberScroll();category=index;for(int i=0;i<6;i++)MarkSelected(actions["category-"+i],i==index);LayoutCategory();BuildDetails();Record("Category",index.ToString());}
         void SelectDefinition(string id)
         {
             RememberScroll();selectedDefinition=id;
@@ -319,7 +319,7 @@ namespace Showcase.Unity.Settings
             if(tab==4&&CurrentDimensions<4)tab=0;
             if(tab>=2){var plane=TabPlanes[tab-2];ShowPlane(plane.h,plane.v);return;}
             planeTab=tab;previewRect.gameObject.SetActive(tab==0);projectionRect.gameObject.SetActive(tab==1);planeRect.gameObject.SetActive(false);subspaceRect.gameObject.SetActive(false);
-            for(int i=0;i<6;i++)actions["plane-"+i].GetComponent<Image>().color=i==tab?CfgUi.Blue:Dark;
+            for(int i=0;i<6;i++)MarkSelected(actions["plane-"+i],i==tab);
             ShowSectionAids(tab!=1);geometryDirty=true;Record("Plane",tab.ToString());
         }
         void RememberScroll(){if(detailScroll!=null)detailPositions[detailContext]=detailScroll.verticalNormalizedPosition;}
