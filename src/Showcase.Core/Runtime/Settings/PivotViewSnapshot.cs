@@ -50,7 +50,8 @@ namespace NDShogi.Showcase.Core.Settings
             // Unity Y is up; lowering A by s*h keeps C, B and every piece where they were in 4D.
             if (embeddingId == LegacyBoardAtOriginVersion) this.anchor[1] -= height * cellScale;
             EmbeddingId = EmbeddingVersion; Height = height; HalfWindow = halfWindow; CellScale = cellScale;
-            SelectedPieceId = selectedPieceId; SelectedCell = selectedCell; PlaneReferenceCell = planeReferenceCell; Dimensions = n;
+            // Cells are stored with all N coordinates: a fresh match selects no cell (the padded origin), which must still save as "0,0,0,0".
+            SelectedPieceId = selectedPieceId; SelectedCell = QN.Padded(selectedCell.ToArray(), n); PlaneReferenceCell = QN.Padded(planeReferenceCell.ToArray(), n); Dimensions = n;
         }
 
         private static bool Finite(double value) => !double.IsNaN(value) && !double.IsInfinity(value);

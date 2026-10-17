@@ -317,5 +317,22 @@ static class PivotStorageTests
             string four = Path.Combine(dataRoot, "pivot-4d.xml"); PivotSettingsStore.SaveValid(four, SettingsDraft.CreateMatchDemo(), new MatchOptionsRaw(), PreviewSession.CreateExperiment(), View());
             string fourXml = File.ReadAllText(four); Check(fourXml.Contains("center=\"0,0,3,0\"") && fourXml.Contains("dimensions=\"4\"") && PivotSettingsStore.Load(four).View.Dimensions == 4, "4D bundle keeps its four-component form");
         });
+        test("pivot-unselected-cells-save-as-the-padded-origin-in-every-n", () =>
+        {
+            // A match starts with no selected cell (QN default, which prints as ""); the saved view must still carry N coordinates.
+            foreach (int n in new[] { 4, 5, 7 })
+            {
+                var identity = new double[n * n]; for (int i = 0; i < n; i++) identity[i * n + i] = 1;
+                var center = new double[n]; center[2] = 3;
+                var view = new PivotViewSnapshot(3, center, identity, new double[] { 0, 1.01, 0 }, 4.5, .05, new double[] { 32, 29, .82, 0, 0, 0 }, "", default, default);
+                Check(view.SelectedCell.Dimensions == n && view.PlaneReferenceCell.ToString() == string.Join(",", Enumerable.Repeat("0", n)), "default cells padded to " + n);
+                var draft = SettingsDraft.CreateMatchDemo();
+                if (n != 4) draft.Edit(d => { d.Dimensions = n.ToString(); foreach (var x in d.Definitions) { x.AxesMask = BoundsN.FullAxesMask(n).ToString(); if (x.MaxAxes == "4") x.MaxAxes = n.ToString(); } });
+                string path = Path.Combine(dataRoot, "pivot-unselected-" + n + ".xml");
+                PivotSettingsStore.SaveValid(path, draft, new MatchOptionsRaw(), new PreviewSession(new BoundsN(dimensions: n)), view);
+                var loaded = PivotSettingsStore.Load(path); Check(loaded.View.SelectedCell == default && loaded.View.Dimensions == n, "unselected view round trip in " + n + "D");
+                if (n == 4) Check(File.ReadAllText(path).Contains("selectedCell=\"0,0,0,0\""), "4D unselected cell keeps the original four-zero form");
+            }
+        });
     }
 }
