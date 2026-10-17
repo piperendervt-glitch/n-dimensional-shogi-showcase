@@ -43,7 +43,7 @@ namespace Showcase.Unity.Settings
         void BeginPointer(PointerEventData e,bool control,bool shift)
         {
             if(ownership.Owner!=InputOwner.None)return;
-            if(EventSystem.current?.currentSelectedGameObject?.GetComponent<InputField>()?.isFocused==true)return;
+            if(CfgUi.EditingText)return;
             // Modifiers and scale belong to this entire gesture, including cancel.
             gesture=e.button==PointerEventData.InputButton.Middle?Gesture.Pan:e.button==PointerEventData.InputButton.Right?Gesture.Orbit:control?Gesture.Rotate4D:shift?Gesture.Pan:Gesture.ClickOrbit;
             rotateZw=control&&shift;pointerScale=Mathf.Max(.001f,canvas.scaleFactor);

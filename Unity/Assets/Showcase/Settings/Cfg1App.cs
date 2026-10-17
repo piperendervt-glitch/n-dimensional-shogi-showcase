@@ -231,7 +231,7 @@ namespace Showcase.Unity.Settings
                 geometryDirty=false;foreach(var mini in minis)mini.Refresh(slice.Frame);UpdateCounts();
                 sliceText.text=(slice.IsAnimating?"回転中（任意中間姿勢）":slice.StableView.ToString())+" ｜ 厳密4Dセル断面\n中心(F,U,V,W) "+slice.Frame.Center;
             }
-            bool textInput=EventSystem.current?.currentSelectedGameObject?.GetComponent<InputField>()!=null;
+            bool textInput=CfgUi.SelectedInput!=null;
             if(opened&&!textInput&&modal==null)
             {
                 bool ctrl=Input.GetKey(KeyCode.LeftControl)||Input.GetKey(KeyCode.RightControl);
@@ -353,7 +353,7 @@ namespace Showcase.Unity.Settings
             CloseDialog();modal=CfgUi.Panel(root,"Modal input owner",0,0,1536,1024,new Color(0,0,0,.64f));panel=CfgUi.Panel(modal,"Dialog",468,345,600,300);
             CfgUi.Label(panel,title,25,20,550,66,20);ownership.Cancel();pointerButton=-1;foreach(var mini in minis)mini.CancelDrag();
         }
-        void CloseDialog(){if(modal!=null)Destroy(modal.gameObject);modal=null;}
+        void CloseDialog(){if(modal!=null){CfgUi.ReleaseSelection(modal);Destroy(modal.gameObject);}modal=null;}
         void RequestQuit()
         {
             if(quitting)return;ShowDialog("終了します。保存した設定は今回run内に残ります。",out var p);

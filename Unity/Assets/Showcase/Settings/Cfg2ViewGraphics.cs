@@ -45,7 +45,7 @@ namespace Showcase.Unity.Settings
         internal void Down(LogicalAxis axis,PointerEventData e,Vector2 screenDirection)
         {
             if(e.button!=PointerEventData.InputButton.Left||ownership.Owner!=InputOwner.None||pressed)return;
-            if(EventSystem.current?.currentSelectedGameObject?.GetComponent<InputField>()?.isFocused==true)return;
+            if(CfgUi.EditingText)return;
             down=e.position;pointer=e.pointerId;pressedAxis=axis;pressed=true;moved=false;dragScale=Mathf.Max(.01f,uiScale?.Invoke()??1);
             // Always the live slice: a match or settings switch replaces it.
             drag=new AxisDrag(currentSlice(),ownership);
