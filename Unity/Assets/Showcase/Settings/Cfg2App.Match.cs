@@ -119,8 +119,12 @@ namespace Showcase.Unity.Settings
             float canvasWidth=canvas!=null?((RectTransform)canvas.transform).rect.width:1536;
             return Mathf.Max(1510,1536+Mathf.Max(0,(canvasWidth-1536)*.5f)-14);
         }
+        // A dark strip behind the label keeps it readable over the bright piece tray.
         void MinisLabel(string text,float x,float y,float w,Color color)
-        {var label=CfgUi.Label(matchHud,text,x+2,y,w-4,19,13,color);label.alignment=TextAnchor.MiddleLeft;minisLabels.Add(label.rectTransform);helperPanels.Add(label.rectTransform);}
+        {
+            var back=CfgUi.Rect(matchHud,"Hyperplane label",x,y,w,19);var image=back.gameObject.AddComponent<Image>();image.color=new Color(.02f,.03f,.045f,.72f);image.raycastTarget=false;
+            var label=CfgUi.Label(back,text,2,0,w-4,19,13,color);label.alignment=TextAnchor.MiddleLeft;minisLabels.Add(back);helperPanels.Add(back);
+        }
         void EnsureMinis()
         {
             if(matchHud==null)return;int n=slice.Frame.Dimensions;
