@@ -16,15 +16,19 @@ namespace Showcase.Unity.Settings
     // the origin are projected the same way, so they bend with the hidden-axis rotation. All rays are faint until a cell of the
     // rotation-plane table or ±axis buttons are chosen (cells: any of them; ±axes: all of them). The table and the dials live in a
     // controller panel beside the view: a cell names a plane (a pair of axes); the plane last clicked is the one the big dial turns.
+    // The axis check boxes under the title hide every direction that moves along an unchecked axis, together with that axis and its
+    // part of the XYZ cube grid (the cube flattens to a square, a line, or nothing).
     internal sealed class Cfg2ProjectionView : MonoBehaviour
     {
         Cfg2ProjectionGraphic graphic;Cfg2ProjectionTableGraphic tableGraphic;RectTransform controls,tableRect,listHost;InputOwnership ownership;Func<float> uiScale;Action<string,string> record;
         readonly List<Text> axisLabels=new List<Text>();readonly List<Text> rowLabels=new List<Text>(),columnLabels=new List<Text>();
-        Text countLabel,rotationLabel,axisHint,tableTitle,tableHint,turnTitle,activeLabel,dialLabelA,dialLabelB,listTitle,listMore,zoomTitle,zoomLabel;Slider zoomSlider;
+        Text countLabel,rotationLabel,shownTitle,axisHint,tableTitle,tableHint,turnTitle,activeLabel,dialLabelA,dialLabelB,listTitle,listMore,zoomTitle,zoomLabel;Slider zoomSlider;
         readonly List<Button> axisButtons=new List<Button>(),stepButtons=new List<Button>();readonly List<Cfg2ProjectionDial> listDials=new List<Cfg2ProjectionDial>();readonly List<Text> listValues=new List<Text>();
         // The big dial of the active plane, the dial being dragged and the pointer's last position around its centre.
         Cfg2ProjectionDial activeDial,dragDial;Camera dragCamera;Vector2 dialLast;
         readonly List<(int a,int b)> listedPlanes=new List<(int a,int b)>();Button resetButton,clearButton;
+        // One check box per axis: unchecked axes (UI order) are hidden.
+        readonly List<Toggle> shownToggles=new List<Toggle>();readonly HashSet<int> hiddenAxes=new HashSet<int>();
         // Board and piece shown.
         int dimensions=4;string pieceName="",refreshKey;
         // Directions in UI axis order (X Y Z W V ...), one int[dimensions] each, and the ray length in cells.
@@ -43,6 +47,11 @@ namespace Showcase.Unity.Settings
         internal const float MinZoom=.4f,MaxZoom=3f;
         internal int DirectionCount=>directions.Count;
         internal int HighlightedCount{get;private set;}
+        internal int ShownCount{get;private set;}
+        internal IReadOnlyCollection<int> HiddenAxes=>hiddenAxes;
+        internal bool AxisShown(int axis)=>!hiddenAxes.Contains(axis);
+        // A direction is shown unless it moves along an unchecked axis.
+        internal bool Shown(int[] d){foreach(int axis in hiddenAxes)if(axis<d.Length&&d[axis]!=0)return false;return true;}
         internal IReadOnlyCollection<(int a,int b)> Selected=>selected;
         internal IReadOnlyCollection<(int axis,int sign)> AxisSelected=>axisSelected;
         internal (int a,int b)? Hovered=>hovered;
@@ -54,7 +63,7 @@ namespace Showcase.Unity.Settings
         {
             controls=controller;ownership=input;uiScale=scale;record=recorder;
             Cfg2Ui.ClearOwned(transform,true);Cfg2Ui.ClearOwned(controls,true);
-            axisLabels.Clear();rowLabels.Clear();columnLabels.Clear();axisButtons.Clear();stepButtons.Clear();listDials.Clear();listValues.Clear();listedPlanes.Clear();activeDial=dragDial=null;
+            axisLabels.Clear();rowLabels.Clear();columnLabels.Clear();axisButtons.Clear();shownToggles.Clear();stepButtons.Clear();listDials.Clear();listValues.Clear();listedPlanes.Clear();activeDial=dragDial=null;
             // Rays near a hidden-axis camera project far outside the panel: everything in the view is clipped to it.
             if(!TryGetComponent<RectMask2D>(out _))gameObject.AddComponent<RectMask2D>();
             var rect=CfgUi.Rect(transform,"Projected directions",0,0,1,1);CfgUi.Fill(rect);
@@ -62,6 +71,7 @@ namespace Showcase.Unity.Settings
             var surface=rect.gameObject.AddComponent<CfgPointerSurface>();surface.Down=OnViewDown;surface.Drag=OnDrag;surface.Up=OnUp;surface.Scroll=OnScroll;
             countLabel=CfgUi.Label(transform,"",10,6,400,22,14,Cfg2Ui.Gold);
             rotationLabel=CfgUi.Label(transform,"",10,28,400,20,12,new Color(.75f,.80f,.86f));
+            shownTitle=CfgUi.Label(transform,"表示する軸：",10,50,90,28,12,new Color(.75f,.80f,.86f));shownTitle.alignment=TextAnchor.MiddleLeft;
             axisHint=CfgUi.Label(transform,"方向で選ぶ（＋側・−側。複数押すと全部を満たす方向だけ）\n背景ドラッグ：視点　ホイール：ズーム",10,0,400,32,11,new Color(.62f,.68f,.76f));
             // Controller: table, angle slider of the active plane, list of turned planes, zoom, reset.
             CfgUi.Label(controls,"回転コントローラー",12,8,300,26,17,Cfg2Ui.Gold);
@@ -84,7 +94,7 @@ namespace Showcase.Unity.Settings
             resetButton=Cfg2Ui.Button(controls,"初期位置に戻す",0,0,100,30,()=>ResetRotation());
             clearButton=Cfg2Ui.Button(controls,"選択をクリア",0,0,100,30,ClearSelection);
             foreach(var b in stepButtons.Concat(new[]{resetButton,clearButton})){var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=12;}
-            ResetRotation(false);EnsureLabels();EnsureAxisButtons();Layout();
+            ResetRotation(false);EnsureLabels();EnsureAxisButtons();EnsureShownToggles();Layout();
         }
         // Rebuilds the direction list for the piece. Allowed unit directions of {-1,0,1}^N are enumerated like the preview query does.
         internal void Refresh(PreviewPreset preset,string definitionId,string displayName)
@@ -93,7 +103,7 @@ namespace Showcase.Unity.Settings
             // The list only changes with the rules or the piece; a view change (the usual reason for a refresh) keeps it.
             string key=(preset?.RuleHash??"")+"/"+definitionId+"/"+n;
             if(key==refreshKey&&pieceName==displayName)return;refreshKey=key;
-            if(n!=dimensions){dimensions=n;selected.RemoveWhere(c=>c.a>=n||c.b>=n);axisSelected.RemoveWhere(c=>c.axis>=n);hovered=null;ResetRotation(false);EnsureLabels();EnsureAxisButtons();Layout();UpdateTexts();}
+            if(n!=dimensions){dimensions=n;selected.RemoveWhere(c=>c.a>=n||c.b>=n);axisSelected.RemoveWhere(c=>c.axis>=n);hiddenAxes.RemoveWhere(a=>a>=n);hovered=null;ResetRotation(false);EnsureLabels();EnsureAxisButtons();EnsureShownToggles();Layout();UpdateTexts();}
             pieceName=displayName;directions.Clear();rayLength=1;
             if(definition!=null&&definition.IsSupported)
             {
@@ -177,6 +187,7 @@ namespace Showcase.Unity.Settings
         internal IReadOnlyList<int[]> Directions=>directions;
         internal int Dimensions=>dimensions;
         internal const double AxisLength=5;
+        internal const int GridReach=4;
         // Highlight level of a direction: 2 chosen, 1 hovered, 0 faint; 1 for every ray while nothing is chosen. A direction is chosen
         // when it lies in any chosen cell's plane AND moves towards every chosen ±axis (+X and −X together light nothing).
         internal int Level(int[] d)
@@ -286,6 +297,12 @@ namespace Showcase.Unity.Settings
         void ClearSelection(){if(selected.Count==0&&axisSelected.Count==0)return;selected.Clear();axisSelected.Clear();record?.Invoke("ProjectionSelect","clear");UpdateTexts();graphic.SetVerticesDirty();}
         internal void SetSelected(IEnumerable<(int a,int b)> cells){selected.Clear();foreach(var c in cells)if(c.a<=c.b&&c.b<dimensions)selected.Add(c);UpdateTexts();graphic?.SetVerticesDirty();}
         internal void SetAxisSelected(int axis,int sign,bool on){var key=(axis,Math.Sign(sign));if(on)axisSelected.Add(key);else axisSelected.Remove(key);UpdateTexts();graphic?.SetVerticesDirty();}
+        internal void SetAxisShown(int axis,bool on)
+        {
+            if(axis<0||axis>=dimensions||on==AxisShown(axis))return;if(on)hiddenAxes.Remove(axis);else hiddenAxes.Add(axis);
+            syncing=true;if(axis<shownToggles.Count)shownToggles[axis].isOn=on;syncing=false;
+            UpdateTexts();graphic?.SetVerticesDirty();
+        }
         internal void SetActive((int a,int b) plane){if(plane.a!=plane.b&&plane.a<dimensions&&plane.b<dimensions)active=plane.a<plane.b?plane:(plane.b,plane.a);UpdateTexts();}
         // One Graphic per GameObject: the dial draws itself and takes the pointer; the pointer surface beside it reports to the view.
         Cfg2ProjectionDial MakeDial(Transform parent,(int a,int b) plane,bool large)
@@ -320,11 +337,27 @@ namespace Showcase.Unity.Settings
                 var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=dimensions<=6?13:11;t.color=AxisColor(a);axisButtons.Add(b);
             }
         }
+        // One check box per axis under the title, all checked at first; a change of N keeps the choice of the axes that remain.
+        void EnsureShownToggles()
+        {
+            if(shownToggles.Count!=dimensions)
+            {
+                foreach(var t in shownToggles)Destroy(t.gameObject);shownToggles.Clear();
+                for(int axis=0;axis<dimensions;axis++)
+                {
+                    int a=axis;var t=CfgUi.Toggle(transform,AxisName(a)+"軸",AxisShown(a),0,0,60,v=>{if(syncing)return;SetAxisShown(a,v);record?.Invoke("ProjectionShown",AxisName(a)+"="+v);});
+                    var text=t.GetComponentsInChildren<Text>().First(x=>x.text!="✓");text.fontSize=dimensions<=6?14:12;text.color=AxisColor(a);shownToggles.Add(t);
+                }
+            }
+            syncing=true;for(int i=0;i<shownToggles.Count;i++)shownToggles[i].isOn=AxisShown(i);syncing=false;
+        }
         // Positions every widget from the current sizes of the view and the controller; called after a resize or a change of N.
         internal void Layout()
         {
             if(graphic==null||controls==null)return;float w=((RectTransform)transform).rect.width,h=((RectTransform)transform).rect.height,cw=controls.rect.width,ch=controls.rect.height;
             countLabel.rectTransform.sizeDelta=new Vector2(w-20,22);rotationLabel.rectTransform.sizeDelta=new Vector2(w-20,20);
+            float tw=Mathf.Clamp((w-110)/Math.Max(1,dimensions),48,72);
+            for(int i=0;i<shownToggles.Count;i++){var r=(RectTransform)shownToggles[i].transform;r.anchoredPosition=new Vector2(100+i*tw,-48);r.sizeDelta=new Vector2(tw,32);}
             float bw=Mathf.Clamp((w-20)/Math.Max(1,dimensions)-4,24,46);
             axisHint.rectTransform.anchoredPosition=new Vector2(10,-(h-104));axisHint.rectTransform.sizeDelta=new Vector2(w-20,34);
             for(int i=0;i<axisButtons.Count;i++){int axis=i/2,row=i%2;var r=(RectTransform)axisButtons[i].transform;r.anchoredPosition=new Vector2(10+axis*(bw+4),-(h-66+row*30));r.sizeDelta=new Vector2(bw,26);}
@@ -377,7 +410,7 @@ namespace Showcase.Unity.Settings
         internal void LayoutLabels()
         {
             if(graphic==null)return;
-            for(int i=0;i<dimensions&&i<axisLabels.Count;i++){var p=new double[dimensions];p[i]=AxisLength;var k=ToScreen(Project(p,out _));axisLabels[i].rectTransform.anchoredPosition=new Vector2(k.x+8,k.y+12);}
+            for(int i=0;i<dimensions&&i<axisLabels.Count;i++){axisLabels[i].gameObject.SetActive(AxisShown(i));var p=new double[dimensions];p[i]=AxisLength;var k=ToScreen(Project(p,out _));axisLabels[i].rectTransform.anchoredPosition=new Vector2(k.x+8,k.y+12);}
         }
         // The list shows every plane that has been turned, the active one ringed in blue. A dial stays once added (one being
         // dragged through 0° must not vanish under the pointer); the list empties only on a reset or a change of N.
@@ -411,13 +444,13 @@ namespace Showcase.Unity.Settings
         void UpdateTexts()
         {
             if(countLabel==null)return;
-            int total=directions.Count,lit=0;
-            // With cells or ±axes chosen the count is of chosen rays; a bare hover counts the hovered plane's rays.
+            int total=directions.Count,lit=0,shown=0;
+            // With cells or ±axes chosen the count is of chosen rays; a bare hover counts the hovered plane's rays. Hidden rays count for neither.
             int threshold=selected.Count>0||axisSelected.Count>0?2:1;
-            if(AnyChoice)foreach(var d in directions)if(Level(d)>=threshold)lit++;
-            HighlightedCount=AnyChoice?lit:0;
+            foreach(var d in directions){if(!Shown(d))continue;shown++;if(AnyChoice&&Level(d)>=threshold)lit++;}
+            HighlightedCount=AnyChoice?lit:0;ShownCount=shown;
             string piece=string.IsNullOrEmpty(pieceName)?"":pieceName+"　";
-            countLabel.text=piece+dimensions+"次元 → 3次元 透視投影　"+total.ToString("N0",CultureInfo.InvariantCulture)+"方向"+(AnyChoice?"　強調 "+lit.ToString("N0",CultureInfo.InvariantCulture)+" 本"+(lit>MaxLitRays?"（表示は"+MaxLitRays.ToString("N0",CultureInfo.InvariantCulture)+"本まで）":""):"")+(total>MaxFaintRays?"　（多いので選んだ方向だけ描画）":"");
+            countLabel.text=piece+dimensions+"次元 → 3次元 透視投影　"+total.ToString("N0",CultureInfo.InvariantCulture)+"方向"+(shown<total?"（表示 "+shown.ToString("N0",CultureInfo.InvariantCulture)+"）":"")+(AnyChoice?"　強調 "+lit.ToString("N0",CultureInfo.InvariantCulture)+" 本"+(lit>MaxLitRays?"（表示は"+MaxLitRays.ToString("N0",CultureInfo.InvariantCulture)+"本まで）":""):"")+(total>MaxFaintRays?"　（多いので選んだ方向だけ描画）":"");
             var parts=angles.Where(kv=>Math.Abs(kv.Value)>=.5).Select(kv=>CellName(kv.Key)+" "+kv.Value.ToString("0",CultureInfo.InvariantCulture)+"°").ToList();
             var chosen=selected.OrderBy(c=>c).Select(CellName).Concat(axisSelected.OrderBy(c=>c).Select(c=>(c.sign>0?"+":"−")+AxisName(c.axis))).ToList();
             rotationLabel.text="回転："+(parts.Count==0?"なし":string.Join("  ",parts))+"　ズーム "+Mathf.RoundToInt(zoom*100)+"%"+(chosen.Count>0?"　選択："+string.Join(" ",chosen):"");
@@ -450,18 +483,21 @@ namespace Showcase.Unity.Settings
             vh.Clear();if(View==null||View.Rotation==null)return;var r=rectTransform.rect;int n=View.Dimensions;
             Cfg2Glow.Gradient(vh,0,0,r.width,r.height,new Color(.55f,.65f,1,.06f),new Color(.08f,.11f,.25f,.02f));
             var origin=View.ToScreen(View.Project(new double[n],out _));
-            // The three XYZ grids through the origin, projected like the rays so a hidden-axis turn bends them. The X–Z floor is the firmest.
-            var a=new double[n];var b=new double[n];
-            foreach(var (p,q,alpha) in new[]{(0,2,.11f),(0,1,.06f),(1,2,.06f)})
+            // A cube grid of the XYZ cells within ±GridReach, projected like the rays so a hidden-axis turn bends it. Each line runs
+            // along one axis; an unchecked axis drops its lines and keeps only the layer at 0 across it. Lines on the cube's edges are the
+            // firmest, then those on its faces and on the planes through the origin, then the inner ones.
+            int g=Cfg2ProjectionView.GridReach;var a=new double[n];var b=new double[n];
+            for(int p=0;p<3&&p<n;p++)
             {
-                if(q>=n)continue;
-                for(int i=-4;i<=4;i++)
+                if(!View.AxisShown(p))continue;
+                int q=(p+1)%3,s=(p+2)%3;if(q>=n||s>=n)continue;
+                int qr=View.AxisShown(q)?g:0,sr=View.AxisShown(s)?g:0,edges=(qr>0?1:0)+(sr>0?1:0);
+                for(int i=-qr;i<=qr;i++)for(int j=-sr;j<=sr;j++)
                 {
-                    var color=new Color(.5f,.58f,.75f,i==0?alpha*2:alpha);
-                    Array.Clear(a,0,n);Array.Clear(b,0,n);a[p]=i;a[q]=-4;b[p]=i;b[q]=4;
-                    Cfg2Glow.Line(vh,View.ToScreen(View.Project(a,out _)),View.ToScreen(View.Project(b,out _)),color,1.2f);
-                    Array.Clear(a,0,n);Array.Clear(b,0,n);a[q]=i;a[p]=-4;b[q]=i;b[p]=4;
-                    Cfg2Glow.Line(vh,View.ToScreen(View.Project(a,out _)),View.ToScreen(View.Project(b,out _)),color,1.2f);
+                    int onEdge=(qr>0&&Math.Abs(i)==g?1:0)+(sr>0&&Math.Abs(j)==g?1:0);
+                    float alpha=edges>0&&onEdge==edges?.2f:onEdge>0?.08f:i==0||j==0?.07f:.035f;
+                    Array.Clear(a,0,n);Array.Clear(b,0,n);a[q]=b[q]=i;a[s]=b[s]=j;a[p]=-g;b[p]=g;
+                    Cfg2Glow.Line(vh,View.ToScreen(View.Project(a,out _)),View.ToScreen(View.Project(b,out _)),new Color(.5f,.58f,.75f,alpha),onEdge==edges&&edges>0?1.4f:1.1f);
                 }
             }
             // Rays. Faint ones first and as single segments; lit ones on top with a dot per reached cell.
@@ -470,6 +506,7 @@ namespace Showcase.Unity.Settings
             var point=new double[n];
             foreach(var d in dirs)
             {
+                if(!View.Shown(d))continue;
                 int level=View.Level(d);
                 if(level==0||(level==1&&choice==false&&many)){if(many)continue;if(faint++>Cfg2ProjectionView.MaxFaintRays)continue;}
                 int hidden=0;for(int i=3;i<n;i++)if(d[i]!=0)hidden++;var tier=Tier[Mathf.Min(hidden,Tier.Length-1)];
@@ -499,7 +536,7 @@ namespace Showcase.Unity.Settings
                 }
             }
             // Axes as thin lines with a dot at the positive end, back to front; the negative half is dashed.
-            var axes=new List<(int axis,Vector3 p)>();for(int axis=0;axis<n;axis++){var v=new double[n];v[axis]=Cfg2ProjectionView.AxisLength;axes.Add((axis,View.Project(v,out _)));}
+            var axes=new List<(int axis,Vector3 p)>();for(int axis=0;axis<n;axis++){if(!View.AxisShown(axis))continue;var v=new double[n];v[axis]=Cfg2ProjectionView.AxisLength;axes.Add((axis,View.Project(v,out _)));}
             axes.Sort((x,y)=>y.p.z.CompareTo(x.p.z));
             foreach(var entry in axes)
             {
