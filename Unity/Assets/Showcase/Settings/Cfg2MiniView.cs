@@ -22,6 +22,10 @@ namespace Showcase.Unity.Settings
         public bool IsCoincident=>graphic!=null&&graphic.Relation!=null&&graphic.Relation.IsCoincident;
         public string FixedCoordinates {get;private set;}="";
         public HyperplaneRelation Relation=>graphic?.Relation;
+        // Small swap panels in higher N fade while their intersection is only a line or a point, so the planes stand out.
+        public bool DimWhenFlat {get;set;}
+        public bool IsFlat=>graphic!=null&&graphic.Relation!=null&&!graphic.Relation.IsCoincident&&graphic.Relation.TriangleIndices.Count==0;
+        CanvasGroup fade;
         public Vector2 AxisScreenDirection(LogicalAxis axis)=>tips.TryGetValue(axis,out var v)?v:Vector2.zero;
         public void Initialize(Func<SliceAnimator> slice,InputOwnership input,ReferenceSection view,Action geometryChanged,Action<ReferenceSection> onRequested,Func<float> scale)
         {
@@ -51,11 +55,16 @@ namespace Showcase.Unity.Settings
             // Every axis the panel holds fixed, with C's coordinate on it: W=0 in 4D, e.g. Z=0  V=0 for an XYW panel in 5D.
             FixedCoordinates=string.Join("  ",reference.Hidden.Select(axis=>SliceAxes.AxisName(SliceAxes.AxisOfCore(axis))+"="+SliceAxes.Coordinate(frame.Center,axis).ToString("0.##",System.Globalization.CultureInfo.InvariantCulture)));
             title.text=reference.Name+"   "+FixedCoordinates;title.color=IsCoincident?Cfg2Ui.Gold:new Color(.88f,.92f,.98f);
+            if(DimWhenFlat&&fade==null)fade=gameObject.AddComponent<CanvasGroup>();
             foreach(var item in handles)
             {var tip=graphic.AxisEnd(item.Key);tips[item.Key]=tip;var center=graphic.Center;item.Value.anchoredPosition=new Vector2(center.x+tip.x-11.5f,-26+center.y+tip.y+11.5f);}
         }
         public bool IsPointerOver(Vector2 screen)=>gameObject.activeInHierarchy&&RectTransformUtility.RectangleContainsScreenPoint((RectTransform)transform,screen,null);
-        void Update()=>drag?.Update();
+        void Update()
+        {
+            drag?.Update();
+            if(fade!=null)fade.alpha=Mathf.MoveTowards(fade.alpha,DimWhenFlat&&IsFlat?.45f:1,Time.unscaledDeltaTime*4);
+        }
         public void CancelDrag()=>drag?.Cancel();
         void OnDisable(){CancelDrag();}
     }

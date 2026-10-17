@@ -211,7 +211,7 @@ namespace Showcase.Unity.Settings
             if(slice==null)return;
             if(previousWidth!=Screen.width||previousHeight!=Screen.height){previousWidth=Screen.width;previousHeight=Screen.height;layoutRevision++;ownership.Cancel();pointerButton=-1;RefreshAuxiliaryViews();}
             if(slice.IsAnimating){slice.Advance(Time.unscaledDeltaTime);geometryDirty=true;stableDirty=true;}
-            UpdateMatch();if(geometryDirty)RenderGeometry();
+            UpdateMatch();if(geometryDirty)RenderGeometry();UpdateMagnifier();
             if(settingsDirty&&Time.unscaledTime>=saveDue)AutoSave();
             // The view is saved once it has settled: never during a CPU move show, a turn reset or a piece glide,
             // which move C every frame without marking the slice as animating.
@@ -233,7 +233,7 @@ namespace Showcase.Unity.Settings
                     if(!Input.GetKeyDown(key))continue;
                     var logical=(LogicalAxis)(axis-1);
                     if(SliceAxes.CoreAxis(logical)>=CurrentDimensions){Notice("この対局は"+CurrentDimensions+"次元です。"+SliceAxes.AxisName(logical)+"軸はありません。");break;}
-                    rotationAxis=logical;Notice("Ctrl＋ドラッグの回転軸："+SliceAxes.AxisName(logical));Record("RotationAxis",logical.ToString());break;
+                    rotationAxis=logical;geometryDirty=true;Notice("Ctrl＋ドラッグの回転軸："+SliceAxes.AxisName(logical));Record("RotationAxis",logical.ToString());break;
                 }
             if(!typing&&Input.GetKeyDown(KeyCode.Escape)){if(ownership.Owner!=InputOwner.None){ownership.Cancel();pointerButton=-1;}else if(opened){if((!settingsDirty||AutoSave())&&SaveStableView())ShowMenu();}else if(session!=null)ReturnFromMatch();}
             if(opened&&!typing&&ownership.Owner==InputOwner.None&&(Input.GetKey(KeyCode.LeftControl)||Input.GetKey(KeyCode.RightControl)))
