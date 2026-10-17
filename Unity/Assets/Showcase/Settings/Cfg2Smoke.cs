@@ -472,7 +472,8 @@ namespace Showcase.Unity.Settings
             preview.Place(new TrialPiece("plane-hidden","pawn-step",Side.B,new QN(0,0,0,1)));QueueQuery();yield return null;
             for(int tab=1;tab<=4;tab++)
             {
-                SmokeAction("plane-"+tab);yield return null;RenderGeometry();
+                // Fixed planes XY XZ XW YZ sit after the 断面/投影 tabs, so their buttons are plane-2..plane-5.
+                SmokeAction("plane-"+(tab+1));yield return null;RenderGeometry();
                 var source=preview.Find(selectedPiece).Position;
                 int a=tab==4?2:1,b=tab==1?2:tab==3?3:0;
                 bool InPlane(QN q)=>Enumerable.Range(0,4).All(i=>i==a||i==b||q[i]==source[i]);
