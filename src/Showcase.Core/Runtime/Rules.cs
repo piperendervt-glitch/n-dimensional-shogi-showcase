@@ -184,14 +184,22 @@ namespace NDShogi.Showcase.Core
                 {
                     var unit=new int[dimensions]; Enumerate(unit,0,-1,1,d=>{if(!Allows(kind,side,d))return;for(int k=1;k<=8;k++)list.Add(d.Select(x=>x*k).ToArray());});
                 }
+                else if(kind==PieceKind.Knight)
+                {
+                    // Two forward, one across on any single transverse axis: 2(N-1) jumps, listed in the lexicographic order a full 5^N scan would give.
+                    int sign=side==Side.A?1:-1;
+                    for(int axis=1;axis<dimensions;axis++)foreach(int across in new[]{-1,1}){var d=new int[dimensions];d[0]=2*sign;d[axis]=across;list.Add(d);}
+                    list.Sort(Lexicographic);
+                }
                 else
                 {
-                    var unit=new int[dimensions]; int r=kind==PieceKind.Knight?2:1;
-                    Enumerate(unit,0,-r,r,d=>{if(Allows(kind,side,d))list.Add((int[])d.Clone());});
+                    var unit=new int[dimensions];
+                    Enumerate(unit,0,-1,1,d=>{if(Allows(kind,side,d))list.Add((int[])d.Clone());});
                 }
                 found=list.ToArray();cache.Add(key,found);return found;
             }
         }
+        private static int Lexicographic(int[] a,int[] b){for(int i=0;i<a.Length;i++)if(a[i]!=b[i])return a[i].CompareTo(b[i]);return 0;}
         private static void Enumerate(int[] d,int axis,int min,int max,Action<int[]> visit)
         {if(axis==d.Length){visit(d);return;}for(int x=min;x<=max;x++){d[axis]=x;Enumerate(d,axis+1,min,max,visit);}}
     }

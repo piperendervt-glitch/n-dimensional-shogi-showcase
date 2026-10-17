@@ -3,24 +3,97 @@ using System.Collections.Generic;
 using System.Linq;
 namespace Showcase.Geometry.Interaction
 {
-    // VecN=(F,U,V,W,...); UI X=U,Y=V,Z=F,W=W, then A5..A11 = core axes 4..10 (displayed as V, U, T, S, R, Q, P); Unity adapter=(U,V,F).
+    // VecN=(F,U,V,W,...); UI X=U,Y=V,Z=F,W=W, then A5..A11 = core axes 4..10 (displayed as V U T S R Q P); Unity adapter=(U,V,F).
     public enum LogicalAxis { X,Y,Z,W,A5,A6,A7,A8,A9,A10,A11 }
     public enum ReferenceView { XYZ,XYW,XZW,YZW }
+    /// <summary>An axis-aligned section of an N-space: the three core axes it shows, in frame slot order (AxisX, AxisY, AxisZ).
+    /// The other N-3 axes are hidden. The default value is the 4D XYZ view; a <see cref="ReferenceView"/> converts implicitly.</summary>
+    public readonly struct ReferenceSection : IEquatable<ReferenceSection>
+    {
+        readonly int a,b,c,n;
+        public ReferenceSection(IReadOnlyList<int> shown,int dimensions)
+        {
+            if(shown==null||shown.Count!=3||dimensions<3||dimensions>VecN.MaxDimensions||shown.Distinct().Count()!=3||shown.Any(x=>x<0||x>=dimensions))
+                throw new ArgumentException("Three distinct core axes of an N-space (3.."+VecN.MaxDimensions+") are required.");
+            a=shown[0];b=shown[1];c=shown[2];n=dimensions;
+        }
+        public int Dimensions=>n==0?4:n;
+        /// <summary>Core axes in slot order: slot 0 is AxisX, 1 AxisY, 2 AxisZ of the frame.</summary>
+        public int[] Shown=>n==0?new[]{0,1,2}:new[]{a,b,c};
+        public int Slot(int slot)=>Shown[slot];
+        public bool Shows(int coreAxis){var s=Shown;return s[0]==coreAxis||s[1]==coreAxis||s[2]==coreAxis;}
+        /// <summary>Core axes the section holds fixed, ascending.</summary>
+        public int[] Hidden{get{var hidden=new List<int>();for(int axis=0;axis<Dimensions;axis++)if(!Shows(axis))hidden.Add(axis);return hidden.ToArray();}}
+        public static ReferenceSection Of(ReferenceView view,int dimensions=4)=>new ReferenceSection(SliceAxes.ShownAxes(view),dimensions);
+        /// <summary>The initial section of an N-space: X, Y, Z shown, every other axis hidden.</summary>
+        public static ReferenceSection Initial(int dimensions)=>Of(ReferenceView.XYZ,dimensions);
+        /// <summary>The same three shown axes as a section of another N-space.</summary>
+        public ReferenceSection In(int dimensions)=>dimensions==Dimensions?this:new ReferenceSection(Shown,dimensions);
+        /// <summary>The 4D reference view with these shown axes in this slot order, when there is one (in any N: XYZ of a 5D space is still XYZ).</summary>
+        public ReferenceView? View
+        {
+            get
+            {
+                var s=Shown;
+                foreach(ReferenceView view in Enum.GetValues(typeof(ReferenceView))){var v=SliceAxes.ShownAxes(view);if(v[0]==s[0]&&v[1]==s[1]&&v[2]==s[2])return view;}
+                return null;
+            }
+        }
+        /// <summary>Shows a hidden axis in the slot of a shown one; the shown axis becomes hidden. For 4D this is the usual turn to another reference view.</summary>
+        public ReferenceSection Swap(int shownCoreAxis,int hiddenCoreAxis)
+        {
+            if(!Shows(shownCoreAxis)||Shows(hiddenCoreAxis)||hiddenCoreAxis<0||hiddenCoreAxis>=Dimensions)throw new ArgumentException("Swap needs one shown and one hidden core axis of the section's space.");
+            var s=Shown;for(int i=0;i<3;i++)if(s[i]==shownCoreAxis)s[i]=hiddenCoreAxis;return new ReferenceSection(s,Dimensions);
+        }
+        /// <summary>Sections one axis swap away: for each hidden axis ascending, the shown axes are replaced in descending UI order (Z, Y, X).
+        /// From the 4D XYZ view this is XYW, XZW, YZW, the order of the original panels.</summary>
+        public IReadOnlyList<ReferenceSection> Neighbours
+        {
+            get
+            {
+                var removed=Shown.OrderByDescending(axis=>(int)SliceAxes.AxisOfCore(axis)).ToArray();var list=new List<ReferenceSection>();
+                foreach(int hidden in Hidden)foreach(int shown in removed)list.Add(Swap(shown,hidden));
+                return list;
+            }
+        }
+        /// <summary>Player-facing name: the shown axes in UI order, e.g. XYW or XYV.</summary>
+        public string Name=>string.Concat(Shown.Select(SliceAxes.AxisOfCore).OrderBy(axis=>(int)axis).Select(SliceAxes.AxisName));
+        /// <summary>The reference frame of this section through a centre; 4D views keep their exact original frames.</summary>
+        public SliceFrame Frame(VecN center=default)
+        {var view=View;return Dimensions==4&&view.HasValue?SliceAxes.OnLeg(view.Value,90,center):SliceAxes.ReferenceFrame(Shown,Dimensions,center);}
+        public bool Equals(ReferenceSection other){var s=Shown;var t=other.Shown;return Dimensions==other.Dimensions&&s[0]==t[0]&&s[1]==t[1]&&s[2]==t[2];}
+        public override bool Equals(object obj)=>obj is ReferenceSection other&&Equals(other);
+        public override int GetHashCode(){var s=Shown;return ((Dimensions*31+s[0])*31+s[1])*31+s[2];}
+        public static bool operator==(ReferenceSection x,ReferenceSection y)=>x.Equals(y);
+        public static bool operator!=(ReferenceSection x,ReferenceSection y)=>!x.Equals(y);
+        public static implicit operator ReferenceSection(ReferenceView view)=>Of(view);
+        public override string ToString()=>Name;
+    }
     public static class SliceAxes
     {
-        public static VecN WorldAxis(LogicalAxis a)=>VecN.Unit(CoreAxis(a));
-        /// <summary>UI axis of a core axis index (F=0→Z, U=1→X, V=2→Y, W=3→W, 4..10→A5..A11).</summary>
+        public static VecN WorldAxis(LogicalAxis a)=>VecN.Unit(CoreAxis(a),Math.Max(4,CoreAxis(a)+1));
+        /// <summary>UI axis of a core axis index (F=0→Z, U=1→X, V=2→Y, W=3→W, then 4→A5 ... 10→A11).</summary>
         public static LogicalAxis AxisOfCore(int coreAxis)
-        {switch(coreAxis){case 0:return LogicalAxis.Z;case 1:return LogicalAxis.X;case 2:return LogicalAxis.Y;case 3:return LogicalAxis.W;case 4:return LogicalAxis.A5;case 5:return LogicalAxis.A6;case 6:return LogicalAxis.A7;case 7:return LogicalAxis.A8;case 8:return LogicalAxis.A9;case 9:return LogicalAxis.A10;case 10:return LogicalAxis.A11;default:throw new ArgumentOutOfRangeException(nameof(coreAxis));}}
+        {
+            switch(coreAxis){case 0:return LogicalAxis.Z;case 1:return LogicalAxis.X;case 2:return LogicalAxis.Y;}
+            if(coreAxis<3||coreAxis>=VecN.MaxDimensions)throw new ArgumentOutOfRangeException(nameof(coreAxis));
+            return (LogicalAxis)coreAxis;
+        }
         /// <summary>Label shown to the player: X Y Z W, then V U T S R Q P for the fifth to eleventh axes.</summary>
         public static string AxisName(LogicalAxis a)
-        {switch(a){case LogicalAxis.A5:return "V";case LogicalAxis.A6:return "U";case LogicalAxis.A7:return "T";case LogicalAxis.A8:return "S";case LogicalAxis.A9:return "R";case LogicalAxis.A10:return "Q";case LogicalAxis.A11:return "P";default:return a.ToString();}}
+        {int i=(int)a;return i<4?a.ToString():"VUTSRQP"[i-4].ToString();}
+        /// <summary>UI axes of an N-space in display order.</summary>
+        public static LogicalAxis[] Axes(int dimensions)
+        {
+            if(dimensions<3||dimensions>VecN.MaxDimensions)throw new ArgumentOutOfRangeException(nameof(dimensions));
+            return Enumerable.Range(0,dimensions).Select(AxisOfCore).OrderBy(axis=>(int)axis).ToArray();
+        }
         /// <summary>Core axes shown by a 4D reference view, in frame slot order (AxisX, AxisY, AxisZ).</summary>
         public static int[] ShownAxes(ReferenceView view)
         {switch(view){case ReferenceView.XYZ:return new[]{0,1,2};case ReferenceView.XYW:return new[]{3,1,2};case ReferenceView.XZW:return new[]{0,1,3};case ReferenceView.YZW:return new[]{0,3,2};default:throw new ArgumentOutOfRangeException(nameof(view));}}
         /// <summary>Reference frame of an N-space showing three core axes: slot i of the frame is the unit vector of shown[i]; the remaining axes,
         /// ascending, are the normals, the first of them negated when the permutation is odd so the basis stays positively oriented.
-        /// For N=4 this reproduces <see cref="Reference(ReferenceView,VecN)"/> exactly.</summary>
+        /// For N=4 this reproduces <see cref="Reference(ReferenceView,VecN,int)"/> exactly.</summary>
         public static SliceFrame ReferenceFrame(int[] shown,int dimensions,VecN center=default)
         {
             if(shown==null||shown.Length!=3||dimensions<3||dimensions>VecN.MaxDimensions||shown.Distinct().Count()!=3||shown.Any(a=>a<0||a>=dimensions))throw new ArgumentException("Three distinct core axes of an N-space (3.."+VecN.MaxDimensions+") are required.");
@@ -38,14 +111,44 @@ namespace Showcase.Geometry.Interaction
             for(int a=0;a<frame.Dimensions;a++)if(Math.Abs(frame.AxisX.Axis(a))<1e-9&&Math.Abs(frame.AxisY.Axis(a))<1e-9&&Math.Abs(frame.AxisZ.Axis(a))<1e-9)hidden.Add(a);
             return hidden.Count==frame.Dimensions-3?hidden.ToArray():Array.Empty<int>();
         }
+        /// <summary>The section whose reference frame this is, or null when the frame is rotated away from every reference pose.</summary>
+        public static ReferenceSection? SectionOf(SliceFrame frame)
+        {
+            int n=frame.Dimensions;var shown=new int[3];var slots=new[]{frame.AxisX,frame.AxisY,frame.AxisZ};
+            for(int slot=0;slot<3;slot++)
+            {
+                int best=0;for(int axis=1;axis<n;axis++)if(Math.Abs(slots[slot].Axis(axis))>Math.Abs(slots[slot].Axis(best)))best=axis;
+                if(slots[slot].Axis(best)<1-1e-9)return null;shown[slot]=best;
+            }
+            if(shown.Distinct().Count()!=3)return null;
+            var section=new ReferenceSection(shown,n);
+            return SameOrientation(frame,section.Frame(frame.Center))?section:(ReferenceSection?)null;
+        }
+        public static bool SameOrientation(SliceFrame a,SliceFrame b)
+        {
+            if(a.Dimensions!=b.Dimensions)return false;var x=a.Vectors;var y=b.Vectors;
+            for(int i=0;i<x.Length;i++)if((x[i]-y[i]).Length>=1e-12)return false;return true;
+        }
         public static ReferenceView ViewForAxis(LogicalAxis a)
         {switch(a){case LogicalAxis.W:return ReferenceView.XYZ;case LogicalAxis.Z:return ReferenceView.XYW;case LogicalAxis.Y:return ReferenceView.XZW;case LogicalAxis.X:return ReferenceView.YZW;default:throw new ArgumentOutOfRangeException(nameof(a));}}
+        /// <summary>The section an axis label selects. In 4D it is the original view that hides the axis. In higher N a shown axis is swapped
+        /// out for the lowest hidden axis, and a hidden axis is swapped in for the shown axis of highest UI order (Z before Y before X).</summary>
+        public static ReferenceSection SectionForAxis(ReferenceSection current,LogicalAxis a)
+        {
+            int core=CoreAxis(a);
+            if(current.Dimensions==4&&current.View.HasValue&&core<4)return ReferenceSection.Of(ViewForAxis(a));
+            if(core>=current.Dimensions)return current;
+            if(current.Shows(core)){var hidden=current.Hidden;return hidden.Length==0?current:current.Swap(core,hidden[0]);}
+            if(current.Dimensions==4)return current;
+            int removed=current.Shown.OrderByDescending(axis=>(int)AxisOfCore(axis)).First();return current.Swap(removed,core);
+        }
         /// <summary>The 4D reference frame when the space is 4D; the same three shown axes with N-3 normals otherwise (N given, or taken from the centre).</summary>
         public static SliceFrame Reference(ReferenceView view,VecN center=default,int dimensions=0)
         {
             int n=dimensions>0?dimensions:Math.Max(4,center.Rank);
             return n==4?OnLeg(view,90,center):ReferenceFrame(ShownAxes(view),n,center);
         }
+        public static SliceFrame Reference(ReferenceSection section,VecN center=default)=>section.Frame(center);
         public static SliceFrame OnLeg(ReferenceView view,double degrees,VecN center=default)
         {
             if(!center.IsFinite||double.IsNaN(degrees)||double.IsInfinity(degrees))throw new ArgumentException("Frame values must be finite.");
@@ -57,7 +160,7 @@ namespace Showcase.Geometry.Interaction
         public static string DisplayName(ReferenceView view)=>view.ToString();
         // VecN components are core axes, not UI axes: VecN.X is UI Z. Use these instead of writing the permutation out.
         public static int CoreAxis(LogicalAxis a)
-        {switch(a){case LogicalAxis.X:return 1;case LogicalAxis.Y:return 2;case LogicalAxis.Z:return 0;case LogicalAxis.W:return 3;case LogicalAxis.A5:return 4;case LogicalAxis.A6:return 5;case LogicalAxis.A7:return 6;case LogicalAxis.A8:return 7;case LogicalAxis.A9:return 8;case LogicalAxis.A10:return 9;case LogicalAxis.A11:return 10;default:throw new ArgumentOutOfRangeException(nameof(a));}}
+        {switch(a){case LogicalAxis.X:return 1;case LogicalAxis.Y:return 2;case LogicalAxis.Z:return 0;default:int i=(int)a;if(i<3||i>=VecN.MaxDimensions)throw new ArgumentOutOfRangeException(nameof(a));return i;}}
         // UI axis that each reference hyperplane holds fixed (the axis whose button selects it).
         public static LogicalAxis NormalAxis(ReferenceView view)
         {switch(view){case ReferenceView.XYZ:return LogicalAxis.W;case ReferenceView.XYW:return LogicalAxis.Z;case ReferenceView.XZW:return LogicalAxis.Y;case ReferenceView.YZW:return LogicalAxis.X;default:throw new ArgumentOutOfRangeException(nameof(view));}}
@@ -78,6 +181,23 @@ namespace Showcase.Geometry.Interaction
             foreach(var view in order){double step=Math.Abs(SliceRotations.Component(to-from,NormalCoreAxis(view)));if(step<bestStep-1e-9){best=view;bestStep=step;}}
             return best;
         }
+        /// <summary>The section that holds both ends of a step, chosen among the initial section, the current one and its one-swap neighbours:
+        /// the first whose hidden axes the step leaves least. In 4D this is <see cref="ViewContaining"/>.</summary>
+        public static ReferenceSection SectionContaining(VecN from,VecN to,ReferenceSection current)
+        {
+            if(!from.IsFinite||!to.IsFinite)throw new ArgumentException("Step ends must be finite.");
+            if(current.Dimensions==4&&current.View.HasValue)return ReferenceSection.Of(ViewContaining(from,to,current.View));
+            var order=new List<ReferenceSection>{ReferenceSection.Initial(current.Dimensions)};
+            if(!order.Contains(current))order.Add(current);
+            foreach(var section in current.Neighbours)if(!order.Contains(section))order.Add(section);
+            var step=to-from;var best=order[0];double bestLeave=double.MaxValue;
+            foreach(var section in order)
+            {
+                double leave=0;foreach(int hidden in section.Hidden){double d=step.Axis(hidden);leave+=d*d;}
+                leave=Math.Sqrt(leave);if(leave<bestLeave-1e-9){best=section;bestLeave=leave;}
+            }
+            return best;
+        }
     }
     public sealed class SliceAnimator
     {
@@ -87,7 +207,7 @@ namespace Showcase.Geometry.Interaction
         public double SecondsPerLeg {get=>secondsPerLeg;set{if(!(value>0)||double.IsInfinity(value))throw new ArgumentOutOfRangeException(nameof(value));secondsPerLeg=value;}}
         readonly List<PlaneTurn> turns=new List<PlaneTurn>();
         readonly bool legacyFramesOnly;
-        ReferenceView? stable,pending;ReferenceView target;double elapsed,pendingSeconds;bool active;SliceFrame start;
+        ReferenceSection? stable,pending;ReferenceSection target;double elapsed,pendingSeconds;bool active;SliceFrame start;
         readonly struct PlaneTurn
         {public readonly int A,B;public readonly double Angle;public PlaneTurn(int a,int b,double angle){A=a;B=b;Angle=angle;}}
         public PivotViewState DisplayState {get;private set;}
@@ -95,24 +215,36 @@ namespace Showcase.Geometry.Interaction
         public VecN Center=>Frame.Center;
         public long ViewRevision {get;private set;}
         public bool IsAnimating=>active;
-        public ReferenceView? StableView=>active?(ReferenceView?)null:stable;
-        public ReferenceView TargetView=>target;
-        public ReferenceView? QueuedView=>pending;
+        /// <summary>The 4D reference view the display rests in, if any; null while turning or in a section of another N-space.</summary>
+        public ReferenceView? StableView=>active?null:stable?.View;
+        /// <summary>The section the display rests in, if any; null while turning or when rotated away from every reference pose.</summary>
+        public ReferenceSection? StableSection=>active?(ReferenceSection?)null:stable;
+        public ReferenceView TargetView=>target.View??throw new InvalidOperationException("The target section is not a 4D reference view.");
+        public ReferenceSection TargetSection=>target;
+        public ReferenceView? QueuedView=>pending?.View;
+        public ReferenceSection? QueuedSection=>pending;
         // The original constructor retains its zero embedding and chart anchor for CFG1 callers.
         public SliceAnimator(VecN center=default,ReferenceView view=ReferenceView.XYZ)
             :this(new PivotViewState(0,SliceAxes.Reference(view,center),default,ShapeFactory.CellPitchMetres,FiniteSliceWindow.DefaultHalfExtent)){legacyFramesOnly=true;}
         public SliceAnimator(PivotViewState state)
-        {DisplayState=state??throw new ArgumentNullException(nameof(state));stable=FindReference(state.Frame);target=stable??ReferenceView.XYZ;}
-        public bool Request(ReferenceView view)
+        {DisplayState=state??throw new ArgumentNullException(nameof(state));stable=SliceAxes.SectionOf(state.Frame);target=stable??ReferenceSection.Initial(Frame.Dimensions);}
+        public bool Request(ReferenceView view)=>Request(ReferenceSection.Of(view,Frame.Dimensions));
+        public bool Request(ReferenceSection section)
         {
-            SliceAxes.Reference(view,Center,Frame.Dimensions);
-            if(active){if(target==view||pending==view)return false;pending=view;pendingSeconds=secondsPerLeg;return true;}
-            if(stable==view)return false;Start(view,secondsPerLeg);return true;
+            section=Fit(section);section.Frame(Center);
+            if(active){if(target==section||pending==section)return false;pending=section;pendingSeconds=secondsPerLeg;return true;}
+            if(stable==section)return false;Start(section,secondsPerLeg);return true;
         }
-        void Start(ReferenceView view,double seconds)
+        ReferenceSection Fit(ReferenceSection section)
         {
-            target=view;start=Frame;turns.Clear();elapsed=0;active=true;legSeconds=seconds;
-            var end=SliceAxes.Reference(view,Center,Frame.Dimensions);
+            if(section.Dimensions==Frame.Dimensions)return section;
+            if(section.Shown.Any(axis=>axis>=Frame.Dimensions))throw new ArgumentException("Reference section of a different dimension.");
+            return section.In(Frame.Dimensions);
+        }
+        void Start(ReferenceSection section,double seconds)
+        {
+            target=section;start=Frame;turns.Clear();elapsed=0;active=true;legSeconds=seconds;
+            var end=section.Frame(Center);
             var a=start.Vectors;var b=end.Vectors;int n=a.Length;
             if(b.Length!=n)throw new InvalidOperationException("Reference frame of a different dimension.");
             var relative=new double[n,n];
@@ -142,7 +274,7 @@ namespace Showcase.Geometry.Interaction
                 var pose=start.WithCenter(Center);
                 for(int i=turns.Count-1;i>=0;i--)pose=SliceRotations.Rotate(pose,turns[i].A,turns[i].B,turns[i].Angle*s);
                 DisplayState=DisplayState.WithOrientation(pose);ViewRevision++;
-                if(t>=1){stable=target;DisplayState=DisplayState.WithOrientation(SliceAxes.Reference(target,Center,Frame.Dimensions));active=false;if(pending.HasValue){var next=pending.Value;pending=null;if(next!=stable)Start(next,pendingSeconds);}}
+                if(t>=1){stable=target;DisplayState=DisplayState.WithOrientation(target.Frame(Center));active=false;if(pending.HasValue){var next=pending.Value;pending=null;if(next!=stable)Start(next,pendingSeconds);}}
             }
             return true;
         }
@@ -150,34 +282,20 @@ namespace Showcase.Geometry.Interaction
         // Legacy frame-only restore keeps its chart anchor. New saves restore the full display state.
         public void Restore(SliceFrame frame)
         {
-            if(legacyFramesOnly&&!FindReference(frame).HasValue)throw new ArgumentException("Legacy CFG1 frame-only restore requires a stable reference pose. Pivot saves require the full display state.");
+            if(legacyFramesOnly&&!SliceAxes.SectionOf(frame).HasValue)throw new ArgumentException("Legacy CFG1 frame-only restore requires a stable reference pose. Pivot saves require the full display state.");
             Restore(new PivotViewState(DisplayState.EmbeddingHeight,frame,DisplayState.Anchor,DisplayState.CellScale,DisplayState.HalfWindow));
         }
         public void Restore(PivotViewState state)
         {
             if(state==null)throw new ArgumentNullException(nameof(state));
-            SliceRotations.Validate(state.Frame);DisplayState=state;stable=FindReference(Frame);target=stable??ReferenceView.XYZ;
+            SliceRotations.Validate(state.Frame);DisplayState=state;stable=SliceAxes.SectionOf(Frame);target=stable??ReferenceSection.Initial(Frame.Dimensions);
             pending=null;turns.Clear();active=false;elapsed=0;ViewRevision++;
         }
         public bool SetOrientation(SliceFrame frame)
         {
-            var state=DisplayState.WithOrientation(frame);bool changed=active||pending.HasValue||!SameOrientation(Frame,frame);
-            DisplayState=state;active=false;pending=null;turns.Clear();elapsed=0;stable=FindReference(frame);target=stable??ReferenceView.XYZ;
+            var state=DisplayState.WithOrientation(frame);bool changed=active||pending.HasValue||!SliceAxes.SameOrientation(Frame,frame);
+            DisplayState=state;active=false;pending=null;turns.Clear();elapsed=0;stable=SliceAxes.SectionOf(frame);target=stable??ReferenceSection.Initial(Frame.Dimensions);
             if(changed)ViewRevision++;return changed;
-        }
-        static ReferenceView? FindReference(SliceFrame frame)
-        {
-            foreach(ReferenceView view in Enum.GetValues(typeof(ReferenceView)))
-            {
-                var reference=SliceAxes.Reference(view,frame.Center,frame.Dimensions);
-                if(SameOrientation(frame,reference))return view;
-            }
-            return null;
-        }
-        static bool SameOrientation(SliceFrame a,SliceFrame b)
-        {
-            if(a.Dimensions!=b.Dimensions)return false;var x=a.Vectors;var y=b.Vectors;
-            for(int i=0;i<x.Length;i++)if((x[i]-y[i]).Length>=1e-12)return false;return true;
         }
         public bool SetCenter(VecN value){if(!value.IsFinite)throw new ArgumentException("Slice center must be finite.");if((value-Center).Length<1e-14)return false;DisplayState=DisplayState.WithCenter(value);ViewRevision++;return true;}
         // Sets C and its display anchor together without stopping a running turn, so a view can glide back to a saved one.
