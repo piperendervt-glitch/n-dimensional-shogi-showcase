@@ -27,12 +27,20 @@ namespace Showcase.Unity
         public SectionResult Last { get; private set; }
         public long SectionVersion { get; private set; }
         public string Id { get; }
+        // The pose the mesh shows. PrepareSection only proposes the next one; ApplySection records it, so a cut that never
+        // reaches ApplySection (its worker threw, or an earlier piece's apply did) is made again on the next frame.
         VecN previous;
         double previousAngle = double.NaN;
         int previousForward;
         SliceFrame previousFrame;
         bool frameMode;
         double? previousHalfExtent;
+        VecN nextQ;
+        double nextAngle;
+        int nextForward;
+        SliceFrame nextFrame;
+        bool nextFrameMode, proposed;
+        double? nextHalfExtent;
 
         public SectionView(string id, ConvexShape shape, Material topMaterial, Material sideMaterial, bool isBoard=false, float scale=1, bool useSymmetricMaterial=true)
         {
@@ -54,7 +62,7 @@ namespace Showcase.Unity
         {
             SectionVersion=version;
             if(previousAngle==angle&&previousForward==forward&&VecN.Dot(q-previous,q-previous)<1e-22)return false;
-            previous=q;previousAngle=angle;previousForward=forward;SectionVersion=version;frameMode=false;
+            nextQ=q;nextAngle=angle;nextForward=forward;nextFrameMode=false;proposed=true;
             return true;
         }
         public SectionResult ComputeSection(VecN q,int forward,double angle)
@@ -70,7 +78,7 @@ namespace Showcase.Unity
             if(frameMode&&previousForward==forward&&previousHalfExtent==halfExtent&&Same(q,previous)&&
                 Same(frame.Center,previousFrame.Center)&&Same(frame.AxisX,previousFrame.AxisX)&&
                 Same(frame.AxisY,previousFrame.AxisY)&&Same(frame.AxisZ,previousFrame.AxisZ)&&Same(frame.Normal,previousFrame.Normal))return false;
-            previous=q;previousForward=forward;previousFrame=frame;previousHalfExtent=halfExtent;frameMode=true;previousAngle=double.NaN;
+            nextQ=q;nextForward=forward;nextFrame=frame;nextHalfExtent=halfExtent;nextFrameMode=true;proposed=true;
             return true;
         }
         public SectionResult ComputeSection(VecN q,int forward,SliceFrame frame,double? halfExtent=null)
@@ -82,17 +90,25 @@ namespace Showcase.Unity
         public void ApplySection(SectionResult result)
         {
             Last=result;
+            if(proposed)
+            {
+                previous=nextQ;previousForward=nextForward;frameMode=nextFrameMode;previousAngle=nextFrameMode?double.NaN:nextAngle;
+                previousFrame=nextFrame;previousHalfExtent=nextHalfExtent;proposed=false;
+            }
+            mesh.Clear();
+            // A failed cut shows nothing rather than the previous pose's triangles; the pose is recorded, so it is not retried every frame.
             if(Last.Status==SectionStatus.CapacityExceeded||Last.Status==SectionStatus.NumericallyUncertain)
                 throw new InvalidOperationException(Id+": "+Last.Status+" "+Last.Diagnostic);
-            mesh.Clear();
             if(Last.Status!=SectionStatus.Volume3D)return;
             positions.Clear();normals.Clear();uv.Clear();local4.Clear();provenance.Clear();top.Clear();side.Clear();
             foreach(var v in Last.Vertices)
             {
                 positions.Add(MapVector(v.Position)*Cell);normals.Add(MapVector(v.Normal));
                 var r=v.LocalPosition;
-                // Affine material field defined once in local 4D; no dependence on angle/camera.
+                // Affine material field defined once in local 4D; no dependence on angle/camera. Axes past W are thickness
+                // like W, so the symmetric field adds them too (a 4D vertex has none: its values are unchanged).
                 double lateral=symmetricMaterial?r.Y+r.W:r.Y;
+                if(symmetricMaterial)for(int axis=4;axis<r.Dimensions;axis++)lateral+=r.Axis(axis);
                 if(board)uv.Add(v.Surface==SurfaceKind.Top?new Vector2((float)(lateral/9+.5),(float)(r.X/9+.5)):new Vector2((float)(r.X*.25),(float)(r.Z*.8+lateral*.1)));
                 else uv.Add(v.Surface==SurfaceKind.Top?new Vector2((float)(lateral/(.58*size)+.5),(float)(r.X/(.72*size)+.5)):new Vector2((float)(r.X/size+.5),(float)((r.Z+lateral*.15)/size)));
                 local4.Add(new Vector4((float)r.X,(float)r.Y,(float)r.Z,(float)r.W));

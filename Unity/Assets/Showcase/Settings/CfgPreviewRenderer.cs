@@ -23,7 +23,7 @@ namespace Showcase.Unity.Settings
         static readonly ParallelOptions sectionWorkers=new ParallelOptions{MaxDegreeOfParallelism=Math.Max(1,Math.Min(8,System.Environment.ProcessorCount-2))};
         readonly List<QN> candidates=new List<QN>();
         readonly EnvironmentRig rig;
-        // One unit cell per N; the 4D cell is the original one.
+        // One unit cell per N (a 3D cell for N=3); the 4D cell is the original one.
         readonly Dictionary<int,ConvexShape> cellShapes=new Dictionary<int,ConvexShape>();
         ConvexShape Cell(int dimensions)
         {
@@ -122,7 +122,9 @@ namespace Showcase.Unity.Settings
             fillObject.AddComponent<MeshFilter>().sharedMesh=fillMesh;fillObject.AddComponent<MeshRenderer>().sharedMaterial=fillMaterial;
         }
         public static VecN V(QN p){var q=p.ToArray();var v=new double[Math.Max(4,q.Length)];for(int i=0;i<q.Length;i++)v[i]=q[i];return new VecN(v);}
-        static double L1(VecN p){double sum=0;for(int i=0;i<p.Dimensions;i++)sum+=Math.Abs(p.Axis(i));return sum;}
+        // Far above any view of the board (a fully turned 11D frame meets about 5,000 cells of the 4.5-cell window, at most about 9,000);
+        // it only stops a pathological frame, and Diagnostic says so.
+        public const int MaxCells=60000;
         public void Rebuild(SliceFrame frame,long revision,IEnumerable<CfgVisualPiece> source,IEnumerable<QN> g,IEnumerable<QN> p,QN? selected)
             =>Rebuild(frame,revision,source,g,p,Array.Empty<QN>(),selected);
         public void Rebuild(SliceFrame frame,long revision,IEnumerable<CfgVisualPiece> source,IEnumerable<QN> g,IEnumerable<QN> p,IEnumerable<QN> attacks,QN? selected)
@@ -134,38 +136,16 @@ namespace Showcase.Unity.Settings
             VisibleG=VisibleP=VisibleAttacks=VisiblePieces=0;cells.Clear();lines.Clear();colors.Clear();indices.Clear();displayEdges.Clear();fillVertices.Clear();fillColors.Clear();fillIndices.Clear();
             double half=HalfWindow;if(half<=0||double.IsNaN(half)||double.IsInfinity(half))throw new ArgumentOutOfRangeException(nameof(HalfWindow));
             lineObject.transform.position=fillObject.transform.position=Anchor;int n=frame.Dimensions;var cell=Cell(n);
-            // Enumerate only temporary geometric candidates; no 9^N state array is allocated. The N nested loops of the 4D code
-            // become one axis-by-axis recursion that drops a prefix as soon as no completion can reach the section window,
-            // so an axis-aligned view visits about 9^3 cells whatever N is. For N=4 the surviving cells and their order are unchanged.
-            var constraints=new List<VecN>();var bounds=new List<double>();
-            foreach(var normal in frame.Normals){constraints.Add(normal);bounds.Add(.5*L1(normal)+1e-8);}
-            foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ}){constraints.Add(axis);bounds.Add(half+.5*L1(axis));}
-            var offset=embedding-frame.Center;int k=constraints.Count;
-            // Largest |coefficient*d| any remaining axis can still add: d ranges over -4..4 plus the axis offset.
-            var remaining=new double[k,n+1];
-            for(int c=0;c<k;c++)for(int axis=n-1;axis>=0;axis--)remaining[c,axis]=remaining[c,axis+1]+Math.Abs(constraints[c].Axis(axis))*Math.Max(Math.Abs(-4+offset.Axis(axis)),Math.Abs(4+offset.Axis(axis)));
-            var coordinates=new int[n];var sums=new double[k];
-            void Visit(int axis)
-            {
-                for(int c=0;c<k;c++)if(Math.Abs(sums[c])-remaining[c,axis]>bounds[c])return;
-                if(axis<n)
-                {
-                    for(int value=-4;value<=4;value++)
-                    {
-                        coordinates[axis]=value;double d=value+offset.Axis(axis);
-                        for(int c=0;c<k;c++)sums[c]+=constraints[c].Axis(axis)*d;
-                        Visit(axis+1);
-                        for(int c=0;c<k;c++)sums[c]-=constraints[c].Axis(axis)*d;
-                    }
-                    return;
-                }
-                candidates.Add(new QN(coordinates));
-            }
-            candidates.Clear();Visit(0);
+            // The frame is checked once here, not per cell. No 9^N state array is allocated: the candidates are the cells the finite
+            // window meets, found by walking the window itself (FiniteSliceWindow.Cells), so the work follows the cells shown however
+            // many hidden axes a Ctrl+drag has mixed in. They come in the former lexicographic order, and every cell whose cut is solid
+            // is among them, so the cells kept below and their order are unchanged.
+            var cut=FiniteSliceWindow.Cutter(frame,half);candidates.Clear();
+            if(!FiniteSliceWindow.Cells(frame,embedding,half,-4,4,MaxCells,c=>candidates.Add(new QN(c))))Diagnostic="Cell grid stopped at "+MaxCells+" cells.";
             // Each cell's section is independent pure C#, so the cells are cut on worker threads and then
             // consumed below in enumeration order: the meshes are the same as cutting them one by one.
             var built=new SectionResult[candidates.Count];var cellShape=cell;var origin=embedding;
-            Parallel(built.Length,i=>built[i]=FiniteSliceWindow.Build(new InstanceN(cellShape,V(candidates[i])+origin,1,candidates[i].ToString()),frame,half));
+            Parallel(built.Length,i=>built[i]=cut(new InstanceN(cellShape,V(candidates[i])+origin)));
             for(int i=0;i<built.Length;i++)
             {
                 var q=candidates[i];var section=built[i];
@@ -202,17 +182,25 @@ namespace Showcase.Unity.Settings
                 var q=(item.Glide??V(item.Position))+embedding;int forward=item.Side==Side.A?1:-1;
                 if(view.PrepareSection(q,forward,frame,revision,half))jobs.Add((view,q,forward));
             }
-            var cut=new SectionResult[jobs.Count];
-            Parallel(cut.Length,i=>cut[i]=jobs[i].view.ComputeSection(jobs[i].q,jobs[i].forward,frame,half));
-            for(int i=0;i<jobs.Count;i++)jobs[i].view.ApplySection(cut[i]);
+            var sections=new SectionResult[jobs.Count];var errors=new Exception[jobs.Count];
+            Parallel(sections.Length,i=>{try{sections[i]=jobs[i].view.ComputeSection(jobs[i].q,jobs[i].forward,frame,half);}catch(Exception e){errors[i]=e;}});
+            // One failing piece must not leave the others on old meshes: every finished cut is applied and the first failure is
+            // raised only at the end. A piece whose cut never arrived keeps its previous pose, so the next frame cuts it again.
+            ExceptionDispatchInfo failure=null;
+            for(int i=0;i<jobs.Count;i++)
+            {
+                if(errors[i]!=null){failure??=ExceptionDispatchInfo.Capture(errors[i]);continue;}
+                try{jobs[i].view.ApplySection(sections[i]);}catch(Exception e){failure??=ExceptionDispatchInfo.Capture(e);}
+            }
             foreach(var item in items)
             {
-                var section=pieces[item.Id].Last;
-                pieces[item.Id].Renderer.enabled=ShowPieces&&section.Status==SectionStatus.Volume3D;
-                if(ShowPieces&&section.Status==SectionStatus.Volume3D)VisiblePieces++;
+                var section=pieces[item.Id].Last;bool solid=section!=null&&section.Status==SectionStatus.Volume3D;
+                pieces[item.Id].Renderer.enabled=ShowPieces&&solid;
+                if(ShowPieces&&solid)VisiblePieces++;
             }
             foreach(var id in pieces.Keys.Where(id=>!live.Contains(id)).ToArray()){pieces[id].Dispose();pieces.Remove(id);}
             LastBuildMilliseconds=watch.Elapsed.TotalMilliseconds;
+            failure?.Throw();
         }
         // Runs body(0..count-1) on the section workers; a failure surfaces as the original exception, as in the serial loop.
         static void Parallel(int count,Action<int> body)
