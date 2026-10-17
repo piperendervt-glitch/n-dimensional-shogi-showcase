@@ -161,6 +161,16 @@ static class PivotStorageTests
             Check(legacy.EmbeddingId == PivotViewSnapshot.EmbeddingVersion && Math.Abs(legacy.Anchor[1] - .86) < 1e-12 && legacy.Anchor[0] == .1 && legacy.Anchor[2] == -.2 && legacy.Center.SequenceEqual(new double[] { .5, -1, 3, .25 }));
             reject(() => new PivotViewSnapshot(3, new double[4], basis, new double[3], 4.5, .05, new double[] { 27, 31, 1.04, 0, 0, 0 }, "", default, default, "core-v-plus-height/0"));
         });
+        test("pivot-board-at-origin-file-loads-with-migration-notice", () =>
+        {
+            string path = PathFor("view-embedding-1"); var view = View();
+            PivotSettingsStore.SaveValid(path, SettingsDraft.CreateMatchDemo(), new MatchOptionsRaw(), PreviewSession.CreateExperiment(), view);
+            Check(PivotSettingsStore.Load(path).MigrationNotice == "", "Current embedding needs no notice.");
+            var doc = XDocument.Load(path); doc.Root!.Element(V + "view")!.SetAttributeValue("embedding", PivotViewSnapshot.LegacyBoardAtOriginVersion); File.WriteAllText(path, doc.ToString());
+            var loaded = PivotSettingsStore.Load(path);
+            Check(loaded.MigrationNotice.Length > 0 && loaded.View.EmbeddingId == PivotViewSnapshot.EmbeddingVersion, "A /1 file must be migrated with a notice so it is rewritten.");
+            Check(Math.Abs(loaded.View.Anchor[1] - (view.Anchor[1] - view.Height * view.CellScale)) < 1e-12, "Anchor moves to the board surface.");
+        });
         test("pivot-explicit-known-legacy-migration-keeps-logical-and-original-bytes", () =>
         {
             string match = PathFor("old-match"), trial = PathFor("old-trial"), target = PathFor("migrated"); var draft = SettingsDraft.CreateMatchDemo(); var options = new MatchOptionsRaw(); var preview = PreviewSession.CreateExperiment();

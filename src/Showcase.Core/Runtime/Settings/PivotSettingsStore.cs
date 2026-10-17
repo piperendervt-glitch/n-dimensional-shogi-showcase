@@ -78,19 +78,9 @@ namespace NDShogi.Showcase.Core.Settings
             if (bytes.Length > MaxBytes) throw new InvalidOperationException("保存bundleが上限1 MiBを超えています。");
             string full = Path.GetFullPath(path), directory = Path.GetDirectoryName(full)!;
             if (File.Exists(full) && Load(full).IsValidSettings != valid) throw new IOException("正常設定bundleと不正下書きbundleは別ファイルへ保存してください。");
-            Directory.CreateDirectory(directory);
-            string temporary = Path.Combine(directory, ".pivot-" + Guid.NewGuid().ToString("N") + ".tmp");
-            try
-            {
-                fault?.Invoke(SaveStage.BeforeWrite);
-                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None)) { stream.Write(bytes, 0, bytes.Length); stream.Flush(true); }
-                fault?.Invoke(SaveStage.AfterFlush);
-                Load(temporary); // Re-read flushed file, not merely the in-memory XDocument.
-                fault?.Invoke(SaveStage.BeforeReplace);
-                if (File.Exists(full)) File.Replace(temporary, full, null); else File.Move(temporary, full);
-                if (draft.ContentHash == before && LogicalContentHash(draft, options) == logicalBefore) draft.MarkSaved();
-            }
-            finally { if (File.Exists(temporary)) File.Delete(temporary); }
+            // Re-read the flushed file, not merely the in-memory XDocument.
+            AtomicFile.Write(full, bytes, ".pivot-", fault, temporary => Load(temporary));
+            if (draft.ContentHash == before && LogicalContentHash(draft, options) == logicalBefore) draft.MarkSaved();
         }
         public static LoadedPivotSettings Load(string path)
         {
@@ -152,7 +142,9 @@ namespace NDShogi.Showcase.Core.Settings
             if (A(v, "logicalHash") != logicalHash || A(v, "previewHash") != previewHash) throw new InvalidDataException("表示と論理設定・試し盤の対応hashが一致しません。");
             var view = new PivotViewSnapshot(Number(A(v, "height")), Vector(A(v, "center"), 4), Vector(A(v, "basis"), 16), Vector(A(v, "anchor"), 3),
                 Number(A(v, "halfWindow")), Number(A(v, "cellScale")), Vector(A(v, "camera"), 6), A(v, "selectedPiece"), Cell(A(v, "selectedCell")), Cell(A(v, "planeReference")), A(v, "embedding"));
-            return new LoadedPivotSettings(logical, preview, view);
+            // The snapshot itself already migrated a /1 view; say so, so the caller saves the new form once.
+            string notice = A(v, "embedding") == PivotViewSnapshot.LegacyBoardAtOriginVersion ? "表示の保存形式を更新しました（駒配置面を盤面に表示する形式）。次の自動保存で新形式になります。" : "";
+            return new LoadedPivotSettings(logical, preview, view, notice);
         }
     }
 }

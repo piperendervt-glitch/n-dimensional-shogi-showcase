@@ -12,7 +12,7 @@ namespace Showcase.Unity.Settings
 {
     public sealed partial class Cfg2App
     {
-        Q4 planeReferenceCell;
+        Q4 planeReferenceCell;bool migratedView;
         string trialSelectedPiece="subject";Q4 trialSelectedCell,trialPlaneReference;
         PivotViewSnapshot CapturePivotView(SliceAnimator animator,float cameraYaw,float cameraPitch,float cameraDistance,Vector3 cameraPan,string selected,Q4 cell,Q4 plane)
         {
@@ -53,7 +53,7 @@ namespace Showcase.Unity.Settings
                 yaw=(float)camera[0];pitch=(float)camera[1];distance=(float)camera[2];pan=new Vector3((float)camera[3],(float)camera[4],(float)camera[5]);
                 selectedPiece=saved.View.SelectedPieceId;selectedCell=saved.View.SelectedCell;planeReferenceCell=saved.View.PlaneReferenceCell;
                 if(preview.Find(selectedPiece)!=null)selectedDefinition=preview.Find(selectedPiece).DefinitionId;
-                notice=saved.MigrationNotice;Record("RestoredPivotBundle",saved.LogicalHash+";preview="+saved.PreviewHash+";"+saved.MigrationNotice);
+                notice=saved.MigrationNotice;migratedView=saved.MigrationNotice!="";Record("RestoredPivotBundle",saved.LogicalHash+";preview="+saved.PreviewHash+";"+saved.MigrationNotice);
             }
             catch(Exception e){startupLoadError=e.Message;notice="保存の読込に失敗："+e.Message;Record("LoadRejected",e.Message);}
         }

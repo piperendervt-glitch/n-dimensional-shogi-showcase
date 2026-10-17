@@ -52,6 +52,15 @@ static class PivotTests
         var glide=new SliceAnimator(Initial());glide.Request(ReferenceView.XZW);glide.Advance(.2);glide.Place(new Vec4(1,0,3,2),new Vec3(.1,.8,0));
         check(glide.IsAnimating,"Place keeps the turn running");Same(glide.Center,new Vec4(1,0,3,2),"Place sets C");Same(glide.DisplayState.Anchor,new Vec3(.1,.8,0),"Place sets A");
         glide.Advance(1);check(!glide.IsAnimating&&glide.StableView==ReferenceView.XZW,"Turn lands after Place");Same(glide.Center,new Vec4(1,0,3,2),"Turn keeps the placed C");Same(glide.DisplayState.Anchor,new Vec3(.1,.8,0),"Turn keeps the placed A");
+        // A queued leg keeps the duration it was requested with, even when SecondsPerLeg changes before it starts.
+        var queued=new SliceAnimator(Initial());queued.SecondsPerLeg=1.6;queued.Request(ReferenceView.XZW);queued.Request(ReferenceView.XYW);queued.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;
+        queued.Advance(1.6);check(queued.IsAnimating&&queued.TargetView==ReferenceView.XYW,"Queued leg starts after the first");
+        queued.Advance(1.0);check(queued.IsAnimating,"Queued 1.6 s leg still turning after 1 s");queued.Advance(.6);check(!queued.IsAnimating&&queued.StableView==ReferenceView.XYW,"Queued leg lands on XYW");
+        // Snapping is to whole core cells, so a fractional embedding height does not shift the grid on Y.
+        var half=new SliceAnimator(new PivotViewState(2.5,SliceAxes.Reference(ReferenceView.XYZ,new Vec4(0,0,2.5,0)),new Vec3(0,.86,0),ShapeFactory.CellPitchMetres,FiniteSliceWindow.DefaultHalfExtent));
+        var yDrag=new AxisDrag(half,new InputOwnership());check(yDrag.Begin(LogicalAxis.Y,3,0,0,40,0),"Y drag begins");
+        yDrag.Update(3,AxisDrag.PixelsPerCell*1.37,0,true);Same(half.Center,new Vec4(0,0,3.5,0),"Y snap lands on core V=1, world 3.5");
+        Same(half.DisplayState.WorldToCore(half.Center),new Vec4(0,0,1,0),"Snapped Y is a whole core cell");yDrag.Complete(3);
         Reject(()=>{try{slow.SecondsPerLeg=0;}catch(ArgumentOutOfRangeException e){throw new ArgumentException(e.Message);}},"Zero leg duration rejected");
     }
     static void EmbeddingAndPivots()

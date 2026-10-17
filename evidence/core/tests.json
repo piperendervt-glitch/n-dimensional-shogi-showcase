@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "passed": 32,
+  "passed": 37,
   "failed": 0,
   "tests": [
     {
@@ -68,11 +68,27 @@
       "status": "PASS"
     },
     {
-      "name": "directed-live-complete-19-ply-cpu-evaluated-route",
+      "name": "directed-live-complete-27-ply-cpu-evaluated-route",
       "status": "PASS"
     },
     {
-      "name": "scene-pressure-height-hidden-and-ending-guards",
+      "name": "scene-pressure-three-height-exchanges-hidden-ending-guards",
+      "status": "PASS"
+    },
+    {
+      "name": "ordinary-B-mixed-piece-development-after-escape",
+      "status": "PASS"
+    },
+    {
+      "name": "ordinary-B-development-does-not-use-escape-ply",
+      "status": "PASS"
+    },
+    {
+      "name": "four-dimensional-presentation-metadata-alternates-one-move",
+      "status": "PASS"
+    },
+    {
+      "name": "early-four-dimensional-escape-is-rejected-by-scenario-guard",
       "status": "PASS"
     },
     {
@@ -129,6 +145,10 @@
     },
     {
       "name": "all-run-snapshots-preserve-rules-and-capabilities",
+      "status": "PASS"
+    },
+    {
+      "name": "q4-text-is-culture-invariant",
       "status": "PASS"
     }
   ]

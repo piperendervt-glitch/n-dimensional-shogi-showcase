@@ -39,7 +39,8 @@ namespace Showcase.Geometry.Interaction
         {
             if(!IsActive||pointerId!=pointer||!ownership.IsOwner(InputOwner.Axis,pointerId)||!Finite(x)||!Finite(y))return false;
             double amount=((x-startX)*unitX+(y-startY)*unitY)/PixelsPerCell;
-            if(snap){double start=Vec4.Dot(original,SliceAxes.WorldAxis(axis));amount=Math.Round(start+amount,MidpointRounding.AwayFromZero)-start;}
+            // Board cells are whole numbers in core coordinates; the world Y axis also carries the embedding height.
+            if(snap){double start=Vec4.Dot(slice.DisplayState.WorldToCore(original),SliceAxes.WorldAxis(axis));amount=Math.Round(start+amount,MidpointRounding.AwayFromZero)-start;}
             return slice.SetCenter(original+SliceAxes.WorldAxis(axis)*amount);
         }
         public bool Complete(int pointerId)

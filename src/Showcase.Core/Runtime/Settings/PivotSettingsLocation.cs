@@ -52,19 +52,11 @@ namespace NDShogi.Showcase.Core.Settings
             string name = Path.GetFileName(bundle);
             var document = new XDocument(new XElement(N + "selection", new XAttribute("schema", "1"), new XAttribute("file", name)));
             byte[] bytes = new UTF8Encoding(false).GetBytes(document.ToString(SaveOptions.DisableFormatting));
-            Directory.CreateDirectory(root);
-            string temporary = Path.Combine(root, ".pivot-location-" + Guid.NewGuid().ToString("N") + ".tmp");
-            try
+            AtomicFile.Write(selector, bytes, ".pivot-location-", fault, temporary =>
             {
-                fault?.Invoke(SaveStage.BeforeWrite);
-                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None)) { stream.Write(bytes, 0, bytes.Length); stream.Flush(true); }
-                fault?.Invoke(SaveStage.AfterFlush);
                 if (ReadName(temporary) != name) throw new InvalidDataException("保存先selectorの書込再検証に失敗しました。");
                 RequireValid(bundle);
-                fault?.Invoke(SaveStage.BeforeReplace);
-                if (File.Exists(selector)) File.Replace(temporary, selector, null); else File.Move(temporary, selector);
-            }
-            finally { if (File.Exists(temporary)) File.Delete(temporary); }
+            });
         }
 
         private static string Root(string runtimeRoot)

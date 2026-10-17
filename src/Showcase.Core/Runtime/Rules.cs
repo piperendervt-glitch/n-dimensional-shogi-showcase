@@ -31,7 +31,9 @@ namespace NDShogi.Showcase.Core
         public static Q4 operator +(Q4 a,Q4 b)=>new Q4(a.F+b.F,a.U+b.U,a.V+b.V,a.W+b.W);
         public static Q4 operator -(Q4 a,Q4 b)=>new Q4(a.F-b.F,a.U-b.U,a.V-b.V,a.W-b.W);
         public int Manhattan(Q4 x)=>Math.Abs(F-x.F)+Math.Abs(U-x.U)+Math.Abs(V-x.V)+Math.Abs(W-x.W);
-        public override string ToString()=>string.Join(",",F,U,V,W);
+        // Invariant on purpose: cells feed hashes, move keys (CPU tie-break) and saved files, so a locale whose
+        // minus sign is U+2212 must not change them.
+        public override string ToString()=>F.ToString(CultureInfo.InvariantCulture)+","+U.ToString(CultureInfo.InvariantCulture)+","+V.ToString(CultureInfo.InvariantCulture)+","+W.ToString(CultureInfo.InvariantCulture);
     }
     public sealed class Piece
     {

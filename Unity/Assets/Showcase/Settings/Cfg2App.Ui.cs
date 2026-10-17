@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -98,7 +99,7 @@ namespace Showcase.Unity.Settings
             var r=Cfg2Ui.Panel(parent,"Hyperplane "+view,x,y,w,h,new Color(.03f,.05f,.10f,.38f),true);
             var glass=r.GetComponentInChildren<Cfg2PanelBorder>();glass.color=new Color(.80f,.87f,1,.55f);glass.Glow=true;
             helperPanels.Add(r);
-            var mini=r.gameObject.AddComponent<Cfg2MiniView>();mini.Initialize(slice,ownership,view,()=>{geometryDirty=true;stableDirty=true;},v=>{slice.Request(v);geometryDirty=true;},()=>canvas.scaleFactor);minis.Add(mini);
+            var mini=r.gameObject.AddComponent<Cfg2MiniView>();mini.Initialize(()=>slice,ownership,view,()=>{geometryDirty=true;stableDirty=true;},v=>{slice.Request(v);geometryDirty=true;},()=>canvas.scaleFactor);minis.Add(mini);
         }
         void RefreshAuxiliaryViews()
         {
@@ -118,13 +119,16 @@ namespace Showcase.Unity.Settings
             var ds=draft.Current.Definitions.Where(d=>!d.Id.StartsWith("promoted")).ToArray();
             for(int i=0;i<Math.Min(8,ds.Length);i++)
             {
-                var d=ds[i];string[] shortNames={"王（玉将）","飛車","角行","金将","銀将","桂馬","香車","歩兵"};var b=Button(pieceHost,"piece-"+d.Id,shortNames[i],9,52+i*65,168,59,()=>SelectDefinition(d.Id),d.Id==selectedDefinition);
+                var d=ds[i];var b=Button(pieceHost,"piece-"+d.Id,ShortNames.TryGetValue(d.Id,out var shortName)?shortName:d.Name,9,52+i*65,168,59,()=>SelectDefinition(d.Id),d.Id==selectedDefinition);
                 var label=b.GetComponentInChildren<Text>();label.fontSize=17;label.alignment=TextAnchor.MiddleLeft;label.rectTransform.anchoredPosition=new Vector2(53,-3);label.rectTransform.sizeDelta=new Vector2(108,53);
                 Cfg2Ui.PieceIcon(b.transform,d.Id,Side.A,7,6,37,46);
             }
             CfgUi.Label(pieceHost,"成りなし",12,607,162,30,18,Muted);
             CfgUi.Label(pieceHost,"と金・成銀・成桂\n成香・龍王・龍馬\n\nこのデモでは無効",12,648,162,160,16,Muted);
         }
+        // Looked up by definition id so a reordered definition list cannot mislabel a button.
+        static readonly System.Collections.Generic.Dictionary<string,string> ShortNames=new System.Collections.Generic.Dictionary<string,string>
+        {{"king-step","王（玉将）"},{"rook-h11","飛車"},{"bishop-h22","角行"},{"gold-legacy","金将"},{"silver-legacy","銀将"},{"knight-legacy","桂馬"},{"lance-legacy","香車"},{"pawn-step","歩兵"}};
         void SelectCategory(int index)
         {RememberScroll();category=index;for(int i=0;i<6;i++)actions["category-"+i].GetComponent<Image>().color=i==index?CfgUi.Blue:Dark;BuildDetails();Record("Category",index.ToString());}
         void SelectDefinition(string id)
@@ -167,7 +171,7 @@ namespace Showcase.Unity.Settings
                 CfgUi.Label(c,"初期配置：40駒",8,7,330,44,25,Gold);
                 CfgUi.Label(c,"論理盤：各軸 −4〜4\nX / Y / Z / W\n\n先手 A：+Z方向\n後手 B：−Z方向\n\n初期配置は両側20駒。\n表示の駒配置面はY=h、W=0。\n開始中心Pは駒配置面の中央。\n先手Aから開始します。\n\n試し配置は対局に入りません。",8,71,330,450,20);
                 CfgUi.Label(c,"試し配置セル X,Y,Z,W",8,562,330,30,18);
-                var coordinate=CfgUi.Input(c,"0,0,0,0",8,606,330,41,value=>{var p=value.Split(',');if(p.Length==4&&p.All(s=>int.TryParse(s,out _))){selectedCell=new Q4(int.Parse(p[2]),int.Parse(p[0]),int.Parse(p[1]),int.Parse(p[3]));if(!selectedCell.InBounds)Notice("各軸 −4〜4で指定してください。");}else Notice("4つの整数を入力してください。");});inputs["coordinate"]=coordinate;
+                var coordinate=CfgUi.Input(c,"0,0,0,0",8,606,330,41,value=>{var p=value.Split(',');if(p.Length==4&&p.All(s=>int.TryParse(s,NumberStyles.Integer,CultureInfo.InvariantCulture,out _))){selectedCell=FromUiAxes(p.Select(s=>int.Parse(s,NumberStyles.Integer,CultureInfo.InvariantCulture)).ToArray());if(!selectedCell.InBounds)Notice("各軸 −4〜4で指定してください。");}else Notice("4つの整数を入力してください。");});inputs["coordinate"]=coordinate;
                 Button(c,"place-coordinate","指定セルに置く",8,660,330,42,()=>PlaceAt(selectedCell));
             }
             else if(category==3)
@@ -220,8 +224,7 @@ namespace Showcase.Unity.Settings
                 }
                 else {CfgUi.Label(c,d.Kind=="h11/1"?"軸方向の走り H(1,1)":"2軸の走り H(2,2)",8,65,330,45,20);Field(c,"distance","最大距離",d.MaxDistance,130,v=>Edit(x=>x.MaxDistance=v,false));}
                 CfgUi.Label(c,"使用する軸",8,431,330,32,19);int.TryParse(d.AxesMask,out var mask);
-                string[] axes={"X","Y","Z","W"};int[] ids={1,2,0,3};
-                for(int i=0;i<4;i++){int bit=1<<ids[i];Toggle(c,axes[i],(mask&bit)!=0,8+i*83,476,82,v=>Edit(x=>{int.TryParse(x.AxesMask,out int m);x.AxesMask=(v?m|bit:m&~bit).ToString();}));}
+                for(int i=0;i<4;i++){var axis=(LogicalAxis)i;int bit=1<<SliceAxes.CoreAxis(axis);Toggle(c,axis.ToString(),(mask&bit)!=0,8+i*83,476,82,v=>Edit(x=>{int.TryParse(x.AxesMask,out int m);x.AxesMask=(v?m|bit:m&~bit).ToString();}));}
                 CfgUi.Label(c,"青：移動候補   赤：攻撃範囲\n金：選択中の駒\n\n全4Dで照会し、表示内を描きます。",8,548,330,146,18,Muted);
             }
             else
@@ -234,6 +237,8 @@ namespace Showcase.Unity.Settings
                 CfgUi.Label(c,"味方のセルへは移動できません。\n\n王捕獲デモの着手候補です。\n完全合法性L・詰みは未評価。\n\n変更は試し盤と次局へ反映します。",8,389,330,217,18,Muted);
             }
         }
+        // The coordinate field is written in UI order X,Y,Z,W; Q4 is in core order.
+        static Q4 FromUiAxes(int[] xyzw){var core=new int[4];for(int i=0;i<4;i++)core[SliceAxes.CoreAxis((LogicalAxis)i)]=xyzw[i];return new Q4(core[0],core[1],core[2],core[3]);}
         void BuildDisplay(RectTransform c,float y=8)
         {
             Toggle(c,"移動候補を表示",showCandidates,8,y,330,v=>showCandidates=v);Toggle(c,"攻撃範囲を表示",showAttacks,8,y+49,330,v=>showAttacks=v);Toggle(c,"座標グリッドを表示",showGrid,8,y+98,330,v=>showGrid=v);

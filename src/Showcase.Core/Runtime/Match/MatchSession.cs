@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 
@@ -165,7 +166,9 @@ namespace NDShogi.Showcase.Core.Match
             if (State.Turn == Side.A) aSeconds = Math.Max(0, aSeconds - elapsed); else bSeconds = Math.Max(0, bSeconds - elapsed);
             if ((State.Turn == Side.A ? aSeconds : bSeconds) <= 0) End(MatchOutcome.TimeLoss, RuleCore.Other(State.Turn), "持ち時間0：単調時計");
         }
-        private void InvalidateCpu() { Generation++; pending = null; }
+        // A held CPU clock belongs to the request being presented; any invalidation (commit, presentation end,
+        // pause, retry) releases it so the hold can never carry over to the next CPU turn.
+        private void InvalidateCpu() { Generation++; pending = null; CpuClockHeld = false; }
         private void End(MatchOutcome outcome, Side? winner, string detail)
         {
             if (IsFinished) return; string before = State.Hash;
@@ -215,7 +218,7 @@ namespace NDShogi.Showcase.Core.Match
         }
         public void CompletePresentation()
         {
-            if (!presentationPending || IsFinished || Phase != MatchPhase.Presentation && Phase != MatchPhase.CvcPaused) return; Tick();
+            if (!presentationPending || IsFinished || (Phase != MatchPhase.Presentation && Phase != MatchPhase.CvcPaused)) return; Tick();
             bool stayPaused = Phase == MatchPhase.CvcPaused || pauseAfterPresentation;
             presentationPending = false;
             Phase = stayPaused ? MatchPhase.CvcPaused : MatchPhase.Active; pauseAfterPresentation = false; InvalidateCpu();
@@ -223,7 +226,8 @@ namespace NDShogi.Showcase.Core.Match
         }
         public bool PauseCvc()
         {
-            Tick(); if (Snapshot.Mode != MatchMode.CvC || IsFinished) return false;
+            // A processing fault is left only through RetryProcessing, which re-runs the failed query.
+            Tick(); if (Snapshot.Mode != MatchMode.CvC || IsFinished || Phase == MatchPhase.ProcessingPaused) return false;
             Phase = MatchPhase.CvcPaused; stopAfterOne = false; pauseAfterPresentation = false; InvalidateCpu(); events.Add(new MatchEvent("cvc-pause", this, State.Hash)); return true;
         }
         public bool ResumeCvc()
@@ -241,7 +245,14 @@ namespace NDShogi.Showcase.Core.Match
         }
         public bool RetryProcessing()
         {
-            Tick(); if (Phase != MatchPhase.ProcessingPaused || IsFinished) return false; FaultReason = ""; Phase = MatchPhase.Active; InvalidateCpu(); events.Add(new MatchEvent("processing-retry", this, State.Hash)); return true;
+            Tick(); if (Phase != MatchPhase.ProcessingPaused || IsFinished) return false; FaultReason = ""; InvalidateCpu(); events.Add(new MatchEvent("processing-retry", this, State.Hash));
+            if (!presentationPending) { Phase = MatchPhase.Active; return true; }
+            // The fault came from the next-turn query after a commit: run it again and resume the hand-over it interrupted.
+            Phase = MatchPhase.Presentation;
+            var legal = QueryLegal();
+            if (legal.Status == MatchQueryStatus.Complete && legal.Moves.Count == 0) End(MatchOutcome.NoMovesDraw, null, "次手番の完了済み着手候補が0件");
+            else if (legal.Status != MatchQueryStatus.Complete) SuspendProcessing("次手番照会未完了：" + legal.Reason);
+            return true;
         }
         public void Interrupt(string reason = "メニュー復帰") { Tick(); if (!IsFinished) End(MatchOutcome.Interrupted, null, reason); }
         public CpuRequest BeginCpuRequest()
@@ -254,8 +265,15 @@ namespace NDShogi.Showcase.Core.Match
         public bool TryApplyCpu(CpuResult result, out string reason)
         {
             Tick();
-            if (!CanCpuAct || !pending.HasValue || !pending.Value.Equals(result.Stamp) || result.Stamp.MatchId != Snapshot.MatchId || result.Stamp.Revision != Revision || result.Stamp.Turn != State.Turn || result.Stamp.RuleHash != Config.RuleHash || result.Stamp.Generation != Generation)
+            // pending was stamped from this session's current match, revision, turn, rules and generation, so equality covers them all.
+            if (!CanCpuAct || !pending.HasValue || !pending.Value.Equals(result.Stamp))
             { reason = "古い/終了後/取消後のCPU応答を拒否しました。"; return false; }
+            if (result.Status == MatchQueryStatus.Partial)
+            {
+                // Retrying recomputes the same partial result, so say what has to change.
+                reason = "CPU未完了：照会予算" + Config.CpuBudget.ToString(CultureInfo.InvariantCulture) + "件では全候補を照会できません（照会済み" + result.EvaluatedCandidates.ToString(CultureInfo.InvariantCulture) + "件）。オプションのCPU設定で照会予算を増やし、次の対局を始めてください。";
+                SuspendProcessing(reason); return false;
+            }
             if (result.Status != MatchQueryStatus.Complete) { reason = "CPU未完了：" + result.Status + " " + result.Reason; SuspendProcessing(reason); return false; }
             if (!result.Move.HasValue)
             {

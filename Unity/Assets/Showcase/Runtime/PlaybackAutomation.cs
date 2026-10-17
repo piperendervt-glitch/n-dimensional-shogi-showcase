@@ -196,7 +196,7 @@ namespace Showcase.Unity
             if(exit&&controller!=null)
             {
                 if(!controller.InspectPlayback().exitDialog)controller.CommandExitToggle();
-                controller.CommandExitConfirm();
+                controller.CommandExitConfirm(failed?2:0);
             }
         }
     }

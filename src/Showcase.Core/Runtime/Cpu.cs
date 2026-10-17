@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace NDShogi.Showcase.Core
@@ -72,7 +73,7 @@ namespace NDShogi.Showcase.Core
         public CpuDecision(string cpu,Move move,string observationHash,IEnumerable<CandidateScore> candidates,int seed,int budget,int nodes,string explanation,bool rescue=false)
         {
             Cpu=cpu;Move=move;ObservationHash=observationHash;Candidates=Array.AsReadOnly(candidates.ToArray());Seed=seed;NodeBudget=budget;NodesVisited=nodes;PreferenceExplanation=explanation;NonPawnRescue=rescue;
-            Fingerprint=StableHash.Of(cpu+"|"+move.Key+"|"+observationHash+"|"+seed+"|"+budget+"|"+nodes+"|"+string.Join(";",Candidates.Select(c=>c.Move.Key+":"+c.TacticalScore+":"+c.PreferenceScore+":"+c.ReplyNodes)));
+            Fingerprint=StableHash.Of(cpu+"|"+move.Key+"|"+observationHash+"|"+seed.ToString(CultureInfo.InvariantCulture)+"|"+budget.ToString(CultureInfo.InvariantCulture)+"|"+nodes.ToString(CultureInfo.InvariantCulture)+"|"+string.Join(";",Candidates.Select(c=>c.Move.Key+":"+Convert.ToString(c.TacticalScore,CultureInfo.InvariantCulture)+":"+Convert.ToString(c.PreferenceScore,CultureInfo.InvariantCulture)+":"+Convert.ToString(c.ReplyNodes,CultureInfo.InvariantCulture))));
         }
     }
     public static class PieceValue

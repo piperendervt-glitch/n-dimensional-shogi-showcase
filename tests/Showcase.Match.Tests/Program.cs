@@ -172,6 +172,26 @@ Test("C2-09-partial-cancel-fault-never-zero-or-draw", () =>
     Assert(cancelled.Status == MatchQueryStatus.Cancelled && !s.TryApplyCpu(cancelled, out _)); Assert(s.State.Outcome == MatchOutcome.Ongoing);
     Assert(s.RetryProcessing()); s.SuspendProcessing("injected worker exception"); Assert(s.Phase == MatchPhase.ProcessingPaused && s.State.Outcome == MatchOutcome.Ongoing);
 });
+Test("C2-09-partial-reason-names-budget-and-evaluated-count", () =>
+{
+    var s = MatchSession.Create(Compile(options: new MatchOptionsRaw { CpuBudget = "1" }), MatchMode.CvC, new ManualClock()); var result = MatchCpu.Compute(s.BeginCpuRequest());
+    Assert(!s.TryApplyCpu(result, out var reason)); Assert(reason.Contains("照会予算1件") && reason.Contains("照会済み" + result.EvaluatedCandidates + "件"), reason); Assert(s.FaultReason == reason);
+});
+Test("C2-09-retry-after-handover-fault-resumes-presentation-not-input", () =>
+{
+    var s = MatchSession.Create(Compile(), MatchMode.CvC, new ManualClock()); Assert(ApplyCpu(s, out _)); Assert(s.PresentationPaused);
+    s.SuspendProcessing("injected next-turn query fault"); Assert(s.Phase == MatchPhase.ProcessingPaused);
+    Assert(!s.PauseCvc() && s.Phase == MatchPhase.ProcessingPaused); Assert(!s.ResumeCvc());
+    Assert(s.RetryProcessing()); Assert(s.Phase == MatchPhase.Presentation && !s.CanCpuAct && !s.Clock.Running && s.FaultReason == "");
+    s.CompletePresentation(); Assert(s.Phase == MatchPhase.Active && s.CanCpuAct && s.State.Ply == 1);
+    var idle = MatchSession.Create(Compile(), MatchMode.CvC, new ManualClock()); idle.SuspendProcessing("injected"); Assert(idle.RetryProcessing() && idle.Phase == MatchPhase.Active);
+});
+Test("C2-12-cpu-clock-hold-released-when-cpu-request-is-invalidated", () =>
+{
+    var clock = new ManualClock(); var s = MatchSession.Create(Compile(), MatchMode.CvC, clock); s.BeginCpuRequest(); s.CpuClockHeld = true; Assert(!s.Clock.Running);
+    Assert(s.PauseCvc()); Assert(!s.CpuClockHeld); Assert(s.ResumeCvc()); clock.Advance(2); s.Tick(); Near(s.Clock.ASeconds, 598);
+    s.CpuClockHeld = true; s.SuspendProcessing("injected"); Assert(!s.CpuClockHeld);
+});
 Test("C2-10-pick-revision-generation-double-commit-rejected", () =>
 {
     var s = MatchSession.Create(Compile(), MatchMode.PvP, new ManualClock()); var move = s.QueryLegal().Moves.First(); long revision = s.Revision, generation = s.Generation;

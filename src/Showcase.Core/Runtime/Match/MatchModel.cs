@@ -45,7 +45,7 @@ namespace NDShogi.Showcase.Core.Match
         {
             Preset = preset; raw = options.Clone(); TimeSeconds = time; CpuSeed = seed; CpuBudget = budget; CpuDelayMilliseconds = delay;
             RuleHash = StableHash.Of(RuleId + "/" + RuleVersion + "|" + preset.RuleHash + "|king-capture;no-moves-draw;time-loss;no-self-check;no-promotion;no-drops;no-repetition|" + time.ToString("R", CultureInfo.InvariantCulture));
-            SettingsHash = StableHash.Of(RuleHash + "|" + CpuId + "|" + seed + "|" + budget + "|" + delay + "|" + ClockPolicy);
+            SettingsHash = StableHash.Of(RuleHash + "|" + CpuId + "|" + seed.ToString(CultureInfo.InvariantCulture) + "|" + budget.ToString(CultureInfo.InvariantCulture) + "|" + delay.ToString(CultureInfo.InvariantCulture) + "|" + ClockPolicy);
         }
         public MatchOptionsRaw ToRaw() => raw.Clone();
         public static string DefinitionId(PieceKind kind) => kind == PieceKind.King ? "king-step" : kind == PieceKind.Pawn ? "pawn-step" : kind == PieceKind.Rook ? "rook-h11" : kind == PieceKind.Bishop ? "bishop-h22" : kind.ToString().ToLowerInvariant() + "-legacy";
@@ -128,6 +128,19 @@ namespace NDShogi.Showcase.Core.Match
         }
         public static QueryResult Query(MatchConfig config, MatchState state, string pieceId, CancellationToken cancellation = default, int budget = int.MaxValue)
             => PreviewQuery.Execute(config.Preset, state.ToPreview(config), pieceId, cancellation, budget);
+        // Explicit mapping instead of matching enum names as strings: an unmapped value fails here, by name.
+        private static MatchQueryStatus ToMatchStatus(QueryStatus status)
+        {
+            switch (status)
+            {
+                case QueryStatus.Complete: return MatchQueryStatus.Complete;
+                case QueryStatus.Partial: return MatchQueryStatus.Partial;
+                case QueryStatus.Cancelled: return MatchQueryStatus.Cancelled;
+                case QueryStatus.Unsupported: return MatchQueryStatus.Unsupported;
+                case QueryStatus.Invalid: return MatchQueryStatus.Invalid;
+                default: throw new ArgumentOutOfRangeException(nameof(status), status, null);
+            }
+        }
         public static LegalMoveResult QueryLegal(MatchConfig config, MatchState state, CancellationToken cancellation = default, int budget = int.MaxValue)
         {
             var moves = new List<Move>(); int evaluated = 0;
@@ -141,7 +154,7 @@ namespace NDShogi.Showcase.Core.Match
                     if (cancellation.IsCancellationRequested) return new LegalMoveResult(MatchQueryStatus.Cancelled, moves, evaluated);
                     var q = PreviewQuery.Execute(config.Preset, preview, p.Id, cancellation, Math.Max(0, budget - evaluated)); evaluated += q.EvaluatedCandidates;
                     moves.AddRange(q.P.Select(to => new Move(p.Id, p.Position, to)));
-                    if (q.Status != QueryStatus.Complete) return new LegalMoveResult((MatchQueryStatus)Enum.Parse(typeof(MatchQueryStatus), q.Status.ToString()), moves, evaluated, q.Reason);
+                    if (q.Status != QueryStatus.Complete) return new LegalMoveResult(ToMatchStatus(q.Status), moves, evaluated, q.Reason);
                 }
                 return new LegalMoveResult(MatchQueryStatus.Complete, moves, evaluated, "王捕獲デモの着手可能手。自玉安全を制約する完全Lではありません。");
             }

@@ -91,22 +91,12 @@ namespace NDShogi.Showcase.Core.Settings
             if (bytes.Length > MaxBytes) throw new InvalidOperationException("保存データが上限1 MiBを超えています。");
             // Round-trip validation happens before touching an old file.
             Parse(document);
-            Directory.CreateDirectory(directory);
-            string temporary = Path.Combine(directory, ".cfg1-" + Guid.NewGuid().ToString("N") + ".tmp");
-            try
+            Match.AtomicFile.Write(full, bytes, ".cfg1-", fault);
+            if (draft.ContentHash == beforeHash)
             {
-                fault?.Invoke(SaveStage.BeforeWrite);
-                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None)) { stream.Write(bytes, 0, bytes.Length); stream.Flush(true); }
-                fault?.Invoke(SaveStage.AfterFlush);
-                fault?.Invoke(SaveStage.BeforeReplace);
-                if (File.Exists(full)) File.Replace(temporary, full, null); else File.Move(temporary, full);
-                if (draft.ContentHash == beforeHash)
-                {
-                    if (saveAs) draft.Edit(d => d.Id = data.Id);
-                    draft.MarkSaved();
-                }
+                if (saveAs) draft.Edit(d => d.Id = data.Id);
+                draft.MarkSaved();
             }
-            finally { if (File.Exists(temporary)) File.Delete(temporary); }
         }
         public static LoadedSettings Load(string path)
         {

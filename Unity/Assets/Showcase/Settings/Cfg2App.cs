@@ -46,13 +46,14 @@ namespace Showcase.Unity.Settings
         Vector3 CameraBase=>SectionView.Anchor;
         SliceAnimator NewPivotSlice()=>new SliceAnimator(PivotViewState.CreateInitial(new Vec3(SectionView.Anchor.x,SectionView.Anchor.y,SectionView.Anchor.z),SectionView.Cell));
         [Serializable] sealed class RunConfig {public string runRoot;}
+        bool startupFailed;
         void Start()
         {
+            // A plain double-click start (no launcher identity arguments) saves under persistentDataPath.
+            // Starts with --pivot-request-id keep the strict launcher/build identity check used by tests.
+            bool standalone=Arg("--pivot-request-id","")=="";
             try
             {
-                // A plain double-click start (no launcher identity arguments) saves under persistentDataPath.
-                // Starts with --pivot-request-id keep the strict launcher/build identity check used by tests.
-                bool standalone=Arg("--pivot-request-id","")=="";
                 if(standalone){runRoot=Application.persistentDataPath;Directory.CreateDirectory(runRoot);}
                 else
                 {
@@ -64,6 +65,7 @@ namespace Showcase.Unity.Settings
                 runtimeRoot=Path.Combine(runRoot,"runtime-data",Arg("--cfg2-data","user"));
                 if(!Path.GetFullPath(runtimeRoot).StartsWith(Path.GetFullPath(Path.Combine(runRoot,"runtime-data"))+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new ArgumentException("Invalid runtime data path");
                 Directory.CreateDirectory(runtimeRoot); recordRoot=Path.Combine(runRoot,"match-records");Directory.CreateDirectory(recordRoot);
+                if(standalone)PruneOldFiles();
                 validPath=Path.Combine(runtimeRoot,"pivot-next-match.xml");draftPath=Path.Combine(runtimeRoot,"pivot-invalid-draft.xml");trialPath=Path.Combine(runtimeRoot,"trial-view.xml");
                 Application.runInBackground=true;Application.targetFrameRate=45;QualitySettings.vSyncCount=0;
                 var fonts=Font.GetOSInstalledFontNames();var fontName=new[]{"Yu Gothic UI","Yu Gothic","Meiryo","MS Gothic"}.FirstOrDefault(fonts.Contains);
@@ -78,13 +80,43 @@ namespace Showcase.Unity.Settings
                 previewRenderer.SetDisplayState(slice.DisplayState);
                 draft=SettingsDraft.CreateMatchDemo();options=new MatchOptionsRaw();preview=PreviewSession.CreateExperiment();
                 LoadStartup();trialSlice=slice;ValidateSettings();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
-                trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;settingsDirty=!File.Exists(validPath)&&startupLoadError=="";
+                trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;settingsDirty=(!File.Exists(validPath)||migratedView)&&startupLoadError=="";
                 Application.wantsToQuit+=PrepareShutdown;
                 Record("Started","CFG2; font="+fontName+"; "+Screen.width+"x"+Screen.height+"; reportedDpi="+Screen.dpi+"; data="+runtimeRoot);
                 WritePlayerIdentity("Menu");
                 if(Arg("--cfg2-smoke","")!="")StartCoroutine(Smoke());
             }
-            catch(Exception e){Debug.LogException(e);enabled=false;Application.Quit(2);}
+            catch(Exception e)
+            {
+                Debug.LogException(e);
+                if(!standalone){enabled=false;Application.Quit(2);return;}
+                // A double-click start has no launcher to read the exit code, so say why on screen instead of closing.
+                Application.wantsToQuit-=PrepareShutdown;startupFailed=true;ShowStartupError(e);
+            }
+        }
+        void ShowStartupError(Exception e)
+        {
+            var go=new GameObject("CFG2 startup error",typeof(RectTransform),typeof(Canvas),typeof(CanvasScaler));
+            var errorCanvas=go.GetComponent<Canvas>();errorCanvas.renderMode=RenderMode.ScreenSpaceOverlay;errorCanvas.sortingOrder=1000;
+            var back=new GameObject("Background",typeof(RectTransform),typeof(Image));back.transform.SetParent(go.transform,false);
+            var backRect=(RectTransform)back.transform;backRect.anchorMin=Vector2.zero;backRect.anchorMax=Vector2.one;backRect.offsetMin=backRect.offsetMax=Vector2.zero;back.GetComponent<Image>().color=new Color(.03f,.04f,.06f,1);
+            var label=new GameObject("Message",typeof(RectTransform),typeof(Text));label.transform.SetParent(go.transform,false);
+            var labelRect=(RectTransform)label.transform;labelRect.anchorMin=Vector2.zero;labelRect.anchorMax=Vector2.one;labelRect.offsetMin=new Vector2(48,48);labelRect.offsetMax=new Vector2(-48,-48);
+            var text=label.GetComponent<Text>();text.font=Font.CreateDynamicFontFromOSFont(new[]{"Yu Gothic UI","Yu Gothic","Meiryo","MS Gothic","Arial"},22);text.fontSize=22;text.color=Color.white;
+            text.text="四次元将棋を起動できませんでした。\nThe game could not start.\n\n"+e.Message+"\n\n詳細ログ / Log: "+Application.consoleLogPath+"\n\nEsc：終了 / Quit";
+        }
+        // Standalone starts keep only the newest per-launch traces and per-match view files; match records are kept.
+        void PruneOldFiles()
+        {
+            const int keep=20;
+            foreach(var pattern in new[]{"events-*.tsv","pivot-match-*.xml"})
+            {
+                try
+                {
+                    foreach(var old in new DirectoryInfo(runtimeRoot).GetFiles(pattern).OrderByDescending(f=>f.LastWriteTimeUtc).Skip(keep))old.Delete();
+                }
+                catch(Exception e){Debug.LogWarning("CFG2 could not prune "+pattern+": "+e.Message);}
+            }
         }
         string Arg(string key,string fallback){var a=System.Environment.GetCommandLineArgs();int i=Array.IndexOf(a,key);return i>=0&&i+1<a.Length?a[i+1]:fallback;}
         void Record(string name,string data="")
@@ -146,12 +178,15 @@ namespace Showcase.Unity.Settings
         }
         void Update()
         {
+            if(startupFailed){if(Input.GetKeyDown(KeyCode.Escape))Application.Quit(2);return;}
             if(slice==null)return;
             if(previousWidth!=Screen.width||previousHeight!=Screen.height){previousWidth=Screen.width;previousHeight=Screen.height;layoutRevision++;ownership.Cancel();pointerButton=-1;RefreshAuxiliaryViews();}
             if(slice.IsAnimating){slice.Advance(Time.unscaledDeltaTime);geometryDirty=true;stableDirty=true;}
             UpdateMatch();if(geometryDirty)RenderGeometry();
             if(settingsDirty&&Time.unscaledTime>=saveDue)AutoSave();
-            if(stableDirty&&!slice.IsAnimating&&ownership.Owner==InputOwner.None&&Time.unscaledTime>=saveDue+.5f)SaveStableView();
+            // The view is saved once it has settled: never during a CPU move show, a turn reset or a piece glide,
+            // which move C every frame without marking the slice as animating.
+            if(stableDirty&&!slice.IsAnimating&&!PresentingMove&&ownership.Owner==InputOwner.None&&Time.unscaledTime>=saveDue+.5f)SaveStableView();
             bool typing=EventSystem.current?.currentSelectedGameObject?.GetComponent<InputField>()!=null;
             if(!typing&&ownership.Owner==InputOwner.None&&Input.GetKeyDown(KeyCode.Home)&&IsPivotHomeSurface(Input.mousePosition))
             {

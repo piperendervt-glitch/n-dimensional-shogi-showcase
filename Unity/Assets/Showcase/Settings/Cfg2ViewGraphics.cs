@@ -32,6 +32,40 @@ namespace Showcase.Unity.Settings
         internal static void Arrow(VertexHelper vh,Vector2 from,Vector2 to,Color color)
         {if((to-from).magnitude<2)return;Line(vh,from,to,new Color(0,0,0,.75f),4.4f);Line(vh,from,to,color,2.4f);var d=(to-from).normalized;var n=new Vector2(-d.y,d.x);Triangle(vh,to,to-d*8+n*4,to-d*8-n*4,color);}
     }
+    // Press, drag and release of one world-axis handle, shared by the XYZW gizmo and the hyperplane panels.
+    // A press without movement is a click; a drag moves C along the axis (snapping while Shift or Ctrl is held).
+    internal sealed class Cfg2AxisDragHandle
+    {
+        readonly Func<SliceAnimator> currentSlice;readonly InputOwnership ownership;readonly Func<float> uiScale;readonly Action changed;readonly Action<LogicalAxis> clicked;
+        AxisDrag drag;Vector2 down;int pointer;bool pressed,moved;LogicalAxis pressedAxis;float dragScale=1;
+        internal Cfg2AxisDragHandle(Func<SliceAnimator> currentSlice,InputOwnership ownership,Func<float> uiScale,Action changed,Action<LogicalAxis> clicked)
+        {this.currentSlice=currentSlice;this.ownership=ownership;this.uiScale=uiScale;this.changed=changed;this.clicked=clicked;}
+        internal void Down(LogicalAxis axis,PointerEventData e,Vector2 screenDirection)
+        {
+            if(e.button!=PointerEventData.InputButton.Left||ownership.Owner!=InputOwner.None||pressed)return;
+            if(EventSystem.current?.currentSelectedGameObject?.GetComponent<InputField>()?.isFocused==true)return;
+            down=e.position;pointer=e.pointerId;pressedAxis=axis;pressed=true;moved=false;dragScale=Mathf.Max(.01f,uiScale?.Invoke()??1);
+            // Always the live slice: a match or settings switch replaces it.
+            drag=new AxisDrag(currentSlice(),ownership);
+            // Endpoints are the ones rendered this frame; Canvas pixels are used for both length and displacement.
+            if(!drag.Begin(axis,pointer,e.position.x/dragScale,e.position.y/dragScale,screenDirection.x,screenDirection.y))
+                if(!ownership.TryBegin(InputOwner.Axis,pointer,()=>pressed=false))pressed=false;
+        }
+        internal void Drag(PointerEventData e)
+        {
+            if(!pressed||e.pointerId!=pointer||!ownership.IsOwner(InputOwner.Axis,pointer))return;moved|=(e.position-down).magnitude/dragScale>6;
+            if(moved&&drag.Update(pointer,e.position.x/dragScale,e.position.y/dragScale,Cfg2Ui.SnapHeld))changed?.Invoke();
+        }
+        internal void Up(PointerEventData e)
+        {
+            if(!pressed||e.pointerId!=pointer)return;pressed=false;if(!ownership.IsOwner(InputOwner.Axis,pointer))return;
+            if(drag.IsActive)drag.Complete(pointer);else ownership.Release(InputOwner.Axis,pointer);
+            if(!moved)clicked(pressedAxis);changed?.Invoke();
+        }
+        // Another owner (Esc, focus loss, resize) took the input.
+        internal void Update(){if(pressed&&!ownership.IsOwner(InputOwner.Axis,pointer)){pressed=false;changed?.Invoke();}}
+        internal void Cancel(bool notify=true){drag?.Cancel();if(pressed&&ownership.IsOwner(InputOwner.Axis,pointer))ownership.Cancel();pressed=false;if(notify)changed?.Invoke();}
+    }
     internal sealed class Cfg2AxisGizmo : MonoBehaviour
     {
         Cfg2GizmoGraphic graphic;readonly Dictionary<LogicalAxis,Button> buttons=new Dictionary<LogicalAxis,Button>();
@@ -39,11 +73,10 @@ namespace Showcase.Unity.Settings
         internal long ViewRevision {get;private set;}
         internal long CameraRevision {get;private set;}
         readonly Dictionary<LogicalAxis,Vector2> directions=new Dictionary<LogicalAxis,Vector2>();
-        InputOwnership ownership;Func<SliceAnimator> currentSlice;Func<float> uiScale;Action changed;Action<LogicalAxis> selected;
-        AxisDrag drag;Vector2 down;int pointer;bool pressed,moved;LogicalAxis pressedAxis;float dragScale;
+        Cfg2AxisDragHandle handle;
         internal void Initialize(Action<LogicalAxis> selected,Func<SliceAnimator> currentSlice,InputOwnership ownership,Action changed,Func<float> scale)
         {
-            this.selected=selected;this.currentSlice=currentSlice;this.ownership=ownership;this.changed=changed;uiScale=scale;
+            handle=new Cfg2AxisDragHandle(currentSlice,ownership,scale,changed,selected);
             // The globe carries its own light, so the host panel keeps only a faint tint and no frame.
             var host=GetComponent<Image>();if(host!=null)host.color=new Color(.01f,.02f,.05f,.10f);
             foreach(var frame in GetComponentsInChildren<Cfg2PanelBorder>())frame.enabled=false;
@@ -51,25 +84,12 @@ namespace Showcase.Unity.Settings
             foreach(LogicalAxis axis in Enum.GetValues(typeof(LogicalAxis)))
             {var captured=axis;var b=Cfg2Ui.Button(transform,axis.ToString(),0,0,48,27,()=>{});var image=b.GetComponent<Image>();image.color=new Color(0,0,0,0);b.GetComponentInChildren<Cfg2PanelBorder>().enabled=false;
                 var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=18;t.color=Cfg2Projection.AxisColor(axis);t.rectTransform.anchoredPosition=new Vector2(0,-1);t.rectTransform.sizeDelta=new Vector2(48,25);Cfg2Glow.GlowText(t,t.color);b.targetGraphic=t;buttons.Add(axis,b);
-                var surface=b.gameObject.AddComponent<CfgPointerSurface>();surface.Down=e=>OnDown(captured,e);surface.Drag=OnDrag;surface.Up=OnUp;}
+                var surface=b.gameObject.AddComponent<CfgPointerSurface>();surface.Down=e=>handle.Down(captured,e,AxisScreenDirection(captured));surface.Drag=handle.Drag;surface.Up=handle.Up;}
         }
         internal Vector2 AxisScreenDirection(LogicalAxis axis)=>directions.TryGetValue(axis,out var value)?value:Vector2.zero;
         internal bool IsPointerOver(Vector2 point)=>gameObject.activeInHierarchy&&RectTransformUtility.RectangleContainsScreenPoint((RectTransform)transform,point,null);
-        void OnDown(LogicalAxis axis,PointerEventData e)
-        {
-            if(e.button!=PointerEventData.InputButton.Left||ownership.Owner!=InputOwner.None||pressed)return;
-            if(EventSystem.current?.currentSelectedGameObject?.GetComponent<InputField>()?.isFocused==true)return;
-            down=e.position;pointer=e.pointerId;pressedAxis=axis;pressed=true;moved=false;dragScale=Mathf.Max(.01f,uiScale());drag=new AxisDrag(currentSlice(),ownership);
-            var direction=AxisScreenDirection(axis);
-            if(!drag.Begin(axis,pointer,e.position.x/dragScale,e.position.y/dragScale,direction.x,direction.y))
-                if(!ownership.TryBegin(InputOwner.Axis,pointer,()=>pressed=false))pressed=false;
-        }
-        void OnDrag(PointerEventData e)
-        {if(!pressed||e.pointerId!=pointer||!ownership.IsOwner(InputOwner.Axis,pointer))return;moved|=(e.position-down).magnitude/dragScale>6;if(moved&&drag.Update(pointer,e.position.x/dragScale,e.position.y/dragScale,Cfg2Ui.SnapHeld))changed();}
-        void OnUp(PointerEventData e)
-        {if(!pressed||e.pointerId!=pointer)return;pressed=false;if(!ownership.IsOwner(InputOwner.Axis,pointer))return;if(drag.IsActive)drag.Complete(pointer);else ownership.Release(InputOwner.Axis,pointer);if(!moved)selected(pressedAxis);changed();}
-        void Update(){if(pressed&&!ownership.IsOwner(InputOwner.Axis,pointer)){pressed=false;changed();}}
-        void OnDisable(){drag?.Cancel();if(pressed&&ownership.IsOwner(InputOwner.Axis,pointer))ownership.Cancel();pressed=false;}
+        void Update()=>handle?.Update();
+        void OnDisable()=>handle?.Cancel(false);
         internal void Refresh(SliceFrame frame,Quaternion rotation,long viewRevision,long cameraRevision)
         {
             ViewRevision=viewRevision;CameraRevision=cameraRevision;graphic.Frame=frame;graphic.CameraRotation=rotation;graphic.SetVerticesDirty();

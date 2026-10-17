@@ -21,6 +21,15 @@ namespace Showcase.Geometry.Interaction
             switch(view){case ReferenceView.XYZ:return new SliceFrame(center,f,u,v,w);case ReferenceView.XYW:return new SliceFrame(center,f*c+w*s,u,v,f*(-s)+w*c);case ReferenceView.XZW:return new SliceFrame(center,f,u,v*c+w*s,v*(-s)+w*c);case ReferenceView.YZW:return new SliceFrame(center,f,u*c+w*s,v,u*(-s)+w*c);default:throw new ArgumentOutOfRangeException(nameof(view));}
         }
         public static string DisplayName(ReferenceView view)=>view.ToString();
+        // Vec4 components are core axes, not UI axes: Vec4.X is UI Z. Use these instead of writing the permutation out.
+        public static int CoreAxis(LogicalAxis a)
+        {switch(a){case LogicalAxis.X:return 1;case LogicalAxis.Y:return 2;case LogicalAxis.Z:return 0;case LogicalAxis.W:return 3;default:throw new ArgumentOutOfRangeException(nameof(a));}}
+        // UI axis that each reference hyperplane holds fixed (the axis whose button selects it).
+        public static LogicalAxis NormalAxis(ReferenceView view)
+        {switch(view){case ReferenceView.XYZ:return LogicalAxis.W;case ReferenceView.XYW:return LogicalAxis.Z;case ReferenceView.XZW:return LogicalAxis.Y;case ReferenceView.YZW:return LogicalAxis.X;default:throw new ArgumentOutOfRangeException(nameof(view));}}
+        public static double Coordinate(Vec4 value,int coreAxis)=>SliceRotations.Component(value,coreAxis);
+        public static Vec4 WithCoordinate(Vec4 value,int coreAxis,double coordinate)
+            =>new Vec4(coreAxis==0?coordinate:value.X,coreAxis==1?coordinate:value.Y,coreAxis==2?coordinate:value.Z,coreAxis==3?coordinate:value.W);
         // Core axis (F=0,U=1,V=2,W=3) that each reference hyperplane holds fixed.
         public static int NormalCoreAxis(ReferenceView view)
         {switch(view){case ReferenceView.XYZ:return 3;case ReferenceView.XYW:return 0;case ReferenceView.XZW:return 2;case ReferenceView.YZW:return 1;default:throw new ArgumentOutOfRangeException(nameof(view));}}
@@ -41,11 +50,11 @@ namespace Showcase.Geometry.Interaction
     {
         public const double SecondsPerQuarterTurn=.45;
         double secondsPerLeg=SecondsPerQuarterTurn,legSeconds=SecondsPerQuarterTurn;
-        // Duration of legs started from now on; a running leg keeps the duration it started with.
+        // Duration of legs requested from now on; a running or queued leg keeps the duration it was requested with.
         public double SecondsPerLeg {get=>secondsPerLeg;set{if(!(value>0)||double.IsInfinity(value))throw new ArgumentOutOfRangeException(nameof(value));secondsPerLeg=value;}}
         readonly List<PlaneTurn> turns=new List<PlaneTurn>();
         readonly bool legacyFramesOnly;
-        ReferenceView? stable,pending;ReferenceView target;double elapsed;bool active;SliceFrame start;
+        ReferenceView? stable,pending;ReferenceView target;double elapsed,pendingSeconds;bool active;SliceFrame start;
         readonly struct PlaneTurn
         {public readonly int A,B;public readonly double Angle;public PlaneTurn(int a,int b,double angle){A=a;B=b;Angle=angle;}}
         public PivotViewState DisplayState {get;private set;}
@@ -64,12 +73,12 @@ namespace Showcase.Geometry.Interaction
         public bool Request(ReferenceView view)
         {
             SliceAxes.Reference(view,Center);
-            if(active){if(target==view||pending==view)return false;pending=view;return true;}
-            if(stable==view)return false;Start(view);return true;
+            if(active){if(target==view||pending==view)return false;pending=view;pendingSeconds=secondsPerLeg;return true;}
+            if(stable==view)return false;Start(view,secondsPerLeg);return true;
         }
-        void Start(ReferenceView view)
+        void Start(ReferenceView view,double seconds)
         {
-            target=view;start=Frame;turns.Clear();elapsed=0;active=true;legSeconds=secondsPerLeg;
+            target=view;start=Frame;turns.Clear();elapsed=0;active=true;legSeconds=seconds;
             var end=SliceAxes.Reference(view,Center);
             var a=new[]{start.AxisX,start.AxisY,start.AxisZ,start.Normal};var b=new[]{end.AxisX,end.AxisY,end.AxisZ,end.Normal};
             var relative=new double[4,4];
@@ -99,7 +108,7 @@ namespace Showcase.Geometry.Interaction
                 var pose=new SliceFrame(Center,start.AxisX,start.AxisY,start.AxisZ,start.Normal);
                 for(int i=turns.Count-1;i>=0;i--)pose=SliceRotations.Rotate(pose,turns[i].A,turns[i].B,turns[i].Angle*s);
                 DisplayState=DisplayState.WithOrientation(pose);ViewRevision++;
-                if(t>=1){stable=target;DisplayState=DisplayState.WithOrientation(SliceAxes.Reference(target,Center));active=false;if(pending.HasValue){var next=pending.Value;pending=null;if(next!=stable)Start(next);}}
+                if(t>=1){stable=target;DisplayState=DisplayState.WithOrientation(SliceAxes.Reference(target,Center));active=false;if(pending.HasValue){var next=pending.Value;pending=null;if(next!=stable)Start(next,pendingSeconds);}}
             }
             return true;
         }

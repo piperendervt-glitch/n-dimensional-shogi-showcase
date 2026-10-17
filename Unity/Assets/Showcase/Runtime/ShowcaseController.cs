@@ -150,7 +150,7 @@ namespace Showcase.Unity
             SetCameraGoal();rig.Camera.transform.position=cameraGoal;rig.Camera.transform.LookAt(lookGoal);
             Event("RunStarted",mode+"; all rules fixed; official 40-piece initial state");RefreshGeometry();
             if(paused)Event("StartupPaused","Waiting for Space before advancing the first scene; R explicitly restarts playback.");
-            StartCoroutine(Sequence());if(recordFrames)StartCoroutine(CaptureFrames());
+            StartCoroutine(Guarded(Sequence()));if(recordFrames)StartCoroutine(CaptureFrames());
         }
         IEnumerator Sequence()
         {
@@ -229,7 +229,7 @@ namespace Showcase.Unity
             StartCoroutine(EndingGlow());yield return Hold(.35);Screenshot("scene05-ending");
             yield return Hold(7);while(passCapture!=null&&passCapture.IsBusy)yield return null;captureFinished=true;evidence.Dispose();
             if(runIndex<loopCount){RestartRun();yield break;}
-            if(exitAtEnd){quitting=true;Application.Quit(passCapture!=null&&passCapture.HasAuditFailures?2:0);}
+            if(exitAtEnd){quitting=true;Application.Quit(AuditExitCode);}
         }
         CpuDecision ChooseDecision(GameState state)
         {
@@ -264,7 +264,7 @@ namespace Showcase.Unity
                 rig.Camera.transform.position=new Vector3(.25f,1.14f,-.32f);rig.Camera.transform.LookAt(new Vector3(0,.87f,0));
                 yield return Hold(3);Screenshot("shape-AC-"+a);yield return new WaitForEndOfFrame();while(passCapture!=null&&passCapture.IsBusy)yield return null;
             }
-            captureFinished=true;evidence.Dispose();if(exitAtEnd)Application.Quit(passCapture!=null&&passCapture.HasAuditFailures?2:0);
+            captureFinished=true;evidence.Dispose();if(exitAtEnd)Application.Quit(AuditExitCode);
         }
         IEnumerator Hold(double seconds)
         {double t=0;while(t<seconds){if(!paused)t+=Time.unscaledDeltaTime*speed;yield return null;}}
@@ -301,7 +301,7 @@ namespace Showcase.Unity
             yield return LightingShot("lighting-restored");
             if(tx.State.Hash!=hash||tx.State.Ply!=0||tx.CommitCount!=0){Fail(new InvalidOperationException("Lighting diagnostics changed the game state."));yield break;}
             Event("LightingAuditComplete","All shared effect APIs exercised; fixed camera/state; actual output images require pixel and visual review.");
-            captureFinished=true;evidence.Dispose();if(exitAtEnd)Application.Quit();
+            captureFinished=true;evidence.Dispose();if(exitAtEnd)Application.Quit(AuditExitCode);
         }
         IEnumerator AblateGpu()
         {
@@ -310,7 +310,7 @@ namespace Showcase.Unity
             string hash=tx.State.Hash;yield return Hold(2);
             yield return GpuAblation.Run(rig,evidence,transition,Path.Combine(evidence.DirectoryPath,"gpu-ablation.json"),message=>Event("GpuAblation",message));
             if(tx.State.Hash!=hash||tx.State.Ply!=0){Fail(new InvalidOperationException("GPU ablation changed the game state."));yield break;}
-            captureFinished=true;evidence.Dispose();if(exitAtEnd)Application.Quit();
+            captureFinished=true;evidence.Dispose();if(exitAtEnd)Application.Quit(AuditExitCode);
         }
         IEnumerator LightingShot(string name)
         {
@@ -433,7 +433,24 @@ namespace Showcase.Unity
         public void CommandToggleTransition(){transitionAllowed=!transitionAllowed;transition.EffectEnabled=profile=="ShowcaseRaster"&&transitionAllowed;Event("TransitionToggle",transition.EffectEnabled.ToString());}
         public void CommandRestart(){try{RestartRun();}catch(Exception e){Fail(e);}}
         public void CommandExitToggle(){if(exitDialog){exitDialog=false;paused=previousPause;}else{previousPause=paused;paused=true;exitDialog=true;}Event("ExitDialog",exitDialog.ToString());}
-        public void CommandExitConfirm(){if(!exitDialog)return;quitting=true;Event("ExitConfirmed","Shared Enter command");evidence?.Dispose();Application.Quit();}
+        // exitCode lets automation report a failed run to its launcher; the Enter key always exits with 0.
+        public void CommandExitConfirm(int exitCode=0){if(!exitDialog)return;quitting=true;Event("ExitConfirmed","Shared Enter command; exitCode="+exitCode);evidence?.Dispose();Application.Quit(exitCode);}
+        int AuditExitCode=>passCapture!=null&&passCapture.HasAuditFailures?2:0;
+        // Runs a playback coroutine with nested enumerators flattened, so an exception at any depth
+        // reaches Fail() (overlay and exit code 1) instead of silently stopping the coroutine.
+        IEnumerator Guarded(IEnumerator body)
+        {
+            var stack=new Stack<IEnumerator>();stack.Push(body);
+            while(stack.Count>0)
+            {
+                object next=null;bool moved;
+                try{moved=stack.Peek().MoveNext();if(moved)next=stack.Peek().Current;}
+                catch(Exception e){Fail(e);yield break;}
+                if(!moved){stack.Pop();continue;}
+                if(next is IEnumerator nested){stack.Push(nested);continue;}
+                yield return next;
+            }
+        }
         public PlaybackSnapshot InspectPlayback()=>new PlaybackSnapshot{stateHash=tx?.State.Hash??"",failure=failed,evidenceDirectory=evidence?.DirectoryPath??"",
             ply=tx?.State.Ply??0,commitCount=tx?.CommitCount??0,runIndex=runIndex,scene=scene,pieceViews=pieces.Count,angle=angle,elapsed=elapsed,
             paused=paused,debug=debug,reserved=tx?.HasReservation??false,terminal=tx!=null&&tx.State.Outcome!=GameOutcome.Ongoing,exitDialog=exitDialog,

@@ -84,21 +84,34 @@ namespace NDShogi.Showcase.Core.Match
             return new LoadedMatchSettings(data, raw, kind == "next-match");
         }
     }
+    // The one write-flush-verify-replace sequence used by every store. The original file is touched only by the
+    // final Replace/Move, so a fault at any earlier stage leaves it as it was.
     internal static class AtomicFile
     {
         internal static void Write(string path, string text, int maxBytes, Action<SaveStage>? fault)
         {
             byte[] bytes = new UTF8Encoding(false).GetBytes(text); if (bytes.Length > maxBytes) throw new InvalidOperationException("保存サイズ上限超過");
+            Write(path, bytes, ".cfg2-", fault);
+        }
+        // verifyTemporary re-reads the flushed temporary file before it replaces the original.
+        internal static void Write(string path, byte[] bytes, string temporaryPrefix, Action<SaveStage>? fault, Action<string>? verifyTemporary = null)
+        {
             string full = Path.GetFullPath(path), dir = Path.GetDirectoryName(full)!; Directory.CreateDirectory(dir);
-            string temporary = Path.Combine(dir, ".cfg2-" + Guid.NewGuid().ToString("N") + ".tmp");
+            string temporary = Path.Combine(dir, temporaryPrefix + Guid.NewGuid().ToString("N") + ".tmp");
             try
             {
                 fault?.Invoke(SaveStage.BeforeWrite);
                 using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None)) { stream.Write(bytes, 0, bytes.Length); stream.Flush(true); }
-                fault?.Invoke(SaveStage.AfterFlush); fault?.Invoke(SaveStage.BeforeReplace);
+                fault?.Invoke(SaveStage.AfterFlush);
+                verifyTemporary?.Invoke(temporary);
+                fault?.Invoke(SaveStage.BeforeReplace);
                 if (File.Exists(full)) File.Replace(temporary, full, null); else File.Move(temporary, full);
             }
-            finally { if (File.Exists(temporary)) File.Delete(temporary); }
+            finally
+            {
+                // A failed cleanup must not hide the exception that interrupted the save.
+                try { if (File.Exists(temporary)) File.Delete(temporary); } catch (IOException) { } catch (UnauthorizedAccessException) { }
+            }
         }
     }
     public static class MatchRecordStore

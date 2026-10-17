@@ -78,6 +78,25 @@ namespace Showcase.Unity
         {
             if(targetCamera==null||ctx.hdCamera.camera!=targetCamera||requests.Count==0)return;
             var request=requests.Dequeue();active.Add(request);
+            // A failure while setting up must not leave the request active forever (IsBusy would never clear).
+            var readbacks=new bool[request.targets.Length];
+            try{RecordRequest(ctx,material,request,readbacks);}
+            catch(Exception e)
+            {
+                request.errors.Add("Capture setup failed: "+e.Message);LastError=e.ToString();HasAuditFailures=true;Debug.LogError("Pass evidence: "+e);
+                for(int mode=0;mode<readbacks.Length;mode++)
+                    if(!readbacks[mode]&&request.targets[mode]!=null){request.targets[mode].Release();Destroy(request.targets[mode]);request.targets[mode]=null;}
+                request.expectedBuffers=readbacks.Count(x=>x);
+                if(request.expectedBuffers==0)
+                {
+                    active.Remove(request);
+                    try{WriteManifest(request,"READBACK_FAILED");File.WriteAllText(request.prefix+"-passes-status.txt","READBACK_FAILED\n");}
+                    catch(Exception write){Debug.LogError("Pass evidence: "+write);}
+                }
+            }
+        }
+        void RecordRequest(CustomPassContext ctx,Material material,CaptureRequest request,bool[] readbacks)
+        {
             request.width=ctx.hdCamera.actualWidth;request.height=ctx.hdCamera.actualHeight;request.captureFrame=Time.frameCount;
             request.expectedVersion=versionProvider==null?-1:versionProvider();request.depthDisplayRange=DepthDisplayRangeMetres;
             var views=sectionProvider==null?Array.Empty<SectionView>():sectionProvider().Where(v=>v!=null).ToArray();
@@ -115,6 +134,7 @@ namespace Showcase.Unity
                     if(!r.hasError)data.bytes=r.GetData<byte>().ToArray();
                     completed.Enqueue(data);
                 });
+                readbacks[mode]=true;
             }
             if(gpuFault!=null&&request.prefix.EndsWith("scene04-absence",StringComparison.Ordinal))
             {

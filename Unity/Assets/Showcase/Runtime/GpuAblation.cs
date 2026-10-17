@@ -45,8 +45,14 @@ namespace Showcase.Unity
             var hdCamera=rig.Camera.GetComponent<HDAdditionalCameraData>();
             var foliage=rig.Root.GetComponentsInChildren<MeshRenderer>().Where(r=>r.name.StartsWith("Laurel foliage")).ToArray();
             var environmentRenderers=rig.Root.GetComponentsInChildren<MeshRenderer>().ToArray();
-            profile.TryGet<HDShadowSettings>(out var shadows);profile.TryGet<ScreenSpaceAmbientOcclusion>(out var ao);profile.TryGet<ContactShadows>(out var contact);
+            if(!profile.TryGet<HDShadowSettings>(out var shadows)||!profile.TryGet<ScreenSpaceAmbientOcclusion>(out var ao)||!profile.TryGet<ContactShadows>(out var contact))
+                throw new InvalidOperationException("GPU ablation needs shadow, SSAO and contact shadow overrides in the showcase volume.");
             int blocker=sun.dirLightPCSSBlockerSampleCount,filter=sun.dirLightPCSSFilterSampleCount,cascades=shadows.cascadeShadowSplitCount.value,shadowResolution=sun.shadowResolution.@override;
+            // Every revert restores the value captured here, so no state leaks into the next measurement.
+            var cubeCamera=cube.settingsRaw.cameraSettings;var planarCamera=planar.settingsRaw.cameraSettings;var planarResolution=planar.settingsRaw.resolutionScalable.@override;bool cubeTimeSlicing=cube.timeSlicing;
+            float aoIntensity=ao.intensity.value;bool aoIntensityOverride=ao.intensity.overrideState,aoFull=ao.fullResolution,aoBilateral=ao.bilateralUpsample;int aoSteps=ao.stepCount,aoDirections=ao.directionCount;
+            bool contactEnabled=contact.enable.value,contactOverride=contact.enable.overrideState;int contactSamples=contact.sampleCount;var antialiasing=hdCamera.antialiasing;
+            void RestoreCube()=>cube.settingsRaw.cameraSettings=cubeCamera;void RestorePlanar()=>planar.settingsRaw.cameraSettings=planarCamera;
             var states=new List<State>
             {
                 new State{Name="baseline",Description="All showcase effects as shipped",Apply=()=>{},Revert=()=>{}},
@@ -59,22 +65,22 @@ namespace Showcase.Unity
                 new State{Name="foliage-hidden",Description="Tree and planter leaves not rendered at all",Apply=()=>{foreach(var r in foliage)r.enabled=false;},Revert=()=>{foreach(var r in foliage)r.enabled=true;}},
                 new State{Name="environment-hidden",Description="Whole courtyard hidden; board, pieces, sky, post only",Apply=()=>{foreach(var r in environmentRenderers)r.enabled=false;},Revert=()=>{foreach(var r in environmentRenderers)r.enabled=true;}},
                 new State{Name="cube-probe-off",Description="Per-frame 128px local cubemap disabled",Apply=()=>cube.enabled=false,Revert=()=>cube.enabled=true},
-                new State{Name="cube-probe-lean",Description="Cubemap keeps rendering every frame but without shadow maps, SSAO, contact shadows, volumetrics",Apply=()=>Lean(cube),Revert=()=>ShowcaseEnvironment.ConfigureReflectionRender(cube,false)},
-                new State{Name="cube-probe-timesliced",Description="Cubemap time sliced across frames",Apply=()=>cube.timeSlicing=true,Revert=()=>cube.timeSlicing=false},
+                new State{Name="cube-probe-lean",Description="Cubemap keeps rendering every frame but without shadow maps, SSAO, contact shadows, volumetrics",Apply=()=>Lean(cube),Revert=RestoreCube},
+                new State{Name="cube-probe-timesliced",Description="Cubemap time sliced across frames",Apply=()=>cube.timeSlicing=true,Revert=()=>cube.timeSlicing=cubeTimeSlicing},
                 new State{Name="planar-off",Description="Per-frame 512px planar reflection disabled",Apply=()=>planar.enabled=false,Revert=()=>planar.enabled=true},
-                new State{Name="planar-lean",Description="Planar keeps rendering every frame but without shadow maps, SSAO, contact shadows, volumetrics",Apply=()=>Lean(planar),Revert=()=>ShowcaseEnvironment.ConfigureReflectionRender(planar,true)},
-                new State{Name="planar-256",Description="Planar reflection at 256px",Apply=()=>planar.settingsRaw.resolutionScalable.@override=PlanarReflectionAtlasResolution.Resolution256,Revert=()=>planar.settingsRaw.resolutionScalable.@override=PlanarReflectionAtlasResolution.Resolution512},
-                new State{Name="both-probes-lean",Description="Cubemap and planar both without shadow maps, SSAO, contact shadows, volumetrics",Apply=()=>{Lean(cube);Lean(planar);},Revert=()=>{ShowcaseEnvironment.ConfigureReflectionRender(cube,false);ShowcaseEnvironment.ConfigureReflectionRender(planar,true);}},
+                new State{Name="planar-lean",Description="Planar keeps rendering every frame but without shadow maps, SSAO, contact shadows, volumetrics",Apply=()=>Lean(planar),Revert=RestorePlanar},
+                new State{Name="planar-256",Description="Planar reflection at 256px",Apply=()=>planar.settingsRaw.resolutionScalable.@override=PlanarReflectionAtlasResolution.Resolution256,Revert=()=>planar.settingsRaw.resolutionScalable.@override=planarResolution},
+                new State{Name="both-probes-lean",Description="Cubemap and planar both without shadow maps, SSAO, contact shadows, volumetrics",Apply=()=>{Lean(cube);Lean(planar);},Revert=()=>{RestoreCube();RestorePlanar();}},
                 new State{Name="reflections-off",Description="All reflection probes disabled (F6)",Apply=()=>rig.Debug.SetEffect(EnvironmentEffect.Reflections,false),Revert=()=>rig.Debug.SetEffect(EnvironmentEffect.Reflections,true)},
-                new State{Name="ao-off",Description="SSAO intensity 0 (pass skipped)",Apply=()=>ao.intensity.Override(0),Revert=()=>ao.intensity.Override(1.2f)},
-                new State{Name="ao-half-res",Description="SSAO at half resolution with bilateral upsample",Apply=()=>{ao.fullResolution=false;ao.bilateralUpsample=true;},Revert=()=>ao.fullResolution=true},
-                new State{Name="ao-4-steps-2-dirs",Description="SSAO 4 steps / 2 directions, full resolution",Apply=()=>{ao.stepCount=4;ao.directionCount=2;},Revert=()=>{ao.stepCount=8;ao.directionCount=4;}},
-                new State{Name="contact-off",Description="Contact shadows disabled",Apply=()=>contact.enable.Override(false),Revert=()=>contact.enable.Override(true)},
-                new State{Name="contact-12-samples",Description="Contact shadows 12 samples instead of 24",Apply=()=>contact.sampleCount=12,Revert=()=>contact.sampleCount=24},
+                new State{Name="ao-off",Description="SSAO intensity 0 (pass skipped)",Apply=()=>ao.intensity.Override(0),Revert=()=>{ao.intensity.value=aoIntensity;ao.intensity.overrideState=aoIntensityOverride;}},
+                new State{Name="ao-half-res",Description="SSAO at half resolution with bilateral upsample",Apply=()=>{ao.fullResolution=false;ao.bilateralUpsample=true;},Revert=()=>{ao.fullResolution=aoFull;ao.bilateralUpsample=aoBilateral;}},
+                new State{Name="ao-4-steps-2-dirs",Description="SSAO 4 steps / 2 directions, full resolution",Apply=()=>{ao.stepCount=4;ao.directionCount=2;},Revert=()=>{ao.stepCount=aoSteps;ao.directionCount=aoDirections;}},
+                new State{Name="contact-off",Description="Contact shadows disabled",Apply=()=>contact.enable.Override(false),Revert=()=>{contact.enable.value=contactEnabled;contact.enable.overrideState=contactOverride;}},
+                new State{Name="contact-12-samples",Description="Contact shadows 12 samples instead of 24",Apply=()=>contact.sampleCount=12,Revert=()=>contact.sampleCount=contactSamples},
                 new State{Name="dof-off",Description="Depth of field off (F8)",Apply=()=>rig.Debug.SetEffect(EnvironmentEffect.DepthOfField,false),Revert=()=>rig.Debug.SetEffect(EnvironmentEffect.DepthOfField,true)},
                 new State{Name="bloom-off",Description="Bloom off (F7)",Apply=()=>rig.Debug.SetEffect(EnvironmentEffect.Bloom,false),Revert=()=>rig.Debug.SetEffect(EnvironmentEffect.Bloom,true)},
                 new State{Name="cookie-off",Description="Leaf cookie off (F4)",Apply=()=>rig.Debug.SetEffect(EnvironmentEffect.DappledShadows,false),Revert=()=>rig.Debug.SetEffect(EnvironmentEffect.DappledShadows,true)},
-                new State{Name="smaa-off",Description="No anti-aliasing",Apply=()=>hdCamera.antialiasing=HDAdditionalCameraData.AntialiasingMode.None,Revert=()=>hdCamera.antialiasing=HDAdditionalCameraData.AntialiasingMode.SubpixelMorphologicalAntiAliasing},
+                new State{Name="smaa-off",Description="No anti-aliasing",Apply=()=>hdCamera.antialiasing=HDAdditionalCameraData.AntialiasingMode.None,Revert=()=>hdCamera.antialiasing=antialiasing},
                 new State{Name="transition-on",Description="Dimensional time-suspension effect at strength .82",Apply=()=>transition.Set(.82f,.5f,.5f),Revert=()=>transition.Set(0,0,0)},
                 new State{Name="baseline-end",Description="All showcase effects as shipped, sampled again after every state was restored (warm steady state)",Apply=()=>{},Revert=()=>{}},
             };
@@ -84,7 +90,13 @@ namespace Showcase.Unity
             foreach(var state in states)
             {
                 log("Ablation "+state.Name);
-                try{state.Apply();}catch(Exception e){Debug.LogError("Ablation apply failed: "+state.Name+" "+e);state.Revert();continue;}
+                try{state.Apply();}
+                catch(Exception e)
+                {
+                    Debug.LogError("Ablation apply failed: "+state.Name+" "+e);
+                    try{state.Revert();}catch(Exception revert){Debug.LogError("Ablation revert failed: "+state.Name+" "+revert);}
+                    continue;
+                }
                 for(int i=0;i<WarmupFrames;i++)yield return null;
                 frameMs.Clear();gpu.Clear();cpu.Clear();render.Clear();
                 for(int i=0;i<SampleFrames;i++)
