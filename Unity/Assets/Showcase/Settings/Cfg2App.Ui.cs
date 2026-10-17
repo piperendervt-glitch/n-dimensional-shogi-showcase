@@ -15,6 +15,9 @@ namespace Showcase.Unity.Settings
     {
         static readonly Color Gold=new Color(.95f,.79f,.49f),Dark=new Color(.025f,.045f,.065f,.83f),Muted=new Color(.62f,.69f,.76f);
         readonly System.Collections.Generic.List<Cfg2PlaneView> planeMinis=new System.Collections.Generic.List<Cfg2PlaneView>();
+        // For a slider that moves k≥3 axes at once the coordinate planes hold no candidate: k-axis subspaces are shown instead.
+        readonly System.Collections.Generic.List<Cfg2SubspaceView> subspaceMinis=new System.Collections.Generic.List<Cfg2SubspaceView>();
+        Cfg2SubspaceView subspaceView;RectTransform subspaceRect;Text subspaceNote;const int MaxSubspaceMinis=48;
         readonly System.Collections.Generic.List<Cfg2AxisGizmo> gizmos=new System.Collections.Generic.List<Cfg2AxisGizmo>();
         void CreateCanvas()
         {
@@ -86,6 +89,8 @@ namespace Showcase.Unity.Settings
             AttachPointer(previewRect);
             planeRect=Cfg2Ui.Panel(center,"2D confirmation",10,104,526,584,new Color(.025f,.04f,.07f,.98f),true);planeView=planeRect.gameObject.AddComponent<Cfg2PlaneView>();
             planeView.Initialize(0,1,(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);planeRect.gameObject.SetActive(false);
+            subspaceRect=Cfg2Ui.Panel(center,"Subspace confirmation",10,104,526,584,new Color(.025f,.04f,.07f,.98f),true);subspaceView=subspaceRect.gameObject.AddComponent<Cfg2SubspaceView>();
+            subspaceView.Initialize(new[]{0,1,2},ownership,()=>canvas.scaleFactor,true);subspaceRect.gameObject.SetActive(false);
             // The projection and its controller fill the whole height: the trial tools below belong to the section view.
             projectionRect=Cfg2Ui.Panel(center,"Direction projection",10,104,526,774,new Color(.025f,.04f,.07f,.98f),true);projectionView=projectionRect.gameObject.AddComponent<Cfg2ProjectionView>();
             projectionControls=Cfg2Ui.Panel(center,"Projection rotation controller",546,104,174,774,new Color(.02f,.035f,.06f,.98f),true);
@@ -127,13 +132,28 @@ namespace Showcase.Unity.Settings
             // Section tabs: the plane diagrams fill the room right of the section in as many 174 px columns as fit.
             Place(planeMiniHost,546,104,width-556,584);LayoutPlaneMinis();
         }
-        // One diagram per coordinate plane of the current N (6 in 4D, 10 in 5D, 55 in 11D), in a scrolling grid.
-        int planeMiniDimensions;ScrollRect planeMiniScroll;
-        void EnsurePlaneMinis(int n)
+        // One diagram per coordinate plane of the current N (6 in 4D, 10 in 5D, 55 in 11D), in a scrolling grid. When the selected
+        // piece slides on k≥3 axes at once, one diagram per k-axis subspace instead (10 in 5D for k=3), the first 48 of them at most.
+        int planeMiniDimensions,planeMiniAxes;ScrollRect planeMiniScroll;
+        void EnsurePlaneMinis(int n,int k=0)
         {
-            if(n==planeMiniDimensions&&planeMiniScroll!=null)return;planeMiniDimensions=n;
-            CfgUi.Clear(planeMiniHost);planeMinis.Clear();
+            if(k<3)k=0;
+            if(n==planeMiniDimensions&&k==planeMiniAxes&&planeMiniScroll!=null)return;planeMiniDimensions=n;planeMiniAxes=k;
+            CfgUi.Clear(planeMiniHost);planeMinis.Clear();subspaceMinis.Clear();subspaceNote=null;
             planeMiniScroll=CfgUi.Scroll(planeMiniHost,"Plane diagrams",0,0,planeMiniHost.rect.width,planeMiniHost.rect.height,out var content,584);
+            if(k>=3)
+            {
+                int total=Cfg2SubspaceView.SubspaceCount(n,k);
+                foreach(var axes in Cfg2SubspaceView.Subspaces(n,k).Take(MaxSubspaceMinis))
+                {
+                    var r=Cfg2Ui.Panel(content,"Selected-cell subspace",0,0,174,174,new Color(.025f,.04f,.065f,.8f),true);
+                    var diagram=r.gameObject.AddComponent<Cfg2SubspaceView>();diagram.Initialize(axes,ownership,()=>canvas.scaleFactor,false);diagram.Dimensions=n;subspaceMinis.Add(diagram);
+                    var chosen=axes;
+                    var open=r.gameObject.AddComponent<Button>();CfgUi.NoNavigation(open);open.targetGraphic=r.GetComponent<Image>();open.onClick.AddListener(()=>{if(ownership.Owner!=InputOwner.None)return;Record("UI","subspace-"+diagram.Name);PlayMenuConfirm();ShowSubspace(chosen);});
+                }
+                subspaceNote=CfgUi.Label(content,k+"軸を同時に動かす駒なので、2軸の平面ではなく "+k+"軸の部分空間（"+total+"個"+(total>MaxSubspaceMinis?"、先頭 "+MaxSubspaceMinis+"個を表示":"")+"）に候補を描いています。押すと大きく表示します。",0,0,100,40,11,Muted);
+                LayoutPlaneMinis();return;
+            }
             foreach(var (h,v) in Cfg2PlaneView.Planes(n))
             {
                 var r=Cfg2Ui.Panel(content,"Selected-cell plane",0,0,174,140,new Color(.025f,.04f,.065f,.8f),true);
@@ -147,16 +167,34 @@ namespace Showcase.Unity.Settings
         {
             if(planeMiniScroll==null)return;float w=planeMiniHost.rect.width,h=planeMiniHost.rect.height;
             Place((RectTransform)planeMiniScroll.transform,0,0,w,h);Place(planeMiniScroll.viewport,0,0,w,h);
-            int columns=Mathf.Max(1,Mathf.FloorToInt((w-14+6)/180f));int rows=(planeMinis.Count+columns-1)/columns;
-            Place(planeMiniScroll.content,0,0,w-14,Mathf.Max(h,rows*146-6));
+            int columns=Mathf.Max(1,Mathf.FloorToInt((w-14+6)/180f));
+            if(subspaceMinis.Count>0)
+            {
+                int rows=(subspaceMinis.Count+columns-1)/columns;float noteHeight=subspaceNote==null?0:80;
+                Place(planeMiniScroll.content,0,0,w-14,Mathf.Max(h,rows*180-6+noteHeight));
+                for(int i=0;i<subspaceMinis.Count;i++)Place((RectTransform)subspaceMinis[i].transform,(i%columns)*180,(i/columns)*180,174,174);
+                if(subspaceNote!=null)Place(subspaceNote.rectTransform,4,rows*180,w-22,76);
+                return;
+            }
+            int planeRows=(planeMinis.Count+columns-1)/columns;
+            Place(planeMiniScroll.content,0,0,w-14,Mathf.Max(h,planeRows*146-6));
             for(int i=0;i<planeMinis.Count;i++)Place((RectTransform)planeMinis[i].transform,(i%columns)*180,(i/columns)*146,174,140);
+        }
+        // Shows one k-axis subspace large in the centre (tab 7: no fixed tab lights up); a drag turns its 3-D camera.
+        void ShowSubspace(int[] axes)
+        {
+            planeTab=7;
+            previewRect.gameObject.SetActive(false);projectionRect.gameObject.SetActive(false);planeRect.gameObject.SetActive(false);subspaceRect.gameObject.SetActive(true);
+            subspaceView.Initialize(axes,ownership,()=>canvas.scaleFactor,true);subspaceView.Dimensions=CurrentDimensions;
+            for(int i=0;i<6;i++)actions["plane-"+i].GetComponent<Image>().color=Dark;
+            ShowSectionAids(true);geometryDirty=true;Record("Subspace",subspaceView.Name);
         }
         // Shows one coordinate plane in the centre. The four fixed tabs are XY XZ XW YZ; any other plane lights no tab.
         static readonly (int h,int v)[] TabPlanes={(0,1),(0,2),(0,3),(1,2)};
         void ShowPlane(int h,int v)
         {
             int tab=Array.IndexOf(TabPlanes,(h,v));planeTab=tab>=0?tab+2:6;
-            previewRect.gameObject.SetActive(false);projectionRect.gameObject.SetActive(false);planeRect.gameObject.SetActive(true);
+            previewRect.gameObject.SetActive(false);projectionRect.gameObject.SetActive(false);planeRect.gameObject.SetActive(true);subspaceRect.gameObject.SetActive(false);
             planeView.Initialize(h,v,(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);
             for(int i=0;i<6;i++)actions["plane-"+i].GetComponent<Image>().color=i==planeTab?CfgUi.Blue:Dark;
             ShowSectionAids(true);geometryDirty=true;Record("Plane",planeTab.ToString()+";"+planeView.Name);
@@ -202,9 +240,14 @@ namespace Showcase.Unity.Settings
             var selected=preview.Find(selectedPiece)?.Position??planeReferenceCell;
             // The XW tab needs a fourth axis: in 3D it is gone. The diagrams are rebuilt for the planes of the current N.
             planeView.Dimensions=n;if(actions.TryGetValue("plane-4",out var xw))xw.gameObject.SetActive(n>3);
-            EnsurePlaneMinis(n);
-            if(planeMiniHost.gameObject.activeInHierarchy)foreach(var diagram in planeMinis)diagram.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
-            if(planeTab>=2)planeView.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
+            EnsurePlaneMinis(n,preset?.Find(selectedDefinition)?.SlideAxes??0);
+            if(planeMiniHost.gameObject.activeInHierarchy)
+            {
+                foreach(var diagram in planeMinis)diagram.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
+                foreach(var diagram in subspaceMinis)diagram.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
+            }
+            if(planeTab>=2&&planeTab<7)planeView.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
+            if(planeTab==7){subspaceView.Dimensions=n;subspaceView.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);}
             if(planeTab==1)projectionView.Refresh(preset,selectedDefinition,ShortNames.TryGetValue(selectedDefinition,out var shortName)?shortName:selectedDefinition);
         }
         void BuildPieces()
@@ -236,7 +279,7 @@ namespace Showcase.Unity.Settings
         {
             if(tab==4&&CurrentDimensions<4)tab=0;
             if(tab>=2){var plane=TabPlanes[tab-2];ShowPlane(plane.h,plane.v);return;}
-            planeTab=tab;previewRect.gameObject.SetActive(tab==0);projectionRect.gameObject.SetActive(tab==1);planeRect.gameObject.SetActive(false);
+            planeTab=tab;previewRect.gameObject.SetActive(tab==0);projectionRect.gameObject.SetActive(tab==1);planeRect.gameObject.SetActive(false);subspaceRect.gameObject.SetActive(false);
             for(int i=0;i<6;i++)actions["plane-"+i].GetComponent<Image>().color=i==tab?CfgUi.Blue:Dark;
             ShowSectionAids(tab!=1);geometryDirty=true;Record("Plane",tab.ToString());
         }
