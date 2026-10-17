@@ -62,8 +62,9 @@ namespace Showcase.Unity.Settings
             // Controller: table, angle slider of the active plane, list of turned planes, zoom, reset.
             CfgUi.Label(controls,"回転コントローラー",12,8,300,26,17,Cfg2Ui.Gold);
             tableTitle=CfgUi.Label(controls,"① 面を選ぶ",12,36,300,18,13);
-            tableRect=CfgUi.Rect(controls,"Rotation planes",34,58,100,100);var tableImage=tableRect.gameObject.AddComponent<Image>();tableImage.color=new Color(0,0,0,.01f);
-            tableGraphic=tableRect.gameObject.AddComponent<Cfg2ProjectionTableGraphic>();tableGraphic.View=this;tableGraphic.color=Color.white;tableGraphic.raycastTarget=false;
+            // One Graphic per GameObject: the table graphic itself is the raycast target (its whole rect, not just the drawn cells).
+            tableRect=CfgUi.Rect(controls,"Rotation planes",34,58,100,100);
+            tableGraphic=tableRect.gameObject.AddComponent<Cfg2ProjectionTableGraphic>();tableGraphic.View=this;tableGraphic.color=Color.white;tableGraphic.raycastTarget=true;
             var tableSurface=tableRect.gameObject.AddComponent<CfgPointerSurface>();tableSurface.Down=OnTableDown;tableSurface.Drag=OnDrag;tableSurface.Up=OnUp;
             tableHint=CfgUi.Label(controls,"クリック＝強調＋回す面に。もう一度で解除。\nドラッグ＝その面で回転。右クリック＝全解除。",12,0,320,32,11,new Color(.62f,.68f,.76f));
             turnTitle=CfgUi.Label(controls,"② 選んだ面を回す",12,0,300,18,13);
