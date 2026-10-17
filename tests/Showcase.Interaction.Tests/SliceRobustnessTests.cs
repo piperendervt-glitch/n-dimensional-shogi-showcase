@@ -172,6 +172,8 @@ static class SliceRobustnessTests
             foreach(var axis in Enum.GetValues<LogicalAxis>())
             {
                 bool inside=SliceAxes.CoreAxis(axis)<n;var drag=new AxisDrag(animator,new InputOwnership());
+                if(inside){var unit=SliceAxes.WorldAxis(axis,n);check(unit.Dimensions==n&&unit.Rank==SliceAxes.CoreAxis(axis)+1&&unit.Axis(SliceAxes.CoreAxis(axis))==1&&unit.Length==1,"World axis "+axis+" carries the "+n+" components");}
+                else Reject<ArgumentOutOfRangeException>(()=>SliceAxes.WorldAxis(axis,n),"World axis "+axis+" refused in "+n+"D");
                 check(drag.Begin(axis,1,0,0,40,0)==inside,"Axis drag begins only on the space's axes "+axis+" in "+n+"D");
                 if(inside){drag.Cancel();continue;}
                 check(drag.RejectionReason.Contains(SliceAxes.AxisName(axis)),"Refusal names the axis");
@@ -180,6 +182,14 @@ static class SliceRobustnessTests
                 Reject<ArgumentException>(()=>animator.SetCenter(animator.Center+SliceAxes.WorldAxis(axis)*.5),"SetCenter refuses it too");
             }
             check(ReferenceEquals(animator.DisplayState,before),"Refused moves leave the state untouched");
+            // Moves on the space's own axes keep the centre in the space: N components, never more.
+            foreach(var axis in Enum.GetValues<LogicalAxis>().Where(a=>SliceAxes.CoreAxis(a)<n))
+            {
+                var drag=new AxisDrag(animator,new InputOwnership());
+                check(drag.Begin(axis,1,0,0,40,0)&&drag.Update(1,25,0,true)&&drag.Complete(1)&&animator.Center.Dimensions==Math.Max(n,before.Frame.Center.Dimensions),"Drag on "+axis+" keeps the centre in "+n+"D");
+                check(animator.Translate(axis,-.5)&&animator.Center.Dimensions==Math.Max(n,before.Frame.Center.Dimensions),"Translate on "+axis+" too");
+            }
+            animator.Restore(before);
             check(animator.Translate(LogicalAxis.X,1)&&animator.DisplayState.WithCenter(animator.Center+VecN.Zero(VecN.MaxDimensions)).Dimensions==n,"Trailing zero components are still the same space");
         }
         // N from the centre's components when none is given: a 5-component centre names a 5D space even with V=0.
@@ -211,6 +221,9 @@ static class SliceRobustnessTests
         var relation=HyperplaneRelation.Build(frame,ReferenceSection.Initial(3),4.5,1,4.5,state.Embedding);
         check(relation.IsCoincident&&relation.Vertices.Count==8&&relation.FixedCoordinate==0,"The 3D panel is the whole view");
         var axis=new AxisDrag(animator,new InputOwnership());check(!axis.Begin(LogicalAxis.W,1,0,0,40,0),"No W drag in 3D");
-        check(axis.Begin(LogicalAxis.Y,1,0,0,40,0)&&axis.Update(1,40,0)&&axis.Complete(1)&&animator.Center.Dimensions<=4&&animator.Center.Rank==3,"Y drag in 3D");
+        int start=animator.Center.Dimensions;check(start==3,"3D centre has 3 components: "+start);
+        check(axis.Begin(LogicalAxis.Y,1,0,0,40,0)&&axis.Update(1,40,0,true)&&axis.Complete(1)&&animator.Center.Dimensions==3&&animator.Center.Rank==3,"Y drag in 3D keeps a 3D centre");
+        check(axis.Begin(LogicalAxis.X,1,0,0,40,0)&&axis.Update(1,-40,0)&&axis.Complete(1)&&animator.Center.Dimensions==3,"X drag in 3D keeps a 3D centre");
+        check(animator.Translate(LogicalAxis.Z,-1)&&animator.Center.Dimensions==3,"Translate in 3D keeps a 3D centre");
     }
 }

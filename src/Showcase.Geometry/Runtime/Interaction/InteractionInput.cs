@@ -40,8 +40,10 @@ namespace Showcase.Geometry.Interaction
             if(!IsActive||pointerId!=pointer||!ownership.IsOwner(InputOwner.Axis,pointerId)||!Finite(x)||!Finite(y))return false;
             double amount=((x-startX)*unitX+(y-startY)*unitY)/PixelsPerCell;
             // Board cells are whole numbers in core coordinates; the world Y axis also carries the embedding height.
-            if(snap){double start=VecN.Dot(slice.DisplayState.WorldToCore(original),SliceAxes.WorldAxis(axis));amount=Math.Round(start+amount,MidpointRounding.AwayFromZero)-start;}
-            return slice.SetCenter(original+SliceAxes.WorldAxis(axis)*amount);
+            // The step carries the frame's N components, so the centre stays in the board's space (3D included).
+            int n=slice.Frame.Dimensions;if(SliceAxes.CoreAxis(axis)>=n)return false;var step=SliceAxes.WorldAxis(axis,n);
+            if(snap){double start=VecN.Dot(slice.DisplayState.WorldToCore(original),step);amount=Math.Round(start+amount,MidpointRounding.AwayFromZero)-start;}
+            return slice.SetCenter(original+step*amount);
         }
         public bool Complete(int pointerId)
         {if(!IsActive||pointerId!=pointer||!ownership.Release(InputOwner.Axis,pointerId))return false;IsActive=false;return true;}

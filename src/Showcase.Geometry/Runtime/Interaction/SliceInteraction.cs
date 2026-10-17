@@ -71,7 +71,16 @@ namespace Showcase.Geometry.Interaction
     }
     public static class SliceAxes
     {
+        /// <summary>The unit vector of a logical axis with at least four components (the 4D form); a move in an N-dimensional space uses the overload with N.</summary>
         public static VecN WorldAxis(LogicalAxis a)=>VecN.Unit(CoreAxis(a),Math.Max(4,CoreAxis(a)+1));
+        /// <summary>The unit vector of a logical axis in an N-dimensional space, carrying exactly N components, so a 3D centre stays 3D;
+        /// an axis the space does not have is refused.</summary>
+        public static VecN WorldAxis(LogicalAxis a,int dimensions)
+        {
+            int core=CoreAxis(a);if(dimensions<3||dimensions>VecN.MaxDimensions)throw new ArgumentOutOfRangeException(nameof(dimensions));
+            if(core>=dimensions)throw new ArgumentOutOfRangeException(nameof(a),"The axis is not part of the "+dimensions+"D space.");
+            return VecN.Unit(core,dimensions);
+        }
         /// <summary>UI axis of a core axis index (F=0→Z, U=1→X, V=2→Y, W=3→W, then 4→A5 ... 10→A11).</summary>
         public static LogicalAxis AxisOfCore(int coreAxis)
         {
@@ -309,7 +318,7 @@ namespace Showcase.Geometry.Interaction
         {
             if(double.IsNaN(cells)||double.IsInfinity(cells))throw new ArgumentOutOfRangeException(nameof(cells));
             if(SliceAxes.CoreAxis(axis)>=Frame.Dimensions)throw new ArgumentOutOfRangeException(nameof(axis),"The axis is not part of the frame's "+Frame.Dimensions+"D space.");
-            return SetCenter(Center+SliceAxes.WorldAxis(axis)*cells);
+            return SetCenter(Center+SliceAxes.WorldAxis(axis,Frame.Dimensions)*cells);
         }
     }
 }
