@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 namespace Showcase.Geometry.Interaction
 {
-    // VecN=(F,U,V,W,...); UI X=U,Y=V,Z=F,W=W, then A5..A7 = core axes 4..6 (displayed as V, U, T); Unity adapter=(U,V,F).
-    public enum LogicalAxis { X,Y,Z,W,A5,A6,A7 }
+    // VecN=(F,U,V,W,...); UI X=U,Y=V,Z=F,W=W, then A5..A11 = core axes 4..10 (displayed as V, U, T, S, R, Q, P); Unity adapter=(U,V,F).
+    public enum LogicalAxis { X,Y,Z,W,A5,A6,A7,A8,A9,A10,A11 }
     public enum ReferenceView { XYZ,XYW,XZW,YZW }
     public static class SliceAxes
     {
         public static VecN WorldAxis(LogicalAxis a)=>VecN.Unit(CoreAxis(a));
-        /// <summary>UI axis of a core axis index (F=0→Z, U=1→X, V=2→Y, W=3→W, 4→A5, 5→A6, 6→A7).</summary>
+        /// <summary>UI axis of a core axis index (F=0→Z, U=1→X, V=2→Y, W=3→W, 4..10→A5..A11).</summary>
         public static LogicalAxis AxisOfCore(int coreAxis)
-        {switch(coreAxis){case 0:return LogicalAxis.Z;case 1:return LogicalAxis.X;case 2:return LogicalAxis.Y;case 3:return LogicalAxis.W;case 4:return LogicalAxis.A5;case 5:return LogicalAxis.A6;case 6:return LogicalAxis.A7;default:throw new ArgumentOutOfRangeException(nameof(coreAxis));}}
-        /// <summary>Label shown to the player: X Y Z W, then V U T for the fifth to seventh axes.</summary>
+        {switch(coreAxis){case 0:return LogicalAxis.Z;case 1:return LogicalAxis.X;case 2:return LogicalAxis.Y;case 3:return LogicalAxis.W;case 4:return LogicalAxis.A5;case 5:return LogicalAxis.A6;case 6:return LogicalAxis.A7;case 7:return LogicalAxis.A8;case 8:return LogicalAxis.A9;case 9:return LogicalAxis.A10;case 10:return LogicalAxis.A11;default:throw new ArgumentOutOfRangeException(nameof(coreAxis));}}
+        /// <summary>Label shown to the player: X Y Z W, then V U T S R Q P for the fifth to eleventh axes.</summary>
         public static string AxisName(LogicalAxis a)
-        {switch(a){case LogicalAxis.A5:return "V";case LogicalAxis.A6:return "U";case LogicalAxis.A7:return "T";default:return a.ToString();}}
+        {switch(a){case LogicalAxis.A5:return "V";case LogicalAxis.A6:return "U";case LogicalAxis.A7:return "T";case LogicalAxis.A8:return "S";case LogicalAxis.A9:return "R";case LogicalAxis.A10:return "Q";case LogicalAxis.A11:return "P";default:return a.ToString();}}
         /// <summary>Core axes shown by a 4D reference view, in frame slot order (AxisX, AxisY, AxisZ).</summary>
         public static int[] ShownAxes(ReferenceView view)
         {switch(view){case ReferenceView.XYZ:return new[]{0,1,2};case ReferenceView.XYW:return new[]{3,1,2};case ReferenceView.XZW:return new[]{0,1,3};case ReferenceView.YZW:return new[]{0,3,2};default:throw new ArgumentOutOfRangeException(nameof(view));}}
@@ -23,7 +23,7 @@ namespace Showcase.Geometry.Interaction
         /// For N=4 this reproduces <see cref="Reference(ReferenceView,VecN)"/> exactly.</summary>
         public static SliceFrame ReferenceFrame(int[] shown,int dimensions,VecN center=default)
         {
-            if(shown==null||shown.Length!=3||dimensions<3||dimensions>VecN.MaxDimensions||shown.Distinct().Count()!=3||shown.Any(a=>a<0||a>=dimensions))throw new ArgumentException("Three distinct core axes of an N-space (3..7) are required.");
+            if(shown==null||shown.Length!=3||dimensions<3||dimensions>VecN.MaxDimensions||shown.Distinct().Count()!=3||shown.Any(a=>a<0||a>=dimensions))throw new ArgumentException("Three distinct core axes of an N-space (3.."+VecN.MaxDimensions+") are required.");
             if(!center.IsFinite||center.Rank>dimensions)throw new ArgumentException("Frame centre must be finite and within the space.");
             var order=new List<int>(shown);for(int a=0;a<dimensions;a++)if(!order.Contains(a))order.Add(a);
             int inversions=0;for(int i=0;i<order.Count;i++)for(int j=i+1;j<order.Count;j++)if(order[i]>order[j])inversions++;
@@ -57,7 +57,7 @@ namespace Showcase.Geometry.Interaction
         public static string DisplayName(ReferenceView view)=>view.ToString();
         // VecN components are core axes, not UI axes: VecN.X is UI Z. Use these instead of writing the permutation out.
         public static int CoreAxis(LogicalAxis a)
-        {switch(a){case LogicalAxis.X:return 1;case LogicalAxis.Y:return 2;case LogicalAxis.Z:return 0;case LogicalAxis.W:return 3;case LogicalAxis.A5:return 4;case LogicalAxis.A6:return 5;case LogicalAxis.A7:return 6;default:throw new ArgumentOutOfRangeException(nameof(a));}}
+        {switch(a){case LogicalAxis.X:return 1;case LogicalAxis.Y:return 2;case LogicalAxis.Z:return 0;case LogicalAxis.W:return 3;case LogicalAxis.A5:return 4;case LogicalAxis.A6:return 5;case LogicalAxis.A7:return 6;case LogicalAxis.A8:return 7;case LogicalAxis.A9:return 8;case LogicalAxis.A10:return 9;case LogicalAxis.A11:return 10;default:throw new ArgumentOutOfRangeException(nameof(a));}}
         // UI axis that each reference hyperplane holds fixed (the axis whose button selects it).
         public static LogicalAxis NormalAxis(ReferenceView view)
         {switch(view){case ReferenceView.XYZ:return LogicalAxis.W;case ReferenceView.XYW:return LogicalAxis.Z;case ReferenceView.XZW:return LogicalAxis.Y;case ReferenceView.YZW:return LogicalAxis.X;default:throw new ArgumentOutOfRangeException(nameof(view));}}

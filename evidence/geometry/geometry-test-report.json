@@ -3,7 +3,7 @@
   "testVersion": "geometry-tests/0.1",
   "geometryVersion": "geometry/0.1",
   "checks": 3372857,
-  "elapsedMilliseconds": 970,
+  "elapsedMilliseconds": 1031,
   "runtime": "9.0.19",
   "provenance": {
     "sourceFiles": [
@@ -29,28 +29,28 @@
       },
       {
         "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs",
-        "sha256": "a81ba66c88915d18173392ded16b7026760010becef52d78e69ea6482373304e",
-        "bytes": 13543
+        "sha256": "f416771f50b5dea682c50235f55d9ca3b501ae837c03dd6f3c303beb5d8c6da5",
+        "bytes": 13544
       },
       {
         "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs",
-        "sha256": "b78aeeca5873432dbca2b19fcafb800abaf52f37eb1a6dcddde5881b53038fbd",
-        "bytes": 12057
+        "sha256": "912d170b78a74b07baaaae291d1ad5a318ceabca23f7042ef4b173c510edfaf9",
+        "bytes": 12229
       },
       {
         "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs",
-        "sha256": "5b7cd871b865b3c09c8a301e1558a8d2c82014fbc9567496dd24804baf4dbd8b",
-        "bytes": 5767
+        "sha256": "669e8a2fbc4c6030675de3b7f7435d35e96cd8302cd8dd33eb7a96380140ad58",
+        "bytes": 5851
       },
       {
         "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs",
-        "sha256": "7b73762f13034e0db565d0624bede3e6b1405e4b31c69368fa6374e5f824f9bd",
-        "bytes": 2907
+        "sha256": "b46d9fecbf7f848f4f22e5192b3bde88116e8ac5dd27d90afbb46a47e6906317",
+        "bytes": 2960
       },
       {
         "path": "tests/Showcase.Geometry.Tests/Program.cs",
-        "sha256": "fc4ffa697830882d4fe47dad9a1bcb55ac6fdad74beac6e89547292e7f52d5b2",
-        "bytes": 19560
+        "sha256": "9e17f284b94487c679985cc7218a1852f3a07945dac7f3b3c2b1a50ae848abb0",
+        "bytes": 19779
       },
       {
         "path": "tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj",
@@ -58,8 +58,8 @@
         "bytes": 307
       }
     ],
-    "testAssemblySha256": "bc600e7c2cf971e4cbf125e9c1616845ecece4b42156a25eafe906ff5d197f7b",
-    "geometryAssemblySha256": "43f3f1f672a079bb1a28f5fb23619b23a0dbae64cdf4eb4c74f9461f5080b2d9",
+    "testAssemblySha256": "0108b9c09e2a6daaf7b5ae0b6c1a126f29a76bf994ef870af86657e5e88be39f",
+    "geometryAssemblySha256": "3173c5e7f5dddafbc948f73a34c6a44e2754eb9c6fc6c74943787df457a3ac38",
     "command": "dotnet run --project tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj --configuration Release -- evidence/geometry"
   },
   "primary": "Incremental convex polyhedron clipping",

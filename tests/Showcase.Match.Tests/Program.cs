@@ -344,7 +344,7 @@ Test("ND-01-four-dimensional-hashes-text-and-legal-moves-are-unchanged", () =>
     Assert(StableRecord(s) == "91b6c6f49f45c7ed94d2b434c6eb6f0ded739d3b00a44f886f72b034fd597d5f", "record text");
     Assert(new QN(1, -2, 3, -4).ToString() == "1,-2,3,-4" && new QN() == new QN(0, 0, 0, 0) && new QN(1, 0, 0, 0) == new QN(1, 0, 0, 0, 0) && new QN(1, 0, 0, 0).GetHashCode() == new QN(1, 0, 0, 0, 0).GetHashCode());
     Assert(new QN(0, 0, 0, 1) != new QN(0, 0, 0, 0, 1) && new QN(0, 0, 0, 1).Rank == 4 && new QN(0, 0, 0, 0, 1).Rank == 5);
-    Assert(QN.TryParse("1,2,3,4", 4, out var parsed) && parsed == new QN(1, 2, 3, 4) && !QN.TryParse("1,2,3", 4, out _) && !QN.TryParse("1,2,3,4,5,6,7,8", 0, out _) && !QN.TryParse("1,2,３,4", 4, out _));
+    Assert(QN.TryParse("1,2,3,4", 4, out var parsed) && parsed == new QN(1, 2, 3, 4) && !QN.TryParse("1,2,3", 4, out _) && !QN.TryParse("1,2,3,4,5,6,7,8,9,10,11,12", 0, out _) && !QN.TryParse("1,2,３,4", 4, out _));
 });
 
 Test("ND-02-five-dimensional-match-compiles-starts-moves-along-the-fifth-axis-and-saves", () =>
@@ -359,8 +359,8 @@ Test("ND-02-five-dimensional-match-compiles-starts-moves-along-the-fifth-axis-an
     string xml = MatchRecordStore.Serialize(s); Assert(xml.Contains("dimensions=\"5\"") && xml.Contains("ruleId=\"CFG2_DEMO_ND\"") && xml.Contains("to=\"-2,0,0,0,1\"") && xml.Contains("cell=\"-2,0,0,0,0\""));
     string file = Path.Combine(data, "nd-settings.xml"); MatchSettingsStore.SaveValid(file, DemoN(5), new MatchOptionsRaw());
     var loaded = MatchSettingsStore.Load(file); Assert(loaded.IsValidSettings && loaded.Config!.Dimensions == 5 && loaded.Config.RuleHash == config.RuleHash);
-    foreach (int n in new[] { 3, 6, 7 }) { var c = Compile(DemoN(n)); var m = MatchSession.Create(c, MatchMode.CvC, new ManualClock()); Assert(m.State.Pieces.All(p => p.Position.Dimensions == n)); One(m); One(m); Assert(m.State.Ply == 2); }
-    foreach (int n in new[] { 2, 8 }) { var bad = DemoN(n); Assert(!MatchConfig.TryCreate(bad, new MatchOptionsRaw(), out _, out var report) && report.Errors.Any(e => e.Contains("N")), "N=" + n + " must be rejected"); }
+    foreach (int n in new[] { 3, 6, 7, 8, 11 }) { var c = Compile(DemoN(n), n == 11 ? new MatchOptionsRaw { CpuBudget = "1000000" } : null); var m = MatchSession.Create(c, MatchMode.CvC, new ManualClock()); Assert(m.State.Pieces.All(p => p.Position.Dimensions == n)); One(m); One(m); Assert(m.State.Ply == 2); }
+    foreach (int n in new[] { 2, 12 }) { var bad = DemoN(n); Assert(!MatchConfig.TryCreate(bad, new MatchOptionsRaw(), out _, out var report) && report.Errors.Any(e => e.Contains("N")), "N=" + n + " must be rejected"); }
     var wrongMask = DemoN(5); wrongMask.Edit(d => d.Definitions.Single(x => x.Id == "gold-legacy").AxesMask = "15"); Assert(!MatchConfig.TryCreate(wrongMask, new MatchOptionsRaw(), out _, out _), "fixed pieces must use every axis");
 });
 
@@ -371,6 +371,22 @@ Test("ND-03-lower-dimensional-cells-are-accepted-and-normalized-to-the-board", (
     Assert(s.TryMove(new Move("AK", new QN(-4, -4, -4, -4), new QN(-3, -4, -4, -4)), out var why), why); Assert(s.State.Find("AK")!.Position == new QN(-3, -4, -4, -4, 0));
     Reject(() => Fixture(Kings().Concat(new[] { new Piece("far", Side.A, PieceKind.Pawn, new QN(0, 0, 0, 0, 0, 1)) }), config: config));
     var three = Compile(DemoN(3)); Reject(() => Fixture(Kings(), config: three)); Assert(Fixture(new[] { P("AK", Side.A, PieceKind.King, -4, -4, -4), P("BK", Side.B, PieceKind.King, 4, 4, 4) }, config: three).State.Pieces.All(p => p.Position.Dimensions == 3));
+});
+
+Test("ND-04-eleven-dimensional-match-moves-along-the-eleventh-axis-and-saves", () =>
+{
+    var config = Compile(DemoN(11)); Assert(config.Dimensions == 11 && config.EffectiveRuleId == MatchConfig.RuleIdND);
+    var s = MatchSession.Create(config, MatchMode.PvP, new ManualClock());
+    Assert(s.State.Pieces.Count == 40 && s.State.Pieces.All(p => p.Position.Dimensions == 11));
+    var legal = s.QueryLegal(); Assert(legal.Status == MatchQueryStatus.Complete && legal.Moves.Count > 217, "more room: " + legal.Moves.Count);
+    var pawn = s.State.Find("A-Pawn-0")!; var to = pawn.Position + QN.Zero(11).WithAxis(10, 1);
+    Assert(legal.Moves.Any(m => m.PieceId == pawn.Id && m.To == to)); Assert(s.TryMove(new Move(pawn.Id, pawn.Position, to), out var why), why);
+    Assert(s.State.Find("A-Pawn-0")!.Position.Axis(10) == 1 && s.State.Turn == Side.B);
+    string xml = MatchRecordStore.Serialize(s); Assert(xml.Contains("dimensions=\"11\"") && xml.Contains("to=\"-2,0,0,0,0,0,0,0,0,0,1\""));
+    string file = Path.Combine(data, "nd11-settings.xml"); MatchSettingsStore.SaveValid(file, DemoN(11), new MatchOptionsRaw());
+    var loaded = MatchSettingsStore.Load(file); Assert(loaded.IsValidSettings && loaded.Config!.Dimensions == 11 && loaded.Config.RuleHash == config.RuleHash);
+    // The initial N=11 position has about 178,000 candidate moves: the default CPU budget (65536) stops with a partial result, a larger one plays.
+    var cvc = MatchSession.Create(config, MatchMode.CvC, new ManualClock()); var partial = MatchCpu.Compute(cvc.BeginCpuRequest()); Assert(partial.Status != MatchQueryStatus.Complete, "default budget is partial at N=11");
 });
 
 watch.Stop(); var report = new { status = failed == 0 ? "PASS" : "FAIL", passed, failed, assertions, elapsedMilliseconds = watch.Elapsed.TotalMilliseconds, tests = results, evidenceType = "Pure C#; no Unity/OS/human input", dataRoot = data };

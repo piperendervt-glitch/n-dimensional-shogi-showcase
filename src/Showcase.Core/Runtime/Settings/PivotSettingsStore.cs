@@ -112,7 +112,7 @@ namespace NDShogi.Showcase.Core.Settings
         private static int Integer(string text) => int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int number) ? number : throw new InvalidDataException("整数が必要です。");
         private static double Number(string text) => double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double number) ? number : throw new InvalidDataException("有限数値が必要です。");
         private static double[] Vector(string text, int size) { var values = text.Split(','); if (values.Length != size) throw new InvalidDataException("ベクトル次元が不正です。"); return values.Select(Number).ToArray(); }
-        private static QN Cell(string text) => QN.TryParse(text, 0, out var cell) && cell.Dimensions >= BoundsN.MinDimensions ? cell : throw new InvalidDataException("N次元セル（3〜7個の整数）が必要です。");
+        private static QN Cell(string text) => QN.TryParse(text, 0, out var cell) && cell.Dimensions >= BoundsN.MinDimensions ? cell : throw new InvalidDataException("N次元セル（3〜" + BoundsN.MaxDimensions + "個の整数）が必要です。");
         private static LoadedPivotSettings Parse(XDocument document)
         {
             if (document.DocumentType != null || document.Nodes().Any(n => !(n is XElement) && !(n is XText t && string.IsNullOrWhiteSpace(t.Value)))) throw new InvalidDataException("宣言的XML以外は対応しません。");

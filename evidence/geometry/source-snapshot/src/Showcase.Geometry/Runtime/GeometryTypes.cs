@@ -26,7 +26,7 @@ namespace Showcase.Geometry
     /// and default(VecN) is the origin. Operations between vectors of different N work on the larger N.</summary>
     public readonly struct VecN : IEquatable<VecN>
     {
-        public const int MaxDimensions = 7;
+        public const int MaxDimensions = 11;
         private readonly double[]? c;
         public VecN(double f, double u, double v, double w) { c = new[] { f, u, v, w }; }
         public VecN(params double[] components)

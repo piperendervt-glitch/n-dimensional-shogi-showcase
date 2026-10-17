@@ -165,8 +165,8 @@ static class Program
             for(int i=0;i<4;i++)Vec(general.Vectors[i],legacy.Vectors[i],"N=4 general reference equals legacy "+view+" vector "+i);
             Vec(SliceAxes.Reference(view,center4,4).Normal,legacy.Normal,"Explicit N=4 reference equals legacy "+view);
         }
-        // Every ordered axis triple of a 3..7 dimensional space gives a positively oriented orthonormal frame whose hidden axes are the complement.
-        for(int n=3;n<=7;n++)for(int x=0;x<n;x++)for(int y=0;y<n;y++)for(int z=0;z<n;z++)
+        // Every ordered axis triple of a 3..11 dimensional space gives a positively oriented orthonormal frame whose hidden axes are the complement.
+        for(int n=3;n<=VecN.MaxDimensions;n++)for(int x=0;x<n;x++)for(int y=0;y<n;y++)for(int z=0;z<n;z++)
         {
             if(x==y||y==z||x==z)continue;var shown=new[]{x,y,z};var order=shown.Concat(Enumerable.Range(0,n).Except(shown)).ToArray();
             int inversions=0;for(int i=0;i<n;i++)for(int j=i+1;j<n;j++)if(order[i]>order[j])inversions++;
@@ -177,7 +177,7 @@ static class Program
             Vec(frame.AxisX,VecN.Unit(x,n),"Slot X shows axis "+x);Vec(frame.AxisY,VecN.Unit(y,n),"Slot Y shows axis "+y);Vec(frame.AxisZ,VecN.Unit(z,n),"Slot Z shows axis "+z);
             Check(SliceAxes.HiddenAxes(frame).SequenceEqual(Enumerable.Range(0,n).Except(shown)),"Hidden axes are the complement N="+n);
         }
-        Check(triples==3+24+60+120+210,"Triple count 3..7 (only even 3D orders): "+triples);
+        Check(VecN.MaxDimensions==11&&triples==3+24+60+120+210+336+504+720+990,"Triple count 3..11 (only even 3D orders): "+triples);
         // Rotations in a 5D space: any plane of two core axes, including a hidden one beyond W.
         var center5=VecN.Zero(5).WithAxis(2,3);var f5=SliceAxes.ReferenceFrame(new[]{0,1,2},5,center5);
         var turned=SliceRotations.Rotate(f5,1,4,.7);Check(turned.IsOrthonormal(),"5D rotation orthonormal");Near(SliceRotations.Determinant(turned),1,"5D rotation orientation");
@@ -213,12 +213,12 @@ static class Program
         var end=SliceAxes.Reference(ReferenceView.XYW,center5,5);for(int i=0;i<5;i++)Vec(animator.Frame.Vectors[i],end.Vectors[i],"5D endpoint vector "+i);
         Check(SliceAxes.HiddenAxes(animator.Frame).SequenceEqual(new[]{0,4}),"XYW in 5D hides F and the fifth axis");
         Check(animator.Translate(LogicalAxis.A5,1.5)&&Math.Abs(animator.Center.Axis(4)-1.5)<1e-12,"Translate along the fifth axis");
-        Check(SliceAxes.AxisName(LogicalAxis.A5)=="V"&&SliceAxes.AxisName(LogicalAxis.A6)=="U"&&SliceAxes.AxisName(LogicalAxis.A7)=="T"&&SliceAxes.AxisName(LogicalAxis.W)=="W","Axis labels");
-        Check(SliceAxes.CoreAxis(LogicalAxis.A7)==6&&SliceAxes.AxisOfCore(4)==LogicalAxis.A5,"Fifth to seventh axes map to core 4..6");
+        Check(SliceAxes.AxisName(LogicalAxis.A5)=="V"&&SliceAxes.AxisName(LogicalAxis.A6)=="U"&&SliceAxes.AxisName(LogicalAxis.A7)=="T"&&SliceAxes.AxisName(LogicalAxis.A8)=="S"&&SliceAxes.AxisName(LogicalAxis.A9)=="R"&&SliceAxes.AxisName(LogicalAxis.A10)=="Q"&&SliceAxes.AxisName(LogicalAxis.A11)=="P"&&SliceAxes.AxisName(LogicalAxis.W)=="W","Axis labels");
+        Check(SliceAxes.CoreAxis(LogicalAxis.A7)==6&&SliceAxes.CoreAxis(LogicalAxis.A11)==10&&SliceAxes.AxisOfCore(4)==LogicalAxis.A5&&SliceAxes.AxisOfCore(10)==LogicalAxis.A11,"Fifth to eleventh axes map to core 4..10");
         // VecN: missing trailing components are zero, so four-component vectors are valid in every N.
         Check(new VecN(1,2,3,4)==new VecN(1,2,3,4,0)&&new VecN(1,2,3,4)!=new VecN(1,2,3,4,1)&&default(VecN)==VecN.Zero(5)&&new VecN(1,2,3,4).ToString()=="(1,2,3,4)","VecN padded equality");
         Near(VecN.Dot(new VecN(1,2,3,4),VecN.Unit(4,5)),0,"Dot across dimensions");Near((new VecN(1,0,0,0)+VecN.Unit(4,5)).Length,Math.Sqrt(2),"Sum across dimensions");
-        cases.Add(new{name="n_dimensional_frames_sections_and_turns",status="PASS",dimensions="3..7",triples,note="General reference frames reproduce the 4D ones; 5D sections of the extruded piece match the 4D sections."});
+        cases.Add(new{name="n_dimensional_frames_sections_and_turns",status="PASS",dimensions="3..11",triples,note="General reference frames reproduce the 4D ones; 5D sections of the extruded piece match the 4D sections."});
     }
     static void Picking()
     {

@@ -18,7 +18,7 @@ namespace NDShogi.Showcase.Core
     /// A board normalizes the cells it stores to its own N (see BoundsN.Normalize), so persisted text always carries N coordinates.</summary>
     public readonly struct QN : IEquatable<QN>
     {
-        public const int MinDimensions = 1, MaxDimensions = 7;
+        public const int MinDimensions = 1, MaxDimensions = 11;
         private readonly int[]? c;
         public QN(params int[] coordinates)
         {

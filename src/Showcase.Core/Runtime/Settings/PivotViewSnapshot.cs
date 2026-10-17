@@ -30,9 +30,9 @@ namespace NDShogi.Showcase.Core.Settings
             QN selectedCell, QN planeReferenceCell, string embeddingId = EmbeddingVersion)
         {
             if (embeddingId != EmbeddingVersion && embeddingId != LegacyBoardAtOriginVersion) throw new ArgumentException("未知の固定埋込方式です。");
-            // N is the centre's length (3..7); 4 is the original 4D view and its saved form is unchanged.
+            // N is the centre's length (3..11); 4 is the original 4D view and its saved form is unchanged.
             int n = center == null ? 0 : center.Length;
-            if (n < BoundsN.MinDimensions || n > BoundsN.MaxDimensions) throw new ArgumentException("centerの次元は3〜7です。");
+            if (n < BoundsN.MinDimensions || n > BoundsN.MaxDimensions) throw new ArgumentException("centerの次元は3〜" + BoundsN.MaxDimensions + "です。");
             this.center = Copy(center!, n, "center"); this.basis = Copy(basis, n * n, "basis");
             this.anchor = Copy(anchor, 3, "anchor"); this.camera = Copy(camera, 6, "camera");
             if (!Finite(height) || height < 0 || height > 1000 || !Finite(halfWindow) || halfWindow < .25 || halfWindow > 128 ||
