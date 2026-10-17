@@ -62,7 +62,7 @@ namespace Showcase.Unity.Settings
             var surface=rect.gameObject.AddComponent<CfgPointerSurface>();surface.Down=OnViewDown;surface.Drag=OnDrag;surface.Up=OnUp;surface.Scroll=OnScroll;
             countLabel=CfgUi.Label(transform,"",10,6,400,22,14,Cfg2Ui.Gold);
             rotationLabel=CfgUi.Label(transform,"",10,28,400,20,12,new Color(.75f,.80f,.86f));
-            axisHint=CfgUi.Label(transform,"方向で選ぶ（＋側・−側、複数押すと全部を満たす方向だけ）　背景ドラッグ：視点　ホイール：ズーム",10,0,400,18,11,new Color(.62f,.68f,.76f));
+            axisHint=CfgUi.Label(transform,"方向で選ぶ（＋側・−側。複数押すと全部を満たす方向だけ）\n背景ドラッグ：視点　ホイール：ズーム",10,0,400,32,11,new Color(.62f,.68f,.76f));
             // Controller: table, angle slider of the active plane, list of turned planes, zoom, reset.
             CfgUi.Label(controls,"回転コントローラー",12,8,300,26,17,Cfg2Ui.Gold);
             tableTitle=CfgUi.Label(controls,"① 面を選ぶ",12,36,300,18,13);
@@ -70,7 +70,7 @@ namespace Showcase.Unity.Settings
             tableRect=CfgUi.Rect(controls,"Rotation planes",34,58,100,100);
             tableGraphic=tableRect.gameObject.AddComponent<Cfg2ProjectionTableGraphic>();tableGraphic.View=this;tableGraphic.color=Color.white;tableGraphic.raycastTarget=true;
             var tableSurface=tableRect.gameObject.AddComponent<CfgPointerSurface>();tableSurface.Down=OnTableDown;tableSurface.Drag=OnDrag;tableSurface.Up=OnUp;
-            tableHint=CfgUi.Label(controls,"クリック＝強調＋回す面に。もう一度で解除。\nドラッグ＝その面で回転。右クリック＝全解除。",12,0,320,32,11,new Color(.62f,.68f,.76f));
+            tableHint=CfgUi.Label(controls,"押す＝強調し、回す面に（再度で解除）\nドラッグ＝回転　右クリック＝全解除",12,0,320,32,11,new Color(.62f,.68f,.76f));
             turnTitle=CfgUi.Label(controls,"② 選んだ面を回す（図をドラッグ）",12,0,300,18,13);
             activeLabel=CfgUi.Label(controls,"",12,0,300,22,15,Cfg2Ui.Gold);
             activeDial=MakeDial(controls,active,true);
@@ -83,7 +83,7 @@ namespace Showcase.Unity.Settings
             zoomSlider=Cfg2Ui.Slider(controls,12,0,100,MinZoom,MaxZoom,1,v=>{if(syncing)return;zoom=v;UpdateTexts();graphic.SetVerticesDirty();},()=>record?.Invoke("ProjectionZoom",zoom.ToString("0.00",CultureInfo.InvariantCulture)));
             resetButton=Cfg2Ui.Button(controls,"初期位置に戻す",0,0,100,30,()=>ResetRotation());
             clearButton=Cfg2Ui.Button(controls,"選択をクリア",0,0,100,30,ClearSelection);
-            foreach(var b in stepButtons.Concat(new[]{resetButton,clearButton})){var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=13;}
+            foreach(var b in stepButtons.Concat(new[]{resetButton,clearButton})){var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=12;}
             ResetRotation(false);EnsureLabels();EnsureAxisButtons();Layout();
         }
         // Rebuilds the direction list for the piece. Allowed unit directions of {-1,0,1}^N are enumerated like the preview query does.
@@ -326,7 +326,7 @@ namespace Showcase.Unity.Settings
             if(graphic==null||controls==null)return;float w=((RectTransform)transform).rect.width,h=((RectTransform)transform).rect.height,cw=controls.rect.width,ch=controls.rect.height;
             countLabel.rectTransform.sizeDelta=new Vector2(w-20,22);rotationLabel.rectTransform.sizeDelta=new Vector2(w-20,20);
             float bw=Mathf.Clamp((w-20)/Math.Max(1,dimensions)-4,24,46);
-            axisHint.rectTransform.anchoredPosition=new Vector2(10,-(h-88));axisHint.rectTransform.sizeDelta=new Vector2(w-20,18);
+            axisHint.rectTransform.anchoredPosition=new Vector2(10,-(h-104));axisHint.rectTransform.sizeDelta=new Vector2(w-20,34);
             for(int i=0;i<axisButtons.Count;i++){int axis=i/2,row=i%2;var r=(RectTransform)axisButtons[i].transform;r.anchoredPosition=new Vector2(10+axis*(bw+4),-(h-66+row*30));r.sizeDelta=new Vector2(bw,26);}
             float cs=CellSize;int n=dimensions;float y=58;
             tableRect.anchoredPosition=new Vector2(34,-y);tableRect.sizeDelta=new Vector2(n*cs,n*cs);
@@ -335,15 +335,15 @@ namespace Showcase.Unity.Settings
                 rowLabels[i].rectTransform.anchoredPosition=new Vector2(10,-(y+i*cs));rowLabels[i].rectTransform.sizeDelta=new Vector2(22,cs);
                 columnLabels[i].rectTransform.anchoredPosition=new Vector2(34+i*cs,-(y+n*cs));columnLabels[i].rectTransform.sizeDelta=new Vector2(cs,16);
             }
-            y+=n*cs+20;float hintHeight=cw<260?48:32;tableHint.rectTransform.anchoredPosition=new Vector2(12,-y);tableHint.rectTransform.sizeDelta=new Vector2(cw-24,hintHeight);y+=hintHeight+8;
+            y+=n*cs+20;tableHint.rectTransform.anchoredPosition=new Vector2(12,-y);tableHint.rectTransform.sizeDelta=new Vector2(cw-24,32);y+=40;
             turnTitle.rectTransform.anchoredPosition=new Vector2(12,-y);turnTitle.rectTransform.sizeDelta=new Vector2(cw-24,18);y+=20;activeLabel.rectTransform.anchoredPosition=new Vector2(12,-y);activeLabel.rectTransform.sizeDelta=new Vector2(cw-24,22);y+=24;
             // The big dial: as wide as the panel allows, with the axis names floating at its arrow tips (placed in UpdateTexts).
-            float ds=Mathf.Clamp(cw-24-40,100,150);activeDial.rectTransform.anchoredPosition=new Vector2(12+(cw-24-ds)*.5f,-y);activeDial.rectTransform.sizeDelta=new Vector2(ds,ds);y+=ds+8;
+            float ds=Mathf.Clamp(cw-24-60,96,130);activeDial.rectTransform.anchoredPosition=new Vector2(12+(cw-24-ds)*.5f,-y);activeDial.rectTransform.sizeDelta=new Vector2(ds,ds);y+=ds+8;
             float sw=(cw-24-8)/3;for(int i=0;i<stepButtons.Count;i++){var r=(RectTransform)stepButtons[i].transform;r.anchoredPosition=new Vector2(12+i*(sw+4),-y);r.sizeDelta=new Vector2(sw,26);}y+=40;
             listTitle.rectTransform.anchoredPosition=new Vector2(12,-y);listTitle.rectTransform.sizeDelta=new Vector2(cw-24,18);y+=22;
-            // Small dials in a grid, as many as fit above the zoom section (58) and the buttons; the rest is named in listMore.
-            bool stacked=cw<260;float buttons=stacked?2*30+6:30;
-            int columns=Math.Max(1,Mathf.FloorToInt((cw-24)/DialCell));int rowsAvailable=Mathf.FloorToInt((ch-y-20-58-buttons-20)/DialRow);
+            // Small dials in a grid, at least one row and as many more as fit above the zoom row (30) and the buttons (30).
+            const float buttons=30;
+            int columns=Math.Max(1,Mathf.FloorToInt((cw-24)/DialCell));int rowsAvailable=Math.Max(1,Mathf.FloorToInt((ch-y-20-30-buttons-20)/DialRow));
             listCapacity=Mathf.Clamp(columns*rowsAvailable,0,MaxListed);int shownCount=Math.Min(listedPlanes.Count,listCapacity);int rows=(shownCount+columns-1)/columns;
             listHost.anchoredPosition=new Vector2(12,-y);listHost.sizeDelta=new Vector2(cw-24,Math.Max(10,rows*DialRow));
             float cellX=(cw-24-columns*DialCell)*.5f;
@@ -354,21 +354,13 @@ namespace Showcase.Unity.Settings
                 listDials[i].rectTransform.anchoredPosition=new Vector2(x+(DialCell-DialSize)*.5f,-row*DialRow);listDials[i].rectTransform.sizeDelta=new Vector2(DialSize,DialSize);
                 listValues[i].rectTransform.anchoredPosition=new Vector2(x,-(row*DialRow+DialSize+2));listValues[i].rectTransform.sizeDelta=new Vector2(DialCell,18);
             }
-            y+=rows*DialRow;listMore.rectTransform.anchoredPosition=new Vector2(12,-y);if(listMore.text!="")y+=20;y+=12;
-            zoomTitle.rectTransform.anchoredPosition=new Vector2(12,-y);zoomLabel.rectTransform.anchoredPosition=new Vector2(cw-12-80,-y);y+=22;
-            var zs=(RectTransform)zoomSlider.transform;zs.anchoredPosition=new Vector2(12,-y);zs.sizeDelta=new Vector2(cw-24,24);ResizeSlider(zoomSlider,cw-24);
-            float by=Math.Max(y+40,ch-12-buttons);
-            if(stacked)
-            {
-                ((RectTransform)resetButton.transform).anchoredPosition=new Vector2(12,-by);((RectTransform)resetButton.transform).sizeDelta=new Vector2(cw-24,30);
-                ((RectTransform)clearButton.transform).anchoredPosition=new Vector2(12,-(by+36));((RectTransform)clearButton.transform).sizeDelta=new Vector2(cw-24,30);
-            }
-            else
-            {
-                float hw=(cw-24-6)/2;
-                ((RectTransform)resetButton.transform).anchoredPosition=new Vector2(12,-by);((RectTransform)resetButton.transform).sizeDelta=new Vector2(hw,30);
-                ((RectTransform)clearButton.transform).anchoredPosition=new Vector2(12+hw+6,-by);((RectTransform)clearButton.transform).sizeDelta=new Vector2(hw,30);
-            }
+            y+=rows*DialRow;listMore.rectTransform.anchoredPosition=new Vector2(12,-y);if(listMore.text!="")y+=20;y+=8;
+            // Zoom on one row: title left, value right, the slider between them.
+            zoomTitle.rectTransform.anchoredPosition=new Vector2(12,-y);zoomTitle.rectTransform.sizeDelta=new Vector2(70,18);zoomLabel.rectTransform.anchoredPosition=new Vector2(cw-12-44,-y);zoomLabel.rectTransform.sizeDelta=new Vector2(44,18);
+            float zw=cw-24-70-48;var zs=(RectTransform)zoomSlider.transform;zs.anchoredPosition=new Vector2(12+70,-(y-3));zs.sizeDelta=new Vector2(zw,24);ResizeSlider(zoomSlider,zw);y+=30;
+            float by=Math.Max(y+8,ch-12-buttons);float hw=(cw-24-6)/2;
+            ((RectTransform)resetButton.transform).anchoredPosition=new Vector2(12,-by);((RectTransform)resetButton.transform).sizeDelta=new Vector2(hw,30);
+            ((RectTransform)clearButton.transform).anchoredPosition=new Vector2(12+hw+6,-by);((RectTransform)clearButton.transform).sizeDelta=new Vector2(hw,30);
             LayoutLabels();graphic.SetVerticesDirty();tableGraphic.SetVerticesDirty();
         }
         // Cfg2Ui.Slider lays its parts out for one width; a resize moves the track, fill area and handle area with it.
@@ -420,7 +412,9 @@ namespace Showcase.Unity.Settings
         {
             if(countLabel==null)return;
             int total=directions.Count,lit=0;
-            if(AnyChoice)foreach(var d in directions)if(Level(d)>0)lit++;
+            // With cells or ±axes chosen the count is of chosen rays; a bare hover counts the hovered plane's rays.
+            int threshold=selected.Count>0||axisSelected.Count>0?2:1;
+            if(AnyChoice)foreach(var d in directions)if(Level(d)>=threshold)lit++;
             HighlightedCount=AnyChoice?lit:0;
             string piece=string.IsNullOrEmpty(pieceName)?"":pieceName+"　";
             countLabel.text=piece+dimensions+"次元 → 3次元 透視投影　"+total.ToString("N0",CultureInfo.InvariantCulture)+"方向"+(AnyChoice?"　強調 "+lit.ToString("N0",CultureInfo.InvariantCulture)+" 本"+(lit>MaxLitRays?"（表示は"+MaxLitRays.ToString("N0",CultureInfo.InvariantCulture)+"本まで）":""):"")+(total>MaxFaintRays?"　（多いので選んだ方向だけ描画）":"");
