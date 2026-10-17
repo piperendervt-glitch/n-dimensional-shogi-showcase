@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Rendering.HighDefinition;
 using NDimensionalShogi.Showcase.Environment;
 
@@ -22,6 +23,14 @@ namespace Showcase.Unity.Settings
         const float AutoQualitySlowFrame=1f/38;
         int shippedShadowResolution,shippedBlocker,shippedFilter,shippedContactSamples;bool shippedAoFull,shippedAoBilateral,qualityReady,qualityStored;
         GraphicsQuality quality;string qualityReason="";Coroutine qualityCheck;
+        Text qualityReasonText;readonly List<UnityEngine.UI.Toggle> effectToggles=new List<UnityEngine.UI.Toggle>();
+        // The graphics part of the 表示・操作 page, brought up to date without rebuilding the page (controls of another page are gone, so skipped).
+        void RefreshGraphicsControls()
+        {
+            for(int i=0;i<QualityNames.Length;i++)if(actions.TryGetValue("quality-"+i,out var b)&&b!=null)MarkSelected(b,(GraphicsQuality)i==quality);
+            if(qualityReasonText!=null)qualityReasonText.text=qualityReason;
+            for(int i=0;i<effectToggles.Count&&i<QualityEffects.Length;i++)if(effectToggles[i]!=null)effectToggles[i].SetIsOnWithoutNotify(EffectEnabled(quality,QualityEffects[i]));
+        }
 
         void InitializeGraphicsQuality(bool store)
         {
@@ -32,7 +41,8 @@ namespace Showcase.Unity.Settings
             qualityReady=true;qualityStored=store;
             // Verification runs keep the shipped look and leave this machine's preference alone.
             if(!store){SetQuality(GraphicsQuality.High,"検証実行のため固定");return;}
-            if(PlayerPrefs.HasKey(QualityKey)&&System.Enum.TryParse(PlayerPrefs.GetString(QualityKey),out GraphicsQuality saved))
+            // TryParse also accepts any number ("7"), so the value must name a preset.
+            if(PlayerPrefs.HasKey(QualityKey)&&System.Enum.TryParse(PlayerPrefs.GetString(QualityKey),out GraphicsQuality saved)&&System.Enum.IsDefined(typeof(GraphicsQuality),saved))
             {SetQuality(saved,PlayerPrefs.GetInt(QualityAutoKey,0)!=0?"自動選択":"手動で選択");return;}
             ChooseQualityAutomatically();
         }
@@ -64,7 +74,8 @@ namespace Showcase.Unity.Settings
                 if(PlayerPrefs.GetInt(QualityAutoKey,0)==0||median<=AutoQualitySlowFrame||quality==GraphicsQuality.Low)break;
                 var lower=quality==GraphicsQuality.High?GraphicsQuality.Medium:GraphicsQuality.Low;
                 StoreQuality(lower,true);SetQuality(lower,"自動選択（"+GpuSummary()+"、実測 "+Mathf.RoundToInt(1/median)+" fps）");
-                if(opened&&category==5)BuildDetails();
+                // Updated in place: a rebuild would drop a volume slider the player may be dragging on the same page.
+                RefreshGraphicsControls();
             }
             qualityCheck=null;
         }
@@ -73,9 +84,13 @@ namespace Showcase.Unity.Settings
             if(!qualityStored)return;
             PlayerPrefs.SetString(QualityKey,q.ToString());PlayerPrefs.SetInt(QualityAutoKey,automatic?1:0);PlayerPrefs.Save();
         }
+        // Verification runs keep カスタム choices in memory only, like the preset itself.
+        readonly Dictionary<EnvironmentEffect,bool> runEffects=new Dictionary<EnvironmentEffect,bool>();
+        bool CustomEffect(EnvironmentEffect effect)=>qualityStored?PlayerPrefs.GetInt(EffectKeyPrefix+effect,1)!=0:!runEffects.TryGetValue(effect,out var on)||on;
+        void SetCustomEffect(EnvironmentEffect effect,bool on){if(qualityStored)PlayerPrefs.SetInt(EffectKeyPrefix+effect,on?1:0);else runEffects[effect]=on;}
         bool EffectEnabled(GraphicsQuality q,EnvironmentEffect effect)
         {
-            if(q==GraphicsQuality.Custom)return PlayerPrefs.GetInt(EffectKeyPrefix+effect,1)!=0;
+            if(q==GraphicsQuality.Custom)return CustomEffect(effect);
             if(q!=GraphicsQuality.Low)return true;
             return effect!=EnvironmentEffect.SunShadows&&effect!=EnvironmentEffect.Reflections&&effect!=EnvironmentEffect.AmbientOcclusion&&effect!=EnvironmentEffect.ContactShadows;
         }
@@ -93,8 +108,8 @@ namespace Showcase.Unity.Settings
         void SetEffectByPlayer(EnvironmentEffect effect,bool enabled)
         {
             // Switching one effect turns the current preset into カスタム with the same starting effects.
-            if(quality!=GraphicsQuality.Custom)foreach(var e in QualityEffects)PlayerPrefs.SetInt(EffectKeyPrefix+e,EffectEnabled(quality,e)?1:0);
-            PlayerPrefs.SetInt(EffectKeyPrefix+effect,enabled?1:0);StoreQuality(GraphicsQuality.Custom,false);SetQuality(GraphicsQuality.Custom,"手動で選択");
+            if(quality!=GraphicsQuality.Custom)foreach(var e in QualityEffects)SetCustomEffect(e,EffectEnabled(quality,e));
+            SetCustomEffect(effect,enabled);StoreQuality(GraphicsQuality.Custom,false);SetQuality(GraphicsQuality.Custom,"手動で選択");
         }
         void BuildGraphics(RectTransform c,float y)
         {
@@ -104,11 +119,11 @@ namespace Showcase.Unity.Settings
                 var q=(GraphicsQuality)i;
                 Button(c,"quality-"+i,QualityNames[i],8+i*84,y+42,78,40,()=>{StoreQuality(q,false);SetQuality(q,"手動で選択");BuildDetails();},q==quality);
             }
-            CfgUi.Label(c,qualityReason,8,y+90,330,44,15,Muted);
+            qualityReasonText=CfgUi.Label(c,qualityReason,8,y+90,330,44,15,Muted);effectToggles.Clear();
             for(int i=0;i<QualityEffects.Length;i++)
             {
                 var effect=QualityEffects[i];
-                CfgUi.Toggle(c,QualityEffectNames[i],EffectEnabled(quality,effect),8,y+140+i*40,330,v=>{SetEffectByPlayer(effect,v);BuildDetails();});
+                effectToggles.Add(CfgUi.Toggle(c,QualityEffectNames[i],EffectEnabled(quality,effect),8,y+140+i*40,330,v=>{SetEffectByPlayer(effect,v);BuildDetails();}));
             }
             float below=y+140+QualityEffects.Length*40+8;
             Button(c,"quality-auto","この PC に合わせて自動で選び直す",8,below,330,42,()=>{ChooseQualityAutomatically();BuildDetails();});
