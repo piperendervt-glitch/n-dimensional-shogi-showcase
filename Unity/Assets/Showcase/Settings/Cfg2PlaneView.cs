@@ -19,6 +19,8 @@ namespace Showcase.Unity.Settings
         int horizontal,vertical;bool showCandidates,showAttacks,showGrid;
         HashSet<QN> gs=new HashSet<QN>(),ps=new HashSet<QN>(),attacks=new HashSet<QN>();
         public Cfg2Plane Plane=>plane;
+        // N of the board shown; the two fixed-axis conditions list every other axis of that board.
+        public int Dimensions=4;
         public long Revision=>revision;
         public int VisiblePieceCount {get;private set;}
         public int VisibleCandidates=>ps.Count(Contains);
@@ -43,7 +45,7 @@ namespace Showcase.Unity.Settings
         {
             center=selected;revision=stateRevision;contentVersion++;showCandidates=candidates;showAttacks=attack;showGrid=grid;
             gs=new HashSet<QN>(g??Array.Empty<QN>());ps=new HashSet<QN>(p??Array.Empty<QN>());attacks=new HashSet<QN>(attacked??Array.Empty<QN>());
-            condition.text=string.Join("  ",Enumerable.Range(0,4).Where(i=>i!=horizontal&&i!=vertical).Select(i=>AxisName(i)+"="+center[i]));
+            condition.text=string.Join("  ",Enumerable.Range(0,Dimensions).Where(i=>i!=horizontal&&i!=vertical).Select(i=>AxisName(i)+"="+center.Axis(i)));
             var live=new HashSet<string>();VisiblePieceCount=0;
             foreach(var item in source??Array.Empty<CfgVisualPiece>())
             {
@@ -51,21 +53,21 @@ namespace Showcase.Unity.Settings
                 if(!icons.TryGetValue(item.Id,out var icon)){icon=Cfg2Ui.PieceIcon(transform,item.DefinitionId,item.Side,0,0,16,20);icons.Add(item.Id,icon);}
                 var pieceIcon=(Cfg2PieceIcon)icon;pieceIcon.Texture=Resources.Load<Texture2D>("PieceTextures/"+CfgPreviewRenderer.TextureFor(item.DefinitionId,item.Side));pieceIcon.SetMaterialDirty();
                 GridRect(out float left,out float top,out float cell);var r=icon.rectTransform;r.pivot=new Vector2(.5f,.5f);r.sizeDelta=new Vector2(cell*.66f,cell*.79f);
-                r.anchoredPosition=new Vector2(left+(item.Position[horizontal]+4.5f)*cell,-top-(4.5f-item.Position[vertical])*cell);
+                r.anchoredPosition=new Vector2(left+(item.Position.Axis(horizontal)+4.5f)*cell,-top-(4.5f-item.Position.Axis(vertical))*cell);
                 r.localRotation=Quaternion.Euler(0,0,item.Side==Side.B?180:0);icon.gameObject.SetActive(true);
             }
             foreach(var entry in icons.Where(x=>!live.Contains(x.Key)).ToArray()){Destroy(entry.Value.gameObject);icons.Remove(entry.Key);}
             graphic.SetVerticesDirty();
         }
-        static string AxisName(int axis)=>axis==0?"Z":axis==1?"X":axis==2?"Y":"W";
+        static string AxisName(int axis)=>SliceAxes.AxisName(SliceAxes.AxisOfCore(axis));
         public bool Contains(QN cell)
-        {for(int axis=0;axis<4;axis++)if(axis!=horizontal&&axis!=vertical&&cell[axis]!=center[axis])return false;return true;}
+        {int n=Math.Max(Dimensions,Math.Max(cell.Dimensions,center.Dimensions));for(int axis=0;axis<n;axis++)if(axis!=horizontal&&axis!=vertical&&cell.Axis(axis)!=center.Axis(axis))return false;return true;}
         public QN Cell(int h,int v)
-        {var q=center.ToArray();q[horizontal]=h;q[vertical]=v;return new QN(q[0],q[1],q[2],q[3]);}
+        {var q=QN.Padded(center.ToArray(),Math.Max(Dimensions,center.Dimensions)).ToArray();q[horizontal]=h;q[vertical]=v;return new QN(q);}
         public Vector2 CellScreenCenter(QN cell,Camera eventCamera=null)
         {
             GridRect(out float left,out float top,out float pitch);
-            return RectTransformUtility.WorldToScreenPoint(eventCamera,graphic.rectTransform.TransformPoint(new Vector3(left+(cell[horizontal]+4.5f)*pitch,-top-(4.5f-cell[vertical])*pitch)));
+            return RectTransformUtility.WorldToScreenPoint(eventCamera,graphic.rectTransform.TransformPoint(new Vector3(left+(cell.Axis(horizontal)+4.5f)*pitch,-top-(4.5f-cell.Axis(vertical))*pitch)));
         }
         public bool TryCellAt(Vector2 screen,Camera eventCamera,out QN cell)
         {
@@ -99,7 +101,7 @@ namespace Showcase.Unity.Settings
             Vector2 CellCenter(int h,int v)=>new Vector2(left+(h+4.5f)*pitch,-top-(4.5f-v)*pitch);
             // Deep backdrop with a cool light pool around the reference cell.
             Cfg2Glow.Gradient(vh,0,0,rect.width,rect.height,new Color(.03f,.06f,.13f,.60f),new Color(.01f,.02f,.05f,.60f));
-            var focus=CellCenter(center[horizontal],center[vertical]);
+            var focus=CellCenter(center.Axis(horizontal),center.Axis(vertical));
             Cfg2Glow.Blob(vh,new Vector2(left+size*.5f,-top-size*.5f),size*.85f,new Color(.10f,.22f,.60f,.16f));
             Cfg2Glow.Blob(vh,focus,size*.55f,new Color(.16f,.36f,1,.26f));
             Cfg2Glow.Rect(vh,left-1.5f,-top+1.5f,size+3,size+3,new Color(.015f,.03f,.07f,.80f));
@@ -139,7 +141,7 @@ namespace Showcase.Unity.Settings
                 Cfg2Glow.Line(vh,new Vector2(x,y),new Vector2(x,y-w),edge,e);Cfg2Glow.Line(vh,new Vector2(x+w,y),new Vector2(x+w,y-w),edge,e);
             }
         }
-        int Distance(int h,int v)=>Math.Abs(h-center[horizontal])+Math.Abs(v-center[vertical]);
+        int Distance(int h,int v)=>Math.Abs(h-center.Axis(horizontal))+Math.Abs(v-center.Axis(vertical));
     }
     internal sealed class Cfg2PlaneGraphic : Graphic
     {

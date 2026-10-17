@@ -24,7 +24,7 @@ namespace Showcase.Unity.Settings
         void RequestView(string axis)
         {
             if(ownership.Owner!=InputOwner.None)return;
-            slice.Request(SliceAxes.ViewForAxis((LogicalAxis)Enum.Parse(typeof(LogicalAxis),axis)));geometryDirty=true;stableDirty=true;Record("SliceRequest",axis);
+            slice.Request(SliceAxes.SectionForAxis(slice.TargetSection,(LogicalAxis)Enum.Parse(typeof(LogicalAxis),axis)));geometryDirty=true;stableDirty=true;Record("SliceRequest",axis);
         }
         void UpdateCamera()
         {
@@ -61,7 +61,10 @@ namespace Showcase.Unity.Settings
             if(pointerButton<0||ownership.PointerId!=e.pointerId)return;var total=(e.position-pointerStart)/pointerScale;lastPointer=e.position;pointerMoved|=total.sqrMagnitude>36;
             if(!pointerMoved)return;
             if(gesture==Gesture.Rotate4D)
-            {slice.SetOrientation(SliceRotations.RotateDrag(pointerView.Frame,total.x*.25,total.y*.25,rotateZw));geometryDirty=true;stableDirty=true;}
+            {
+                // A 3D board has no hidden axis to rotate against.
+                if(pointerView.Dimensions>3){slice.SetOrientation(SliceRotations.RotateDrag(pointerView.Frame,total.x*.25,total.y*.25,rotateZw,RotationCoreAxis));geometryDirty=true;stableDirty=true;}
+            }
             else if(gesture==Gesture.Pan)
             {pan=startPan+(-(startCameraRotation*Vector3.right)*total.x-(startCameraRotation*Vector3.up)*total.y)*startDistance*.001f;manualCamera=true;UpdateCamera();}
             else {yaw=startYaw+total.x*.25f;pitch=Mathf.Clamp(startPitch-total.y*.2f,-75,75);manualCamera=true;UpdateCamera();}

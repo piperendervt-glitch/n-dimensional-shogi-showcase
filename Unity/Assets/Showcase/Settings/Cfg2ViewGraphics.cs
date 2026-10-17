@@ -15,9 +15,11 @@ namespace Showcase.Unity.Settings
         {var p=Quaternion.Inverse(cameraRotation)*SectionView.MapVector(local);return new Vector2(p.x,p.y)*scale;}
         internal static Vec3 Tangent(SliceFrame f,VecN world)
             =>new Vec3(VecN.Dot(world,f.AxisX),VecN.Dot(world,f.AxisY),VecN.Dot(world,f.AxisZ));
-        // Neon palette: X red, Y amber, Z cyan, W violet.
-        internal static Color AxisColor(LogicalAxis a)
-            =>a==LogicalAxis.X?new Color(1,.36f,.30f):a==LogicalAxis.Y?new Color(1,.78f,.26f):a==LogicalAxis.Z?new Color(.30f,.78f,1):new Color(.68f,.52f,1);
+        // Neon palette: X red, Y amber, Z cyan, W violet; then V green, U orange, T pink, S lime, R teal, Q magenta, P silver.
+        static readonly Color[] AxisColors={new Color(1,.36f,.30f),new Color(1,.78f,.26f),new Color(.30f,.78f,1),new Color(.68f,.52f,1),
+            new Color(.31f,.88f,.54f),new Color(1,.60f,.18f),new Color(1,.45f,.75f),new Color(.80f,.95f,.35f),new Color(.20f,.85f,.80f),new Color(.95f,.40f,1),new Color(.85f,.85f,.85f)};
+        internal static Color AxisColor(LogicalAxis a)=>AxisColors[Mathf.Clamp((int)a,0,AxisColors.Length-1)];
+        internal static Color AxisColor(int coreAxis)=>AxisColor(SliceAxes.AxisOfCore(coreAxis));
         // Camera-space depth of a chart direction; positive is behind the diagram's centre.
         internal static float Depth(Vec3 local,Quaternion cameraRotation)=>(Quaternion.Inverse(cameraRotation)*SectionView.MapVector(local)).z;
     }
@@ -94,16 +96,29 @@ namespace Showcase.Unity.Settings
         {
             ViewRevision=viewRevision;CameraRevision=cameraRevision;graphic.Frame=frame;graphic.CameraRotation=rotation;graphic.SetVerticesDirty();
             var rect=((RectTransform)transform).rect;var center=new Vector2(rect.width*.5f,rect.height*.5f);float scale=Mathf.Min(rect.width*.32f,rect.height*.36f);
+            int n=frame.Dimensions;var hidden=new List<LogicalAxis>();
             foreach(var entry in buttons)
             {
-                var axis=entry.Key;var world=SliceAxes.WorldAxis(axis);var tangent=Cfg2Projection.Tangent(frame,world);var p=Cfg2Projection.Project(tangent,rotation,scale);
-                directions[axis]=p;
-                double normal=VecN.Dot(frame.Normal,world);string symbol="";
-                if(tangent.Length<1e-7){p=Vector2.zero;symbol=normal>=0?" ⊙":" ⊗";}
-                else if(p.magnitude<4){p=new Vector2(0,-14);symbol=" ·";}
+                var axis=entry.Key;int core=SliceAxes.CoreAxis(axis);
+                // Axes beyond the space of this match stay out of the gizmo.
+                if(core>=n){entry.Value.gameObject.SetActive(false);directions[axis]=Vector2.zero;continue;}
+                entry.Value.gameObject.SetActive(true);
+                var world=VecN.Unit(core,n);var tangent=Cfg2Projection.Tangent(frame,world);var p=Cfg2Projection.Project(tangent,rotation,scale);
+                directions[axis]=p;string symbol="";
+                if(tangent.Length<1e-7){hidden.Add(axis);continue;}
+                if(p.magnitude<4){p=new Vector2(0,-14);symbol=" ·";}
                 else p+=p.normalized*13;
                 var r=(RectTransform)entry.Value.transform;r.anchoredPosition=new Vector2(center.x+p.x-24,-center.y+p.y+13.5f);
-                entry.Value.GetComponentInChildren<Text>().text=axis+symbol;
+                var label=entry.Value.GetComponentInChildren<Text>();label.fontSize=18;label.text=SliceAxes.AxisName(axis)+symbol;
+            }
+            // Hidden axes (no direction in the section) line up under the globe with C's coordinate on each: W=0  V=0 ...
+            float spacing=Mathf.Min(52,(rect.width-4)/Mathf.Max(1,hidden.Count));
+            for(int i=0;i<hidden.Count;i++)
+            {
+                var axis=hidden[i];var r=(RectTransform)buttons[axis].transform;float x=(i-(hidden.Count-1)*.5f)*spacing;
+                r.anchoredPosition=new Vector2(center.x+x-24,-center.y-scale-16+13.5f);
+                var label=buttons[axis].GetComponentInChildren<Text>();label.fontSize=hidden.Count>4?11:13;
+                label.text=SliceAxes.AxisName(axis)+"="+frame.Center.Axis(SliceAxes.CoreAxis(axis)).ToString("0.##",System.Globalization.CultureInfo.InvariantCulture);
             }
         }
     }
@@ -126,13 +141,14 @@ namespace Showcase.Unity.Settings
             Ring(vh,inverse,center,scale,Vector3.forward,Vector3.up,new Color(.72f,.50f,1,.72f));
             // Axes are drawn back to front so the nearer neon stays on top.
             var axes=new List<(LogicalAxis axis,Vec3 tangent,float depth)>();
-            foreach(LogicalAxis a in Enum.GetValues(typeof(LogicalAxis))){var t=Cfg2Projection.Tangent(Frame,SliceAxes.WorldAxis(a));axes.Add((a,t,Cfg2Projection.Depth(t,CameraRotation)));}
-            axes.Sort((x,y)=>y.depth.CompareTo(x.depth));
+            foreach(LogicalAxis a in SliceAxes.Axes(Frame.Dimensions)){var t=Cfg2Projection.Tangent(Frame,VecN.Unit(SliceAxes.CoreAxis(a),Frame.Dimensions));axes.Add((a,t,Cfg2Projection.Depth(t,CameraRotation)));}
+            axes.Sort((x,y)=>y.depth.CompareTo(x.depth));int hiddenRings=0;
             foreach(var entry in axes)
             {
                 var color=Cfg2Projection.AxisColor(entry.axis);
+                // A hidden axis points straight out of the section: one ring per hidden axis around the centre, widening outwards.
                 if(entry.tangent.Length<1e-7)
-                {Cfg2Glow.Circle(vh,center,8,color,1.1f,7,32);Cfg2Glow.Blob(vh,center,10,Cfg2Glow.Alpha(color,.45f));continue;}
+                {float radius=8+3*hiddenRings++;Cfg2Glow.Circle(vh,center,radius,color,1.1f,7,32);if(hiddenRings==1)Cfg2Glow.Blob(vh,center,10,Cfg2Glow.Alpha(color,.45f));continue;}
                 var p=Cfg2Projection.Project(entry.tangent,CameraRotation,scale);float fade=entry.depth>0?.65f:1;
                 Cfg2Glow.Dashed(vh,center,center-p*.85f,Cfg2Glow.Alpha(color,.38f*fade),2.2f,3,3);
                 Cfg2Glow.Arrow(vh,center,center+p,Cfg2Glow.Alpha(color,fade),1.6f);
@@ -152,13 +168,13 @@ namespace Showcase.Unity.Settings
     }
     internal sealed class Cfg2RelationGraphic : Graphic
     {
-        internal HyperplaneRelation Relation;internal Quaternion CameraRotation;internal ReferenceView Reference;internal double HalfExtent=4.5;
+        internal HyperplaneRelation Relation;internal Quaternion CameraRotation;internal ReferenceSection Reference;internal double HalfExtent=4.5;
         public override Texture mainTexture=>Cfg2Glow.Texture;
         internal Vector2 Center=>new Vector2(rectTransform.rect.width*.5f,-rectTransform.rect.height*.5f);
         internal float ProjectionScale=>Mathf.Min(rectTransform.rect.width*.22f,rectTransform.rect.height*.30f);
         internal Vector2 Project(Vec3 point)=>Cfg2Projection.Project(point,CameraRotation,ProjectionScale);
         internal Vector2 AxisEnd(LogicalAxis axis)
-        {var basis=SliceAxes.Reference(Reference);return Project(Cfg2Projection.Tangent(basis,SliceAxes.WorldAxis(axis))*1.4);}
+        {var basis=Reference.Frame();return Project(Cfg2Projection.Tangent(basis,VecN.Unit(SliceAxes.CoreAxis(axis),Reference.Dimensions))*1.4);}
         static readonly Color Plane=new Color(.42f,.50f,1),Edge=new Color(.66f,.76f,1),Gold=new Color(1,.84f,.50f);
         protected override void OnPopulateMesh(VertexHelper vh)
         {
@@ -178,8 +194,8 @@ namespace Showcase.Unity.Settings
                 int j=i^(1<<a);if(i>j)continue;bool back=Cfg2Projection.Depth((cube[i]+cube[j])*.5,CameraRotation)>.05;
                 if(back)Cfg2Glow.Dashed(vh,P(cube[i]),P(cube[j]),new Color(.62f,.70f,.85f,.16f),1.6f,3,3);else Cfg2Glow.Line(vh,P(cube[i]),P(cube[j]),new Color(.70f,.78f,.92f,.26f),1.8f);
             }
-            var basis=SliceAxes.Reference(Reference);var visible=new List<(LogicalAxis axis,float depth)>();
-            foreach(LogicalAxis axis in Enum.GetValues(typeof(LogicalAxis))){var t=Cfg2Projection.Tangent(basis,SliceAxes.WorldAxis(axis));if(t.Length>.5)visible.Add((axis,Cfg2Projection.Depth(t,CameraRotation)));}
+            var basis=Reference.Frame();var visible=new List<(LogicalAxis axis,float depth)>();
+            foreach(LogicalAxis axis in SliceAxes.Axes(Reference.Dimensions)){var t=Cfg2Projection.Tangent(basis,VecN.Unit(SliceAxes.CoreAxis(axis),Reference.Dimensions));if(t.Length>.5)visible.Add((axis,Cfg2Projection.Depth(t,CameraRotation)));}
             // Negative half-axes sit behind the plane.
             foreach(var entry in visible)Cfg2Glow.Dashed(vh,center,center-AxisEnd(entry.axis)*.8f,Cfg2Glow.Alpha(Cfg2Projection.AxisColor(entry.axis),.30f),2,3,3);
             if(Relation!=null)

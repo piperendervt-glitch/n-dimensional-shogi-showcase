@@ -18,8 +18,20 @@ namespace Showcase.Unity.Settings
     {
         public static readonly Vector3 AirAnchor=new Vector3(0,1.1f,0);
         readonly EnvironmentRig rig;
-        readonly ConvexShape cell=ShapeFactory.CreateBox(new VecN(-.5,-.5,-.5,-.5),new VecN(.5,.5,.5,.5),0,"cfg1-logical-cell/1");
+        // One unit cell per N; the 4D cell is the original one.
+        readonly Dictionary<int,ConvexShape> cellShapes=new Dictionary<int,ConvexShape>();
+        ConvexShape Cell(int dimensions)
+        {
+            if(!cellShapes.TryGetValue(dimensions,out var shape))
+            {
+                var half=new double[dimensions];for(int i=0;i<dimensions;i++)half[i]=.5;
+                shape=ShapeFactory.CreateBox(new VecN(half)*-1,new VecN(half),0,"cfg1-logical-cell/1");cellShapes.Add(dimensions,shape);
+            }
+            return shape;
+        }
         readonly Dictionary<string,SectionView> pieces=new Dictionary<string,SectionView>();
+        // N of the piece solids in use; a match of another N replaces them.
+        int pieceDimensions=4;
         readonly Dictionary<string,Material> labels=new Dictionary<string,Material>();
         readonly List<CellMesh> cells=new List<CellMesh>();
         readonly Dictionary<string,QN> pieceCells=new Dictionary<string,QN>();
@@ -104,8 +116,8 @@ namespace Showcase.Unity.Settings
             fillMesh=new Mesh{name="CFG2 finite cell faces",indexFormat=IndexFormat.UInt32};fillMesh.MarkDynamic();
             fillObject.AddComponent<MeshFilter>().sharedMesh=fillMesh;fillObject.AddComponent<MeshRenderer>().sharedMaterial=fillMaterial;
         }
-        public static VecN V(QN p)=>new VecN(p.F,p.U,p.V,p.W);
-        static double L1(VecN p)=>Math.Abs(p.X)+Math.Abs(p.Y)+Math.Abs(p.Z)+Math.Abs(p.W);
+        public static VecN V(QN p){var q=p.ToArray();var v=new double[Math.Max(4,q.Length)];for(int i=0;i<q.Length;i++)v[i]=q[i];return new VecN(v);}
+        static double L1(VecN p){double sum=0;for(int i=0;i<p.Dimensions;i++)sum+=Math.Abs(p.Axis(i));return sum;}
         public void Rebuild(SliceFrame frame,long revision,IEnumerable<CfgVisualPiece> source,IEnumerable<QN> g,IEnumerable<QN> p,QN? selected)
             =>Rebuild(frame,revision,source,g,p,Array.Empty<QN>(),selected);
         public void Rebuild(SliceFrame frame,long revision,IEnumerable<CfgVisualPiece> source,IEnumerable<QN> g,IEnumerable<QN> p,IEnumerable<QN> attacks,QN? selected)
@@ -116,23 +128,44 @@ namespace Showcase.Unity.Settings
             candidateCells.Clear();candidateCells.UnionWith(ps);pieceCells.Clear();
             VisibleG=VisibleP=VisibleAttacks=VisiblePieces=0;cells.Clear();lines.Clear();colors.Clear();indices.Clear();displayEdges.Clear();fillVertices.Clear();fillColors.Clear();fillIndices.Clear();
             double half=HalfWindow;if(half<=0||double.IsNaN(half)||double.IsInfinity(half))throw new ArgumentOutOfRangeException(nameof(HalfWindow));
-            lineObject.transform.position=fillObject.transform.position=Anchor;double normalRadius=.5*L1(frame.Normal);
-            // Enumerate only temporary geometric candidates; no 9^4 state array is allocated.
-            for(int f=-4;f<=4;f++)for(int u=-4;u<=4;u++)for(int v=-4;v<=4;v++)for(int w=-4;w<=4;w++)
+            lineObject.transform.position=fillObject.transform.position=Anchor;int n=frame.Dimensions;var cell=Cell(n);
+            // Enumerate only temporary geometric candidates; no 9^N state array is allocated. The N nested loops of the 4D code
+            // become one axis-by-axis recursion that drops a prefix as soon as no completion can reach the section window,
+            // so an axis-aligned view visits about 9^3 cells whatever N is. For N=4 the surviving cells and their order are unchanged.
+            var constraints=new List<VecN>();var bounds=new List<double>();
+            foreach(var normal in frame.Normals){constraints.Add(normal);bounds.Add(.5*L1(normal)+1e-8);}
+            foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ}){constraints.Add(axis);bounds.Add(half+.5*L1(axis));}
+            var offset=embedding-frame.Center;int k=constraints.Count;
+            // Largest |coefficient*d| any remaining axis can still add: d ranges over -4..4 plus the axis offset.
+            var remaining=new double[k,n+1];
+            for(int c=0;c<k;c++)for(int axis=n-1;axis>=0;axis--)remaining[c,axis]=remaining[c,axis+1]+Math.Abs(constraints[c].Axis(axis))*Math.Max(Math.Abs(-4+offset.Axis(axis)),Math.Abs(4+offset.Axis(axis)));
+            var coordinates=new int[n];var sums=new double[k];
+            void Visit(int axis)
             {
-                var q=new QN(f,u,v,w);var d=V(q)+embedding-frame.Center;
-                if(Math.Abs(VecN.Dot(d,frame.Normal))>normalRadius+1e-8)continue;
-                if(Math.Abs(VecN.Dot(d,frame.AxisX))>half+.5*L1(frame.AxisX)||Math.Abs(VecN.Dot(d,frame.AxisY))>half+.5*L1(frame.AxisY)||Math.Abs(VecN.Dot(d,frame.AxisZ))>half+.5*L1(frame.AxisZ))continue;
+                for(int c=0;c<k;c++)if(Math.Abs(sums[c])-remaining[c,axis]>bounds[c])return;
+                if(axis<n)
+                {
+                    for(int value=-4;value<=4;value++)
+                    {
+                        coordinates[axis]=value;double d=value+offset.Axis(axis);
+                        for(int c=0;c<k;c++)sums[c]+=constraints[c].Axis(axis)*d;
+                        Visit(axis+1);
+                        for(int c=0;c<k;c++)sums[c]-=constraints[c].Axis(axis)*d;
+                    }
+                    return;
+                }
+                var q=new QN(coordinates);
                 var section=FiniteSliceWindow.Build(new InstanceN(cell,V(q)+embedding,1,q.ToString()),frame,half);
-                if(section.Status==SectionStatus.NumericallyUncertain||section.Status==SectionStatus.CapacityExceeded){Diagnostic=section.Status.ToString();continue;}
-                if(section.Status!=SectionStatus.Volume3D)continue;
+                if(section.Status==SectionStatus.NumericallyUncertain||section.Status==SectionStatus.CapacityExceeded){Diagnostic=section.Status.ToString();return;}
+                if(section.Status!=SectionStatus.Volume3D)return;
                 cells.Add(new CellMesh{Id=q,Section=section});if(gs.Contains(q))VisibleG++;if(ps.Contains(q))VisibleP++;if(attacked.Contains(q))VisibleAttacks++;
-                bool highlighted=Candidates&&(gs.Contains(q)||ps.Contains(q));bool attack=Attacks&&attacked.Contains(q);if(!Grid&&!highlighted&&!attack&&(!selected.HasValue||selected.Value!=q))continue;
+                bool highlighted=Candidates&&(gs.Contains(q)||ps.Contains(q));bool attack=Attacks&&attacked.Contains(q);if(!Grid&&!highlighted&&!attack&&(!selected.HasValue||selected.Value!=q))return;
                 bool isSelected=selected.HasValue&&selected.Value==q;
                 var color=isSelected?new Color(1,.76f,.26f,.95f):attack?new Color(1,.28f,.23f,.84f):highlighted?(ps.Contains(q)?new Color(.32f,.58f,1,.78f):Fill?new Color(.44f,.63f,.87f,.40f):new Color(.68f,.42f,.8f,.55f)):new Color(.65f,.76f,.83f,Fill?.065f:.16f);
                 AddEdges(section,color,isSelected?4:attack?3:highlighted?(ps.Contains(q)?2:1):0);
                 if(Fill&&(isSelected||highlighted||attack))AddFaces(section,new Color(color.r,color.g,color.b,isSelected?.12f:attack?.055f:ps.Contains(q)?.045f:.015f));
             }
+            Visit(0);
             foreach(var edge in displayEdges.Values)
             {
                 indices.Add(lines.Count);lines.Add(SectionView.MapVector(edge.A)*displayCell);colors.Add(edge.Color);
@@ -141,11 +174,12 @@ namespace Showcase.Unity.Settings
             lineMesh.Clear();lineMesh.SetVertices(lines);lineMesh.SetColors(colors);lineMesh.SetIndices(indices,MeshTopology.Lines,0);lineMesh.RecalculateBounds();
             fillMesh.Clear();fillMesh.SetVertices(fillVertices);fillMesh.SetColors(fillColors);fillMesh.SetIndices(fillIndices,MeshTopology.Triangles,0);fillMesh.RecalculateBounds();
             var live=new HashSet<string>();
+            if(pieceDimensions!=n){foreach(var stale in pieces.Values)stale.Dispose();pieces.Clear();pieceDimensions=n;}
             foreach(var item in source)
             {
                 live.Add(item.Id);pieceCells[item.Id]=item.Position;if(!pieces.TryGetValue(item.Id,out var view))
                 {
-                    string texture=TextureFor(item.DefinitionId,item.Side,StrictDefinitions);view=new SectionView("CFG1 "+item.Id,ShapeFactory.CreatePiece(ShapeVariant.C),labels[texture],rig.Materials.BrightWood);
+                    string texture=TextureFor(item.DefinitionId,item.Side,StrictDefinitions);view=new SectionView("CFG1 "+item.Id,n==4?ShapeFactory.CreatePiece(ShapeVariant.C):ShapeFactory.CreatePiece(ShapeVariant.C,1,n),labels[texture],rig.Materials.BrightWood);
                     pieces[item.Id]=view;
                 }
                 view.Object.transform.position=Anchor;

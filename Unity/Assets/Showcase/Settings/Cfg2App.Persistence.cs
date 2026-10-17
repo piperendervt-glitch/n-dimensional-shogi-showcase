@@ -16,9 +16,10 @@ namespace Showcase.Unity.Settings
         string trialSelectedPiece="subject";QN trialSelectedCell,trialPlaneReference;
         PivotViewSnapshot CapturePivotView(SliceAnimator animator,float cameraYaw,float cameraPitch,float cameraDistance,Vector3 cameraPan,string selected,QN cell,QN plane)
         {
-            var state=animator.DisplayState;var f=state.Frame;
-            double[] V(VecN v)=>new[]{v.X,v.Y,v.Z,v.W};
-            return new PivotViewSnapshot(state.EmbeddingHeight,V(f.Center),V(f.AxisX).Concat(V(f.AxisY)).Concat(V(f.AxisZ)).Concat(V(f.Normal)).ToArray(),
+            var state=animator.DisplayState;var f=state.Frame;int n=f.Dimensions;
+            // N components per vector and N vectors (the three axes, then the normals): for N=4 this is the original 4+16 layout.
+            double[] V(VecN v)=>v.ToArray(n);
+            return new PivotViewSnapshot(state.EmbeddingHeight,V(f.Center),f.Vectors.SelectMany(V).ToArray(),
                 new[]{state.Anchor.X,state.Anchor.Y,state.Anchor.Z},state.HalfWindow,state.CellScale,
                 new double[]{cameraYaw,cameraPitch,cameraDistance,cameraPan.x,cameraPan.y,cameraPan.z},selected??"",cell,plane);
         }
@@ -26,9 +27,9 @@ namespace Showcase.Unity.Settings
         {var source=session!=null&&!opened?session.ToPreview():preview;return CapturePivotView(slice,yaw,pitch,distance,pan,source.Find(selectedPiece)!=null?selectedPiece:"",selectedCell,planeReferenceCell);}
         static SliceAnimator RestorePivotView(PivotViewSnapshot saved)
         {
-            var c=saved.Center;var b=saved.Basis;var a=saved.Anchor;
-            VecN V(double[] values,int n)=>new VecN(values[n],values[n+1],values[n+2],values[n+3]);
-            return new SliceAnimator(new PivotViewState(saved.Height,new SliceFrame(V(c,0),V(b,0),V(b,4),V(b,8),V(b,12)),new Vec3(a[0],a[1],a[2]),saved.CellScale,saved.HalfWindow));
+            var c=saved.Center;var b=saved.Basis;var a=saved.Anchor;int n=c.Length;
+            var vectors=Enumerable.Range(0,n).Select(i=>new VecN(b.Skip(i*n).Take(n).ToArray())).ToArray();
+            return new SliceAnimator(new PivotViewState(saved.Height,SliceFrame.FromVectors(new VecN(c),vectors),new Vec3(a[0],a[1],a[2]),saved.CellScale,saved.HalfWindow));
         }
         string DraftPathForBundle(string bundlePath)=>Path.Combine(runtimeRoot,Path.GetFileNameWithoutExtension(bundlePath)+"-draft.xml");
         void LoadStartup()
@@ -100,7 +101,7 @@ namespace Showcase.Unity.Settings
                 var next=RestorePivotView(saved.View);var camera=saved.View.Camera;
                 slice=next;yaw=(float)camera[0];pitch=(float)camera[1];distance=(float)camera[2];pan=new Vector3((float)camera[3],(float)camera[4],(float)camera[5]);
                 selectedPiece=saved.View.SelectedPieceId;selectedCell=saved.View.SelectedCell;planeReferenceCell=saved.View.PlaneReferenceCell;
-                manualCamera=true;RebindMinis();previewRenderer.SetDisplayState(slice.DisplayState);UpdateCamera();QueueQuery();Record("MatchViewRestored",basename);return true;
+                manualCamera=true;RebuildMinis();previewRenderer.SetDisplayState(slice.DisplayState);UpdateCamera();QueueQuery();Record("MatchViewRestored",basename);return true;
             }
             catch(Exception e){Notice("対局表示の読込を拒否："+e.Message);return false;}
         }

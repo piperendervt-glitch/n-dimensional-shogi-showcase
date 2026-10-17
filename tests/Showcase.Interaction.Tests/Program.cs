@@ -15,7 +15,7 @@ static class Program
         var started=DateTime.UtcNow;
         try
         {
-            Baselines();Animation();Sections();Relations();Input();Picking();NDimensional();PivotTests.Run(Check,value=>cases.Add(value));
+            Baselines();Animation();Sections();Relations();Input();Picking();NDimensional();ReferenceSections();PivotTests.Run(Check,value=>cases.Add(value));
             var result=new{status="PASS",assertions,startedUtc=started,finishedUtc=DateTime.UtcNow,cases,
                 note="Pure C# tests; does not certify Unity input, rendering, Japanese text or Windows execution."};
             if(args.Length>0){Directory.CreateDirectory(args[0]);File.WriteAllText(Path.Combine(args[0],"interaction-results.json"),JsonSerializer.Serialize(result,new JsonSerializerOptions{WriteIndented=true}));}
@@ -219,6 +219,54 @@ static class Program
         Check(new VecN(1,2,3,4)==new VecN(1,2,3,4,0)&&new VecN(1,2,3,4)!=new VecN(1,2,3,4,1)&&default(VecN)==VecN.Zero(5)&&new VecN(1,2,3,4).ToString()=="(1,2,3,4)","VecN padded equality");
         Near(VecN.Dot(new VecN(1,2,3,4),VecN.Unit(4,5)),0,"Dot across dimensions");Near((new VecN(1,0,0,0)+VecN.Unit(4,5)).Length,Math.Sqrt(2),"Sum across dimensions");
         cases.Add(new{name="n_dimensional_frames_sections_and_turns",status="PASS",dimensions="3..11",triples,note="General reference frames reproduce the 4D ones; 5D sections of the extruded piece match the 4D sections."});
+    }
+    // Axis-aligned sections of an N-space: the panels, the axis-label targets and the CPU show view, all generalising the 4D views.
+    static void ReferenceSections()
+    {
+        for(int n=3;n<=11;n++)
+        {
+            var initial=ReferenceSection.Initial(n);Check(initial.Name=="XYZ"&&initial.Dimensions==n&&initial.Hidden.Length==n-3,"Initial section of "+n+"D");
+            var neighbours=initial.Neighbours;Check(neighbours.Count==3*(n-3)&&neighbours.Distinct().Count()==neighbours.Count,"3(N-3) distinct one-swap sections in "+n+"D");
+            var center=VecN.Zero(n).WithAxis(1,.5);
+            foreach(var section in neighbours)
+            {
+                Check(section.Shown.Count(initial.Shows)==2&&!neighbours.Contains(initial),"Neighbour differs in exactly one shown axis");
+                var frame=section.Frame(center);Check(frame.IsOrthonormal()&&frame.Dimensions==n,"Section frame orthonormal in "+n+"D");
+                Check(SliceAxes.SectionOf(frame)==section,"SectionOf round trip "+section.Name+" in "+n+"D");
+                if(n>3)Check(SliceAxes.SectionOf(SliceRotations.Rotate(frame,section.Shown[0],section.Hidden[0],Math.PI/9))==null,"Rotated frame is no section");
+                Check(section.Neighbours.Contains(initial),"Swap is symmetric");
+            }
+        }
+        // In 4D every generalised operation is the original one.
+        foreach(var view in Views)
+        {
+            var section=ReferenceSection.Of(view);Check(section.View==view&&section.Name==view.ToString()&&section.Dimensions==4,"4D section is its view");
+            foreach(LogicalAxis axis in new[]{LogicalAxis.X,LogicalAxis.Y,LogicalAxis.Z,LogicalAxis.W})Check(SliceAxes.SectionForAxis(section,axis).View==SliceAxes.ViewForAxis(axis),"4D axis label target unchanged");
+            foreach(var step in new[]{new VecN(1,0,0,0),new VecN(0,1,0,0),new VecN(0,0,1,0),new VecN(0,0,0,1),new VecN(1,1,0,1),new VecN(2,1,-1,0)})
+                Check(SliceAxes.SectionContaining(new VecN(1,2,3,4),new VecN(1,2,3,4)+step,section).View==SliceAxes.ViewContaining(new VecN(1,2,3,4),new VecN(1,2,3,4)+step,view),"4D step section unchanged");
+            Check(SliceAxes.SectionOf(SliceAxes.OnLeg(view,90,new VecN(1,2,3,4)))==section,"4D reference frame recognised");
+        }
+        // 5D: XYZ shows core 0,1,2 and hides W (3) and V (4).
+        var xyz5=ReferenceSection.Initial(5);var xyv=xyz5.Swap(0,4);var xyw5=ReferenceSection.Of(ReferenceView.XYW,5);
+        Check(xyv.Name=="XYV"&&xyv.Shown.SequenceEqual(new[]{4,1,2})&&xyv.Hidden.SequenceEqual(new[]{0,3}),"XYV section");
+        Check(SliceAxes.SectionForAxis(xyz5,LogicalAxis.A5)==xyv,"Hidden axis label swaps in for Z");
+        Check(SliceAxes.SectionForAxis(xyz5,LogicalAxis.Z)==xyw5&&SliceAxes.SectionForAxis(xyz5,LogicalAxis.W)==xyw5,"Shown Z and hidden W both lead to XYW in 5D");
+        Check(SliceAxes.SectionForAxis(xyz5,LogicalAxis.A6)==xyz5,"An axis beyond N changes nothing");
+        Check(xyz5.Neighbours[0]==xyw5&&xyz5.Neighbours.Count==6,"5D neighbours start with the 4D panel order");
+        var c5=new VecN(0,0,3,0,0);
+        Check(SliceAxes.SectionContaining(c5,c5+VecN.Unit(4,5),xyz5)==xyv,"A step along V is shown by XYV");
+        Check(SliceAxes.SectionContaining(c5,c5+VecN.Unit(1,5),xyz5)==xyz5,"A step along X stays in XYZ");
+        Check(SliceAxes.SectionContaining(c5,c5+VecN.Unit(3,5),xyv)==xyw5,"A step along W from XYV picks XYW");
+        // Hyperplane relation in 5D: a one-constraint polygon, a two-constraint segment, and in 6D a three-constraint point.
+        var frame5=xyz5.Frame(c5);var polygon=HyperplaneRelation.Build(frame5,xyv,1,11);
+        Check(!polygon.IsCoincident&&polygon.Vertices.Count==4&&polygon.ViewRevision==11,"XYZ frame meets the XYV space in a square");
+        foreach(var p in polygon.Vertices)Near(Vec3.Dot(polygon.RestrictedNormal,p),0,"5D polygon plane equation");
+        Check(HyperplaneRelation.Build(frame5,xyz5).IsCoincident&&HyperplaneRelation.Build(frame5,ReferenceView.XYZ).IsCoincident,"5D coincidence, also through a 4D view name");
+        var turned=SliceRotations.Rotate(frame5,1,3,Math.PI/4);var segment=HyperplaneRelation.Build(turned,xyv,1);
+        Check(!segment.IsCoincident&&segment.Vertices.Count==2&&segment.Vertices.All(v=>v.IsFinite),"Frame turned away from the chart meets it in a segment");
+        var wvu=ReferenceSection.Initial(6).Swap(0,3).Swap(1,4).Swap(2,5);var point=HyperplaneRelation.Build(ReferenceSection.Initial(6).Frame(VecN.Zero(6)),wvu,1);
+        Check(wvu.Name=="WVU"&&!point.IsCoincident&&point.Vertices.Count<=1,"Three constraints leave at most the point C");
+        cases.Add(new{name="reference_sections_and_relations_in_n_dimensions",status="PASS",panels="3(N-3) one-swap sections",relation="volume / polygon / segment / point"});
     }
     static void Picking()
     {

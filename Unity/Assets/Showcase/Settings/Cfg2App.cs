@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace Showcase.Unity.Settings
         PreviewSession preview; QueryResult result; IReadOnlyList<QN> attackCells=Array.Empty<QN>();
         MatchSession session; ValidationReport validation;
         Canvas canvas; CanvasGroup inputGate; RectTransform root,menu,settings,matchHud,detailHost,pieceHost,previewRect,planeRect,resultPanel;
-        Text headerStatus,counts,statusText,clockNear,clockFar,matchStatus,resultText; ScrollRect detailScroll;
+        Text headerStatus,headerDimensions,hudDimensions,counts,statusText,clockNear,clockFar,matchStatus,resultText; ScrollRect detailScroll;
         RawImage previewImage; RenderTexture previewTexture;
         readonly List<Cfg2MiniView> minis=new List<Cfg2MiniView>(); Cfg2PlaneView planeView;
         readonly List<RectTransform> helperPanels=new List<RectTransform>();
@@ -44,7 +45,26 @@ namespace Showcase.Unity.Settings
         int previousWidth,previousHeight; bool manualCamera;
         // The piece plane Y=h is displayed on the wooden board surface, so the orbit pivot is the board itself.
         Vector3 CameraBase=>SectionView.Anchor;
-        SliceAnimator NewPivotSlice()=>new SliceAnimator(PivotViewState.CreateInitial(new Vec3(SectionView.Anchor.x,SectionView.Anchor.y,SectionView.Anchor.z),SectionView.Cell));
+        SliceAnimator NewPivotSlice()=>new SliceAnimator(PivotViewState.CreateInitial(new Vec3(SectionView.Anchor.x,SectionView.Anchor.y,SectionView.Anchor.z),SectionView.Cell,dimensions:CurrentDimensions));
+        // N of the board on screen: the match's while playing, the next match's (the draft's) otherwise; 4 before the draft exists.
+        int DraftDimensions=>draft!=null&&int.TryParse(draft.Current.Dimensions,NumberStyles.Integer,CultureInfo.InvariantCulture,out var n)&&n>=BoundsN.MinDimensions&&n<=BoundsN.MaxDimensions?n:4;
+        int CurrentDimensions=>session!=null&&!opened?session.Config.Dimensions:DraftDimensions;
+        // Hidden axis Ctrl+drag rotates against: W unless a number key picked another axis of this space (4=W, 5=V ... 9=R, 0=Q, -=P).
+        LogicalAxis rotationAxis=LogicalAxis.W;
+        int RotationCoreAxis{get{int core=SliceAxes.CoreAxis(rotationAxis);return core<CurrentDimensions?core:3;}}
+        static string AppTitle(int dimensions)=>"N次元将棋（"+dimensions+"次元）";
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        [System.Runtime.InteropServices.DllImport("user32.dll")] static extern IntPtr GetActiveWindow();
+        [System.Runtime.InteropServices.DllImport("user32.dll",CharSet=System.Runtime.InteropServices.CharSet.Unicode,EntryPoint="SetWindowTextW")] static extern bool SetWindowText(IntPtr window,string text);
+#endif
+        // The window title names the current N; the product name (and with it the save folder) stays as it was.
+        void UpdateWindowTitle()
+        {
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+            try{var window=GetActiveWindow();if(window!=IntPtr.Zero)SetWindowText(window,AppTitle(CurrentDimensions));}
+            catch(Exception e){Debug.LogWarning("CFG2 window title: "+e.Message);}
+#endif
+        }
         [Serializable] sealed class RunConfig {public string runRoot;}
         bool startupFailed;
         void Start()
@@ -79,7 +99,7 @@ namespace Showcase.Unity.Settings
                 GameObject.Find("CFG1 exact cell sections").layer=30;GameObject.Find("CFG2 exact cell faces").layer=30;
                 previewRenderer.SetDisplayState(slice.DisplayState);
                 draft=SettingsDraft.CreateMatchDemo();options=new MatchOptionsRaw();preview=PreviewSession.CreateExperiment();
-                LoadStartup();trialSlice=slice;ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
+                LoadStartup();if(slice.Frame.Dimensions!=DraftDimensions)slice=NewPivotSlice();trialSlice=slice;ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
                 trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;settingsDirty=(!File.Exists(validPath)||migratedView)&&startupLoadError=="";
                 Application.wantsToQuit+=PrepareShutdown;
                 Record("Started","CFG2; font="+fontName+"; "+Screen.width+"x"+Screen.height+"; reportedDpi="+Screen.dpi+"; data="+runtimeRoot);
@@ -103,7 +123,7 @@ namespace Showcase.Unity.Settings
             var label=new GameObject("Message",typeof(RectTransform),typeof(Text));label.transform.SetParent(go.transform,false);
             var labelRect=(RectTransform)label.transform;labelRect.anchorMin=Vector2.zero;labelRect.anchorMax=Vector2.one;labelRect.offsetMin=new Vector2(48,48);labelRect.offsetMax=new Vector2(-48,-48);
             var text=label.GetComponent<Text>();text.font=Font.CreateDynamicFontFromOSFont(new[]{"Yu Gothic UI","Yu Gothic","Meiryo","MS Gothic","Arial"},22);text.fontSize=22;text.color=Color.white;
-            text.text="四次元将棋を起動できませんでした。\nThe game could not start.\n\n"+e.Message+"\n\n詳細ログ / Log: "+Application.consoleLogPath+"\n\nEsc：終了 / Quit";
+            text.text="N次元将棋を起動できませんでした。\nThe game could not start.\n\n"+e.Message+"\n\n詳細ログ / Log: "+Application.consoleLogPath+"\n\nEsc：終了 / Quit";
         }
         // Standalone starts keep only the newest per-launch traces and per-match view files; match records are kept.
         void PruneOldFiles()
@@ -168,11 +188,12 @@ namespace Showcase.Unity.Settings
         {
             if(counts==null)return;
             counts.text=result==null?"駒を選択してください":result.Status!=QueryStatus.Complete?"照会："+result.Status:
-                "全4D  G "+result.G.Count+" / P "+result.P.Count+" / 攻撃 "+attackCells.Count+"\n表示内  G "+previewRenderer.VisibleG+" / P "+previewRenderer.VisibleP+" / 攻撃 "+previewRenderer.VisibleAttacks;
+                "全"+CurrentDimensions+"D  G "+result.G.Count+" / P "+result.P.Count+" / 攻撃 "+attackCells.Count+"\n表示内  G "+previewRenderer.VisibleG+" / P "+previewRenderer.VisibleP+" / 攻撃 "+previewRenderer.VisibleAttacks;
         }
         void UpdateHeader()
         {
             if(headerStatus==null)return;
+            if(headerDimensions!=null)headerDimensions.text=DraftDimensions+"次元";
             headerStatus.text=startupLoadError!=""?"保存読込エラー。\n元ファイルを保持中。":config!=null?"変更は次の対局へ自動反映します":"入力を確認してください。対局開始は保留中です。";
             headerStatus.color=config!=null?new Color(.7f,.81f,.89f):new Color(1,.65f,.47f);
         }
@@ -196,6 +217,16 @@ namespace Showcase.Unity.Settings
             }
             if(!typing&&ownership.Owner==InputOwner.None&&cpuShowResult==null&&resetStage==0&&Input.GetKeyDown(KeyCode.R)&&!Input.GetKey(KeyCode.LeftControl)&&!Input.GetKey(KeyCode.RightControl))
             {slice.Restore(NewPivotSlice().DisplayState);geometryDirty=true;stableDirty=true;Record("PivotReset","C=P;XYZ");}
+            // Number keys pick the hidden axis Ctrl+drag rotates against: 4=W, 5=V, 6=U, 7=T, 8=S, 9=R, 0=Q, -=P.
+            if(!typing&&ownership.Owner==InputOwner.None&&(opened||session!=null))
+                for(int axis=4;axis<=BoundsN.MaxDimensions;axis++)
+                {
+                    var key=axis<10?KeyCode.Alpha0+axis:axis==10?KeyCode.Alpha0:KeyCode.Minus;
+                    if(!Input.GetKeyDown(key))continue;
+                    var logical=(LogicalAxis)(axis-1);
+                    if(SliceAxes.CoreAxis(logical)>=CurrentDimensions){Notice("この対局は"+CurrentDimensions+"次元です。"+SliceAxes.AxisName(logical)+"軸はありません。");break;}
+                    rotationAxis=logical;Notice("Ctrl＋ドラッグの回転軸："+SliceAxes.AxisName(logical));Record("RotationAxis",logical.ToString());break;
+                }
             if(!typing&&Input.GetKeyDown(KeyCode.Escape)){if(ownership.Owner!=InputOwner.None){ownership.Cancel();pointerButton=-1;}else if(opened){if((!settingsDirty||AutoSave())&&SaveStableView())ShowMenu();}else if(session!=null)ReturnFromMatch();}
             if(opened&&!typing&&ownership.Owner==InputOwner.None&&(Input.GetKey(KeyCode.LeftControl)||Input.GetKey(KeyCode.RightControl)))
             {

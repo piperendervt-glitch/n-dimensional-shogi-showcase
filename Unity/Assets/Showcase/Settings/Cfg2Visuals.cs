@@ -106,9 +106,10 @@ namespace Showcase.Unity.Settings
         public void RefreshBoardCandidates(IEnumerable<QN> p,QN? selected,bool visible)
         {
             boardCandidateCells.Clear();candidateVertices.Clear();candidateColors.Clear();candidateIndices.Clear();
-            if(visible)foreach(var q in p??Array.Empty<QN>())if(q.InBounds&&q.V==0&&q.W==0)boardCandidateCells.Add(q);
+            // On the wooden board only cells of the F,U plane: every axis from V on is 0, whatever N the match has.
+            if(visible)foreach(var q in p??Array.Empty<QN>())if(q.InBounds&&q.Rank<=2)boardCandidateCells.Add(q);
             foreach(var q in boardCandidateCells)if(!selected.HasValue||selected.Value!=q)CandidateTile(q,new Color(.12f,.43f,1,.22f),new Color(.24f,.57f,1,.8f));
-            if(selected.HasValue&&selected.Value.InBounds&&selected.Value.V==0&&selected.Value.W==0)CandidateTile(selected.Value,new Color(1,.74f,.18f,.26f),new Color(1,.75f,.2f,.95f));
+            if(selected.HasValue&&selected.Value.InBounds&&selected.Value.Rank<=2)CandidateTile(selected.Value,new Color(1,.74f,.18f,.26f),new Color(1,.75f,.2f,.95f));
             boardCandidateMesh.Clear();boardCandidateMesh.SetVertices(candidateVertices);boardCandidateMesh.SetColors(candidateColors);boardCandidateMesh.SetTriangles(candidateIndices,0);boardCandidateMesh.RecalculateBounds();
         }
         void CandidateTile(QN q,Color fill,Color border)

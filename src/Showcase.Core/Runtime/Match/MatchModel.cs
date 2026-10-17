@@ -60,7 +60,7 @@ namespace NDShogi.Showcase.Core.Match
             config = null; draft.TryCompile(out var preset, out var previewReport); var errors = previewReport.Errors.ToList();
             if (!double.TryParse(options.TimeSeconds, NumberStyles.Float, CultureInfo.InvariantCulture, out double time) || double.IsNaN(time) || double.IsInfinity(time) || time <= 0 || time > TimeSpan.MaxValue.TotalSeconds) errors.Add("持ち時間は有限の正の秒数です。生入力を保持しています。");
             if (!int.TryParse(options.CpuSeed, NumberStyles.Integer, CultureInfo.InvariantCulture, out int seed)) errors.Add("CPU seedは32bit整数です。");
-            if (!int.TryParse(options.CpuBudget, NumberStyles.Integer, CultureInfo.InvariantCulture, out int budget) || budget < 1 || budget > 1000000) errors.Add("CPU候補予算は1〜1000000です。予算終了を引分にはしません。");
+            if (!int.TryParse(options.CpuBudget, NumberStyles.Integer, CultureInfo.InvariantCulture, out int budget) || budget < 1 || budget > 10000000) errors.Add("CPU候補予算は1〜10000000です。予算終了を引分にはしません。");
             if (!int.TryParse(options.CpuDelayMilliseconds, NumberStyles.Integer, CultureInfo.InvariantCulture, out int delay) || delay < 0 || delay > 60000) errors.Add("CPU表示待ちは0〜60000msです。");
             if (preset != null)
             {

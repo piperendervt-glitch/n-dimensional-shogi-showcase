@@ -23,7 +23,9 @@ namespace Showcase.Unity.Settings
         const float TurnChangeSeconds=1.6f;
         // CvC shows each CPU move in its hyperplane: slow 4D turn, slide of C along the normal, brief selection, then the move.
         const double CpuTurnSeconds=1.6;const float CpuSlideSeconds=.8f,CpuHoldSeconds=.5f;
-        CpuResult cpuShowResult;int cpuShowStage,cpuShowAxis;double cpuShowValue,cpuShowLift;VecN cpuShowFromCell,cpuShowToCell;Vec3 cpuShowAnchor;float cpuShowStart;VecN cpuShowFrom,cpuShowTo;ReferenceView cpuShowView;
+        CpuResult cpuShowResult;int cpuShowStage;double cpuShowLift;VecN cpuShowFromCell,cpuShowToCell;Vec3 cpuShowAnchor;float cpuShowStart;VecN cpuShowFrom,cpuShowTo;ReferenceSection cpuShowView;
+        // The space and section the hyperplane panels were built for.
+        int minisDimensions;ReferenceSection minisSection;
         // In CPU games every hand-over returns the 4D view to the initial state (C=P, no rotation).
         int resetStage;float resetStart,resetSeconds;VecN resetFrom;Vec3 resetAnchor;
         // A committed CPU move glides its piece from origin to destination; a captured piece stays until it is reached.
@@ -40,15 +42,15 @@ namespace Showcase.Unity.Settings
         {
             matchHud=CfgUi.Rect(root,"Match view",0,0,1536,1024);
             matchSurface=CfgUi.Rect(matchHud,"Actual match board input",0,0,1536,1024);var input=matchSurface.gameObject.AddComponent<Image>();input.color=Color.clear;AttachPointer(matchSurface);
-            CfgUi.Label(matchHud,"四次元将棋",25,17,380,50,36,Gold);CfgUi.Label(matchHud,"FOUR DIMENSIONAL SHOGI",28,70,370,23,14,Gold);
+            CfgUi.Label(matchHud,"N次元将棋",25,17,380,50,36,Gold);CfgUi.Label(matchHud,"N-DIMENSIONAL SHOGI",28,70,370,23,14,Gold);hudDimensions=CfgUi.Label(matchHud,"",215,24,160,40,26,Gold);
             var far=Cfg2Ui.Panel(matchHud,"Far clock",28,128,337,105,Dark);clockFar=CfgUi.Label(far,"",17,14,303,80,25);
             var near=Cfg2Ui.Panel(matchHud,"Near clock",28,872,352,117,Dark);clockNear=CfgUi.Label(near,"",17,15,318,86,27,Gold);
             Button(matchHud,"match-menu","☰ メニュー",1360,16,150,40,ReturnFromMatch);
             CreateGizmo(matchHud,1310,70,"match-",200,175);
-            for(int i=0;i<4;i++)CreateMini(matchHud,1310,254+i*133,200,125,(ReferenceView)i);
+            RebuildMinis();
             matchStatus=CfgUi.Label(matchHud,"",30,248,330,100,17,Muted);
             var guide=Cfg2Ui.Panel(matchHud,"Mouse guide",394,957,796,49,new Color(.02f,.03f,.045f,.78f));
-            var guideText=CfgUi.Label(guide,"ドラッグ：視点回転　ホイール：ズーム　Ctrl＋ドラッグ：4次元回転　R：4D表示リセット",10,7,776,35,15,new Color(.91f,.91f,.88f));guideText.alignment=TextAnchor.MiddleCenter;
+            var guideText=CfgUi.Label(guide,"ドラッグ：視点回転　ホイール：ズーム　Ctrl＋ドラッグ：高次元回転（4〜9・0・−キーで回す軸）　R：表示リセット",10,7,776,35,15,new Color(.91f,.91f,.88f));guideText.alignment=TextAnchor.MiddleCenter;
             Button(matchHud,"pause","一時停止",1202,877,142,43,TogglePause);
             Button(matchHud,"step","1手進める",1352,877,158,43,StepCpu);
             Button(matchHud,"retry","処理を再試行",1202,928,308,43,()=>{CancelCpu();session?.RetryProcessing();});
@@ -65,20 +67,43 @@ namespace Showcase.Unity.Settings
             session=fixture==null?MatchSession.Create(config,mode,new StopwatchClock()):MatchSession.CreateFixture(config,mode,new StopwatchClock(),fixture,fixtureId);
             lastMode=mode;opened=false;settings.gameObject.SetActive(false);menu.gameObject.SetActive(false);matchHud.gameObject.SetActive(true);resultPanel.gameObject.SetActive(false);
             backgroundCamera.enabled=false;
-            rig.Camera.targetTexture=null;slice=NewPivotSlice();previewRenderer.SetDisplayState(slice.DisplayState);RebindMinis();selectedPiece="";selectedCell=default;shownPly=-1;presentationStart=-1;cameraSide=Side.A;manualCamera=false;
+            rig.Camera.targetTexture=null;slice=NewPivotSlice();previewRenderer.SetDisplayState(slice.DisplayState);RebuildMinis();hudDimensions.text=session.Config.Dimensions+"次元";UpdateWindowTitle();selectedPiece="";selectedCell=default;shownPly=-1;presentationStart=-1;cameraSide=Side.A;manualCamera=false;
             yaw=27;pitch=31;distance=1.04f;pan=Vector3.zero;SetMatchCamera(Side.A,false);QueueQuery();RefreshMatch();SaveMatchRecord();
             // The launcher's saved view belongs to the first match of this process only.
             string restoredView=playViewApplied?"":Arg("--pivot-play-view","");if(restoredView!=""){playViewApplied=true;RestoreSavedMatchView(restoredView);}
             Record("MatchStarted",mode+";"+session.Snapshot.MatchId+";fixture="+session.Snapshot.FixtureId+";rules="+session.Config.RuleHash+";initial="+session.Snapshot.InitialHash);
             WritePlayerIdentity("Play");
         }
-        void RebindMinis()
-        {for(int i=0;i<minis.Count;i++){var mini=minis[i];mini.Initialize(()=>slice,ownership,(ReferenceView)(i%4),()=>{geometryDirty=true;stableDirty=true;},v=>{slice.Request(v);geometryDirty=true;},()=>canvas.scaleFactor);}}
+        // In 4D the four panels are the four reference views, as always. In higher N the top panel is the section the display is
+        // heading to and the others are the 3(N-3) sections one axis swap away, framed in the colour of the axis they swap in:
+        // one column per hidden axis up to 6D, three columns beyond.
+        void RebuildMinis()
+        {
+            foreach(var mini in minis){helperPanels.Remove((RectTransform)mini.transform);Destroy(mini.gameObject);}minis.Clear();
+            int n=slice.Frame.Dimensions;var current=slice.TargetSection;minisDimensions=n;minisSection=current;
+            const float x=1310,top=254,width=200,bottom=866,gap=6;
+            if(n==4){for(int i=0;i<4;i++)CreateMini(matchHud,x,top+i*133,width,125,ReferenceSection.Of((ReferenceView)i),null);return;}
+            var neighbours=current.Neighbours;int columns=Mathf.Min(n-3,3);int rows=Mathf.CeilToInt(neighbours.Count/(float)columns);
+            float currentHeight=rows<=3?110:84;float rowHeight=Mathf.Clamp((bottom-top-currentHeight-gap)/rows-gap,28,110),columnWidth=(width-gap*(columns-1))/columns;
+            CreateMini(matchHud,x,top,width,currentHeight,current,null);
+            for(int i=0;i<neighbours.Count;i++)
+            {
+                bool columnPerAxis=columns==n-3;int column=columnPerAxis?i/3:i%columns,row=columnPerAxis?i%3:i/columns;
+                var section=neighbours[i];int added=section.Shown.First(axis=>!current.Shows(axis));
+                CreateMini(matchHud,x+column*(columnWidth+gap),top+currentHeight+gap+row*(rowHeight+gap),columnWidth,rowHeight,section,Cfg2Projection.AxisColor(added));
+            }
+        }
+        void EnsureMinis()
+        {
+            if(matchHud==null)return;int n=slice.Frame.Dimensions;
+            if(minis.Count>0&&minisDimensions==n&&(n==4||minisSection==slice.TargetSection))return;
+            RebuildMinis();
+        }
         void ReturnFromMatch()
         {
             CancelActiveInput();
             if(session==null){ShowMenu();return;}CancelCpu();session.Interrupt();SaveMatchRecord();Record("MatchLeft",session.State.Outcome+";"+session.State.Hash);session=null;
-            selectedPiece=preview.Find(trialSelectedPiece)!=null?trialSelectedPiece:preview.Pieces.FirstOrDefault()?.Id??"";selectedCell=trialSelectedCell;planeReferenceCell=trialPlaneReference;slice=trialSlice;yaw=trialYaw;pitch=trialPitch;distance=trialDistance;pan=trialPan;RebindMinis();ShowMenu();
+            selectedPiece=preview.Find(trialSelectedPiece)!=null?trialSelectedPiece:preview.Pieces.FirstOrDefault()?.Id??"";selectedCell=trialSelectedCell;planeReferenceCell=trialPlaneReference;slice=trialSlice;yaw=trialYaw;pitch=trialPitch;distance=trialDistance;pan=trialPan;RebuildMinis();ShowMenu();
         }
         void SaveMatchRecord()
         {if(session!=null)try{MatchRecordStore.Save(Path.Combine(recordRoot,session.Snapshot.MatchId+".xml"),session);}catch(Exception e){Notice("棋譜の保存に失敗："+e.Message);}}
@@ -116,11 +141,11 @@ namespace Showcase.Unity.Settings
         {
             if(!CpuShowEnabled||cpu.Status!=MatchQueryStatus.Complete||!cpu.Move.HasValue||ownership.Owner!=InputOwner.None)return false;
             var move=cpu.Move.Value;var embedding=slice.DisplayState.Embedding;
-            var from=new VecN(move.From.F,move.From.U,move.From.V,move.From.W)+embedding;var to=new VecN(move.To.F,move.To.U,move.To.V,move.To.W)+embedding;
-            cpuShowView=SliceAxes.ViewContaining(from,to,slice.StableView);cpuShowAxis=SliceAxes.NormalCoreAxis(cpuShowView);cpuShowValue=SliceAxes.Coordinate(from,cpuShowAxis);
+            var from=CfgPreviewRenderer.V(move.From)+embedding;var to=CfgPreviewRenderer.V(move.To)+embedding;
+            cpuShowView=SliceAxes.SectionContaining(from,to,slice.StableSection??ReferenceSection.Initial(slice.Frame.Dimensions));
             cpuShowFromCell=from;cpuShowToCell=to;
             cpuShowResult=cpu;cpuShowStage=1;slice.SecondsPerLeg=CpuTurnSeconds;if(slice.Request(cpuShowView))geometryDirty=true;
-            Record("CpuShow",cpuShowView+";"+move);return true;
+            Record("CpuShow",cpuShowView.Name+";"+move);return true;
         }
         void UpdateCpuShow()
         {
@@ -130,7 +155,9 @@ namespace Showcase.Unity.Settings
             if(cpuShowStage==1)
             {
                 if(slice.IsAnimating||slice.QueuedView.HasValue)return;
-                slice.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;cpuShowFrom=slice.Center;cpuShowTo=SliceAxes.WithCoordinate(slice.Center,cpuShowAxis,cpuShowValue);
+                // C slides along the hidden axes of the shown section until the moving piece's cell lies in it.
+                slice.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;cpuShowFrom=slice.Center;cpuShowTo=slice.Center;
+                foreach(int hidden in cpuShowView.Hidden)cpuShowTo=SliceAxes.WithCoordinate(cpuShowTo,hidden,SliceAxes.Coordinate(cpuShowFromCell,hidden));
                 // Unity up is the section's third axis. A step that dips below the board surface would vanish inside the
                 // wooden board, so the whole section display is raised until both ends of the step sit on or above it.
                 cpuShowAnchor=slice.DisplayState.Anchor;var state=slice.DisplayState;double board=NewPivotSlice().DisplayState.Anchor.Y;
@@ -153,7 +180,7 @@ namespace Showcase.Unity.Settings
         {
             resetStage=0;if(session.Snapshot.Mode==MatchMode.PvP||!TurnResetEnabled)return;
             var initial=NewPivotSlice().DisplayState;var now=slice.DisplayState;
-            if(!slice.IsAnimating&&slice.StableView==ReferenceView.XYZ&&(now.Frame.Center-initial.Frame.Center).Length<1e-9&&(now.Anchor-initial.Anchor).Length<1e-9)return;
+            if(!slice.IsAnimating&&slice.StableSection==ReferenceSection.Initial(slice.Frame.Dimensions)&&(now.Frame.Center-initial.Frame.Center).Length<1e-9&&(now.Anchor-initial.Anchor).Length<1e-9)return;
             resetStage=1;resetFrom=now.Frame.Center;resetAnchor=now.Anchor;resetStart=Time.unscaledTime;slice.SecondsPerLeg=CpuTurnSeconds;
             bool turning=slice.Request(ReferenceView.XYZ)||slice.IsAnimating;resetSeconds=turning?(float)CpuTurnSeconds:1f;geometryDirty=true;Record("TurnReset","start");
         }
@@ -226,7 +253,7 @@ namespace Showcase.Unity.Settings
             bool cvc=session.Snapshot.Mode==MatchMode.CvC;actions["pause"].gameObject.SetActive(cvc&&!session.IsFinished);actions["step"].gameObject.SetActive(cvc&&!session.IsFinished);
             if(pauseLabel==null)pauseLabel=actions["pause"].GetComponentInChildren<Text>();pauseLabel.text=session.IsPaused?"再開":"一時停止";actions["step"].interactable=session.Phase==MatchPhase.CvcPaused;
             actions["retry"].gameObject.SetActive(session.Phase==MatchPhase.ProcessingPaused);
-            matchStatus.text=session.Phase==MatchPhase.ProcessingPaused?"処理を停止しています\n"+session.FaultReason:session.IsPaused?"一時停止中":session.PresentationPaused?(resetStage!=0?"手番交代：初期表示へ戻しています":"手番交代中"):cpuShowResult!=null?"CPU 着手："+cpuShowView+" 超平面":session.CanCpuAct?"CPU 思考中":selectedPiece!=""&&result!=null?"着手候補 "+result.P.Count+"手":"";
+            matchStatus.text=session.Phase==MatchPhase.ProcessingPaused?"処理を停止しています\n"+session.FaultReason:session.IsPaused?"一時停止中":session.PresentationPaused?(resetStage!=0?"手番交代：初期表示へ戻しています":"手番交代中"):cpuShowResult!=null?"CPU 着手："+cpuShowView.Name+" 超平面":session.CanCpuAct?"CPU 思考中":selectedPiece!=""&&result!=null?"着手候補 "+result.P.Count+"手":"";
             if(shownPly!=s.Ply)
             {
                 shownPly=s.Ply;geometryDirty=true;
