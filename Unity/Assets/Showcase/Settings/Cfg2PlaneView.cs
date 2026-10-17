@@ -9,16 +9,23 @@ using Showcase.Geometry.Interaction;
 
 namespace Showcase.Unity.Settings
 {
-    internal enum Cfg2Plane { XY,XZ,XW,YZ }
+    // One coordinate plane of the N-dimensional board (two UI axes, every other axis fixed at the selected cell).
     internal sealed class Cfg2PlaneView : MonoBehaviour
     {
-        Cfg2Plane plane;Cfg2PlaneGraphic graphic;Text heading,condition;Action<QN,long> clicked;InputOwnership ownership;
+        int horizontalAxis,verticalAxis;Cfg2PlaneGraphic graphic;Text heading,condition;Action<QN,long> clicked;InputOwnership ownership;
         readonly Dictionary<string,Graphic> icons=new Dictionary<string,Graphic>();
         QN center,downCell;long revision,downRevision;int pointer;bool hasDown;Vector2 downPosition;
         Func<long> stateVersion,draftVersion;long downStateVersion,downDraftVersion,contentVersion,downContentVersion;
         int horizontal,vertical;bool showCandidates,showAttacks,showGrid;
         HashSet<QN> gs=new HashSet<QN>(),ps=new HashSet<QN>(),attacks=new HashSet<QN>();
-        public Cfg2Plane Plane=>plane;
+        // UI axes (X=0, Y=1, Z=2, W=3, V=4, ...) drawn left-right and bottom-up, and the short name such as "XW".
+        public int HorizontalAxis=>horizontalAxis;
+        public int VerticalAxis=>verticalAxis;
+        public string Name=>SliceAxes.AxisName((LogicalAxis)horizontalAxis)+SliceAxes.AxisName((LogicalAxis)verticalAxis);
+        public static int PlaneCount(int dimensions)=>dimensions*(dimensions-1)/2;
+        // Every plane of an N-space in display order: XY XZ XW ... YZ YW ...; the first four of 4D are XY XZ XW YZ.
+        public static IEnumerable<(int horizontal,int vertical)> Planes(int dimensions)
+        {for(int a=0;a<dimensions;a++)for(int b=a+1;b<dimensions;b++)yield return (a,b);}
         // N of the board shown; the two fixed-axis conditions list every other axis of that board.
         public int Dimensions=4;
         public long Revision=>revision;
@@ -27,13 +34,13 @@ namespace Showcase.Unity.Settings
         public int VisibleAttacks=>attacks.Count(Contains);
         public string FixedCoordinates=>condition==null?"":condition.text;
         public int RejectedStaleCount {get;private set;}
-        public void Initialize(Cfg2Plane view,Action<QN,long> selected,InputOwnership input=null,Func<long> stateRevision=null,Func<long> draftRevision=null)
+        public void Initialize(int horizontalUiAxis,int verticalUiAxis,Action<QN,long> selected,InputOwnership input=null,Func<long> stateRevision=null,Func<long> draftRevision=null)
         {
             if(hasDown&&ownership!=null&&ownership.IsOwner(InputOwner.Board,pointer))ownership.Cancel();hasDown=false;
             Cfg2Ui.ClearOwned(transform);icons.Clear();
-            plane=view;clicked=selected;ownership=input;stateVersion=stateRevision;draftVersion=draftRevision;
-            horizontal=view==Cfg2Plane.YZ?2:1;vertical=view==Cfg2Plane.XY?2:view==Cfg2Plane.XW?3:0;
-            heading=CfgUi.Label(transform,view.ToString(),8,2,110,22,15,Cfg2Ui.Gold);
+            horizontalAxis=horizontalUiAxis;verticalAxis=verticalUiAxis;clicked=selected;ownership=input;stateVersion=stateRevision;draftVersion=draftRevision;
+            horizontal=SliceAxes.CoreAxis((LogicalAxis)horizontalUiAxis);vertical=SliceAxes.CoreAxis((LogicalAxis)verticalUiAxis);
+            heading=CfgUi.Label(transform,Name,8,2,110,22,15,Cfg2Ui.Gold);
             var rect=CfgUi.Rect(transform,"Fixed two-axis cells",0,0,((RectTransform)transform).rect.width,((RectTransform)transform).rect.height);
             CfgUi.Fill(rect);graphic=rect.gameObject.AddComponent<Cfg2PlaneGraphic>();graphic.View=this;graphic.color=Color.white;
             graphic.transform.SetAsFirstSibling();

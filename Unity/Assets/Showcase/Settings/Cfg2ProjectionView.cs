@@ -12,52 +12,72 @@ using Showcase.Geometry.Interaction;
 namespace Showcase.Unity.Settings
 {
     // 投影ビュー: every direction a piece can slide in, drawn around the piece at the origin after a perspective projection of the
-    // N-dimensional board down to three dimensions (one hidden axis at a time) and then to the screen. All rays are faint until a
-    // cell of the rotation-plane table (one cell per pair of axes) is hovered or clicked; a drag in a cell or on an axis knob turns
-    // the whole picture in that plane, so the hidden axes come out of the origin and the depth of W, V, ... can be seen.
+    // N-dimensional board down to three dimensions (one hidden axis at a time) and then to the screen. The XYZ grids through
+    // the origin are projected the same way, so they bend with the hidden-axis rotation. All rays are faint until a cell of the
+    // rotation-plane table or a ±axis button is chosen. The table and the sliders live in a controller panel beside the view:
+    // a cell names a plane (a pair of axes); the plane last clicked is the one the angle slider turns.
     internal sealed class Cfg2ProjectionView : MonoBehaviour
     {
-        Cfg2ProjectionGraphic graphic;InputOwnership ownership;Func<float> uiScale;Action<string,string> record;
+        Cfg2ProjectionGraphic graphic;Cfg2ProjectionTableGraphic tableGraphic;RectTransform controls,tableRect,listHost;InputOwnership ownership;Func<float> uiScale;Action<string,string> record;
         readonly List<Text> axisLabels=new List<Text>();readonly List<Text> rowLabels=new List<Text>(),columnLabels=new List<Text>();
-        Text countLabel,rotationLabel,hint;Button playButton,stopButton,resetButton,clearButton;
+        Text countLabel,rotationLabel,axisHint,tableTitle,tableHint,turnTitle,activeLabel,listTitle,listMore,zoomTitle,zoomLabel;Slider angleSlider,zoomSlider;
+        readonly List<Button> axisButtons=new List<Button>(),stepButtons=new List<Button>(),listButtons=new List<Button>();readonly List<Slider> listSliders=new List<Slider>();readonly List<Text> listValues=new List<Text>();
+        readonly List<(int a,int b)> listedPlanes=new List<(int a,int b)>();Button resetButton,clearButton;
         // Board and piece shown.
         int dimensions=4;string pieceName="",refreshKey;
         // Directions in UI axis order (X Y Z W V ...), one int[dimensions] each, and the ray length in cells.
         readonly List<int[]> directions=new List<int[]>();int rayLength=1;
-        // N×N rotation, UI axis order. Angles per plane are only remembered for the status line.
-        double[,] rotation;readonly Dictionary<(int,int),double> angles=new Dictionary<(int,int),double>();
+        // The rotation is the product of one turn per plane, composed in table order from the angles here (degrees, −180..180).
+        double[,] rotation;readonly SortedDictionary<(int a,int b),double> angles=new SortedDictionary<(int a,int b),double>();
+        (int a,int b) active=(0,1);
         // 3-D camera around the projected picture.
-        float yaw=-35,pitch=22;
-        // Table state: hovered cell, selected cells (a,b with a<=b; a==b means "uses axis a"), the plane being dragged.
-        (int a,int b)? hovered,dragging;readonly HashSet<(int a,int b)> selected=new HashSet<(int a,int b)>();
-        bool spinning;float spinPhase;
+        float yaw=-35,pitch=22,zoom=1;
+        // Chosen cells (a,b with a<=b; a==b means "uses axis a"), chosen ±axes, the hovered cell, the plane being dragged.
+        (int a,int b)? hovered,dragging;readonly HashSet<(int a,int b)> selected=new HashSet<(int a,int b)>();readonly HashSet<(int axis,int sign)> axisSelected=new HashSet<(int axis,int sign)>();
         // Pointer gesture.
-        int pointer=-1;Vector2 downPosition,lastPosition;bool pressed,moved;int knobAxis=-1;bool orbiting;
+        int pointer=-1;Vector2 downPosition,lastPosition;bool pressed,moved,orbiting,syncing;
         // UI meshes hold at most 65,000 vertices: faint rays are one quad each, lit rays get steps and glow only while few.
         internal const int MaxFaintRays=6000,MaxLitRays=3000,MaxDetailedRays=700;
+        internal const float MinZoom=.4f,MaxZoom=3f;
         internal int DirectionCount=>directions.Count;
         internal int HighlightedCount{get;private set;}
         internal IReadOnlyCollection<(int a,int b)> Selected=>selected;
+        internal IReadOnlyCollection<(int axis,int sign)> AxisSelected=>axisSelected;
         internal (int a,int b)? Hovered=>hovered;
-        internal bool Spinning=>spinning;
+        internal (int a,int b) Active=>active;
         internal double[,] Rotation=>rotation;
-        internal void Initialize(InputOwnership input,Func<float> scale,Action<string,string> recorder)
+        internal float Zoom=>zoom;
+        internal double Angle(int a,int b)=>angles.TryGetValue(a<b?(a,b):(b,a),out double v)?(a<b?v:-v):0;
+        internal void Initialize(RectTransform controller,InputOwnership input,Func<float> scale,Action<string,string> recorder)
         {
-            ownership=input;uiScale=scale;record=recorder;
-            Cfg2Ui.ClearOwned(transform,true);axisLabels.Clear();rowLabels.Clear();columnLabels.Clear();
+            controls=controller;ownership=input;uiScale=scale;record=recorder;
+            Cfg2Ui.ClearOwned(transform,true);Cfg2Ui.ClearOwned(controls,true);
+            axisLabels.Clear();rowLabels.Clear();columnLabels.Clear();axisButtons.Clear();stepButtons.Clear();listButtons.Clear();listSliders.Clear();listValues.Clear();listedPlanes.Clear();
             var rect=CfgUi.Rect(transform,"Projected directions",0,0,1,1);CfgUi.Fill(rect);
             graphic=rect.gameObject.AddComponent<Cfg2ProjectionGraphic>();graphic.View=this;graphic.color=Color.white;graphic.raycastTarget=true;
-            var surface=rect.gameObject.AddComponent<CfgPointerSurface>();surface.Down=OnDown;surface.Drag=OnDrag;surface.Up=OnUp;
-            float w=((RectTransform)transform).rect.width,h=((RectTransform)transform).rect.height;
-            countLabel=CfgUi.Label(transform,"",10,6,w-20,22,14,Cfg2Ui.Gold);
-            rotationLabel=CfgUi.Label(transform,"",10,28,w-20,20,12,new Color(.75f,.80f,.86f));
-            hint=CfgUi.Label(transform,"表のマス：オーバーで強調、クリックで確定（複数可）、ドラッグで回転。軸の丸をドラッグでも回転。右クリックで解除。",10,h-22,w-20,20,11,new Color(.62f,.68f,.76f));
-            playButton=Cfg2Ui.Button(transform,"▶ 回す",10,h-56,78,28,()=>SetSpinning(true));
-            stopButton=Cfg2Ui.Button(transform,"■ 止める",94,h-56,86,28,()=>SetSpinning(false));
-            resetButton=Cfg2Ui.Button(transform,"初期位置",186,h-56,80,28,()=>ResetRotation());
-            clearButton=Cfg2Ui.Button(transform,"選択をクリア",272,h-56,110,28,ClearSelection);
-            foreach(var b in new[]{playButton,stopButton,resetButton,clearButton}){var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=13;}
-            ResetRotation(false);
+            var surface=rect.gameObject.AddComponent<CfgPointerSurface>();surface.Down=OnViewDown;surface.Drag=OnDrag;surface.Up=OnUp;surface.Scroll=OnScroll;
+            countLabel=CfgUi.Label(transform,"",10,6,400,22,14,Cfg2Ui.Gold);
+            rotationLabel=CfgUi.Label(transform,"",10,28,400,20,12,new Color(.75f,.80f,.86f));
+            axisHint=CfgUi.Label(transform,"方向で選ぶ（＋側・−側）　背景ドラッグ：視点　ホイール：ズーム",10,0,400,18,11,new Color(.62f,.68f,.76f));
+            // Controller: table, angle slider of the active plane, list of turned planes, zoom, reset.
+            CfgUi.Label(controls,"回転コントローラー",12,8,300,26,17,Cfg2Ui.Gold);
+            tableTitle=CfgUi.Label(controls,"① 面を選ぶ",12,36,300,18,13);
+            tableRect=CfgUi.Rect(controls,"Rotation planes",34,58,100,100);var tableImage=tableRect.gameObject.AddComponent<Image>();tableImage.color=new Color(0,0,0,.01f);
+            tableGraphic=tableRect.gameObject.AddComponent<Cfg2ProjectionTableGraphic>();tableGraphic.View=this;tableGraphic.color=Color.white;tableGraphic.raycastTarget=false;
+            var tableSurface=tableRect.gameObject.AddComponent<CfgPointerSurface>();tableSurface.Down=OnTableDown;tableSurface.Drag=OnDrag;tableSurface.Up=OnUp;
+            tableHint=CfgUi.Label(controls,"クリック＝強調＋回す面に。もう一度で解除。\nドラッグ＝その面で回転。右クリック＝全解除。",12,0,320,32,11,new Color(.62f,.68f,.76f));
+            turnTitle=CfgUi.Label(controls,"② 選んだ面を回す",12,0,300,18,13);
+            activeLabel=CfgUi.Label(controls,"",12,0,300,22,15,Cfg2Ui.Gold);
+            angleSlider=Cfg2Ui.Slider(controls,12,0,100,-180,180,0,v=>{if(syncing)return;SetAngle(active,v);UpdateTexts();graphic.SetVerticesDirty();},()=>record?.Invoke("ProjectionTurn","slider "+CellName(active)));
+            foreach(var step in new[]{-15,0,15}){int s=step;stepButtons.Add(Cfg2Ui.Button(controls,s==0?"0°":(s>0?"+":"−")+Math.Abs(s)+"°",0,0,50,26,()=>{if(s==0)SetAngle(active,0);else AddAngle(active.a,active.b,s);record?.Invoke("ProjectionTurn","step "+CellName(active)+" "+s);UpdateTexts();graphic.SetVerticesDirty();}));}
+            listTitle=CfgUi.Label(controls,"③ 回っている面（クリックで選び直し）",12,0,320,18,13);
+            listHost=CfgUi.Rect(controls,"Turned planes",12,0,100,10);listMore=CfgUi.Label(controls,"",12,0,300,18,11,new Color(.62f,.68f,.76f));
+            zoomTitle=CfgUi.Label(controls,"④ ズーム",12,0,120,18,13);zoomLabel=CfgUi.Label(controls,"",0,0,80,18,13,Cfg2Ui.Gold);zoomLabel.alignment=TextAnchor.MiddleRight;
+            zoomSlider=Cfg2Ui.Slider(controls,12,0,100,MinZoom,MaxZoom,1,v=>{if(syncing)return;zoom=v;UpdateTexts();graphic.SetVerticesDirty();},()=>record?.Invoke("ProjectionZoom",zoom.ToString("0.00",CultureInfo.InvariantCulture)));
+            resetButton=Cfg2Ui.Button(controls,"初期位置に戻す",0,0,100,30,()=>ResetRotation());
+            clearButton=Cfg2Ui.Button(controls,"選択をクリア",0,0,100,30,ClearSelection);
+            foreach(var b in stepButtons.Concat(new[]{resetButton,clearButton})){var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=13;}
+            ResetRotation(false);EnsureLabels();EnsureAxisButtons();Layout();
         }
         // Rebuilds the direction list for the piece. Allowed unit directions of {-1,0,1}^N are enumerated like the preview query does.
         internal void Refresh(PreviewPreset preset,string definitionId,string displayName)
@@ -66,7 +86,7 @@ namespace Showcase.Unity.Settings
             // The list only changes with the rules or the piece; a view change (the usual reason for a refresh) keeps it.
             string key=(preset?.RuleHash??"")+"/"+definitionId+"/"+n;
             if(key==refreshKey&&pieceName==displayName)return;refreshKey=key;
-            if(n!=dimensions){dimensions=n;ResetRotation(false);selected.RemoveWhere(c=>c.a>=n||c.b>=n);hovered=null;}
+            if(n!=dimensions){dimensions=n;selected.RemoveWhere(c=>c.a>=n||c.b>=n);axisSelected.RemoveWhere(c=>c.axis>=n);hovered=null;ResetRotation(false);EnsureLabels();EnsureAxisButtons();Layout();}
             pieceName=displayName;directions.Clear();rayLength=1;
             if(definition!=null&&definition.IsSupported)
             {
@@ -95,24 +115,38 @@ namespace Showcase.Unity.Settings
                     if(definition.Kind==PreviewMovementKind.Knight)rayLength=1;
                 }
             }
-            EnsureLabels();LayoutLabels();UpdateTexts();graphic.SetVerticesDirty();
+            UpdateTexts();graphic.SetVerticesDirty();
         }
         static int Gcd(int a,int b){while(b!=0){int t=a%b;a=b;b=t;}return a;}
+        // ---- rotation ----
         internal void ResetRotation(bool notify=true)
         {
-            rotation=new double[dimensions,dimensions];for(int i=0;i<dimensions;i++)rotation[i,i]=1;angles.Clear();
-            // The hidden axes start a little way out of the origin so that W, V, ... can be grabbed at once.
-            for(int a=3;a<dimensions;a++){Turn(a%3,a,a==3?32:a==4?26:14+6*(a-5));if(a>=4)Turn((a+1)%3,a,10);}
-            yaw=-35;pitch=22;spinPhase=0;
+            angles.Clear();
+            // The hidden axes start a little way out of the origin so that W, V, ... can be told apart at once.
+            for(int a=3;a<dimensions;a++){SetAngle((a%3,a),a==3?32:a==4?26:14+6*(a-5),false);if(a>=4)SetAngle(((a+1)%3,a),10,false);}
+            Rebuild();active=dimensions>3?(0,3):(0,1);yaw=-35;pitch=22;zoom=1;listReset=true;
             if(notify){record?.Invoke("ProjectionReset","");UpdateTexts();graphic?.SetVerticesDirty();}
         }
-        // Rotation in the plane of UI axes a and b by degrees; composed on the left so it acts on the current picture.
-        internal void Turn(int a,int b,double degrees)
+        static double Wrap(double degrees){double d=(degrees+180)%360;if(d<0)d+=360;return d-180;}
+        // Sets the angle of one plane (a<b, in degrees); a and b swapped means the opposite turn.
+        internal void SetAngle((int a,int b) plane,double degrees,bool rebuild=true)
         {
-            if(a==b||a<0||b<0||a>=dimensions||b>=dimensions||degrees==0)return;
-            double t=degrees*Math.PI/180,c=Math.Cos(t),s=Math.Sin(t);
-            for(int j=0;j<dimensions;j++){double ra=rotation[a,j],rb=rotation[b,j];rotation[a,j]=c*ra-s*rb;rotation[b,j]=s*ra+c*rb;}
-            var key=a<b?(a,b):(b,a);angles.TryGetValue(key,out double sum);angles[key]=(sum+(a<b?degrees:-degrees)+180)%360-180;
+            if(plane.a==plane.b||plane.a<0||plane.b<0||plane.a>=dimensions||plane.b>=dimensions)return;
+            var key=plane.a<plane.b?plane:(plane.b,plane.a);double v=Wrap(plane.a<plane.b?degrees:-degrees);
+            if(Math.Abs(v)<.05)angles.Remove(key);else angles[key]=v;
+            if(rebuild)Rebuild();
+        }
+        internal void AddAngle(int a,int b,double degrees)=>SetAngle((a,b),Angle(a,b)+degrees);
+        // Kept for callers that think in turns: adds to the plane's angle.
+        internal void Turn(int a,int b,double degrees)=>AddAngle(a,b,degrees);
+        void Rebuild()
+        {
+            rotation=new double[dimensions,dimensions];for(int i=0;i<dimensions;i++)rotation[i,i]=1;
+            foreach(var kv in angles)
+            {
+                int a=kv.Key.a,b=kv.Key.b;double t=kv.Value*Math.PI/180,c=Math.Cos(t),s=Math.Sin(t);
+                for(int j=0;j<dimensions;j++){double ra=rotation[a,j],rb=rotation[b,j];rotation[a,j]=c*ra-s*rb;rotation[b,j]=s*ra+c*rb;}
+            }
         }
         // Projection of a point in UI axis order: N → 3 by one perspective division per hidden axis (camera at +Distance on it),
         // then the fixed 3-D camera. depth sums the hidden coordinates so nearer rays can be drawn brighter and thicker.
@@ -128,63 +162,56 @@ namespace Showcase.Unity.Settings
             double s3=Camera3/Math.Max(.5,Camera3-z2);depth=(float)d;
             return new Vector3((float)(x1*s3),(float)(y2*s3),(float)z2);
         }
-        internal float Scale=>Mathf.Min(graphic.rectTransform.rect.width,graphic.rectTransform.rect.height)/17f;
-        internal Vector2 Center=>new Vector2(graphic.rectTransform.rect.width*.5f,-graphic.rectTransform.rect.height*.5f-10);
+        internal float Scale=>Mathf.Min(graphic.rectTransform.rect.width,graphic.rectTransform.rect.height)/17f*zoom;
+        internal Vector2 Center=>new Vector2(graphic.rectTransform.rect.width*.5f,-graphic.rectTransform.rect.height*.5f);
         internal Vector2 ToScreen(Vector3 projected)=>Center+new Vector2(projected.x,projected.y)*Scale;
         internal int RayLength=>rayLength;
         internal IReadOnlyList<int[]> Directions=>directions;
         internal int Dimensions=>dimensions;
-        // Highlight level of a direction: 2 selected, 1 hovered, 0 faint; 1 for every ray while nothing is chosen.
+        internal const double AxisLength=5;
+        // Highlight level of a direction: 2 chosen (by a cell or a ±axis button), 1 hovered, 0 faint; 1 for every ray while nothing is chosen.
         internal int Level(int[] d)
         {
-            if(selected.Count==0&&!hovered.HasValue)return 1;
+            if(!AnyChoice)return 1;
             foreach(var c in selected)if(d[c.a]!=0&&d[c.b]!=0)return 2;
+            foreach(var s in axisSelected)if(Math.Sign(d[s.axis])==s.sign)return 2;
             if(hovered.HasValue&&d[hovered.Value.a]!=0&&d[hovered.Value.b]!=0)return 1;
             return 0;
         }
-        internal bool AnyChoice=>selected.Count>0||hovered.HasValue;
+        internal bool AnyChoice=>selected.Count>0||axisSelected.Count>0||hovered.HasValue;
         internal (int a,int b)? Dragging=>dragging;
-        // ---- table geometry (bottom-right) ----
-        internal float CellSize=>dimensions<=5?30:dimensions<=8?22:16;
-        internal Vector2 TableOrigin{get{var r=graphic.rectTransform.rect;float cs=CellSize;return new Vector2(r.width-12-dimensions*cs,-(r.height-70-dimensions*cs));}}
-        internal Rect CellRect(int row,int column){var o=TableOrigin;float cs=CellSize;return new Rect(o.x+column*cs,o.y-row*cs-cs,cs,cs);}
+        // ---- table geometry (inside tableRect; cell (row,column) with row<=column) ----
+        internal float CellSize{get{float room=controls==null?100:controls.rect.width-52;return Mathf.Clamp(Mathf.Floor(room/Math.Max(1,dimensions)),10,30);}}
+        internal Rect CellRect(int row,int column){float cs=CellSize;return new Rect(column*cs,-row*cs-cs,cs,cs);}
         bool TryCell(Vector2 local,out (int a,int b) cell)
         {
-            cell=default;var o=TableOrigin;float cs=CellSize;float x=local.x-o.x,y=o.y-local.y;
+            cell=default;float cs=CellSize;float x=local.x,y=-local.y;
             if(x<0||y<0||x>=cs*dimensions||y>=cs*dimensions)return false;
             int column=(int)(x/cs),row=(int)(y/cs);if(column<row)return false;cell=(row,column);return true;
         }
-        // ---- axis knobs ----
-        internal Vector2 KnobPosition(int axis)
-        {var p=new double[dimensions];p[axis]=AxisLength;return ToScreen(Project(p,out _));}
-        internal const double AxisLength=5;
-        int KnobAt(Vector2 local){for(int a=0;a<dimensions;a++)if((KnobPosition(a)-local).sqrMagnitude<14*14)return a;return -1;}
-        // The shown axis whose screen direction best matches a mouse delta; never the dragged axis itself.
-        int PartnerAxis(int axis,Vector2 delta)
+        bool TableLocal(Vector2 screen,Camera camera,out Vector2 local)=>RectTransformUtility.ScreenPointToLocalPointInRectangle(tableRect,screen,camera,out local);
+        // ---- pointer ----
+        bool Begin(PointerEventData e)
         {
-            int best=-1;float score=-1;var o=ToScreen(Project(new double[dimensions],out _));
-            for(int a=0;a<Math.Min(3,dimensions);a++){if(a==axis)continue;var dir=(KnobPosition(a)-o);if(dir.sqrMagnitude<1)continue;float s=Mathf.Abs(Vector2.Dot(dir.normalized,delta.normalized));if(s>score){score=s;best=a;}}
-            if(best<0)best=axis==0?1:0;return best;
+            if(pressed||ownership.Owner!=InputOwner.None||CfgUi.EditingText)return false;
+            if(e.button==PointerEventData.InputButton.Right){ClearSelection();return false;}
+            if(e.button!=PointerEventData.InputButton.Left)return false;
+            if(!ownership.TryBegin(InputOwner.Rotation4D,e.pointerId,()=>{pressed=false;dragging=null;orbiting=false;}))return false;
+            pressed=true;moved=false;pointer=e.pointerId;downPosition=lastPosition=e.position;orbiting=false;dragging=null;return true;
         }
-        bool Local(PointerEventData e,out Vector2 local)=>RectTransformUtility.ScreenPointToLocalPointInRectangle(graphic.rectTransform,e.position,e.pressEventCamera,out local);
-        void OnDown(PointerEventData e)
+        void OnViewDown(PointerEventData e){if(Begin(e))orbiting=true;}
+        void OnTableDown(PointerEventData e)
         {
-            if(pressed||ownership.Owner!=InputOwner.None||CfgUi.EditingText)return;if(!Local(e,out var local))return;
-            if(e.button==PointerEventData.InputButton.Right){ClearSelection();return;}
-            if(e.button!=PointerEventData.InputButton.Left)return;
-            if(!ownership.TryBegin(InputOwner.Rotation4D,e.pointerId,()=>{pressed=false;dragging=null;knobAxis=-1;orbiting=false;}))return;
-            pressed=true;moved=false;pointer=e.pointerId;downPosition=lastPosition=e.position;knobAxis=KnobAt(local);orbiting=false;dragging=null;
-            if(knobAxis<0&&TryCell(local,out var cell))dragging=cell;
-            else if(knobAxis<0)orbiting=true;
+            if(!TableLocal(e.position,e.pressEventCamera,out var local)||!TryCell(local,out var cell)){if(e.button==PointerEventData.InputButton.Right)ClearSelection();return;}
+            if(Begin(e))dragging=cell;
         }
         void OnDrag(PointerEventData e)
         {
             if(!pressed||e.pointerId!=pointer||!ownership.IsOwner(InputOwner.Rotation4D,pointer))return;
             float scale=Mathf.Max(.01f,uiScale?.Invoke()??1);var delta=(e.position-lastPosition)/scale;lastPosition=e.position;
             if(!moved&&(e.position-downPosition).magnitude/scale<5)return;moved=true;
-            if(knobAxis>=0){int partner=PartnerAxis(knobAxis,delta);var o=ToScreen(Project(new double[dimensions],out _));var dir=(KnobPosition(partner)-o).normalized;Turn(partner,knobAxis,Vector2.Dot(delta,dir)*.6f);}
-            else if(dragging.HasValue&&dragging.Value.a!=dragging.Value.b)Turn(dragging.Value.a,dragging.Value.b,delta.x*.6f);
-            else if(dragging.HasValue){int other=dragging.Value.a==0?1:0;Turn(other,dragging.Value.a,delta.x*.6f);}
+            if(dragging.HasValue&&dragging.Value.a!=dragging.Value.b){active=dragging.Value;AddAngle(dragging.Value.a,dragging.Value.b,delta.x*.6f);}
+            else if(dragging.HasValue){int other=dragging.Value.a==0?1:0;active=(other,dragging.Value.a);AddAngle(other,dragging.Value.a,delta.x*.6f);}
             else if(orbiting){yaw+=delta.x*.4f;pitch=Mathf.Clamp(pitch-delta.y*.4f,-80,80);}
             UpdateTexts();graphic.SetVerticesDirty();
         }
@@ -192,52 +219,139 @@ namespace Showcase.Unity.Settings
         {
             if(!pressed||e.pointerId!=pointer)return;pressed=false;
             bool owned=ownership.IsOwner(InputOwner.Rotation4D,pointer);if(owned)ownership.Release(InputOwner.Rotation4D,pointer);
-            if(!moved&&dragging.HasValue){var cell=dragging.Value;if(!selected.Remove(cell))selected.Add(cell);record?.Invoke("ProjectionSelect",CellName(cell)+"="+selected.Contains(cell));}
-            else if(moved)record?.Invoke("ProjectionTurn",knobAxis>=0?"axis "+AxisName(knobAxis):dragging.HasValue?CellName(dragging.Value):"orbit");
-            dragging=null;knobAxis=-1;orbiting=false;UpdateTexts();graphic.SetVerticesDirty();
+            if(!moved&&dragging.HasValue)
+            {
+                var cell=dragging.Value;bool on=!selected.Remove(cell);if(on)selected.Add(cell);
+                if(on&&cell.a!=cell.b)active=cell;
+                record?.Invoke("ProjectionSelect",CellName(cell)+"="+on);
+            }
+            else if(moved)record?.Invoke("ProjectionTurn",dragging.HasValue?CellName(dragging.Value):"orbit");
+            dragging=null;orbiting=false;UpdateTexts();graphic.SetVerticesDirty();
+        }
+        void OnScroll(PointerEventData e)
+        {
+            if(ownership.Owner!=InputOwner.None||CfgUi.EditingText)return;float wheel=e.scrollDelta.y;if(Mathf.Approximately(wheel,0))return;
+            zoom=Mathf.Clamp(zoom*Mathf.Exp(wheel*.08f),MinZoom,MaxZoom);record?.Invoke("ProjectionZoom",zoom.ToString("0.00",CultureInfo.InvariantCulture));UpdateTexts();graphic.SetVerticesDirty();
         }
         void Update()
         {
-            if(pressed&&!ownership.IsOwner(InputOwner.Rotation4D,pointer)){pressed=false;dragging=null;knobAxis=-1;orbiting=false;}
+            if(pressed&&!ownership.IsOwner(InputOwner.Rotation4D,pointer)){pressed=false;dragging=null;orbiting=false;}
             // Hover: the cell under the mouse while no gesture is running.
             (int a,int b)? over=null;
-            if(!pressed&&RectTransformUtility.ScreenPointToLocalPointInRectangle(graphic.rectTransform,Input.mousePosition,null,out var local)&&TryCell(local,out var cell))over=cell;
-            bool changed=!Nullable.Equals(over,hovered);hovered=over;
-            if(spinning)
-            {
-                // Each hidden axis turns slowly against a shown axis, at different rates so the picture keeps changing.
-                float dt=Time.unscaledDeltaTime;spinPhase+=dt;
-                for(int a=3;a<dimensions;a++){Turn(a%3,a,dt*(10+3*(a-3)));if(dimensions>4)Turn((a+1)%3,a,dt*4*Mathf.Sin(spinPhase*.3f+a));}
-                changed=true;
-            }
-            if(changed){UpdateTexts();graphic.SetVerticesDirty();}
+            if(!pressed&&tableRect!=null&&tableRect.gameObject.activeInHierarchy&&TableLocal(Input.mousePosition,null,out var local)&&TryCell(local,out var cell))over=cell;
+            if(!Nullable.Equals(over,hovered)){hovered=over;UpdateTexts();graphic.SetVerticesDirty();}
         }
-        void OnDisable(){if(pressed&&ownership!=null&&ownership.IsOwner(InputOwner.Rotation4D,pointer))ownership.Cancel();pressed=false;dragging=null;knobAxis=-1;orbiting=false;hovered=null;}
-        void SetSpinning(bool on){spinning=on;record?.Invoke("ProjectionSpin",on.ToString());UpdateTexts();}
-        void ClearSelection(){if(selected.Count==0)return;selected.Clear();record?.Invoke("ProjectionSelect","clear");UpdateTexts();graphic.SetVerticesDirty();}
+        void OnDisable(){if(pressed&&ownership!=null&&ownership.IsOwner(InputOwner.Rotation4D,pointer))ownership.Cancel();pressed=false;dragging=null;orbiting=false;hovered=null;}
+        void ClearSelection(){if(selected.Count==0&&axisSelected.Count==0)return;selected.Clear();axisSelected.Clear();record?.Invoke("ProjectionSelect","clear");UpdateTexts();graphic.SetVerticesDirty();}
         internal void SetSelected(IEnumerable<(int a,int b)> cells){selected.Clear();foreach(var c in cells)if(c.a<=c.b&&c.b<dimensions)selected.Add(c);UpdateTexts();graphic?.SetVerticesDirty();}
+        internal void SetAxisSelected(int axis,int sign,bool on){var key=(axis,Math.Sign(sign));if(on)axisSelected.Add(key);else axisSelected.Remove(key);UpdateTexts();graphic?.SetVerticesDirty();}
+        internal void SetActive((int a,int b) plane){if(plane.a!=plane.b&&plane.b<dimensions)active=plane.a<plane.b?plane:(plane.b,plane.a);UpdateTexts();}
         internal string AxisName(int uiAxis)=>SliceAxes.AxisName(SliceAxes.Axes(Math.Max(dimensions,uiAxis+1))[uiAxis]);
+        internal Color AxisColor(int uiAxis)=>Cfg2Projection.AxisColor(SliceAxes.Axes(Math.Max(dimensions,uiAxis+1))[uiAxis]);
         string CellName((int a,int b) c)=>c.a==c.b?AxisName(c.a):AxisName(c.a)+"-"+AxisName(c.b);
+        // ---- widgets that depend on N ----
         void EnsureLabels()
         {
             while(axisLabels.Count<dimensions){var t=CfgUi.Label(transform,"",0,0,30,24,16);Cfg2Glow.GlowText(t,Color.white);axisLabels.Add(t);}
-            while(rowLabels.Count<dimensions){rowLabels.Add(CfgUi.Label(transform,"",0,0,20,20,11));columnLabels.Add(CfgUi.Label(transform,"",0,0,20,20,11));}
+            while(rowLabels.Count<dimensions){rowLabels.Add(CfgUi.Label(controls,"",0,0,20,20,11));columnLabels.Add(CfgUi.Label(controls,"",0,0,20,20,11));}
             for(int i=0;i<axisLabels.Count;i++){bool on=i<dimensions;axisLabels[i].gameObject.SetActive(on);rowLabels[i].gameObject.SetActive(on);columnLabels[i].gameObject.SetActive(on);
-                if(!on)continue;var color=Cfg2Projection.AxisColor(SliceAxes.Axes(dimensions)[i]);string name=AxisName(i);
+                if(!on)continue;var color=AxisColor(i);string name=AxisName(i);
                 axisLabels[i].text=name;axisLabels[i].color=color;axisLabels[i].GetComponent<Outline>().effectColor=Cfg2Glow.Alpha(color,.45f);
                 rowLabels[i].text=name;rowLabels[i].color=color;columnLabels[i].text=name;columnLabels[i].color=color;
                 rowLabels[i].fontSize=columnLabels[i].fontSize=dimensions<=5?12:dimensions<=8?10:9;rowLabels[i].alignment=TextAnchor.MiddleRight;columnLabels[i].alignment=TextAnchor.MiddleCenter;}
         }
-        // Axis labels sit beside their knobs; row and column labels frame the table.
+        // One +/− button pair per axis at the bottom left of the view: "+Z" lights every direction that moves towards +Z.
+        void EnsureAxisButtons()
+        {
+            if(axisButtons.Count==2*dimensions)return;
+            foreach(var b in axisButtons)Destroy(b.gameObject);axisButtons.Clear();
+            for(int axis=0;axis<dimensions;axis++)for(int sign=1;sign>=-1;sign-=2)
+            {
+                int a=axis,s=sign;var b=Cfg2Ui.Button(transform,(s>0?"+":"−")+AxisName(a),0,0,40,26,()=>{if(ownership.Owner!=InputOwner.None)return;bool on=!axisSelected.Contains((a,s));SetAxisSelected(a,s,on);record?.Invoke("ProjectionAxis",(s>0?"+":"-")+AxisName(a)+"="+on);});
+                var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=dimensions<=6?13:11;t.color=AxisColor(a);axisButtons.Add(b);
+            }
+        }
+        // Positions every widget from the current sizes of the view and the controller; called after a resize or a change of N.
+        internal void Layout()
+        {
+            if(graphic==null||controls==null)return;float w=((RectTransform)transform).rect.width,h=((RectTransform)transform).rect.height,cw=controls.rect.width,ch=controls.rect.height;
+            countLabel.rectTransform.sizeDelta=new Vector2(w-20,22);rotationLabel.rectTransform.sizeDelta=new Vector2(w-20,20);
+            float bw=Mathf.Clamp((w-20)/Math.Max(1,dimensions)-4,24,46);
+            axisHint.rectTransform.anchoredPosition=new Vector2(10,-(h-88));axisHint.rectTransform.sizeDelta=new Vector2(w-20,18);
+            for(int i=0;i<axisButtons.Count;i++){int axis=i/2,row=i%2;var r=(RectTransform)axisButtons[i].transform;r.anchoredPosition=new Vector2(10+axis*(bw+4),-(h-66+row*30));r.sizeDelta=new Vector2(bw,26);}
+            float cs=CellSize;int n=dimensions;float y=58;
+            tableRect.anchoredPosition=new Vector2(34,-y);tableRect.sizeDelta=new Vector2(n*cs,n*cs);
+            for(int i=0;i<n&&i<rowLabels.Count;i++)
+            {
+                rowLabels[i].rectTransform.anchoredPosition=new Vector2(10,-(y+i*cs));rowLabels[i].rectTransform.sizeDelta=new Vector2(22,cs);
+                columnLabels[i].rectTransform.anchoredPosition=new Vector2(34+i*cs,-(y+n*cs));columnLabels[i].rectTransform.sizeDelta=new Vector2(cs,16);
+            }
+            y+=n*cs+20;tableHint.rectTransform.anchoredPosition=new Vector2(12,-y);tableHint.rectTransform.sizeDelta=new Vector2(cw-24,32);y+=40;
+            turnTitle.rectTransform.anchoredPosition=new Vector2(12,-y);y+=20;activeLabel.rectTransform.anchoredPosition=new Vector2(12,-y);activeLabel.rectTransform.sizeDelta=new Vector2(cw-24,22);y+=26;
+            var slider=(RectTransform)angleSlider.transform;slider.anchoredPosition=new Vector2(12,-y);slider.sizeDelta=new Vector2(cw-24,24);ResizeSlider(angleSlider,cw-24);y+=32;
+            float sw=(cw-24-8)/3;for(int i=0;i<stepButtons.Count;i++){var r=(RectTransform)stepButtons[i].transform;r.anchoredPosition=new Vector2(12+i*(sw+4),-y);r.sizeDelta=new Vector2(sw,26);}y+=40;
+            listTitle.rectTransform.anchoredPosition=new Vector2(12,-y);listTitle.rectTransform.sizeDelta=new Vector2(cw-24,18);y+=22;
+            listHost.anchoredPosition=new Vector2(12,-y);listHost.sizeDelta=new Vector2(cw-24,Math.Max(10,listedPlanes.Count*30));
+            for(int i=0;i<listedPlanes.Count;i++)
+            {
+                var r=(RectTransform)listButtons[i].transform;r.anchoredPosition=new Vector2(0,-i*30);r.sizeDelta=new Vector2(54,26);
+                var s=(RectTransform)listSliders[i].transform;s.anchoredPosition=new Vector2(60,-(i*30+1));s.sizeDelta=new Vector2(cw-24-60-42,24);ResizeSlider(listSliders[i],cw-24-60-42);
+                listValues[i].rectTransform.anchoredPosition=new Vector2(cw-24-40,-(i*30+3));listValues[i].rectTransform.sizeDelta=new Vector2(40,20);
+            }
+            y+=listedPlanes.Count*30;listMore.rectTransform.anchoredPosition=new Vector2(12,-y);if(listMore.text!="")y+=20;y+=12;
+            zoomTitle.rectTransform.anchoredPosition=new Vector2(12,-y);zoomLabel.rectTransform.anchoredPosition=new Vector2(cw-12-80,-y);y+=22;
+            var zs=(RectTransform)zoomSlider.transform;zs.anchoredPosition=new Vector2(12,-y);zs.sizeDelta=new Vector2(cw-24,24);ResizeSlider(zoomSlider,cw-24);
+            float by=Math.Max(y+40,ch-42);float hw=(cw-24-6)/2;
+            ((RectTransform)resetButton.transform).anchoredPosition=new Vector2(12,-by);((RectTransform)resetButton.transform).sizeDelta=new Vector2(hw,30);
+            ((RectTransform)clearButton.transform).anchoredPosition=new Vector2(12+hw+6,-by);((RectTransform)clearButton.transform).sizeDelta=new Vector2(hw,30);
+            LayoutLabels();graphic.SetVerticesDirty();tableGraphic.SetVerticesDirty();
+        }
+        // Cfg2Ui.Slider lays its parts out for one width; a resize moves the track, fill area and handle area with it.
+        static void ResizeSlider(Slider slider,float width)
+        {
+            var root=(RectTransform)slider.transform;
+            foreach(RectTransform child in root)
+            {
+                if(child.name=="Track"||child.name=="Fill area")child.sizeDelta=new Vector2(width,6);
+                else if(child.name=="Handle area")child.sizeDelta=new Vector2(width-18,24);
+            }
+        }
+        // Axis labels sit beside the projected axis ends.
         internal void LayoutLabels()
         {
-            if(graphic==null)return;float cs=CellSize;var o=TableOrigin;
-            for(int i=0;i<dimensions;i++)
+            if(graphic==null)return;
+            for(int i=0;i<dimensions&&i<axisLabels.Count;i++){var p=new double[dimensions];p[i]=AxisLength;var k=ToScreen(Project(p,out _));axisLabels[i].rectTransform.anchoredPosition=new Vector2(k.x+8,k.y+12);}
+        }
+        // The list shows every plane that has been turned, the active one framed. A row stays once added (a slider being
+        // dragged through 0° must not vanish under the pointer); the list empties only on a reset or a change of N.
+        bool listReset;
+        void RefreshList()
+        {
+            var planes=listReset?new List<(int a,int b)>():listedPlanes.Where(p=>p.b<dimensions).ToList();listReset=false;
+            foreach(var kv in angles)if(Math.Abs(kv.Value)>=.5&&!planes.Contains(kv.Key))planes.Add(kv.Key);
+            if(!planes.Contains(active)&&angles.ContainsKey(active))planes.Add(active);
+            int shown=Math.Min(planes.Count,8);
+            if(!planes.Take(shown).SequenceEqual(listedPlanes))
             {
-                var k=KnobPosition(i);var r=axisLabels[i].rectTransform;r.anchoredPosition=new Vector2(k.x+12,k.y+12);
-                rowLabels[i].rectTransform.anchoredPosition=new Vector2(o.x-22,o.y-i*cs);rowLabels[i].rectTransform.sizeDelta=new Vector2(20,cs);
-                columnLabels[i].rectTransform.anchoredPosition=new Vector2(o.x+i*cs,o.y-dimensions*cs);columnLabels[i].rectTransform.sizeDelta=new Vector2(cs,18);
+                foreach(var b in listButtons)Destroy(b.gameObject);foreach(var s in listSliders)Destroy(s.gameObject);foreach(var t in listValues)Destroy(t.gameObject);
+                listButtons.Clear();listSliders.Clear();listValues.Clear();listedPlanes.Clear();listedPlanes.AddRange(planes.Take(shown));
+                foreach(var plane in listedPlanes)
+                {
+                    var p=plane;
+                    var b=Cfg2Ui.Button(listHost,CellName(p),0,0,54,26,()=>{SetActive(p);record?.Invoke("ProjectionActive",CellName(p));});var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=12;listButtons.Add(b);
+                    listSliders.Add(Cfg2Ui.Slider(listHost,60,1,100,-180,180,(float)Angle(p.a,p.b),v=>{if(syncing)return;SetAngle(p,v);if(active!=p)active=p;UpdateTexts();graphic.SetVerticesDirty();},()=>record?.Invoke("ProjectionTurn","list "+CellName(p))));
+                    var value=CfgUi.Label(listHost,"",0,0,40,20,12,Cfg2Ui.Gold);value.alignment=TextAnchor.MiddleRight;listValues.Add(value);
+                }
+                listMore.text=planes.Count>shown?"ほか "+(planes.Count-shown)+" 面（表から選べます）":"";
+                Layout();
             }
+            syncing=true;
+            for(int i=0;i<listedPlanes.Count;i++)
+            {
+                double v=Angle(listedPlanes[i].a,listedPlanes[i].b);listSliders[i].value=(float)v;listValues[i].text=v.ToString("0",CultureInfo.InvariantCulture)+"°";
+                MarkSelected(listButtons[i],listedPlanes[i]==active);
+            }
+            syncing=false;
         }
         void UpdateTexts()
         {
@@ -247,12 +361,16 @@ namespace Showcase.Unity.Settings
             HighlightedCount=AnyChoice?lit:0;
             string piece=string.IsNullOrEmpty(pieceName)?"":pieceName+"　";
             countLabel.text=piece+dimensions+"次元 → 3次元 透視投影　"+total.ToString("N0",CultureInfo.InvariantCulture)+"方向"+(AnyChoice?"　強調 "+lit.ToString("N0",CultureInfo.InvariantCulture)+" 本"+(lit>MaxLitRays?"（表示は"+MaxLitRays.ToString("N0",CultureInfo.InvariantCulture)+"本まで）":""):"")+(total>MaxFaintRays?"　（多いので選んだ方向だけ描画）":"");
-            var parts=angles.Where(kv=>Math.Abs(kv.Value)>=.5).OrderBy(kv=>kv.Key).Select(kv=>CellName(kv.Key)+" "+kv.Value.ToString("0",CultureInfo.InvariantCulture)+"°").ToList();
-            rotationLabel.text="回転："+(parts.Count==0?"なし":string.Join("  ",parts))+(spinning?"　（自動回転中）":"")+(selected.Count>0?"　選択："+string.Join(" ",selected.OrderBy(c=>c).Select(CellName)):"");
-            if(playButton!=null){MarkSelected(playButton,spinning);MarkSelected(stopButton,!spinning);}
-            LayoutLabels();
+            var parts=angles.Where(kv=>Math.Abs(kv.Value)>=.5).Select(kv=>CellName(kv.Key)+" "+kv.Value.ToString("0",CultureInfo.InvariantCulture)+"°").ToList();
+            var chosen=selected.OrderBy(c=>c).Select(CellName).Concat(axisSelected.OrderBy(c=>c).Select(c=>(c.sign>0?"+":"−")+AxisName(c.axis))).ToList();
+            rotationLabel.text="回転："+(parts.Count==0?"なし":string.Join("  ",parts))+"　ズーム "+Mathf.RoundToInt(zoom*100)+"%"+(chosen.Count>0?"　選択："+string.Join(" ",chosen):"");
+            activeLabel.text=CellName(active)+" の回転　"+Angle(active.a,active.b).ToString("0",CultureInfo.InvariantCulture)+"°";
+            zoomLabel.text=Mathf.RoundToInt(zoom*100)+"%";
+            syncing=true;angleSlider.value=(float)Angle(active.a,active.b);zoomSlider.value=zoom;syncing=false;
+            for(int i=0;i<axisButtons.Count;i++)MarkSelected(axisButtons[i],axisSelected.Contains((i/2,i%2==0?1:-1)));
+            RefreshList();LayoutLabels();tableGraphic?.SetVerticesDirty();
         }
-        static void MarkSelected(Button b,bool selected){b.GetComponent<Image>().color=selected?Cfg2Ui.Blue:new Color(.05f,.07f,.1f,.95f);Cfg2Ui.SelectedFrame(b.transform,selected);}
+        static void MarkSelected(Button b,bool selected){b.GetComponent<Image>().color=selected?new Color(.47f,.36f,.12f,.95f):new Color(.05f,.07f,.1f,.95f);Cfg2Ui.SelectedFrame(b.transform,selected);}
     }
     internal sealed class Cfg2ProjectionGraphic : Graphic
     {
@@ -260,19 +378,24 @@ namespace Showcase.Unity.Settings
         public override Texture mainTexture=>Cfg2Glow.Texture;
         // Ray colour by how many hidden axes (W, V, ...) the direction uses: none (visible in the plain section), one, two, more.
         static readonly Color[] Tier={new Color(.47f,.75f,1),new Color(1,.67f,.35f),new Color(.75f,.47f,1),new Color(.47f,.90f,.63f),new Color(1,.47f,.63f)};
-        static readonly Color SelectedCell=new Color(.47f,.36f,.12f,.95f),SelectedEdge=new Color(.91f,.79f,.52f),HoverCell=new Color(.11f,.16f,.22f,.95f),HoverEdge=new Color(.67f,.78f,.94f),PlainCell=new Color(.03f,.045f,.07f,.9f),PlainEdge=new Color(.24f,.28f,.35f),RotatingEdge=new Color(.40f,.60f,.93f);
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             vh.Clear();if(View==null||View.Rotation==null)return;var r=rectTransform.rect;int n=View.Dimensions;
             Cfg2Glow.Gradient(vh,0,0,r.width,r.height,new Color(.55f,.65f,1,.06f),new Color(.08f,.11f,.25f,.02f));
             var origin=View.ToScreen(View.Project(new double[n],out _));
-            // Floor grid of the shown X–Z plane for footing.
-            for(int i=-4;i<=4;i++)
+            // The three XYZ grids through the origin, projected like the rays so a hidden-axis turn bends them. The X–Z floor is the firmest.
+            var a=new double[n];var b=new double[n];
+            foreach(var (p,q,alpha) in new[]{(0,2,.11f),(0,1,.06f),(1,2,.06f)})
             {
-                var a=new double[n];var b=new double[n];a[0]=i;a[2]=-4;b[0]=i;b[2]=4;
-                Cfg2Glow.Line(vh,View.ToScreen(View.Project(a,out _)),View.ToScreen(View.Project(b,out _)),new Color(.5f,.58f,.75f,i==0?.22f:.10f),1.2f);
-                a[0]=-4;a[2]=i;b[0]=4;b[2]=i;
-                Cfg2Glow.Line(vh,View.ToScreen(View.Project(a,out _)),View.ToScreen(View.Project(b,out _)),new Color(.5f,.58f,.75f,i==0?.22f:.10f),1.2f);
+                if(q>=n)continue;
+                for(int i=-4;i<=4;i++)
+                {
+                    var color=new Color(.5f,.58f,.75f,i==0?alpha*2:alpha);
+                    Array.Clear(a,0,n);Array.Clear(b,0,n);a[p]=i;a[q]=-4;b[p]=i;b[q]=4;
+                    Cfg2Glow.Line(vh,View.ToScreen(View.Project(a,out _)),View.ToScreen(View.Project(b,out _)),color,1.2f);
+                    Array.Clear(a,0,n);Array.Clear(b,0,n);a[q]=i;a[p]=-4;b[q]=i;b[p]=4;
+                    Cfg2Glow.Line(vh,View.ToScreen(View.Project(a,out _)),View.ToScreen(View.Project(b,out _)),color,1.2f);
+                }
             }
             // Rays. Faint ones first and as single segments; lit ones on top with a dot per reached cell.
             var dirs=View.Directions;int length=View.RayLength;bool many=dirs.Count>Cfg2ProjectionView.MaxFaintRays;bool choice=View.AnyChoice;
@@ -308,34 +431,43 @@ namespace Showcase.Unity.Settings
                     previous=p;
                 }
             }
-            // Axes with knobs, back to front.
-            var axes=new List<(int axis,Vector3 p)>();for(int a=0;a<n;a++){var v=new double[n];v[a]=Cfg2ProjectionView.AxisLength;axes.Add((a,View.Project(v,out _)));}
+            // Axes as thin lines with a dot at the positive end, back to front; the negative half is dashed.
+            var axes=new List<(int axis,Vector3 p)>();for(int axis=0;axis<n;axis++){var v=new double[n];v[axis]=Cfg2ProjectionView.AxisLength;axes.Add((axis,View.Project(v,out _)));}
             axes.Sort((x,y)=>y.p.z.CompareTo(x.p.z));
             foreach(var entry in axes)
             {
-                var color=Cfg2Projection.AxisColor(SliceAxes.Axes(n)[entry.axis]);var end=View.ToScreen(entry.p);
+                var color=View.AxisColor(entry.axis);var end=View.ToScreen(entry.p);
                 var back=new double[n];back[entry.axis]=-Cfg2ProjectionView.AxisLength*.6;
-                Cfg2Glow.Dashed(vh,origin,View.ToScreen(View.Project(back,out _)),Cfg2Glow.Alpha(color,.35f),1.6f,3,3);
-                Cfg2Glow.Neon(vh,origin,end,color,1.2f,7);
-                bool dragged=View.Dragging.HasValue&&(View.Dragging.Value.a==entry.axis||View.Dragging.Value.b==entry.axis);
-                Cfg2Glow.Blob(vh,end,dragged?15:11,Cfg2Glow.Alpha(color,.55f));Cfg2Glow.Circle(vh,end,8,color,1.2f,5,24);Cfg2Glow.Blob(vh,end,5,new Color(1,1,1,.9f));
+                Cfg2Glow.Dashed(vh,origin,View.ToScreen(View.Project(back,out _)),Cfg2Glow.Alpha(color,.35f),1.4f,3,3);
+                Cfg2Glow.Neon(vh,origin,end,color,1.0f,5);
+                Cfg2Glow.Blob(vh,end,4.5f,color);
             }
             Cfg2Glow.Blob(vh,origin,14,new Color(1,.86f,.55f,.75f));Cfg2Glow.Blob(vh,origin,5,new Color(1,.97f,.88f,1));
-            // Rotation-plane table: upper triangle incl. the diagonal; the diagonal cell means "directions using this axis".
-            float cs=View.CellSize;var o=View.TableOrigin;
-            Cfg2Glow.Halo(vh,o.x-26,o.y+22,n*cs+38,n*cs+44,6,new Color(.02f,.03f,.05f,.78f));
+        }
+    }
+    // Rotation-plane table in the controller: upper triangle incl. the diagonal; the diagonal cell means "directions using this axis".
+    internal sealed class Cfg2ProjectionTableGraphic : Graphic
+    {
+        public Cfg2ProjectionView View;
+        public override Texture mainTexture=>Cfg2Glow.Texture;
+        static readonly Color SelectedCell=new Color(.47f,.36f,.12f,.95f),SelectedEdge=new Color(.91f,.79f,.52f),HoverCell=new Color(.11f,.16f,.22f,.95f),HoverEdge=new Color(.67f,.78f,.94f),PlainCell=new Color(.03f,.045f,.07f,.9f),PlainEdge=new Color(.24f,.28f,.35f),ActiveEdge=new Color(.40f,.60f,.93f);
+        protected override void OnPopulateMesh(VertexHelper vh)
+        {
+            vh.Clear();if(View==null)return;int n=View.Dimensions;float cs=View.CellSize;
+            Cfg2Glow.Halo(vh,-4,4,n*cs+8,n*cs+8,6,new Color(.02f,.03f,.05f,.78f));
             for(int row=0;row<n;row++)for(int column=row;column<n;column++)
             {
-                var cell=(row,column);var rect=View.CellRect(row,column);bool isSelected=View.Selected.Contains(cell),isHovered=View.Hovered.HasValue&&View.Hovered.Value==cell,rotating=View.Dragging.HasValue&&View.Dragging.Value==cell;
+                var cell=(row,column);var rect=View.CellRect(row,column);
+                bool isSelected=View.Selected.Contains(cell),isHovered=View.Hovered.HasValue&&View.Hovered.Value==cell,isActive=row!=column&&View.Active==cell,rotating=View.Dragging.HasValue&&View.Dragging.Value==cell;
                 var fill=isSelected?SelectedCell:isHovered?HoverCell:PlainCell;var edge=isHovered?HoverEdge:isSelected?SelectedEdge:PlainEdge;
                 float x=rect.x+1.5f,y=rect.y+rect.height-1.5f,w=rect.width-3,h=rect.height-3;
                 Cfg2Glow.Rect(vh,x,y,w,h,fill);
                 Cfg2Glow.Line(vh,new Vector2(x,y),new Vector2(x+w,y),edge,1.2f);Cfg2Glow.Line(vh,new Vector2(x+w,y),new Vector2(x+w,y-h),edge,1.2f);Cfg2Glow.Line(vh,new Vector2(x+w,y-h),new Vector2(x,y-h),edge,1.2f);Cfg2Glow.Line(vh,new Vector2(x,y-h),new Vector2(x,y),edge,1.2f);
-                if(rotating){Cfg2Glow.Line(vh,new Vector2(x-2,y+2),new Vector2(x+w+2,y+2),RotatingEdge,2);Cfg2Glow.Line(vh,new Vector2(x+w+2,y+2),new Vector2(x+w+2,y-h-2),RotatingEdge,2);Cfg2Glow.Line(vh,new Vector2(x+w+2,y-h-2),new Vector2(x-2,y-h-2),RotatingEdge,2);Cfg2Glow.Line(vh,new Vector2(x-2,y-h-2),new Vector2(x-2,y+2),RotatingEdge,2);}
-                var ca=Cfg2Projection.AxisColor(SliceAxes.Axes(n)[row]);var cb=Cfg2Projection.AxisColor(SliceAxes.Axes(n)[column]);float inset=cs*.26f;var mid=new Vector2(x+w/2,y-h/2);
-                if(row==column)Cfg2Glow.Line(vh,new Vector2(mid.x,y-inset),new Vector2(mid.x,y-h+inset),ca,2.2f);
-                else{Cfg2Glow.Line(vh,new Vector2(x+inset,mid.y),new Vector2(x+w-inset,mid.y),ca,2.2f);Cfg2Glow.Line(vh,new Vector2(mid.x,y-inset),new Vector2(mid.x,y-h+inset),cb,2.2f);}
-                if(isSelected)Cfg2Glow.Blob(vh,new Vector2(x+w-4,y-4),3.5f,SelectedEdge);
+                if(isActive||rotating){float t=rotating?2.5f:2;Cfg2Glow.Line(vh,new Vector2(x-2,y+2),new Vector2(x+w+2,y+2),ActiveEdge,t);Cfg2Glow.Line(vh,new Vector2(x+w+2,y+2),new Vector2(x+w+2,y-h-2),ActiveEdge,t);Cfg2Glow.Line(vh,new Vector2(x+w+2,y-h-2),new Vector2(x-2,y-h-2),ActiveEdge,t);Cfg2Glow.Line(vh,new Vector2(x-2,y-h-2),new Vector2(x-2,y+2),ActiveEdge,t);}
+                var ca=View.AxisColor(row);var cb=View.AxisColor(column);float inset=cs*.26f;var mid=new Vector2(x+w/2,y-h/2);float bar=cs>=16?2.2f:1.5f;
+                if(row==column)Cfg2Glow.Line(vh,new Vector2(mid.x,y-inset),new Vector2(mid.x,y-h+inset),ca,bar);
+                else{Cfg2Glow.Line(vh,new Vector2(x+inset,mid.y),new Vector2(x+w-inset,mid.y),ca,bar);Cfg2Glow.Line(vh,new Vector2(mid.x,y-inset),new Vector2(mid.x,y-h+inset),cb,bar);}
+                if(isSelected)Cfg2Glow.Blob(vh,new Vector2(x+w-4,y-4),cs>=16?3.5f:2.5f,SelectedEdge);
             }
         }
     }

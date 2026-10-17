@@ -187,11 +187,11 @@ namespace Showcase.Unity.Settings
             if(rays.Count==0||rays[0].gameObject!=surface)throw new InvalidOperationException("CFG2 SMOKE plane cell is covered by another UI: "+purpose);
             e.pointerCurrentRaycast=new RaycastResult{gameObject=surface,screenPosition=point};
             ExecuteEvents.Execute(surface,e,ExecuteEvents.pointerDownHandler);
-            Record("SmokeSimulatedPlaneDown",purpose+"; "+planeView.Plane+"; cell="+cell+"; screen="+point);
+            Record("SmokeSimulatedPlaneDown",purpose+"; "+planeView.Name+"; cell="+cell+"; screen="+point);
             return Tuple.Create(surface,e);
         }
         void SmokePlaneUp(Tuple<GameObject,PointerEventData> pointer)
-        {ExecuteEvents.Execute(pointer.Item1,pointer.Item2,ExecuteEvents.pointerUpHandler);Record("SmokeSimulatedPlaneUp",planeView.Plane.ToString());}
+        {ExecuteEvents.Execute(pointer.Item1,pointer.Item2,ExecuteEvents.pointerUpHandler);Record("SmokeSimulatedPlaneUp",planeView.Name);}
         void SmokePlaneClick(QN cell,string purpose)=>SmokePlaneUp(SmokePlaneDown(cell,purpose));
         IEnumerator SmokeHumanMove(string id,QN destination,string label,Vector2? destinationCamera=null)
         {
@@ -384,7 +384,7 @@ namespace Showcase.Unity.Settings
             }
             if(phase!="initial")throw new ArgumentException("Unknown smoke phase "+phase);
             yield return SmokeCapture("menu");SmokeAction("menu-3");yield return null;
-            SmokeCheck(opened&&planeMinis.Count(m=>m.gameObject.activeInHierarchy)==4&&categories.Length==6&&planeMinis.Select(m=>m.Plane).SequenceEqual(new[]{Cfg2Plane.XY,Cfg2Plane.XZ,Cfg2Plane.XW,Cfg2Plane.YZ}),"settings opens with six categories and four actual XY XZ XW YZ diagrams","simulated options button");
+            SmokeCheck(opened&&planeMinis.Count(m=>m.gameObject.activeInHierarchy)==6&&categories.Length==6&&planeMinis.Take(4).Select(m=>m.Name).SequenceEqual(new[]{"XY","XZ","XW","YZ"}),"settings opens with six categories and the six 4D plane diagrams starting XY XZ XW YZ","simulated options button");
             foreach(int i in Enumerable.Range(0,6)){SmokeAction("category-"+i);yield return null;SmokeCheck(category==i,"settings category "+i+" is reachable","simulated category button");yield return SmokeCapture("settings-category-"+i);}
             SmokeAction("category-2");SelectDefinition("king-step");yield return null;
             foreach(int tab in Enumerable.Range(0,3)){SmokeAction("detail-tab-"+tab);yield return null;yield return SmokeCapture("settings-piece-detail-"+tab);}
@@ -478,10 +478,10 @@ namespace Showcase.Unity.Settings
                 int a=tab==4?2:1,b=tab==1?2:tab==3?3:0;
                 bool InPlane(QN q)=>Enumerable.Range(0,4).All(i=>i==a||i==b||q[i]==source[i]);
                 int expectedPieces=preview.Pieces.Count(item=>InPlane(item.Position));
-                SmokeCheck(planeView.VisiblePieceCount==expectedPieces&&planeView.VisibleCandidates==result.P.Count(InPlane),"2D "+planeView.Plane+" uses exact selected-piece fixed coordinates","actual 2D view model versus independent two-axis filter");
-                SmokeCheck(!string.IsNullOrWhiteSpace(planeView.FixedCoordinates)&&planeMinis.Count(m=>m.gameObject.activeInHierarchy)==4,"2D "+planeView.Plane+" shows hidden-axis condition and preserves four XY XZ XW YZ diagrams");
+                SmokeCheck(planeView.VisiblePieceCount==expectedPieces&&planeView.VisibleCandidates==result.P.Count(InPlane),"2D "+planeView.Name+" uses exact selected-piece fixed coordinates","actual 2D view model versus independent two-axis filter");
+                SmokeCheck(!string.IsNullOrWhiteSpace(planeView.FixedCoordinates)&&planeMinis.Count(m=>m.gameObject.activeInHierarchy)==6,"2D "+planeView.Name+" shows hidden-axis condition and preserves the six plane diagrams");
                 if(tab==1)SmokeCheck(!planeView.Contains(new QN(0,0,0,1)),"XY 2D confirmation excludes W-different piece rather than projecting it onto same cell");
-                yield return SmokeCapture("settings-plane-"+planeView.Plane);
+                yield return SmokeCapture("settings-plane-"+planeView.Name);
             }
             yield return SmokePlaneInputs();
             SmokeAction("plane-0");preview.Erase(new QN(0,0,0,1));QueueQuery();yield return null;

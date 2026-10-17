@@ -115,7 +115,7 @@ namespace Showcase.Unity.Settings
             SmokeCheck((slice.Center-p).Length<1e-9&&initial.EmbeddingHeight==3&&initial.HalfWindow==4.5,"PV01 initial C=P height=3 and finite half-window=4.5");
             SmokeCheck(Math.Abs(initial.Anchor.Y-SectionView.Anchor.y)<1e-8,"PV01 initial A is the wooden board surface, so pieces at Y=h rest on it");
             SmokeCheck(visuals.VisibleBoardPieces==0&&previewRenderer.VisiblePieces==preview.Pieces.Count,"PV06 settings uses only one real piece section path");
-            SmokeCheck(planeMinis.Select(x=>x.Plane).SequenceEqual(new[]{Cfg2Plane.XY,Cfg2Plane.XZ,Cfg2Plane.XW,Cfg2Plane.YZ}),"PV12 settings right views are XY XZ XW YZ 2D diagrams");
+            SmokeCheck(planeMinis.Take(4).Select(x=>x.Name).SequenceEqual(new[]{"XY","XZ","XW","YZ"}),"PV12 settings right views start with the XY XZ XW YZ 2D diagrams");
             CheckMeshCoordinates("initial-P");WritePivotDump("initial-P");yield return SmokeCapture("approved-settings");
             string hash=preview.Hash,logic=config.RuleHash;var gp=result.P.ToArray();var before=PieceWorldVertices("subject");
             slice.SetCenter(default);RenderGeometry();var after=PieceWorldVertices("subject");

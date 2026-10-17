@@ -70,14 +70,14 @@ namespace Showcase.Unity.Settings
         void CreateSettings()
         {
             settings=CfgUi.Rect(root,"Six settings categories",0,0,1536,1024);
-            var heading=Cfg2Ui.Panel(settings,"Header",0,0,1536,88,new Color(.02f,.035f,.05f,.69f));
-            CfgUi.Label(heading,"N次元将棋",22,9,370,45,34,Gold);CfgUi.Label(heading,"N-DIMENSIONAL SHOGI",24,57,360,23,14,Gold);headerDimensions=CfgUi.Label(heading,"",205,14,160,40,26,Gold);
-            CfgUi.Label(heading,"設定（オプション）",560,15,570,48,32);
-            Button(heading,"back","戻る",1423,18,94,43,LeaveSettings);
-            var nav=Cfg2Ui.Panel(settings,"Categories",6,100,196,694,Dark);
-            for(int i=0;i<6;i++){int c=i;Button(nav,"category-"+i,categories[i],5,5+i*113,186,108,()=>SelectCategory(c),i==category);}
+            settingsHeading=Cfg2Ui.Panel(settings,"Header",0,0,1536,88,new Color(.02f,.035f,.05f,.69f));
+            CfgUi.Label(settingsHeading,"N次元将棋",22,9,370,45,34,Gold);CfgUi.Label(settingsHeading,"N-DIMENSIONAL SHOGI",24,57,360,23,14,Gold);headerDimensions=CfgUi.Label(settingsHeading,"",205,14,160,40,26,Gold);
+            settingsTitle=CfgUi.Label(settingsHeading,"設定（オプション）",560,15,570,48,32);
+            backButton=Button(settingsHeading,"back","戻る",1423,18,94,43,LeaveSettings);
+            navPanel=Cfg2Ui.Panel(settings,"Categories",6,100,196,694,Dark);
+            for(int i=0;i<6;i++){int c=i;Button(navPanel,"category-"+i,categories[i],5,5+i*113,186,108,()=>SelectCategory(c),i==category);}
             pieceHost=Cfg2Ui.Panel(settings,"Piece list",212,100,186,888,Dark);BuildPieces();
-            var center=Cfg2Ui.Panel(settings,"Movement preview",408,100,730,888,Dark);
+            var center=centerPanel=Cfg2Ui.Panel(settings,"Movement preview",408,100,730,888,Dark);
             CfgUi.Label(center,"駒の動きプレビュー",14,10,440,36,22);
             // Tab 0 is the live section, tab 1 the N→3D projection of the selected piece's directions, tabs 2.. the fixed planes.
             string[] names={"断面ビュー","投影ビュー","XY平面","XZ平面","XW平面","YZ平面"};
@@ -85,17 +85,15 @@ namespace Showcase.Unity.Settings
             previewRect=CfgUi.Rect(center,"Actual section surface",10,104,526,584);previewImage=previewRect.gameObject.AddComponent<RawImage>();previewImage.color=Color.white;
             AttachPointer(previewRect);
             planeRect=Cfg2Ui.Panel(center,"2D confirmation",10,104,526,584,new Color(.025f,.04f,.07f,.98f),true);planeView=planeRect.gameObject.AddComponent<Cfg2PlaneView>();
-            planeView.Initialize(Cfg2Plane.XY,(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);planeRect.gameObject.SetActive(false);
-            projectionRect=Cfg2Ui.Panel(center,"Direction projection",10,104,526,584,new Color(.025f,.04f,.07f,.98f),true);projectionView=projectionRect.gameObject.AddComponent<Cfg2ProjectionView>();
-            projectionView.Initialize(ownership,()=>canvas.scaleFactor,(name,data)=>Record(name,data));projectionRect.gameObject.SetActive(false);
-            CreateGizmo(center,356,109,"settings-",174,130);
-            for(int i=0;i<4;i++)
-            {
-                var r=Cfg2Ui.Panel(center,"Selected-cell plane "+(Cfg2Plane)i,546,104+i*146,174,140,new Color(.025f,.04f,.065f,.8f),true);
-                var diagram=r.gameObject.AddComponent<Cfg2PlaneView>();diagram.Initialize((Cfg2Plane)i,null,ownership,()=>preview.Revision,()=>draft.Revision);planeMinis.Add(diagram);
-            }
+            planeView.Initialize(0,1,(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);planeRect.gameObject.SetActive(false);
+            // The projection and its controller fill the whole height: the trial tools below belong to the section view.
+            projectionRect=Cfg2Ui.Panel(center,"Direction projection",10,104,526,774,new Color(.025f,.04f,.07f,.98f),true);projectionView=projectionRect.gameObject.AddComponent<Cfg2ProjectionView>();
+            projectionControls=Cfg2Ui.Panel(center,"Projection rotation controller",546,104,174,774,new Color(.02f,.035f,.06f,.98f),true);
+            projectionView.Initialize(projectionControls,ownership,()=>canvas.scaleFactor,(name,data)=>Record(name,data));projectionRect.gameObject.SetActive(false);projectionControls.gameObject.SetActive(false);
+            CreateGizmo(center,356,109,"settings-",174,130);settingsGizmo=helperPanels[helperPanels.Count-1];
+            planeMiniHost=CfgUi.Rect(center,"Selected-cell planes",546,104,174,584);
             counts=CfgUi.Label(center,"",12,696,700,48,16,Muted);
-            var tools=Cfg2Ui.Panel(center,"Trial controls",10,754,438,124,new Color(.04f,.065f,.09f,.7f));
+            var tools=trialTools=Cfg2Ui.Panel(center,"Trial controls",10,754,438,124,new Color(.04f,.065f,.09f,.7f));
             CfgUi.Label(tools,"試し配置",10,5,200,27,19);
             Button(tools,"tool-select","選択",8,38,75,35,()=>SetTool("選択"));
             Button(tools,"tool-place","置く",88,38,75,35,()=>SetTool("配置"));
@@ -104,11 +102,70 @@ namespace Showcase.Unity.Settings
             Button(tools,"trial-reset","試験配置",336,38,94,35,()=>{preview.Place(new TrialPiece("subject",selectedDefinition,Side.A,default));selectedPiece="subject";AfterTrial();});
             Button(tools,"side","陣営 A / B",8,81,119,34,()=>{placementSide=placementSide==Side.A?Side.B:Side.A;Notice("配置陣営 "+placementSide);});
             Button(tools,"trial-undo","Undo",135,81,86,34,()=>{preview.Undo();AfterTrial();});Button(tools,"trial-redo","Redo",229,81,86,34,()=>{preview.Redo();AfterTrial();});
-            var toggles=Cfg2Ui.Panel(center,"Display options",458,754,262,124,new Color(.04f,.065f,.09f,.7f));
+            var toggles=displayToggles=Cfg2Ui.Panel(center,"Display options",458,754,262,124,new Color(.04f,.065f,.09f,.7f));
             Toggle(toggles,"移動候補",showCandidates,8,4,244,v=>showCandidates=v);Toggle(toggles,"攻撃範囲",showAttacks,8,42,244,v=>showAttacks=v);Toggle(toggles,"座標グリッド",showGrid,8,80,244,v=>showGrid=v);
             detailHost=Cfg2Ui.Panel(settings,"Independent details",1148,100,380,888,Dark);BuildDetails();
             headerStatus=CfgUi.Label(settings,"",16,807,181,130,16,Muted);
             statusText=CfgUi.Label(settings,"",410,995,1100,25,15,Gold);UpdateHeader();
+            EnsurePlaneMinis(CurrentDimensions);LayoutSettings();
+        }
+        // The stage is 1536 wide and centred; a wider window leaves spare room on both sides, which the settings screen
+        // spends on the preview: the side columns slide outwards and the centre panel grows by twice the spare width.
+        float settingsSpare=-1;
+        float SettingsSpare(){float canvasWidth=canvas!=null?((RectTransform)canvas.transform).rect.width:1536;return Mathf.Clamp((canvasWidth-1536)*.5f-6,0,260);}
+        static void Place(RectTransform r,float x,float y,float w,float h){r.anchoredPosition=new Vector2(x,-y);r.sizeDelta=new Vector2(w,h);}
+        void LayoutSettings()
+        {
+            if(settings==null)return;float spare=SettingsSpare();if(Mathf.Approximately(spare,settingsSpare))return;settingsSpare=spare;
+            Place(settingsHeading,-spare,0,1536+2*spare,88);settingsTitle.rectTransform.anchoredPosition=new Vector2(560+spare,-15);((RectTransform)backButton.transform).anchoredPosition=new Vector2(1423+2*spare,-18);
+            Place(navPanel,6-spare,100,196,694);Place(pieceHost,212-spare,100,186,888);Place(detailHost,1148+spare,100,380,888);
+            headerStatus.rectTransform.anchoredPosition=new Vector2(16-spare,-807);Place(statusText.rectTransform,410-spare,995,1100+2*spare,25);
+            float width=730+2*spare;Place(centerPanel,408-spare,100,width,888);
+            // Projection tab: the view takes what the controller (174 px, up to 330 when there is room) leaves.
+            float controls=Mathf.Clamp(174+spare*.5f,174,330);
+            Place(projectionRect,10,104,width-30-controls,774);Place(projectionControls,width-10-controls,104,controls,774);projectionView.Layout();
+            // Section tabs: the plane diagrams fill the room right of the section in as many 174 px columns as fit.
+            Place(planeMiniHost,546,104,width-556,584);LayoutPlaneMinis();
+        }
+        // One diagram per coordinate plane of the current N (6 in 4D, 10 in 5D, 55 in 11D), in a scrolling grid.
+        int planeMiniDimensions;ScrollRect planeMiniScroll;
+        void EnsurePlaneMinis(int n)
+        {
+            if(n==planeMiniDimensions&&planeMiniScroll!=null)return;planeMiniDimensions=n;
+            CfgUi.Clear(planeMiniHost);planeMinis.Clear();
+            planeMiniScroll=CfgUi.Scroll(planeMiniHost,"Plane diagrams",0,0,planeMiniHost.rect.width,planeMiniHost.rect.height,out var content,584);
+            foreach(var (h,v) in Cfg2PlaneView.Planes(n))
+            {
+                var r=Cfg2Ui.Panel(content,"Selected-cell plane",0,0,174,140,new Color(.025f,.04f,.065f,.8f),true);
+                var diagram=r.gameObject.AddComponent<Cfg2PlaneView>();diagram.Initialize(h,v,null,ownership,()=>preview.Revision,()=>draft.Revision);diagram.Dimensions=n;planeMinis.Add(diagram);
+                // A click on a diagram opens that plane large in the centre.
+                var open=r.gameObject.AddComponent<Button>();CfgUi.NoNavigation(open);open.targetGraphic=r.GetComponent<Image>();open.onClick.AddListener(()=>{if(ownership.Owner!=InputOwner.None)return;Record("UI","plane-"+diagram.Name);PlayMenuConfirm();ShowPlane(h,v);});
+            }
+            LayoutPlaneMinis();
+        }
+        void LayoutPlaneMinis()
+        {
+            if(planeMiniScroll==null)return;float w=planeMiniHost.rect.width,h=planeMiniHost.rect.height;
+            Place((RectTransform)planeMiniScroll.transform,0,0,w,h);Place(planeMiniScroll.viewport,0,0,w,h);
+            int columns=Mathf.Max(1,Mathf.FloorToInt((w-14+6)/180f));int rows=(planeMinis.Count+columns-1)/columns;
+            Place(planeMiniScroll.content,0,0,w-14,Mathf.Max(h,rows*146-6));
+            for(int i=0;i<planeMinis.Count;i++)Place((RectTransform)planeMinis[i].transform,(i%columns)*180,(i/columns)*146,174,140);
+        }
+        // Shows one coordinate plane in the centre. The four fixed tabs are XY XZ XW YZ; any other plane lights no tab.
+        static readonly (int h,int v)[] TabPlanes={(0,1),(0,2),(0,3),(1,2)};
+        void ShowPlane(int h,int v)
+        {
+            int tab=Array.IndexOf(TabPlanes,(h,v));planeTab=tab>=0?tab+2:6;
+            previewRect.gameObject.SetActive(false);projectionRect.gameObject.SetActive(false);planeRect.gameObject.SetActive(true);
+            planeView.Initialize(h,v,(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);
+            for(int i=0;i<6;i++)actions["plane-"+i].GetComponent<Image>().color=i==planeTab?CfgUi.Blue:Dark;
+            ShowSectionAids(true);geometryDirty=true;Record("Plane",planeTab.ToString()+";"+planeView.Name);
+        }
+        // Trial tools, counts, gizmo and the plane diagrams belong to the section tabs; the projection tab hides them.
+        void ShowSectionAids(bool on)
+        {
+            trialTools.gameObject.SetActive(on);displayToggles.gameObject.SetActive(on);counts.gameObject.SetActive(on);planeMiniHost.gameObject.SetActive(on);
+            settingsGizmo.gameObject.SetActive(on&&showHelpers);projectionControls.gameObject.SetActive(!on);
         }
         void Toggle(Transform parent,string text,bool value,float x,float y,float w,Action<bool> action)
         {CfgUi.Toggle(parent,text,value,x,y,w,v=>{action(v);geometryDirty=true;});}
@@ -143,10 +200,10 @@ namespace Showcase.Unity.Settings
             if(!opened)return;
             var ps=preview.Pieces.Select(p=>new CfgVisualPiece{Id=p.Id,DefinitionId=p.DefinitionId,Position=p.Position,Side=p.Side}).ToArray();
             var selected=preview.Find(selectedPiece)?.Position??planeReferenceCell;
-            // The XW plane needs a fourth axis: in 3D its tab and its diagram are gone.
+            // The XW tab needs a fourth axis: in 3D it is gone. The diagrams are rebuilt for the planes of the current N.
             planeView.Dimensions=n;if(actions.TryGetValue("plane-4",out var xw))xw.gameObject.SetActive(n>3);
-            foreach(var diagram in planeMinis){diagram.Dimensions=n;diagram.gameObject.SetActive(diagram.Plane!=Cfg2Plane.XW||n>3);}
-            foreach(var diagram in planeMinis.Where(d=>d.gameObject.activeSelf))diagram.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
+            EnsurePlaneMinis(n);
+            if(planeMiniHost.gameObject.activeInHierarchy)foreach(var diagram in planeMinis)diagram.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
             if(planeTab>=2)planeView.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
             if(planeTab==1)projectionView.Refresh(preset,selectedDefinition,ShortNames.TryGetValue(selectedDefinition,out var shortName)?shortName:selectedDefinition);
         }
@@ -178,10 +235,10 @@ namespace Showcase.Unity.Settings
         void SelectPlane(int tab)
         {
             if(tab==4&&CurrentDimensions<4)tab=0;
-            planeTab=tab;previewRect.gameObject.SetActive(tab==0);projectionRect.gameObject.SetActive(tab==1);planeRect.gameObject.SetActive(tab>=2);
-            if(tab>=2)planeView.Initialize((Cfg2Plane)(tab-2),(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);
+            if(tab>=2){var plane=TabPlanes[tab-2];ShowPlane(plane.h,plane.v);return;}
+            planeTab=tab;previewRect.gameObject.SetActive(tab==0);projectionRect.gameObject.SetActive(tab==1);planeRect.gameObject.SetActive(false);
             for(int i=0;i<6;i++)actions["plane-"+i].GetComponent<Image>().color=i==tab?CfgUi.Blue:Dark;
-            geometryDirty=true;Record("Plane",tab.ToString());
+            ShowSectionAids(tab!=1);geometryDirty=true;Record("Plane",tab.ToString());
         }
         void RememberScroll(){if(detailScroll!=null)detailPositions[detailContext]=detailScroll.verticalNormalizedPosition;}
         void BuildDetails()

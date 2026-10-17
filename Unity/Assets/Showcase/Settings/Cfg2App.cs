@@ -29,6 +29,7 @@ namespace Showcase.Unity.Settings
         Text headerStatus,headerDimensions,hudDimensions,counts,statusText,clockNear,clockFar,matchStatus,resultText; ScrollRect detailScroll;
         RawImage previewImage; RenderTexture previewTexture;
         readonly List<Cfg2MiniView> minis=new List<Cfg2MiniView>(); Cfg2PlaneView planeView; Cfg2ProjectionView projectionView; RectTransform projectionRect;
+        RectTransform settingsHeading,navPanel,centerPanel,projectionControls,planeMiniHost,trialTools,displayToggles,settingsGizmo; Text settingsTitle; Button backButton;
         readonly List<RectTransform> helperPanels=new List<RectTransform>();
         readonly Dictionary<string,Button> actions=new Dictionary<string,Button>();
         readonly Dictionary<string,InputField> inputs=new Dictionary<string,InputField>();
@@ -210,7 +211,7 @@ namespace Showcase.Unity.Settings
             // every piece, candidate, selected cell and hit uses one real section.
             visuals.RefreshBoard(mainMenu?ps:Array.Empty<CfgVisualPiece>());
             visuals.RefreshBoardCandidates(Array.Empty<QN>(),null,false);
-            foreach(var panel in helperPanels)panel.gameObject.SetActive(showHelpers);
+            foreach(var panel in helperPanels)panel.gameObject.SetActive(showHelpers&&!(panel==settingsGizmo&&opened&&planeTab==1));
             RefreshAuxiliaryViews();
             geometryDirty=false;UpdateCounts();
         }
@@ -232,6 +233,8 @@ namespace Showcase.Unity.Settings
             if(startupFailed){if(Input.GetKeyDown(KeyCode.Escape))Application.Quit(2);return;}
             if(slice==null)return;
             if(previousWidth!=Screen.width||previousHeight!=Screen.height){previousWidth=Screen.width;previousHeight=Screen.height;layoutRevision++;ownership.Cancel();pointerButton=-1;RefreshAuxiliaryViews();}
+            // The canvas scaler sizes the canvas on its own schedule, so the spare width is re-read each frame (a no-op when unchanged).
+            if(opened)LayoutSettings();
             if(slice.IsAnimating){slice.Advance(Time.unscaledDeltaTime);geometryDirty=true;stableDirty=true;}
             UpdateMatch();if(geometryDirty)RenderGeometry();UpdateMagnifier();
             if(settingsDirty&&Time.unscaledTime>=saveDue)AutoSave();
