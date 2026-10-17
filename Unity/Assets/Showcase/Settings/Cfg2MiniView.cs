@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using NDShogi.Showcase.Core;
 using Showcase.Geometry;
 using Showcase.Geometry.Interaction;
 
@@ -19,6 +20,7 @@ namespace Showcase.Unity.Settings
         public ReferenceSection Reference=>reference;
         public long ViewRevision {get;private set;}
         public long CameraRevision {get;private set;}
+        public long PiecesRevision {get;private set;}
         public bool IsCoincident=>graphic!=null&&graphic.Relation!=null&&graphic.Relation.IsCoincident;
         public string FixedCoordinates {get;private set;}="";
         public HyperplaneRelation Relation=>graphic!=null?graphic.Relation:null;
@@ -30,7 +32,7 @@ namespace Showcase.Unity.Settings
         // The host panel's own frame survives (ClearOwned keepFrame): its owner colours it for the section shown.
         public void Initialize(Func<SliceAnimator> slice,InputOwnership input,ReferenceSection view,Action geometryChanged,Action<ReferenceSection> onRequested,Func<float> scale)
         {
-            CancelDrag();Cfg2Ui.ClearOwned(transform,keepFrame:true);handles.Clear();tips.Clear();
+            CancelDrag();Cfg2Ui.ClearOwned(transform,keepFrame:true);handles.Clear();tips.Clear();legend=null;
             currentSlice=slice;ownership=input;reference=view;requested=onRequested;
             // An axis label click selects the section that axis stands for, relative to the section the display is heading to.
             drag=new Cfg2AxisDragHandle(slice,ownership,scale,geometryChanged,axis=>requested(SliceAxes.SectionForAxis(slice().TargetSection,axis)));
@@ -62,16 +64,40 @@ namespace Showcase.Unity.Settings
                 surface.Down=e=>drag.Down(captured,e,AxisScreenDirection(captured));surface.Drag=drag.Drag;surface.Up=drag.Up;handles.Add(axis,handle);
             }
         }
-        public void Refresh(SliceFrame frame,Quaternion cameraRotation,long cameraRevision,double halfWindow=4.5,VecN? chartOrigin=null)
+        // pieces (world positions) are drawn as dots on the panel's own axes: each piece's coordinates on the three shown axes,
+        // whatever its hidden coordinates, so the panel shows where every piece lies in that axis space. Null draws no dots.
+        public void Refresh(SliceFrame frame,Quaternion cameraRotation,long cameraRevision,double halfWindow=4.5,VecN? chartOrigin=null,IReadOnlyList<(VecN world,Side side,bool selected)> pieces=null,long piecesRevision=0)
         {
-            ViewRevision=currentSlice().ViewRevision;CameraRevision=cameraRevision;graphic.CameraRotation=cameraRotation;
-            graphic.Relation=HyperplaneRelation.Build(frame,reference,4.5,ViewRevision,halfWindow,chartOrigin);graphic.SetVerticesDirty();
+            ViewRevision=currentSlice().ViewRevision;CameraRevision=cameraRevision;PiecesRevision=piecesRevision;graphic.CameraRotation=cameraRotation;
+            graphic.Relation=HyperplaneRelation.Build(frame,reference,4.5,ViewRevision,halfWindow,chartOrigin);
+            if(pieces==null)graphic.Dots=null;
+            else
+            {
+                // Only the shown axes matter, so the chart basis may sit anywhere along the hidden ones.
+                var basis=reference.In(frame.Dimensions).Frame(chartOrigin??frame.Center);var dots=new Cfg2PanelDot[pieces.Count];
+                for(int i=0;i<pieces.Count;i++)dots[i]=new Cfg2PanelDot(basis.Project(pieces[i].world),pieces[i].side,pieces[i].selected);
+                graphic.Dots=dots;
+            }
+            graphic.SetVerticesDirty();UpdateLegend(pieces!=null);
             // Every axis the panel holds fixed, with C's coordinate on it: W=0 in 4D, e.g. Z=0  V=0 for an XYW panel in 5D.
             FixedCoordinates=string.Join("  ",reference.Hidden.Select(axis=>SliceAxes.AxisName(SliceAxes.AxisOfCore(axis))+"="+SliceAxes.Coordinate(frame.Center,axis).ToString("0.##",System.Globalization.CultureInfo.InvariantCulture)));
             title.text=reference.Name+"   "+FixedCoordinates;title.color=IsCoincident?Cfg2Ui.Gold:new Color(.88f,.92f,.98f);
             if(DimWhenFlat&&fade==null)fade=gameObject.AddComponent<CanvasGroup>();
             foreach(var item in handles)
             {var tip=graphic.AxisEnd(item.Key);tips[item.Key]=tip;var center=graphic.Center;item.Value.anchoredPosition=new Vector2(center.x+tip.x-11.5f,-26+center.y+tip.y+11.5f);}
+        }
+        // A large panel (the magnifier) names the two dot colours along its bottom edge.
+        Text legend;
+        void UpdateLegend(bool dots)
+        {
+            var rect=((RectTransform)transform).rect;bool show=dots&&rect.width>=250&&rect.height>=250;
+            if(show&&legend==null)
+            {
+                string Hex(Color c)=>ColorUtility.ToHtmlStringRGB(c);
+                legend=CfgUi.Label(transform,"<color=#"+Hex(Cfg2PanelDot.SideA)+">●</color> 先手 A　<color=#"+Hex(Cfg2PanelDot.SideB)+">●</color> 後手 B",10,rect.height-24,rect.width-20,20,13,new Color(.85f,.89f,.95f));
+                legend.supportRichText=true;legend.raycastTarget=false;
+            }
+            if(legend!=null)legend.gameObject.SetActive(show);
         }
         public bool IsPointerOver(Vector2 screen)=>gameObject.activeInHierarchy&&RectTransformUtility.RectangleContainsScreenPoint((RectTransform)transform,screen,null);
         void Update()

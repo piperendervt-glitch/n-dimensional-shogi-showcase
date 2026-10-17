@@ -42,6 +42,14 @@ namespace Showcase.Unity.Settings
         const string CpuShowKey="cfg2.cpu-move-4d-turn",TurnResetKey="cfg2.cpu-game-turn-reset";
         bool CpuShowEnabled{get=>Pref(CpuShowKey);set=>SetPref(CpuShowKey,value);}
         bool TurnResetEnabled{get=>Pref(TurnResetKey);set=>SetPref(TurnResetKey,value);}
+        // The selected piece's name in the left column, and the pieces as dots on the magnified and the column's hyperplane panels.
+        const string PieceNameKey="cfg2.selected-piece-name",MagnifierDotsKey="cfg2.panel-dots-magnified",PanelDotsKey="cfg2.panel-dots-small";
+        bool PieceNameEnabled{get=>Pref(PieceNameKey);set=>SetPref(PieceNameKey,value);}
+        bool MagnifierDotsEnabled{get=>Pref(MagnifierDotsKey);set=>SetPref(MagnifierDotsKey,value);}
+        bool PanelDotsEnabled{get=>Pref(PanelDotsKey);set=>SetPref(PanelDotsKey,value);}
+        Text selectionText;
+        // The pieces handed to the panels with their last redraw; the magnifier redraws when they change.
+        List<(VecN world,Side side,bool selected)> panelPieces;long panelPiecesRevision;
         void CreateMatchHud()
         {
             matchHud=CfgUi.Rect(root,"Match view",0,0,1536,1024);
@@ -53,6 +61,7 @@ namespace Showcase.Unity.Settings
             // The hyperplane panels are built by StartMatch for the match's own space.
             CreateGizmo(matchHud,1310,70,"match-",200,175);matchGizmo=(RectTransform)gizmos[gizmos.Count-1].transform;
             matchStatus=CfgUi.Label(matchHud,"",30,248,330,100,17,Muted);
+            selectionText=CfgUi.Label(matchHud,"",30,244,330,62,22,Gold);selectionText.supportRichText=true;selectionText.raycastTarget=false;
             // Notices during play sit under the status in the left column, clear of the board and the right column.
             hudNotice=CfgUi.Label(matchHud,"",30,352,330,200,15,Gold);
             var guide=Cfg2Ui.Panel(matchHud,"Mouse guide",394,957,796,49,new Color(.02f,.03f,.045f,.78f));
@@ -192,8 +201,29 @@ namespace Showcase.Unity.Settings
                 var glass=Cfg2Ui.Frame(rect);var added=hovered.Reference.Shown.First(axis=>!slice.TargetSection.Shows(axis));
                 if(glass!=null){var color=Cfg2Projection.AxisColor(added);glass.color=new Color(color.r,color.g,color.b,.85f);glass.Glow=true;glass.SetVerticesDirty();}
             }
-            if(changed||magnifier.ViewRevision!=slice.ViewRevision||magnifier.CameraRevision!=cameraRevision)
-                magnifier.Refresh(slice.Frame,rig.Camera.transform.rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding);
+            if(changed||magnifier.ViewRevision!=slice.ViewRevision||magnifier.CameraRevision!=cameraRevision||magnifier.PiecesRevision!=panelPiecesRevision)
+                magnifier.Refresh(slice.Frame,rig.Camera.transform.rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding,MagnifierDotsEnabled?panelPieces:null,panelPiecesRevision);
+        }
+        // The match's pieces in display space (a gliding CPU piece where it is drawn now), for the panels' dots. Null outside a match.
+        List<(VecN world,Side side,bool selected)> PanelPieces()
+        {
+            if(session==null||opened)return null;var embedding=slice.DisplayState.Embedding;float t=GlideProgress,smooth=t*t*(3-2*t);
+            var list=new List<(VecN,Side,bool)>(session.State.Pieces.Count);
+            foreach(var piece in session.State.Pieces)
+            {
+                var cell=glide!=null&&piece.Id==glide.Id?glide.From+(glide.To-glide.From)*smooth:CfgPreviewRenderer.V(piece.Position);
+                list.Add((cell+embedding,piece.Side,piece.Id==selectedPiece));
+            }
+            return list;
+        }
+        // 「選択中：飛車（先手 A）」 in the piece's dot colour, its cell on the line below.
+        string SelectionText()
+        {
+            if(session==null||!PieceNameEnabled)return "";var piece=session.State.Find(selectedPiece);if(piece==null)return "";
+            string id=MatchConfig.DefinitionId(piece.Kind);string name=ShortNames.TryGetValue(id,out var shortName)?shortName:session.Snapshot.Config.Preset.Find(id)?.Name??piece.Kind.ToString();
+            var q=piece.Position.ToArray();int n=session.Config.Dimensions;
+            string cell=string.Join(" ",SliceAxes.Axes(n).Select(axis=>{int core=SliceAxes.CoreAxis(axis);return SliceAxes.AxisName(axis)+"="+(core<q.Length?q[core]:0);}));
+            return "選択中：<color=#"+ColorUtility.ToHtmlStringRGB(Cfg2PanelDot.Of(piece.Side))+">"+name+"</color>（"+(piece.Side==Side.A?"先手 A":"後手 B")+"）\n<size=14>"+cell+"</size>";
         }
         void HideMagnifier(){magnifiedSource=null;if(magnifier!=null&&magnifier.gameObject.activeSelf)magnifier.gameObject.SetActive(false);}
         void ReturnFromMatch()
@@ -357,6 +387,9 @@ namespace Showcase.Unity.Settings
             bool cvc=session.Snapshot.Mode==MatchMode.CvC;actions["pause"].gameObject.SetActive(cvc&&!session.IsFinished);actions["step"].gameObject.SetActive(cvc&&!session.IsFinished);
             if(pauseLabel==null)pauseLabel=actions["pause"].GetComponentInChildren<Text>();pauseLabel.text=session.IsPaused?"再開":"一時停止";actions["step"].interactable=session.Phase==MatchPhase.CvcPaused;
             actions["retry"].gameObject.SetActive(session.Phase==MatchPhase.ProcessingPaused);
+            selectionText.text=SelectionText();bool named=selectionText.text!="";
+            // The name takes the top of the left column; status and notices move down under it.
+            matchStatus.rectTransform.anchoredPosition=new Vector2(30,named?-310:-248);hudNotice.rectTransform.anchoredPosition=new Vector2(30,named?-414:-352);
             matchStatus.text=session.Phase==MatchPhase.ProcessingPaused?"処理を停止しています\n"+session.FaultReason:session.IsPaused?"一時停止中":session.PresentationPaused?(resetStage!=0?"手番交代：初期表示へ戻しています":"手番交代中"):cpuShowResult!=null?"CPU 着手："+cpuShowView.Name+(cpuShowTilted?" 超平面（斜め）":" 超平面"):session.CanCpuAct?"CPU 思考中":selectedPiece!=""&&result!=null?"着手候補 "+result.P.Count+"手":"";
             if(shownPly!=s.Ply)
             {

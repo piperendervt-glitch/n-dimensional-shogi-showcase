@@ -239,7 +239,10 @@ namespace Showcase.Unity.Settings
             // Panels are drawn around the start pivot P, so a move of C along any axis shows up as a shifted plane.
             // They belong to the match screen: hidden, they are neither rebuilt nor redrawn.
             if(matchHud!=null&&matchHud.gameObject.activeInHierarchy)
-            {EnsureMinis();foreach(var mini in minis)mini.Refresh(frame,rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding);}
+            {
+                EnsureMinis();panelPieces=PanelPieces();panelPiecesRevision++;var dots=PanelDotsEnabled?panelPieces:null;
+                foreach(var mini in minis)mini.Refresh(frame,rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding,dots,panelPiecesRevision);
+            }
             if(!opened)return;
             var ps=preview.Pieces.Select(p=>new CfgVisualPiece{Id=p.Id,DefinitionId=p.DefinitionId,Position=p.Position,Side=p.Side}).ToArray();
             var selected=preview.Find(selectedPiece)?.Position??planeReferenceCell;
@@ -301,7 +304,7 @@ namespace Showcase.Unity.Settings
                 string[] tabs={"基本設定","詳細設定","表示設定"};
                 for(int i=0;i<3;i++){int t=i;Button(detailHost,"detail-tab-"+i,tabs[i],12+i*119,59,115,42,()=>{RememberScroll();detailTab=t;BuildDetails();},i==detailTab);}
             }
-            detailScroll=CfgUi.Scroll(detailHost,"Details only scroll",10,category==2?114:64,360,category==2?760:810,out var c,category==5?1380:850);
+            detailScroll=CfgUi.Scroll(detailHost,"Details only scroll",10,category==2?114:64,360,category==2?760:810,out var c,category==5?1527:850);
             if(category==2)BuildPieceDetails(c);
             else if(category==0)
             {
@@ -361,7 +364,7 @@ namespace Showcase.Unity.Settings
                 CfgUi.Label(c,"強さの段階設定はありません。",8,782,330,40,17,Muted);
             }
             // The help text ends well inside its label, so the sound section fits above the fold.
-            else{BuildDisplay(c);BuildSound(c,560);BuildGraphics(c,820);}
+            else{BuildDisplay(c);BuildSound(c,707);BuildGraphics(c,967);}
             detailScroll.verticalNormalizedPosition=detailPositions.TryGetValue(detailContext,out var value)?value:1;
         }
         void Field(RectTransform c,string id,string label,string value,float y,Action<string> edited)
@@ -561,7 +564,10 @@ namespace Showcase.Unity.Settings
         {
             Toggle(c,"移動候補を表示",showCandidates,8,y,330,v=>showCandidates=v);Toggle(c,"攻撃範囲を表示",showAttacks,8,y+49,330,v=>showAttacks=v);Toggle(c,"座標グリッドを表示",showGrid,8,y+98,330,v=>showGrid=v);
             Toggle(c,"断面補助を表示",showHelpers,8,y+147,330,v=>showHelpers=v);
-            helpText=CfgUi.Label(c,HelpText(),8,y+220,330,440,17);
+            Toggle(c,"選択した駒の名前を表示",PieceNameEnabled,8,y+196,330,v=>{PieceNameEnabled=v;Record("Pref",PieceNameKey+"="+v);});
+            Toggle(c,"拡大した超平面図に駒の点を表示",MagnifierDotsEnabled,8,y+245,330,v=>{MagnifierDotsEnabled=v;Record("Pref",MagnifierDotsKey+"="+v);});
+            Toggle(c,"超平面図に駒の点を小さく表示",PanelDotsEnabled,8,y+294,330,v=>{PanelDotsEnabled=v;Record("Pref",PanelDotsKey+"="+v);});
+            helpText=CfgUi.Label(c,HelpText(),8,y+367,330,440,17);
         }
         Text helpText;
         // Ctrl+drag turns X and Y (Z with Shift) against the current rotation axis; a 3D board has nothing to turn against.

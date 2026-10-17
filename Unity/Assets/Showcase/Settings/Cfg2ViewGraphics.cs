@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using NDShogi.Showcase.Core;
 using Showcase.Geometry;
 using Showcase.Geometry.Interaction;
 
@@ -166,9 +167,20 @@ namespace Showcase.Unity.Settings
             }
         }
     }
+    // A piece placed in a panel's chart: its coordinates on the panel's three shown axes, relative to the chart origin.
+    internal readonly struct Cfg2PanelDot
+    {
+        public readonly Vec3 At;public readonly Side Side;public readonly bool Selected;
+        public Cfg2PanelDot(Vec3 at,Side side,bool selected){At=at;Side=side;Selected=selected;}
+        // 先手 A amber, 後手 B pink: apart from the axis colours and from the blue hyperplane.
+        public static readonly Color SideA=new Color(1,.70f,.28f),SideB=new Color(1,.42f,.70f);
+        public static Color Of(Side side)=>side==Side.A?SideA:SideB;
+    }
     internal sealed class Cfg2RelationGraphic : Graphic
     {
         internal HyperplaneRelation Relation;internal Quaternion CameraRotation;internal ReferenceSection Reference;internal double HalfExtent=4.5;
+        // Every piece projected onto the panel's axis space (the hidden coordinates dropped); null draws none.
+        internal IReadOnlyList<Cfg2PanelDot> Dots;
         public override Texture mainTexture=>Cfg2Glow.Texture;
         internal Vector2 Center=>new Vector2(rectTransform.rect.width*.5f,-rectTransform.rect.height*.5f);
         internal float ProjectionScale=>Mathf.Min(rectTransform.rect.width*.22f,rectTransform.rect.height*.30f);
@@ -206,6 +218,7 @@ namespace Showcase.Unity.Settings
                 var edges=Relation.Edges;for(int i=0;i+1<edges.Count;i+=2)Cfg2Glow.Neon(vh,P(v[edges[i]]),P(v[edges[i+1]]),new Color(Edge.r,Edge.g,Edge.b,volume?.70f:.95f),1.2f,9);
                 if(!volume)foreach(var corner in v)Cfg2Glow.Blob(vh,P(corner),5,new Color(.85f,.90f,1,.55f));
             }
+            if(Dots!=null&&Dots.Count>0)DrawDots(vh,P,h);
             visible.Sort((x,y)=>y.depth.CompareTo(x.depth));
             foreach(var entry in visible)Cfg2Glow.Arrow(vh,center,center+AxisEnd(entry.axis),Cfg2Projection.AxisColor(entry.axis),1.4f);
             Cfg2Glow.Blob(vh,center,4,new Color(.9f,.93f,1,.8f));
@@ -214,6 +227,25 @@ namespace Showcase.Unity.Settings
                 // C, the hyperplane centre, relative to the panel origin P.
                 var c=P(Relation.ChartCenter);if((c-center).sqrMagnitude>1)Cfg2Glow.Dashed(vh,center,c,Cfg2Glow.Alpha(Gold,.55f),1.8f,3,2);
                 Cfg2Glow.Blob(vh,c,10,Cfg2Glow.Alpha(Gold,.45f));Cfg2Glow.Blob(vh,c,3.2f,new Color(1,.96f,.85f,1));
+            }
+        }
+        // Back to front, so nearer pieces cover farther ones; pieces behind the chart centre fade a little.
+        // The selected piece is drawn last, larger and ringed in gold.
+        void DrawDots(VertexHelper vh,Func<Vec3,Vector2> P,double h)
+        {
+            float radius=Mathf.Clamp(ProjectionScale*.065f,1.4f,5);
+            var order=new List<(int index,float depth)>(Dots.Count);
+            for(int i=0;i<Dots.Count;i++)order.Add((i,Cfg2Projection.Depth(Dots[i].At/h,CameraRotation)));
+            order.Sort((x,y)=>y.depth.CompareTo(x.depth));
+            foreach(var (index,depth) in order)
+            {
+                var dot=Dots[index];if(dot.Selected)continue;var at=P(dot.At);var color=Cfg2PanelDot.Of(dot.Side);float fade=Mathf.Clamp(1-depth*.45f,.5f,1);
+                Cfg2Glow.Blob(vh,at,radius*3,Cfg2Glow.Alpha(color,.30f*fade));Cfg2Glow.Blob(vh,at,radius*1.6f,new Color(Mathf.Lerp(color.r,1,.25f),Mathf.Lerp(color.g,1,.25f),Mathf.Lerp(color.b,1,.25f),fade));
+            }
+            foreach(var dot in Dots)
+            {
+                if(!dot.Selected)continue;var at=P(dot.At);var color=Cfg2PanelDot.Of(dot.Side);
+                Cfg2Glow.Blob(vh,at,radius*5,Cfg2Glow.Alpha(Gold,.45f));Cfg2Glow.Circle(vh,at,radius*2.3f,Gold,1,3,20);Cfg2Glow.Blob(vh,at,radius*2.1f,new Color(1,.97f,.88f,1));Cfg2Glow.Blob(vh,at,radius*1.3f,color);
             }
         }
         // Unit lattice inside the convex intersection polygon, aligned to its first edge and passing through C.
