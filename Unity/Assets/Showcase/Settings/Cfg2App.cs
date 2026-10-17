@@ -188,6 +188,7 @@ namespace Showcase.Unity.Settings
             // which move C every frame without marking the slice as animating.
             if(stableDirty&&!slice.IsAnimating&&!PresentingMove&&ownership.Owner==InputOwner.None&&Time.unscaledTime>=saveDue+.5f)SaveStableView();
             bool typing=EventSystem.current?.currentSelectedGameObject?.GetComponent<InputField>()!=null;
+            UpdateMenuKeys(typing);
             if(!typing&&ownership.Owner==InputOwner.None&&Input.GetKeyDown(KeyCode.Home)&&IsPivotHomeSurface(Input.mousePosition))
             {
                 bool initial=Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift);

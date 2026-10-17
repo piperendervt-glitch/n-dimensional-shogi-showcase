@@ -2,8 +2,9 @@
 
     python tools/synth_audio.py
 
-Writes Unity/Assets/Showcase/Settings/Resources/Cfg2Audio/bgm.wav (a seamless calm loop)
-and piece.wav (a short soft wooden knock). The output is deterministic.
+Writes Unity/Assets/Showcase/Settings/Resources/Cfg2Audio/bgm.wav (a seamless calm loop),
+piece.wav (the click of a piece on a wooden board), menu-select.wav and
+menu-confirm.wav (soft UI sounds). The output is deterministic.
 """
 import os
 import wave
@@ -115,18 +116,41 @@ def bgm():
 
 
 def piece():
-    # A short muted wooden knock: damped body modes plus a tiny noise transient.
-    n = int(0.22 * RATE)
+    # A shogi piece set down on a kaya board: a bright, dry "pachi". The hard edge of the piece gives a
+    # short high click (2-6 kHz); the board answers with a brief mid-range body (~0.5-1.5 kHz).
+    n = int(0.18 * RATE)
     t = np.arange(n) / RATE
-    modes = [(190, 0.050, 0.9), (620, 0.030, 0.55), (1180, 0.018, 0.45), (2050, 0.010, 0.25), (3300, 0.006, 0.12)]
-    s = sum(a * np.sin(2 * np.pi * f * t) * np.exp(-t / d) for f, d, a in modes)
+    modes = [(480, 0.020, 0.25), (1050, 0.018, 0.45), (1730, 0.016, 0.75), (2480, 0.012, 0.9),
+             (3350, 0.008, 0.7), (4600, 0.005, 0.45), (6100, 0.003, 0.25)]
+    s = sum(a * np.sin(2 * np.pi * f * t + i) * np.exp(-t / d) for i, (f, d, a) in enumerate(modes))
     rng = np.random.default_rng(7)
-    noise = rng.standard_normal(n) * np.exp(-t / 0.0025) * 0.35
-    noise = np.convolve(noise, np.ones(6) / 6, mode="same")  # take the hiss off
+    noise = rng.standard_normal(n) * np.exp(-t / 0.0012) * 0.6
+    noise = np.convolve(noise, np.ones(2) / 2, mode="same")  # keep the crack, drop only the harshest hiss
     s = s + noise
-    s *= np.minimum(1, t / 0.0008)
+    s *= np.minimum(1, t / 0.0003)
     s[-200:] *= np.linspace(1, 0, 200)
     return s / np.max(np.abs(s)) * 0.7
+
+
+def menu_select():
+    # A very soft high tick for moving the menu cursor.
+    n = int(0.08 * RATE)
+    t = np.arange(n) / RATE
+    s = (np.sin(2 * np.pi * 1760 * t) + 0.25 * np.sin(2 * np.pi * 3520 * t)) * np.exp(-t / 0.014)
+    s *= np.minimum(1, t / 0.0015)
+    s[-100:] *= np.linspace(1, 0, 100)
+    return s / np.max(np.abs(s)) * 0.3
+
+
+def menu_confirm():
+    # A gentle wooden marimba-like "pon" (fundamental plus its 4th partial) for pressing a button.
+    n = int(0.30 * RATE)
+    t = np.arange(n) / RATE
+    f = note(81)
+    s = np.sin(2 * np.pi * f * t) * np.exp(-t / 0.075) + 0.3 * np.sin(2 * np.pi * 4 * f * t) * np.exp(-t / 0.02)
+    s *= np.minimum(1, t / 0.002)
+    s[-200:] *= np.linspace(1, 0, 200)
+    return s / np.max(np.abs(s)) * 0.4
 
 
 def main():
@@ -134,6 +158,8 @@ def main():
     loop = bgm()
     write_wav(os.path.join(OUT, "bgm.wav"), loop.reshape(-1), channels=2)
     write_wav(os.path.join(OUT, "piece.wav"), piece())
+    write_wav(os.path.join(OUT, "menu-select.wav"), menu_select())
+    write_wav(os.path.join(OUT, "menu-confirm.wav"), menu_confirm())
     print("bgm", len(loop) / RATE, "s; seam step", float(np.max(np.abs(loop[0] - loop[-1]))))
 
 
