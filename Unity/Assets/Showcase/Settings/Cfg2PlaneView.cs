@@ -150,7 +150,7 @@ namespace Showcase.Unity.Settings
         }
         int Distance(int h,int v)=>Math.Abs(h-center.Axis(horizontal))+Math.Abs(v-center.Axis(vertical));
     }
-    internal sealed class Cfg2PlaneGraphic : Graphic
+    internal sealed class Cfg2PlaneGraphic : MaskableGraphic
     {
         public Cfg2PlaneView View;
         public override Texture mainTexture=>Cfg2Glow.Texture;

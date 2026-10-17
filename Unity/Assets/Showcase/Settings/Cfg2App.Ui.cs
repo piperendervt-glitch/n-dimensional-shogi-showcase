@@ -121,8 +121,8 @@ namespace Showcase.Unity.Settings
             Place(navPanel,6-spare,100,196,694);Place(pieceHost,212-spare,100,186,888);Place(detailHost,1148+spare,100,380,888);
             headerStatus.rectTransform.anchoredPosition=new Vector2(16-spare,-807);Place(statusText.rectTransform,410-spare,995,1100+2*spare,25);
             float width=730+2*spare;Place(centerPanel,408-spare,100,width,888);
-            // Projection tab: the view takes what the controller (174 px, up to 330 when there is room) leaves.
-            float controls=Mathf.Clamp(174+spare*.5f,174,330);
+            // Projection tab: the view takes what the controller (230 px, up to 330 when there is room) leaves.
+            float controls=Mathf.Clamp(174+spare*.5f,230,330);
             Place(projectionRect,10,104,width-30-controls,774);Place(projectionControls,width-10-controls,104,controls,774);projectionView.Layout();
             // Section tabs: the plane diagrams fill the room right of the section in as many 174 px columns as fit.
             Place(planeMiniHost,546,104,width-556,584);LayoutPlaneMinis();

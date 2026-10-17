@@ -53,6 +53,8 @@ namespace Showcase.Unity.Settings
             controls=controller;ownership=input;uiScale=scale;record=recorder;
             Cfg2Ui.ClearOwned(transform,true);Cfg2Ui.ClearOwned(controls,true);
             axisLabels.Clear();rowLabels.Clear();columnLabels.Clear();axisButtons.Clear();stepButtons.Clear();listButtons.Clear();listSliders.Clear();listValues.Clear();listedPlanes.Clear();
+            // Rays near a hidden-axis camera project far outside the panel: everything in the view is clipped to it.
+            if(!TryGetComponent<RectMask2D>(out _))gameObject.AddComponent<RectMask2D>();
             var rect=CfgUi.Rect(transform,"Projected directions",0,0,1,1);CfgUi.Fill(rect);
             graphic=rect.gameObject.AddComponent<Cfg2ProjectionGraphic>();graphic.View=this;graphic.color=Color.white;graphic.raycastTarget=true;
             var surface=rect.gameObject.AddComponent<CfgPointerSurface>();surface.Down=OnViewDown;surface.Drag=OnDrag;surface.Up=OnUp;surface.Scroll=OnScroll;
@@ -71,7 +73,7 @@ namespace Showcase.Unity.Settings
             activeLabel=CfgUi.Label(controls,"",12,0,300,22,15,Cfg2Ui.Gold);
             angleSlider=Cfg2Ui.Slider(controls,12,0,100,-180,180,0,v=>{if(syncing)return;SetAngle(active,v);UpdateTexts();graphic.SetVerticesDirty();},()=>record?.Invoke("ProjectionTurn","slider "+CellName(active)));
             foreach(var step in new[]{-15,0,15}){int s=step;stepButtons.Add(Cfg2Ui.Button(controls,s==0?"0°":(s>0?"+":"−")+Math.Abs(s)+"°",0,0,50,26,()=>{if(s==0)SetAngle(active,0);else AddAngle(active.a,active.b,s);record?.Invoke("ProjectionTurn","step "+CellName(active)+" "+s);UpdateTexts();graphic.SetVerticesDirty();}));}
-            listTitle=CfgUi.Label(controls,"③ 回っている面（クリックで選び直し）",12,0,320,18,13);
+            listTitle=CfgUi.Label(controls,"③ 回した面（名前を押すと選び直し）",12,0,320,18,13);
             listHost=CfgUi.Rect(controls,"Turned planes",12,0,100,10);listMore=CfgUi.Label(controls,"",12,0,300,18,11,new Color(.62f,.68f,.76f));
             zoomTitle=CfgUi.Label(controls,"④ ズーム",12,0,120,18,13);zoomLabel=CfgUi.Label(controls,"",0,0,80,18,13,Cfg2Ui.Gold);zoomLabel.alignment=TextAnchor.MiddleRight;
             zoomSlider=Cfg2Ui.Slider(controls,12,0,100,MinZoom,MaxZoom,1,v=>{if(syncing)return;zoom=v;UpdateTexts();graphic.SetVerticesDirty();},()=>record?.Invoke("ProjectionZoom",zoom.ToString("0.00",CultureInfo.InvariantCulture)));
@@ -156,11 +158,12 @@ namespace Showcase.Unity.Settings
         {
             var p=new double[dimensions];for(int i=0;i<dimensions;i++){double v=0;for(int j=0;j<dimensions;j++)v+=rotation[i,j]*point[j];p[i]=v;}
             double d=0;
-            for(int a=dimensions-1;a>=3;a--){double s=HiddenCamera/Math.Max(.5,HiddenCamera-p[a]);d+=p[a]/HiddenCamera;for(int i=0;i<a;i++)p[i]*=s;}
+            // The divisor is kept at 2 or more so a point almost at a hidden camera grows at most eightfold per axis.
+            for(int a=dimensions-1;a>=3;a--){double s=HiddenCamera/Math.Max(2,HiddenCamera-p[a]);d+=p[a]/HiddenCamera;for(int i=0;i<a;i++)p[i]*=s;}
             double x=p[0],y=dimensions>1?p[1]:0,z=dimensions>2?p[2]:0;
             double cy=Math.Cos(yaw*Math.PI/180),sy=Math.Sin(yaw*Math.PI/180),cp=Math.Cos(pitch*Math.PI/180),sp=Math.Sin(pitch*Math.PI/180);
             double x1=x*cy-z*sy,z1=x*sy+z*cy,y2=y*cp-z1*sp,z2=y*sp+z1*cp;
-            double s3=Camera3/Math.Max(.5,Camera3-z2);depth=(float)d;
+            double s3=Camera3/Math.Max(2,Camera3-z2);depth=(float)d;
             return new Vector3((float)(x1*s3),(float)(y2*s3),(float)z2);
         }
         internal float Scale=>Mathf.Min(graphic.rectTransform.rect.width,graphic.rectTransform.rect.height)/17f*zoom;
@@ -182,7 +185,7 @@ namespace Showcase.Unity.Settings
         internal bool AnyChoice=>selected.Count>0||axisSelected.Count>0||hovered.HasValue;
         internal (int a,int b)? Dragging=>dragging;
         // ---- table geometry (inside tableRect; cell (row,column) with row<=column) ----
-        internal float CellSize{get{float room=controls==null?100:controls.rect.width-52;return Mathf.Clamp(Mathf.Floor(room/Math.Max(1,dimensions)),10,30);}}
+        internal float CellSize{get{float room=controls==null?100:controls.rect.width-52;return Mathf.Clamp(Mathf.Floor(room/Math.Max(1,dimensions)),10,40);}}
         internal Rect CellRect(int row,int column){float cs=CellSize;return new Rect(column*cs,-row*cs-cs,cs,cs);}
         bool TryCell(Vector2 local,out (int a,int b) cell)
         {
@@ -287,24 +290,39 @@ namespace Showcase.Unity.Settings
                 rowLabels[i].rectTransform.anchoredPosition=new Vector2(10,-(y+i*cs));rowLabels[i].rectTransform.sizeDelta=new Vector2(22,cs);
                 columnLabels[i].rectTransform.anchoredPosition=new Vector2(34+i*cs,-(y+n*cs));columnLabels[i].rectTransform.sizeDelta=new Vector2(cs,16);
             }
-            y+=n*cs+20;tableHint.rectTransform.anchoredPosition=new Vector2(12,-y);tableHint.rectTransform.sizeDelta=new Vector2(cw-24,32);y+=40;
+            y+=n*cs+20;float hintHeight=cw<260?48:32;tableHint.rectTransform.anchoredPosition=new Vector2(12,-y);tableHint.rectTransform.sizeDelta=new Vector2(cw-24,hintHeight);y+=hintHeight+8;
             turnTitle.rectTransform.anchoredPosition=new Vector2(12,-y);y+=20;activeLabel.rectTransform.anchoredPosition=new Vector2(12,-y);activeLabel.rectTransform.sizeDelta=new Vector2(cw-24,22);y+=26;
             var slider=(RectTransform)angleSlider.transform;slider.anchoredPosition=new Vector2(12,-y);slider.sizeDelta=new Vector2(cw-24,24);ResizeSlider(angleSlider,cw-24);y+=32;
             float sw=(cw-24-8)/3;for(int i=0;i<stepButtons.Count;i++){var r=(RectTransform)stepButtons[i].transform;r.anchoredPosition=new Vector2(12+i*(sw+4),-y);r.sizeDelta=new Vector2(sw,26);}y+=40;
             listTitle.rectTransform.anchoredPosition=new Vector2(12,-y);listTitle.rectTransform.sizeDelta=new Vector2(cw-24,18);y+=22;
-            listHost.anchoredPosition=new Vector2(12,-y);listHost.sizeDelta=new Vector2(cw-24,Math.Max(10,listedPlanes.Count*30));
+            // Rows only as far as the zoom section (58) and the buttons (50) leave room; the rest is named in listMore.
+            // Narrow panels stack the two buttons; rows only as far as the zoom section (58) and the buttons leave room.
+            bool stacked=cw<260;float buttons=stacked?2*30+6:30;const float RowPitch=32;float nameWidth=stacked?46:54;
+            listCapacity=Mathf.Clamp(Mathf.FloorToInt((ch-y-20-58-buttons-20)/RowPitch),0,8);int rows=Math.Min(listedPlanes.Count,listCapacity);
+            listHost.anchoredPosition=new Vector2(12,-y);listHost.sizeDelta=new Vector2(cw-24,Math.Max(10,rows*RowPitch));
             for(int i=0;i<listedPlanes.Count;i++)
             {
-                var r=(RectTransform)listButtons[i].transform;r.anchoredPosition=new Vector2(0,-i*30);r.sizeDelta=new Vector2(54,26);
-                var s=(RectTransform)listSliders[i].transform;s.anchoredPosition=new Vector2(60,-(i*30+1));s.sizeDelta=new Vector2(cw-24-60-42,24);ResizeSlider(listSliders[i],cw-24-60-42);
-                listValues[i].rectTransform.anchoredPosition=new Vector2(cw-24-40,-(i*30+3));listValues[i].rectTransform.sizeDelta=new Vector2(40,20);
+                bool shown=i<rows;listButtons[i].gameObject.SetActive(shown);listSliders[i].gameObject.SetActive(shown);listValues[i].gameObject.SetActive(shown);
+                var r=(RectTransform)listButtons[i].transform;r.anchoredPosition=new Vector2(0,-i*RowPitch);r.sizeDelta=new Vector2(nameWidth,26);
+                float sliderWidth=cw-24-nameWidth-6-40;
+                var s=(RectTransform)listSliders[i].transform;s.anchoredPosition=new Vector2(nameWidth+6,-(i*RowPitch+1));s.sizeDelta=new Vector2(sliderWidth,24);ResizeSlider(listSliders[i],sliderWidth);
+                listValues[i].rectTransform.anchoredPosition=new Vector2(cw-24-38,-(i*RowPitch+3));listValues[i].rectTransform.sizeDelta=new Vector2(38,20);
             }
-            y+=listedPlanes.Count*30;listMore.rectTransform.anchoredPosition=new Vector2(12,-y);if(listMore.text!="")y+=20;y+=12;
+            y+=rows*RowPitch;listMore.rectTransform.anchoredPosition=new Vector2(12,-y);if(listMore.text!="")y+=20;y+=12;
             zoomTitle.rectTransform.anchoredPosition=new Vector2(12,-y);zoomLabel.rectTransform.anchoredPosition=new Vector2(cw-12-80,-y);y+=22;
             var zs=(RectTransform)zoomSlider.transform;zs.anchoredPosition=new Vector2(12,-y);zs.sizeDelta=new Vector2(cw-24,24);ResizeSlider(zoomSlider,cw-24);
-            float by=Math.Max(y+40,ch-42);float hw=(cw-24-6)/2;
-            ((RectTransform)resetButton.transform).anchoredPosition=new Vector2(12,-by);((RectTransform)resetButton.transform).sizeDelta=new Vector2(hw,30);
-            ((RectTransform)clearButton.transform).anchoredPosition=new Vector2(12+hw+6,-by);((RectTransform)clearButton.transform).sizeDelta=new Vector2(hw,30);
+            float by=Math.Max(y+40,ch-12-buttons);
+            if(stacked)
+            {
+                ((RectTransform)resetButton.transform).anchoredPosition=new Vector2(12,-by);((RectTransform)resetButton.transform).sizeDelta=new Vector2(cw-24,30);
+                ((RectTransform)clearButton.transform).anchoredPosition=new Vector2(12,-(by+36));((RectTransform)clearButton.transform).sizeDelta=new Vector2(cw-24,30);
+            }
+            else
+            {
+                float hw=(cw-24-6)/2;
+                ((RectTransform)resetButton.transform).anchoredPosition=new Vector2(12,-by);((RectTransform)resetButton.transform).sizeDelta=new Vector2(hw,30);
+                ((RectTransform)clearButton.transform).anchoredPosition=new Vector2(12+hw+6,-by);((RectTransform)clearButton.transform).sizeDelta=new Vector2(hw,30);
+            }
             LayoutLabels();graphic.SetVerticesDirty();tableGraphic.SetVerticesDirty();
         }
         // Cfg2Ui.Slider lays its parts out for one width; a resize moves the track, fill area and handle area with it.
@@ -325,13 +343,13 @@ namespace Showcase.Unity.Settings
         }
         // The list shows every plane that has been turned, the active one framed. A row stays once added (a slider being
         // dragged through 0° must not vanish under the pointer); the list empties only on a reset or a change of N.
-        bool listReset;
+        bool listReset;int listCapacity=8;
         void RefreshList()
         {
             var planes=listReset?new List<(int a,int b)>():listedPlanes.Where(p=>p.b<dimensions).ToList();listReset=false;
             foreach(var kv in angles)if(Math.Abs(kv.Value)>=.5&&!planes.Contains(kv.Key))planes.Add(kv.Key);
             if(!planes.Contains(active)&&angles.ContainsKey(active))planes.Add(active);
-            int shown=Math.Min(planes.Count,8);
+            int shown=Math.Min(planes.Count,Math.Max(listCapacity,1));
             if(!planes.Take(shown).SequenceEqual(listedPlanes))
             {
                 foreach(var b in listButtons)Destroy(b.gameObject);foreach(var s in listSliders)Destroy(s.gameObject);foreach(var t in listValues)Destroy(t.gameObject);
@@ -373,7 +391,7 @@ namespace Showcase.Unity.Settings
         }
         static void MarkSelected(Button b,bool selected){b.GetComponent<Image>().color=selected?new Color(.47f,.36f,.12f,.95f):new Color(.05f,.07f,.1f,.95f);Cfg2Ui.SelectedFrame(b.transform,selected);}
     }
-    internal sealed class Cfg2ProjectionGraphic : Graphic
+    internal sealed class Cfg2ProjectionGraphic : MaskableGraphic
     {
         public Cfg2ProjectionView View;
         public override Texture mainTexture=>Cfg2Glow.Texture;
@@ -447,7 +465,7 @@ namespace Showcase.Unity.Settings
         }
     }
     // Rotation-plane table in the controller: upper triangle incl. the diagonal; the diagonal cell means "directions using this axis".
-    internal sealed class Cfg2ProjectionTableGraphic : Graphic
+    internal sealed class Cfg2ProjectionTableGraphic : MaskableGraphic
     {
         public Cfg2ProjectionView View;
         public override Texture mainTexture=>Cfg2Glow.Texture;
