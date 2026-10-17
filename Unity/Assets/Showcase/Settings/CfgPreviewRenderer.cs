@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering;
 using NDShogi.Showcase.Core;
@@ -17,6 +19,9 @@ namespace Showcase.Unity.Settings
     internal sealed class CfgPreviewRenderer : IDisposable
     {
         public static readonly Vector3 AirAnchor=new Vector3(0,1.1f,0);
+        // Same worker count as the showcase controller's section pass.
+        static readonly ParallelOptions sectionWorkers=new ParallelOptions{MaxDegreeOfParallelism=Math.Max(1,Math.Min(8,System.Environment.ProcessorCount-2))};
+        readonly List<QN> candidates=new List<QN>();
         readonly EnvironmentRig rig;
         // One unit cell per N; the 4D cell is the original one.
         readonly Dictionary<int,ConvexShape> cellShapes=new Dictionary<int,ConvexShape>();
@@ -154,18 +159,25 @@ namespace Showcase.Unity.Settings
                     }
                     return;
                 }
-                var q=new QN(coordinates);
-                var section=FiniteSliceWindow.Build(new InstanceN(cell,V(q)+embedding,1,q.ToString()),frame,half);
-                if(section.Status==SectionStatus.NumericallyUncertain||section.Status==SectionStatus.CapacityExceeded){Diagnostic=section.Status.ToString();return;}
-                if(section.Status!=SectionStatus.Volume3D)return;
+                candidates.Add(new QN(coordinates));
+            }
+            candidates.Clear();Visit(0);
+            // Each cell's section is independent pure C#, so the cells are cut on worker threads and then
+            // consumed below in enumeration order: the meshes are the same as cutting them one by one.
+            var built=new SectionResult[candidates.Count];var cellShape=cell;var origin=embedding;
+            Parallel(built.Length,i=>built[i]=FiniteSliceWindow.Build(new InstanceN(cellShape,V(candidates[i])+origin,1,candidates[i].ToString()),frame,half));
+            for(int i=0;i<built.Length;i++)
+            {
+                var q=candidates[i];var section=built[i];
+                if(section.Status==SectionStatus.NumericallyUncertain||section.Status==SectionStatus.CapacityExceeded){Diagnostic=section.Status.ToString();continue;}
+                if(section.Status!=SectionStatus.Volume3D)continue;
                 cells.Add(new CellMesh{Id=q,Section=section});if(gs.Contains(q))VisibleG++;if(ps.Contains(q))VisibleP++;if(attacked.Contains(q))VisibleAttacks++;
-                bool highlighted=Candidates&&(gs.Contains(q)||ps.Contains(q));bool attack=Attacks&&attacked.Contains(q);if(!Grid&&!highlighted&&!attack&&(!selected.HasValue||selected.Value!=q))return;
+                bool highlighted=Candidates&&(gs.Contains(q)||ps.Contains(q));bool attack=Attacks&&attacked.Contains(q);if(!Grid&&!highlighted&&!attack&&(!selected.HasValue||selected.Value!=q))continue;
                 bool isSelected=selected.HasValue&&selected.Value==q;
                 var color=isSelected?new Color(1,.76f,.26f,.95f):attack?new Color(1,.28f,.23f,.84f):highlighted?(ps.Contains(q)?new Color(.32f,.58f,1,.78f):Fill?new Color(.44f,.63f,.87f,.40f):new Color(.68f,.42f,.8f,.55f)):new Color(.65f,.76f,.83f,Fill?.065f:.16f);
                 AddEdges(section,color,isSelected?4:attack?3:highlighted?(ps.Contains(q)?2:1):0);
                 if(Fill&&(isSelected||highlighted||attack))AddFaces(section,new Color(color.r,color.g,color.b,isSelected?.12f:attack?.055f:ps.Contains(q)?.045f:.015f));
             }
-            Visit(0);
             foreach(var edge in displayEdges.Values)
             {
                 indices.Add(lines.Count);lines.Add(SectionView.MapVector(edge.A)*displayCell);colors.Add(edge.Color);
@@ -175,7 +187,9 @@ namespace Showcase.Unity.Settings
             fillMesh.Clear();fillMesh.SetVertices(fillVertices);fillMesh.SetColors(fillColors);fillMesh.SetIndices(fillIndices,MeshTopology.Triangles,0);fillMesh.RecalculateBounds();
             var live=new HashSet<string>();
             if(pieceDimensions!=n){foreach(var stale in pieces.Values)stale.Dispose();pieces.Clear();pieceDimensions=n;}
-            foreach(var item in source)
+            // Pieces follow the showcase controller's pattern: prepare and apply on the main thread, cut on workers.
+            var items=source.ToList();var jobs=new List<(SectionView view,VecN q,int forward)>();
+            foreach(var item in items)
             {
                 live.Add(item.Id);pieceCells[item.Id]=item.Position;if(!pieces.TryGetValue(item.Id,out var view))
                 {
@@ -185,13 +199,27 @@ namespace Showcase.Unity.Settings
                 view.Object.transform.position=Anchor;
                 view.Object.transform.localScale=Vector3.one*(displayCell/SectionView.Cell);
                 view.Renderer.sharedMaterials=new[]{rig.Materials.BrightWood,labels[TextureFor(item.DefinitionId,item.Side,StrictDefinitions)]};
-                view.UpdateSection((item.Glide??V(item.Position))+embedding,item.Side==Side.A?1:-1,frame,revision,half);
-                var section=view.Last;
-                view.Renderer.enabled=ShowPieces&&section.Status==SectionStatus.Volume3D;
+                var q=(item.Glide??V(item.Position))+embedding;int forward=item.Side==Side.A?1:-1;
+                if(view.PrepareSection(q,forward,frame,revision,half))jobs.Add((view,q,forward));
+            }
+            var cut=new SectionResult[jobs.Count];
+            Parallel(cut.Length,i=>cut[i]=jobs[i].view.ComputeSection(jobs[i].q,jobs[i].forward,frame,half));
+            for(int i=0;i<jobs.Count;i++)jobs[i].view.ApplySection(cut[i]);
+            foreach(var item in items)
+            {
+                var section=pieces[item.Id].Last;
+                pieces[item.Id].Renderer.enabled=ShowPieces&&section.Status==SectionStatus.Volume3D;
                 if(ShowPieces&&section.Status==SectionStatus.Volume3D)VisiblePieces++;
             }
             foreach(var id in pieces.Keys.Where(id=>!live.Contains(id)).ToArray()){pieces[id].Dispose();pieces.Remove(id);}
             LastBuildMilliseconds=watch.Elapsed.TotalMilliseconds;
+        }
+        // Runs body(0..count-1) on the section workers; a failure surfaces as the original exception, as in the serial loop.
+        static void Parallel(int count,Action<int> body)
+        {
+            if(count<=3){for(int i=0;i<count;i++)body(i);return;}
+            try{System.Threading.Tasks.Parallel.For(0,count,sectionWorkers,body);}
+            catch(AggregateException e)when(e.InnerExceptions.Count>0){ExceptionDispatchInfo.Capture(e.InnerExceptions[0]).Throw();throw;}
         }
         // CFG1's read-only unsupported-definition visual placeholder is retained.
         // The new match entry enables strict mapping and never aliases an unknown kind.

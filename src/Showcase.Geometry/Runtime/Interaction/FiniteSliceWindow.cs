@@ -7,19 +7,29 @@ namespace Showcase.Geometry.Interaction
         public const double DefaultHalfExtent=2.5;
         public static InstanceN ClipInstance(InstanceN source,SliceFrame frame,double halfExtent=DefaultHalfExtent)
         {
+            var planes=new List<HalfspaceN>();WindowPlanes(planes,source,frame,halfExtent);
+            var shape=new ConvexShape(source.Shape.Id+"/finite-window",planes,source.Shape.Bounds);
+            return new InstanceN(shape,source.Position,source.Forward,source.Id);
+        }
+        // The source's constraints followed by the six window planes, as ClipInstance's shape holds them.
+        static void WindowPlanes(List<HalfspaceN> planes,InstanceN source,SliceFrame frame,double halfExtent)
+        {
             if(!frame.IsOrthonormal()||halfExtent<=0||double.IsNaN(halfExtent)||double.IsInfinity(halfExtent))throw new ArgumentException("A finite orthonormal frame and positive finite half extent are required.");
-            var planes=new List<HalfspaceN>(source.Shape.Planes);int id=1000000;
+            planes.AddRange(source.Shape.Planes);int id=1000000;
             foreach(var p in planes)if(p.FaceId>=id)id=checked(p.FaceId+1);
             foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ})foreach(int sign in new[]{-1,1})
             {
                 var world=axis*sign;var local=source.WorldToLocalDirection(world);
                 planes.Add(new HalfspaceN(local,halfExtent+VecN.Dot(world,frame.Center-source.Position),id++,SurfaceKind.Side));
             }
-            var shape=new ConvexShape(source.Shape.Id+"/finite-window",planes,source.Shape.Bounds);
-            return new InstanceN(shape,source.Position,source.Forward,source.Id);
         }
+        [ThreadStatic] static List<HalfspaceN>? windowPlanes;
+        // Same cut as SectionBuilder.Build(ClipInstance(...)), without building a ConvexShape per call.
         public static SectionResult Build(InstanceN source,SliceFrame frame,double halfExtent=DefaultHalfExtent)
-            =>SectionBuilder.Build(ClipInstance(source,frame,halfExtent),frame);
+        {
+            var planes=windowPlanes??=new List<HalfspaceN>();planes.Clear();WindowPlanes(planes,source,frame,halfExtent);
+            return SectionBuilder.Build(source,planes,frame,null);
+        }
     }
     public sealed class HyperplaneRelation
     {
