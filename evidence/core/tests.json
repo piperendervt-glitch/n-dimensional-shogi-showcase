@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "passed": 37,
+  "passed": 40,
   "failed": 0,
   "tests": [
     {
@@ -149,6 +149,18 @@
     },
     {
       "name": "q4-text-is-culture-invariant",
+      "status": "PASS"
+    },
+    {
+      "name": "qn-text-is-the-invariant-integer-form-in-any-culture",
+      "status": "PASS"
+    },
+    {
+      "name": "position3-observation-and-B-cpu-text-are-culture-invariant",
+      "status": "PASS"
+    },
+    {
+      "name": "four-dimensional-core-rejects-targets-on-a-fifth-axis",
       "status": "PASS"
     }
   ]
