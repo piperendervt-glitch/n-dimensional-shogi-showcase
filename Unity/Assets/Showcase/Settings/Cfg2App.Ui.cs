@@ -250,7 +250,7 @@ namespace Showcase.Unity.Settings
         {
             var r=Cfg2Ui.Panel(parent,"Hyperplane "+view.Name,x,y,w,h,new Color(.03f,.05f,.10f,.38f),true);
             helperPanels.Add(r);
-            var mini=r.gameObject.AddComponent<Cfg2MiniView>();mini.Initialize(()=>slice,ownership,view,()=>{geometryDirty=true;stableDirty=true;},v=>{slice.Request(v);geometryDirty=true;},()=>canvas.scaleFactor);minis.Add(mini);
+            var mini=r.gameObject.AddComponent<Cfg2MiniView>();mini.Initialize(()=>slice,ownership,view,()=>{geometryDirty=true;stableDirty=true;},v=>{slice.Request(v);geometryDirty=true;},()=>canvas.scaleFactor);mini.PinRequested=()=>PinMagnifier(mini);minis.Add(mini);
             PanelFrame(r,border);
         }
         // A null border is the plain glass of the 4D panels; a swap panel in higher N carries the colour of the axis it brings in.

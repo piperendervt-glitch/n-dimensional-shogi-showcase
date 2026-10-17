@@ -29,7 +29,14 @@ namespace Showcase.Unity.Settings
         // The right column of hyperplane panels, shared by the panels and the magnifier left of them.
         const float MinisTop=254,MinisBottom=866,MinisLeftLimit=1290,MinisColumnWidth=300,MagnifierSize=300;
         static float MinisLeft(float right)=>Mathf.Min(MinisLeftLimit,right-MinisColumnWidth);
-        readonly List<RectTransform> minisLabels=new List<RectTransform>();readonly List<Cfg2MiniView> smallMinis=new List<Cfg2MiniView>();
+        readonly List<RectTransform> minisLabels=new List<RectTransform>();readonly List<Cfg2MiniView> magnifiable=new List<Cfg2MiniView>();
+        // Panels narrower than this show the magnifier when hovered (the 4D panels, the Ctrl-axis group and the small grid).
+        const float MagnifiableWidth=250;
+        // A right click pins the magnifier: it stays when the pointer leaves, until another right click. Unpinned it stays while the
+        // pointer is on its panel or on the magnifier itself, and a moment longer so the pointer can cross the gap between them.
+        bool magnifierPinned;float magnifierHoverTime;Text magnifierPinLabel;const float MagnifierGraceSeconds=.35f;
+        // A clicked magnifier dot glides C to where that piece is on the board, the orientation unchanged.
+        VecN sectionGlideFrom,sectionGlideTo;float sectionGlideStart=-1;const float SectionGlideSeconds=.4f;
         // In CPU games every hand-over returns the 4D view to the initial state (C=P, no rotation).
         int resetStage;float resetStart,resetSeconds;VecN resetFrom;Vec3 resetAnchor;
         // A committed CPU move glides its piece from origin to destination; a captured piece stays until it is reached.
@@ -148,7 +155,8 @@ namespace Showcase.Unity.Settings
                     }
                 }
             }
-            minisDimensions=n;minisSection=current;minisActive=RotationCoreAxis;minisRight=right;HideMagnifier();
+            // A pinned magnifier outlives a rebuild of the column within the same space.
+            HideMagnifier(n!=minisDimensions);minisDimensions=n;minisSection=current;minisActive=RotationCoreAxis;minisRight=right;
             minisBorders.Clear();minisBorders.AddRange(panels.Select(p=>p.border));
             if(matchGizmo!=null)matchGizmo.anchoredPosition=gizmo;
             bool Same(RectTransform r,float x,float y,float w,float h)=>r!=null&&r.anchoredPosition==new Vector2(x,-y)&&r.sizeDelta==new Vector2(w,h);
@@ -167,11 +175,11 @@ namespace Showcase.Unity.Settings
                 Record("MinisRetargeted",current.Name);return;
             }
             foreach(var mini in minis){CfgUi.ReleaseSelection(mini.transform);helperPanels.Remove((RectTransform)mini.transform);Destroy(mini.gameObject);}minis.Clear();
-            foreach(var label in minisLabels){helperPanels.Remove(label);Destroy(label.gameObject);}minisLabels.Clear();smallMinis.Clear();
+            foreach(var label in minisLabels){helperPanels.Remove(label);Destroy(label.gameObject);}minisLabels.Clear();magnifiable.Clear();
             foreach(var p in panels)
             {
-                CreateMini(matchHud,p.x,p.y,p.w,p.h,p.view,p.border);
-                if(p.small){var small=minis[minis.Count-1];small.DimWhenFlat=true;smallMinis.Add(small);}
+                CreateMini(matchHud,p.x,p.y,p.w,p.h,p.view,p.border);var mini=minis[minis.Count-1];
+                if(p.small)mini.DimWhenFlat=true;if(p.w<MagnifiableWidth)magnifiable.Add(mini);
             }
             foreach(var l in labels)MinisLabel(l.text,l.x,l.y,l.w,l.color);
         }
@@ -193,33 +201,83 @@ namespace Showcase.Unity.Settings
             if(minis.Count>0&&minisDimensions==n&&(n==4||minisSection==LayoutSection&&minisActive==RotationCoreAxis&&Mathf.Abs(minisRight-MinisRight())<.5f))return;
             RebuildMinis();
         }
-        // One magnified copy of the small panel under the pointer, drawn left of the column; it never takes input.
+        // One magnified copy of the hovered (or pinned) panel, drawn left of the column. Its axes drag C like the panel's own,
+        // its title turns the board to its section, and a click on a dot moves C to that piece.
         void UpdateMagnifier()
         {
-            if(session==null||!showHelpers||smallMinis.Count==0||ownership.Owner!=InputOwner.None||!matchHud.gameObject.activeInHierarchy){HideMagnifier();return;}
-            var hovered=smallMinis.FirstOrDefault(m=>m.IsPointerOver(Input.mousePosition));
-            if(hovered==null){HideMagnifier();return;}
-            const float size=MagnifierSize;var source=(RectTransform)hovered.transform;
+            if(session==null||!showHelpers||minis.Count==0||!matchHud.gameObject.activeInHierarchy){HideMagnifier(true);return;}
+            bool shown=magnifier!=null&&magnifier.gameObject.activeSelf;
+            if(!magnifierPinned&&!(shown&&magnifier.Dragging))
+            {
+                if(ownership.Owner!=InputOwner.None){HideMagnifier();return;}
+                Vector2 pointer=Input.mousePosition;var hovered=magnifiable.FirstOrDefault(m=>m.IsPointerOver(pointer));
+                if(hovered!=null){magnifierHoverTime=Time.unscaledTime;ShowMagnifier(hovered);}
+                else if(shown&&magnifier.IsPointerOver(pointer))magnifierHoverTime=Time.unscaledTime;
+                else if(!shown||Time.unscaledTime-magnifierHoverTime>MagnifierGraceSeconds){HideMagnifier();return;}
+            }
+            if(magnifier==null||!magnifier.gameObject.activeSelf)return;
+            if(magnifier.ViewRevision!=slice.ViewRevision||magnifier.CameraRevision!=cameraRevision||magnifier.PiecesRevision!=panelPiecesRevision)
+                magnifier.Refresh(slice.Frame,rig.Camera.transform.rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding,MagnifierDotsEnabled?panelPieces:null,panelPiecesRevision);
+        }
+        // Builds the magnifier for a panel, unless it already shows that panel; the next UpdateMagnifier draws it.
+        void ShowMagnifier(Cfg2MiniView panel)
+        {
+            const float size=MagnifierSize;var source=(RectTransform)panel.transform;
             if(magnifier==null)
             {
-                var r=Cfg2Ui.Panel(matchHud,"Hyperplane magnifier",0,0,size,size,new Color(.03f,.05f,.10f,.82f));
-                var group=r.gameObject.AddComponent<CanvasGroup>();group.blocksRaycasts=false;group.interactable=false;
-                magnifier=r.gameObject.AddComponent<Cfg2MiniView>();
+                var r=Cfg2Ui.Panel(matchHud,"Hyperplane magnifier",0,0,size,size,new Color(.03f,.05f,.10f,.82f),true);
+                magnifier=r.gameObject.AddComponent<Cfg2MiniView>();magnifier.DotClicked=BringPieceIntoSection;magnifier.PinRequested=()=>PinMagnifier(magnifier);
             }
             var rect=(RectTransform)magnifier.transform;
-            // Built when the hovered panel changes and redrawn only when the view or the camera moves, not every frame.
-            bool changed=!magnifier.gameObject.activeSelf||magnifier.Reference!=hovered.Reference||magnifiedSource!=source;
-            if(changed)
-            {
-                magnifiedSource=source;magnifier.gameObject.SetActive(true);rect.SetAsLastSibling();
-                float y=Mathf.Clamp(-source.anchoredPosition.y+source.sizeDelta.y*.5f-size*.5f,MinisTop,MinisBottom-size);
-                rect.anchoredPosition=new Vector2(MinisLeft(minisRight)-14-size,-y);
-                magnifier.Initialize(()=>slice,ownership,hovered.Reference,()=>{},v=>{},()=>canvas.scaleFactor);
-                var glass=Cfg2Ui.Frame(rect);var added=hovered.Reference.Shown.First(axis=>!minisSection.Shows(axis));
-                if(glass!=null){var color=Cfg2Projection.AxisColor(added);glass.color=new Color(color.r,color.g,color.b,.85f);glass.Glow=true;glass.SetVerticesDirty();}
-            }
-            if(changed||magnifier.ViewRevision!=slice.ViewRevision||magnifier.CameraRevision!=cameraRevision||magnifier.PiecesRevision!=panelPiecesRevision)
-                magnifier.Refresh(slice.Frame,rig.Camera.transform.rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding,MagnifierDotsEnabled?panelPieces:null,panelPiecesRevision);
+            if(magnifier.gameObject.activeSelf&&magnifier.Reference==panel.Reference&&magnifiedSource==source)return;
+            magnifiedSource=source;magnifier.gameObject.SetActive(true);rect.SetAsLastSibling();
+            float y=Mathf.Clamp(-source.anchoredPosition.y+source.sizeDelta.y*.5f-size*.5f,MinisTop,MinisBottom-size);
+            rect.anchoredPosition=new Vector2(MinisLeft(minisRight)-14-size,-y);
+            magnifier.Initialize(()=>slice,ownership,panel.Reference,()=>{geometryDirty=true;stableDirty=true;},v=>{slice.Request(v);geometryDirty=true;},()=>canvas.scaleFactor);
+            // The frame takes the colour of the axis the panel brings in; a panel of the column's own section keeps the plain glass.
+            var glass=Cfg2Ui.Frame(rect);var added=panel.Reference.Shown.Where(axis=>!minisSection.Shows(axis)).Select(axis=>(int?)axis).FirstOrDefault();
+            if(glass!=null){var color=added.HasValue?Cfg2Projection.AxisColor(added.Value):new Color(.80f,.87f,1);glass.color=new Color(color.r,color.g,color.b,.85f);glass.Glow=true;glass.SetVerticesDirty();}
+            magnifierPinLabel=CfgUi.Label(rect,"",10,28,size-20,18,12,Muted);magnifierPinLabel.alignment=TextAnchor.UpperRight;magnifierPinLabel.raycastTarget=false;ShowPinState();
+            // Initialize leaves the old drawing to the next Refresh.
+            magnifier.Refresh(slice.Frame,rig.Camera.transform.rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding,MagnifierDotsEnabled?panelPieces:null,panelPiecesRevision);
+        }
+        // Right click on a panel pins its magnifier (or unpins it, if that one is pinned); right click on the magnifier toggles its pin.
+        void PinMagnifier(Cfg2MiniView panel)
+        {
+            if(session==null||!matchHud.gameObject.activeInHierarchy)return;
+            bool shown=magnifier!=null&&magnifier.gameObject.activeSelf;
+            if(panel==magnifier)magnifierPinned=!magnifierPinned;
+            else if(magnifierPinned&&shown&&magnifier.Reference==panel.Reference)magnifierPinned=false;
+            else{ShowMagnifier(panel);magnifierPinned=true;}
+            magnifierHoverTime=Time.unscaledTime;ShowPinState();Record("MagnifierPin",(magnifierPinned?"on;":"off;")+panel.Reference.Name);
+        }
+        void ShowPinState()
+        {
+            if(magnifierPinLabel==null)return;
+            magnifierPinLabel.text=magnifierPinned?"固定中（右クリックで解除）":"右クリックで固定";magnifierPinLabel.color=magnifierPinned?Gold:new Color(.62f,.68f,.78f);
+        }
+        // C moves, the orientation stays, until the clicked piece is in the board's section: by the least move when the magnifier's
+        // section meets the board's in a line or a plane, onto the piece itself when they coincide.
+        void BringPieceIntoSection(VecN world)
+        {
+            if(session==null||magnifier==null)return;
+            if(ownership.Owner!=InputOwner.None||slice.IsAnimating||slice.QueuedSection.HasValue||PresentingMove){Record("DotMoveRefused",magnifier.Reference.Name);return;}
+            var frame=slice.Frame;int n=frame.Dimensions;var piece=Cfg2MiniView.PieceBounds(n);var target=world;
+            // Aim at the middle of the piece solid (its cell is the bottom of the solid on the height axis).
+            for(int axis=0;axis<n;axis++)target=target.WithAxis(axis,world.Axis(axis)+(piece.Min.Axis(axis)+piece.Max.Axis(axis))*.5);
+            var to=SliceAxes.CenterReaching(frame,magnifier.Reference,target,magnifier.IsCoincident,previewRenderer.HalfWindow);
+            Record("DotMove",magnifier.Reference.Name+(magnifier.IsCoincident?";centre":""));
+            if((to-frame.Center).Length<1e-9)return;
+            sectionGlideFrom=frame.Center;sectionGlideTo=to;sectionGlideStart=Time.unscaledTime;StepSectionGlide();
+        }
+        void StepSectionGlide()
+        {
+            if(sectionGlideStart<0)return;
+            // Any other control of the view (a drag, a turn, a CPU show) ends the glide where it is.
+            if(ownership.Owner!=InputOwner.None||slice.IsAnimating||PresentingMove||session==null){sectionGlideStart=-1;stableDirty=true;return;}
+            float t=Mathf.Clamp01((Time.unscaledTime-sectionGlideStart)/SectionGlideSeconds),s=t*t*(3-2*t);
+            slice.SetCenter(sectionGlideFrom+(sectionGlideTo-sectionGlideFrom)*s);geometryDirty=true;
+            if(t>=1){sectionGlideStart=-1;stableDirty=true;}
         }
         // The match's pieces in display space (a gliding CPU piece where it is drawn now), for the panels' dots. Null outside a match.
         List<(VecN world,Side side,bool selected)> PanelPieces()
@@ -253,7 +311,12 @@ namespace Showcase.Unity.Settings
                 var glass=Cfg2Ui.Frame(minis[i].transform);if(glass!=null){glass.color=new Color(Gold.r,Gold.g,Gold.b,.95f);glass.Glow=true;glass.SetVerticesDirty();}
             }
         }
-        void HideMagnifier(){magnifiedSource=null;if(magnifier!=null&&magnifier.gameObject.activeSelf)magnifier.gameObject.SetActive(false);}
+        // A pinned magnifier stays unless unpin is asked for (leaving the match, another space, the helpers turned off).
+        void HideMagnifier(bool unpin=false)
+        {
+            if(magnifierPinned&&!unpin&&magnifier!=null&&magnifier.gameObject.activeSelf)return;
+            magnifierPinned=false;magnifiedSource=null;if(magnifier!=null&&magnifier.gameObject.activeSelf){magnifier.CancelDrag();magnifier.gameObject.SetActive(false);}
+        }
         void ReturnFromMatch()
         {
             CancelActiveInput();

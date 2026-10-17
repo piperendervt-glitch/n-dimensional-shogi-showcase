@@ -295,6 +295,29 @@ static class Program
         var wvu=ReferenceSection.Initial(6).Swap(0,3).Swap(1,4).Swap(2,5);var point=HyperplaneRelation.Build(ReferenceSection.Initial(6).Frame(VecN.Zero(6)),wvu,1);
         Check(wvu.Name=="WVU"&&!point.IsCoincident&&point.Vertices.Count<=1,"Three constraints leave at most the point C");
         cases.Add(new{name="reference_sections_and_relations_in_n_dimensions",status="PASS",panels="3(N-3) one-swap sections",relation="volume / polygon / segment / point"});
+        // A clicked panel dot: C translates (orientation kept) until the point lies in the slice.
+        void Reaches(SliceFrame frame,ReferenceSection panel,VecN target,bool centre,string label)
+        {
+            var next=SliceAxes.CenterReaching(frame,panel,target,centre,4.5);
+            foreach(var normal in frame.Normals)Near(VecN.Dot(normal,target-next),0,label+": the point lies in the slice",1e-7);
+            foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ})Check(Math.Abs(VecN.Dot(axis,target-next))<=4+1e-9,label+": inside the window");
+        }
+        var piece5=new VecN(2,-1,3,1,-2);
+        // XYZ board, XYW panel (a plane in the panel): only W and V change, X/Y/Z of C stay.
+        var moved=SliceAxes.CenterReaching(frame5,xyw5,piece5,false,4.5);
+        Vec(moved,new VecN(0,0,3,1,-2),"XYW panel plane slides along W, V follows for the off-panel layer");
+        Reaches(frame5,xyw5,piece5,false,"5D plane");
+        // A coincident panel centres C on the point.
+        Vec(SliceAxes.CenterReaching(frame5,xyz5,piece5,true,4.5),piece5,"Coincident panel centres C");
+        // XWV panel against the XYZ board meets it in a line along X: W and V move, X is left alone.
+        var xwv=new ReferenceSection(new[]{0,3,4},5);var line=SliceAxes.CenterReaching(frame5,xwv,piece5,false,4.5);
+        Near(line.Axis(0),0,"Line case keeps X");Near(line.Axis(3),1,"Line case moves W");Near(line.Axis(4),-2,"Line case moves V");
+        // A Ctrl-turned frame: the move still lands the point in the slice, mostly along the panel's axes.
+        foreach(var tilted in new[]{SliceRotations.Rotate(frame5,1,3,.6),SliceRotations.Rotate(SliceRotations.Rotate(frame5,0,4,.3),2,3,-.8)})
+            foreach(var panel in new[]{xyw5,xwv,xyv,xyz5})Reaches(tilted,panel,piece5,false,"Tilted "+panel.Name);
+        // Far along the slice itself: C follows until the point is inside the window.
+        Reaches(frame5,xyz5,new VecN(8,-8,3,0,0)+new VecN(0,0,0,.2,0),false,"Window clamp");
+        cases.Add(new{name="panel_dot_click_translates_the_slice",status="PASS"});
     }
     static void Picking()
     {

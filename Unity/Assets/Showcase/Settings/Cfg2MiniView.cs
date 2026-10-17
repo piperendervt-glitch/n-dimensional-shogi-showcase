@@ -31,6 +31,12 @@ namespace Showcase.Unity.Settings
         public bool IsFlat=>graphic!=null&&graphic.Relation!=null&&!graphic.Relation.IsCoincident&&graphic.Relation.TriangleIndices.Count==0;
         CanvasGroup fade;
         public Vector2 AxisScreenDirection(LogicalAxis axis)=>tips.TryGetValue(axis,out var v)?v:Vector2.zero;
+        // A right click (not a drag) anywhere on the panel; the owner pins or unpins the magnifier with it.
+        public Action PinRequested {get;set;}
+        // Set on the magnifier: a left click on a dot hands over that piece's world position instead of turning the board's section.
+        public Action<VecN> DotClicked {get;set;}
+        public bool Dragging=>drag!=null&&drag.Pressed;
+        VecN[] dotWorlds;
         // The host panel's own frame survives (ClearOwned keepFrame): its owner colours it for the section shown.
         public void Initialize(Func<SliceAnimator> slice,InputOwnership input,ReferenceSection view,Action geometryChanged,Action<ReferenceSection> onRequested,Func<float> scale)
         {
@@ -46,10 +52,24 @@ namespace Showcase.Unity.Settings
             BuildHandles();
             // A left click anywhere on the panel (not a drag) turns the board's section to this panel's section, like its title.
             if(!TryGetComponent<CfgPointerSurface>(out var surface))surface=gameObject.AddComponent<CfgPointerSurface>();
-            surface.Down=e=>{if(e.button==PointerEventData.InputButton.Left)pressAt=e.position;};
-            surface.Up=e=>{if(e.button==PointerEventData.InputButton.Left&&pressAt.HasValue&&(e.position-pressAt.Value).sqrMagnitude<64&&IsPointerOver(e.position)&&ownership.Owner==InputOwner.None)requested(reference);pressAt=null;};
+            surface.Down=e=>{if(e.button==PointerEventData.InputButton.Left)pressAt=e.position;if(e.button==PointerEventData.InputButton.Right)rightAt=e.position;};
+            surface.Up=e=>
+            {
+                if(e.button==PointerEventData.InputButton.Right){if(rightAt.HasValue&&(e.position-rightAt.Value).sqrMagnitude<64&&IsPointerOver(e.position))PinRequested?.Invoke();rightAt=null;return;}
+                if(e.button==PointerEventData.InputButton.Left&&pressAt.HasValue&&(e.position-pressAt.Value).sqrMagnitude<64&&IsPointerOver(e.position)&&ownership.Owner==InputOwner.None)
+                {
+                    if(DotClicked==null)requested(reference);
+                    else{int dot=DotUnder(e.position);if(dot>=0)DotClicked(dotWorlds[dot]);}
+                }
+                pressAt=null;
+            };
         }
-        Vector2? pressAt;
+        Vector2? pressAt,rightAt;
+        int DotUnder(Vector2 screen)
+        {
+            if(dotWorlds==null||!RectTransformUtility.ScreenPointToLocalPointInRectangle(graphic.rectTransform,screen,null,out var local))return -1;
+            int dot=graphic.DotAt(local);return dot<dotWorlds.Length?dot:-1;
+        }
         // Another section in the same panel: the title and the drawing stay, the axis handles follow the section's axes.
         // The next Refresh draws it.
         public void Retarget(ReferenceSection view)
@@ -77,12 +97,20 @@ namespace Showcase.Unity.Settings
         {
             ViewRevision=currentSlice().ViewRevision;CameraRevision=cameraRevision;PiecesRevision=piecesRevision;graphic.CameraRotation=cameraRotation;
             graphic.Relation=HyperplaneRelation.Build(frame,reference,4.5,ViewRevision,halfWindow,chartOrigin);
-            if(pieces==null)graphic.Dots=null;
+            if(pieces==null){graphic.Dots=null;dotWorlds=null;}
             else
             {
                 // Only the shown axes matter, so the chart basis may sit anywhere along the hidden ones.
-                var basis=reference.In(frame.Dimensions).Frame(chartOrigin??frame.Center);var dots=new Cfg2PanelDot[pieces.Count];
-                for(int i=0;i<pieces.Count;i++)dots[i]=new Cfg2PanelDot(basis.Project(pieces[i].world),pieces[i].side,pieces[i].selected);
+                int n=frame.Dimensions;var basis=reference.In(n).Frame(chartOrigin??frame.Center);var dots=new Cfg2PanelDot[pieces.Count];dotWorlds=new VecN[pieces.Count];
+                var hidden=reference.In(n).Hidden;var piece=PieceBounds(n);
+                for(int i=0;i<pieces.Count;i++)
+                {
+                    // A piece whose solid misses C's coordinate on any hidden axis of the panel is not in the panel's space:
+                    // no move along the panel's three axes alone brings it onto the board, so its dot is hollow.
+                    var world=pieces[i].world;bool off=false;
+                    foreach(int axis in hidden){double d=SliceAxes.Coordinate(frame.Center,axis)-SliceAxes.Coordinate(world,axis);if(d<piece.Min.Axis(axis)-1e-6||d>piece.Max.Axis(axis)+1e-6){off=true;break;}}
+                    dots[i]=new Cfg2PanelDot(basis.Project(world),pieces[i].side,pieces[i].selected,off);dotWorlds[i]=world;
+                }
                 graphic.Dots=dots;
             }
             graphic.SetVerticesDirty();UpdateLegend(pieces!=null);
@@ -93,6 +121,13 @@ namespace Showcase.Unity.Settings
             foreach(var item in handles)
             {var tip=graphic.AxisEnd(item.Key);tips[item.Key]=tip;var center=graphic.Center;item.Value.anchoredPosition=new Vector2(center.x+tip.x-11.5f,-26+center.y+tip.y+11.5f);}
         }
+        // The extent of a piece solid around its cell: a section through C shows the piece only when C's offset lies inside it on every normal.
+        static readonly Dictionary<int,VecBounds> pieceBounds=new Dictionary<int,VecBounds>();
+        internal static VecBounds PieceBounds(int dimensions)
+        {
+            if(!pieceBounds.TryGetValue(dimensions,out var bounds)){bounds=ShapeFactory.CreatePiece(ShapeVariant.C,1,dimensions).Bounds;pieceBounds.Add(dimensions,bounds);}
+            return bounds;
+        }
         // A large panel (the magnifier) names the two dot colours along its bottom edge.
         Text legend;
         void UpdateLegend(bool dots)
@@ -101,7 +136,7 @@ namespace Showcase.Unity.Settings
             if(show&&legend==null)
             {
                 string Hex(Color c)=>ColorUtility.ToHtmlStringRGB(c);
-                legend=CfgUi.Label(transform,"<color=#"+Hex(Cfg2PanelDot.SideA)+">●</color> 先手 A　<color=#"+Hex(Cfg2PanelDot.SideB)+">●</color> 後手 B",10,rect.height-24,rect.width-20,20,13,new Color(.85f,.89f,.95f));
+                legend=CfgUi.Label(transform,"<color=#"+Hex(Cfg2PanelDot.SideA)+">●</color> 先手 A　<color=#"+Hex(Cfg2PanelDot.SideB)+">●</color> 後手 B　○ 隠れ軸がずれた駒",10,rect.height-24,rect.width-20,20,13,new Color(.85f,.89f,.95f));
                 legend.supportRichText=true;legend.raycastTarget=false;
             }
             if(legend!=null)legend.gameObject.SetActive(show);

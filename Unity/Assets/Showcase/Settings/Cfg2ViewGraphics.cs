@@ -66,6 +66,7 @@ namespace Showcase.Unity.Settings
             if(!moved)clicked(pressedAxis);changed?.Invoke();
         }
         // Another owner (Esc, focus loss, resize) took the input.
+        internal bool Pressed=>pressed;
         internal void Update(){if(pressed&&!ownership.IsOwner(InputOwner.Axis,pointer)){pressed=false;changed?.Invoke();}}
         internal void Cancel(bool notify=true){drag?.Cancel();if(pressed&&ownership.IsOwner(InputOwner.Axis,pointer))ownership.Cancel();pressed=false;if(notify)changed?.Invoke();}
     }
@@ -168,10 +169,11 @@ namespace Showcase.Unity.Settings
         }
     }
     // A piece placed in a panel's chart: its coordinates on the panel's three shown axes, relative to the chart origin.
+    // Off: the piece lies off the panel's space on one of the panel's hidden axes (drawn as a hollow ring).
     internal readonly struct Cfg2PanelDot
     {
-        public readonly Vec3 At;public readonly Side Side;public readonly bool Selected;
-        public Cfg2PanelDot(Vec3 at,Side side,bool selected){At=at;Side=side;Selected=selected;}
+        public readonly Vec3 At;public readonly Side Side;public readonly bool Selected,Off;
+        public Cfg2PanelDot(Vec3 at,Side side,bool selected,bool off=false){At=at;Side=side;Selected=selected;Off=off;}
         // 先手 A amber, 後手 B pink: apart from the axis colours and from the blue hyperplane.
         public static readonly Color SideA=new Color(1,.70f,.28f),SideB=new Color(1,.42f,.70f);
         public static Color Of(Side side)=>side==Side.A?SideA:SideB;
@@ -179,7 +181,7 @@ namespace Showcase.Unity.Settings
     internal sealed class Cfg2RelationGraphic : Graphic
     {
         internal HyperplaneRelation Relation;internal Quaternion CameraRotation;internal ReferenceSection Reference;internal double HalfExtent=4.5;
-        // Every piece projected onto the panel's axis space (the hidden coordinates dropped); null draws none.
+        // Every piece projected onto the panel's axis space (the hidden coordinates dropped, off-space pieces hollow); null draws none.
         internal IReadOnlyList<Cfg2PanelDot> Dots;
         public override Texture mainTexture=>Cfg2Glow.Texture;
         internal Vector2 Center=>new Vector2(rectTransform.rect.width*.5f,-rectTransform.rect.height*.5f);
@@ -233,20 +235,30 @@ namespace Showcase.Unity.Settings
         }
         // Back to front, so nearer pieces cover farther ones; pieces behind the chart centre fade a little.
         // The selected piece is drawn last, larger and ringed in gold.
+        float DotRadius=>Mathf.Clamp(ProjectionScale*.065f,1.4f,5);
+        // The dot under a point of this graphic (local, top-left origin), nearest first; -1 when none is within reach.
+        internal int DotAt(Vector2 local)
+        {
+            if(Dots==null)return -1;var center=Center;double h=HalfExtent;float reach=Mathf.Max(DotRadius*3,9);int best=-1;float bestDistance=reach;
+            for(int i=0;i<Dots.Count;i++){float distance=(center+Project(Dots[i].At/h)-local).magnitude;if(distance<=bestDistance){best=i;bestDistance=distance;}}
+            return best;
+        }
         void DrawDots(VertexHelper vh,Func<Vec3,Vector2> P,double h)
         {
-            float radius=Mathf.Clamp(ProjectionScale*.065f,1.4f,5);
+            float radius=DotRadius;
             var order=new List<(int index,float depth)>(Dots.Count);
             for(int i=0;i<Dots.Count;i++)order.Add((i,Cfg2Projection.Depth(Dots[i].At/h,CameraRotation)));
             order.Sort((x,y)=>y.depth.CompareTo(x.depth));
             foreach(var (index,depth) in order)
             {
                 var dot=Dots[index];if(dot.Selected)continue;var at=P(dot.At);var color=Cfg2PanelDot.Of(dot.Side);float fade=Mathf.Clamp(1-depth*.45f,.5f,1);
+                if(dot.Off){Cfg2Glow.Circle(vh,at,radius*1.4f,Cfg2Glow.Alpha(color,.55f*fade),.8f,2,radius<3?8:16);continue;}
                 Cfg2Glow.Blob(vh,at,radius*3,Cfg2Glow.Alpha(color,.30f*fade));Cfg2Glow.Blob(vh,at,radius*1.6f,new Color(Mathf.Lerp(color.r,1,.25f),Mathf.Lerp(color.g,1,.25f),Mathf.Lerp(color.b,1,.25f),fade));
             }
             foreach(var dot in Dots)
             {
                 if(!dot.Selected)continue;var at=P(dot.At);var color=Cfg2PanelDot.Of(dot.Side);
+                if(dot.Off){Cfg2Glow.Circle(vh,at,radius*2.3f,Cfg2Glow.Alpha(Gold,.6f),1,3,20);Cfg2Glow.Circle(vh,at,radius*1.3f,color,.8f,2,16);continue;}
                 Cfg2Glow.Blob(vh,at,radius*5,Cfg2Glow.Alpha(Gold,.45f));Cfg2Glow.Circle(vh,at,radius*2.3f,Gold,1,3,20);Cfg2Glow.Blob(vh,at,radius*2.1f,new Color(1,.97f,.88f,1));Cfg2Glow.Blob(vh,at,radius*1.3f,color);
             }
         }

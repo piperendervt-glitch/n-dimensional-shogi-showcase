@@ -241,6 +241,39 @@ namespace Showcase.Geometry.Interaction
             }
             return SliceFrame.FromVectors(default,v);
         }
+        /// <summary>The centre C that puts <paramref name="target"/> into the frame's slice by translation alone (the orientation is kept).
+        /// With <paramref name="centre"/> C is the target itself. Otherwise C moves as little as it can, first along the three axes of
+        /// <paramref name="panel"/> (so a panel's line or plane slides onto the point), then along the frame's normals for whatever the
+        /// panel's axes cannot reach; last, it slides along the slice until the target is inside the finite window, short of its edge.</summary>
+        public static VecN CenterReaching(SliceFrame frame,ReferenceSection panel,VecN target,bool centre,double halfWindow)
+        {
+            if(!target.IsFinite||target.Rank>frame.Dimensions)throw new ArgumentException("The target must be a finite point of the frame's space.");
+            if(centre)return target;
+            int n=frame.Dimensions;var c=frame.Center;var d=target-c;var normals=frame.Normals;var shown=panel.In(n).Shown;
+            // Least squares over the panel's axes: the normal offsets b=N·d reached by y on those axes (A=N·e), slightly damped
+            // so axes the normals do not see stay where they are.
+            var m=new double[3,3];var r=new double[3];
+            foreach(var normal in normals)
+            {
+                double b=VecN.Dot(normal,d);var a=new double[3];for(int i=0;i<3;i++)a[i]=normal.Axis(shown[i]);
+                for(int i=0;i<3;i++){r[i]+=a[i]*b;for(int j=0;j<3;j++)m[i,j]+=a[i]*a[j];}
+            }
+            for(int i=0;i<3;i++)m[i,i]+=1e-9;
+            var y=Solve3(m,r);var t=VecN.Zero(n);for(int i=0;i<3;i++)t=t.WithAxis(shown[i],y[i]);
+            // What the panel's axes leave goes along the normals, which are orthonormal.
+            var rest=d-t;foreach(var normal in normals)t=t+normal*VecN.Dot(normal,rest);
+            var next=c+t;double limit=Math.Max(0,halfWindow-.5);
+            foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ})
+            {double s=VecN.Dot(target-next,axis);if(Math.Abs(s)>limit)next=next+axis*(s-Math.Sign(s)*limit);}
+            return next;
+        }
+        static double[] Solve3(double[,] m,double[] r)
+        {
+            double Det(double[,] a)=>a[0,0]*(a[1,1]*a[2,2]-a[1,2]*a[2,1])-a[0,1]*(a[1,0]*a[2,2]-a[1,2]*a[2,0])+a[0,2]*(a[1,0]*a[2,1]-a[1,1]*a[2,0]);
+            double det=Det(m);var x=new double[3];if(Math.Abs(det)<1e-30)return x;
+            for(int k=0;k<3;k++){var a=(double[,])m.Clone();for(int i=0;i<3;i++)a[i,k]=r[i];x[k]=Det(a)/det;}
+            return x;
+        }
     }
     public sealed class SliceAnimator
     {

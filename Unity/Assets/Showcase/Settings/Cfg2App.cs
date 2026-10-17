@@ -236,7 +236,7 @@ namespace Showcase.Unity.Settings
             // The canvas scaler sizes the canvas on its own schedule, so the spare width is re-read each frame (a no-op when unchanged).
             if(opened)LayoutSettings();
             if(slice.IsAnimating){slice.Advance(Time.unscaledDeltaTime);geometryDirty=true;stableDirty=true;}
-            UpdateMatch();if(geometryDirty)RenderGeometry();UpdateMagnifier();
+            UpdateMatch();StepSectionGlide();if(geometryDirty)RenderGeometry();UpdateMagnifier();
             if(settingsDirty&&Time.unscaledTime>=saveDue)AutoSave();
             if(screenNotice&&Time.unscaledTime-noticeTime>NoticeSeconds)ClearScreenNotice();
             // The view is saved once it has settled: never during a CPU move show, a turn reset or a piece glide,
