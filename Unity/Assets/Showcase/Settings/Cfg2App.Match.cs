@@ -23,7 +23,7 @@ namespace Showcase.Unity.Settings
         const float TurnChangeSeconds=1.6f;
         // CvC shows each CPU move in its hyperplane: slow 4D turn, slide of C along the normal, brief selection, then the move.
         const double CpuTurnSeconds=1.6;const float CpuSlideSeconds=.8f,CpuHoldSeconds=.5f;
-        CpuResult cpuShowResult;int cpuShowStage;double cpuShowLift;VecN cpuShowFromCell,cpuShowToCell;Vec3 cpuShowAnchor;float cpuShowStart;VecN cpuShowFrom,cpuShowTo;ReferenceSection cpuShowView;
+        CpuResult cpuShowResult;int cpuShowStage;double cpuShowLift;VecN cpuShowFromCell,cpuShowToCell;Vec3 cpuShowAnchor;float cpuShowStart;VecN cpuShowFrom,cpuShowTo;ReferenceSection cpuShowView;bool cpuShowTilted;
         // The space and section the hyperplane panels were built for.
         int minisDimensions,minisActive;float minisRight;ReferenceSection minisSection;RectTransform matchGizmo,magnifiedSource;Cfg2MiniView magnifier;Text guideText;
         // The right column of hyperplane panels, shared by the panels and the magnifier left of them.
@@ -243,10 +243,12 @@ namespace Showcase.Unity.Settings
             if(!CpuShowEnabled||cpu.Status!=MatchQueryStatus.Complete||!cpu.Move.HasValue||SectionHeld)return false;
             var move=cpu.Move.Value;var embedding=slice.DisplayState.Embedding;
             var from=CfgPreviewRenderer.V(move.From)+embedding;var to=CfgPreviewRenderer.V(move.To)+embedding;
-            cpuShowView=SliceAxes.SectionContaining(from,to,slice.StableSection??ReferenceSection.Initial(slice.Frame.Dimensions));
+            // A step on four or more axes leaves every axis-aligned section; the view then tilts so the step still lies in it.
+            var orientation=SliceAxes.OrientationContaining(from,to,slice.StableSection??ReferenceSection.Initial(slice.Frame.Dimensions),out cpuShowView);
+            cpuShowTilted=!SliceAxes.SectionOf(orientation).HasValue;
             cpuShowFromCell=from;cpuShowToCell=to;
-            cpuShowResult=cpu;cpuShowStage=1;slice.SecondsPerLeg=CpuTurnSeconds;if(slice.Request(cpuShowView))geometryDirty=true;
-            Record("CpuShow",cpuShowView.Name+";"+move);return true;
+            cpuShowResult=cpu;cpuShowStage=1;slice.SecondsPerLeg=CpuTurnSeconds;if(cpuShowTilted?slice.Request(orientation):slice.Request(cpuShowView))geometryDirty=true;
+            Record("CpuShow",cpuShowView.Name+(cpuShowTilted?"~tilted":"")+";"+move);return true;
         }
         void UpdateCpuShow()
         {
@@ -258,7 +260,8 @@ namespace Showcase.Unity.Settings
                 if(slice.IsAnimating||slice.QueuedSection.HasValue)return;
                 // C slides along the hidden axes of the shown section until the moving piece's cell lies in it.
                 slice.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;cpuShowFrom=slice.Center;cpuShowTo=slice.Center;
-                foreach(int hidden in cpuShowView.Hidden)cpuShowTo=SliceAxes.WithCoordinate(cpuShowTo,hidden,SliceAxes.Coordinate(cpuShowFromCell,hidden));
+                if(cpuShowTilted)foreach(var normal in slice.Frame.Normals)cpuShowTo=cpuShowTo+normal*VecN.Dot(normal,cpuShowFromCell-cpuShowTo);
+                else foreach(int hidden in cpuShowView.Hidden)cpuShowTo=SliceAxes.WithCoordinate(cpuShowTo,hidden,SliceAxes.Coordinate(cpuShowFromCell,hidden));
                 // Unity up is the section's third axis. A step that dips below the board surface would vanish inside the
                 // wooden board, so the whole section display is raised until both ends of the step sit on or above it.
                 cpuShowAnchor=slice.DisplayState.Anchor;var state=slice.DisplayState;double board=SectionView.Anchor.y;
@@ -354,7 +357,7 @@ namespace Showcase.Unity.Settings
             bool cvc=session.Snapshot.Mode==MatchMode.CvC;actions["pause"].gameObject.SetActive(cvc&&!session.IsFinished);actions["step"].gameObject.SetActive(cvc&&!session.IsFinished);
             if(pauseLabel==null)pauseLabel=actions["pause"].GetComponentInChildren<Text>();pauseLabel.text=session.IsPaused?"再開":"一時停止";actions["step"].interactable=session.Phase==MatchPhase.CvcPaused;
             actions["retry"].gameObject.SetActive(session.Phase==MatchPhase.ProcessingPaused);
-            matchStatus.text=session.Phase==MatchPhase.ProcessingPaused?"処理を停止しています\n"+session.FaultReason:session.IsPaused?"一時停止中":session.PresentationPaused?(resetStage!=0?"手番交代：初期表示へ戻しています":"手番交代中"):cpuShowResult!=null?"CPU 着手："+cpuShowView.Name+" 超平面":session.CanCpuAct?"CPU 思考中":selectedPiece!=""&&result!=null?"着手候補 "+result.P.Count+"手":"";
+            matchStatus.text=session.Phase==MatchPhase.ProcessingPaused?"処理を停止しています\n"+session.FaultReason:session.IsPaused?"一時停止中":session.PresentationPaused?(resetStage!=0?"手番交代：初期表示へ戻しています":"手番交代中"):cpuShowResult!=null?"CPU 着手："+cpuShowView.Name+(cpuShowTilted?" 超平面（斜め）":" 超平面"):session.CanCpuAct?"CPU 思考中":selectedPiece!=""&&result!=null?"着手候補 "+result.P.Count+"手":"";
             if(shownPly!=s.Ply)
             {
                 shownPly=s.Ply;geometryDirty=true;

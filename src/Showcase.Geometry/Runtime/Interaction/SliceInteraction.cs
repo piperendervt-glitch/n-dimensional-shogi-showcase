@@ -206,7 +206,40 @@ namespace Showcase.Geometry.Interaction
                 double leave=0;foreach(int hidden in section.Hidden){double d=step.Axis(hidden);leave+=d*d;}
                 leave=Math.Sqrt(leave);if(leave<bestLeave-1e-9){best=section;bestLeave=leave;}
             }
-            return best;
+            if(bestLeave<1e-9)return best;
+            // No nearby section holds the step: show the (up to three) axes it changes most, swapping them in for the current
+            // section's other axes in the neighbours' order. A step on at most three axes is then held exactly, however far away.
+            var changed=Enumerable.Range(0,current.Dimensions).Where(axis=>Math.Abs(step.Axis(axis))>1e-9)
+                .OrderByDescending(axis=>Math.Abs(step.Axis(axis))).ThenBy(axis=>axis).Take(3).ToList();
+            var shown=current.Shown;var removed=shown.Where(axis=>!changed.Contains(axis)).OrderByDescending(axis=>(int)AxisOfCore(axis)).ToList();
+            foreach(int axis in changed)if(!current.Shows(axis)){int slot=Array.IndexOf(shown,removed[0]);removed.RemoveAt(0);shown[slot]=axis;}
+            var built=new ReferenceSection(shown,current.Dimensions);
+            double builtLeave=0;foreach(int hidden in built.Hidden){double d=step.Axis(hidden);builtLeave+=d*d;}
+            return Math.Sqrt(builtLeave)<bestLeave-1e-9?built:best;
+        }
+        /// <summary>An orientation whose slice holds both ends of a step. It is the reference frame of <see cref="SectionContaining"/>
+        /// whenever that section holds the step; a step on four or more axes leaves every axis-aligned section, so one shown slot of that
+        /// section (a horizontal one when it can) is tilted toward the step's hidden part. <paramref name="section"/> is the section used.</summary>
+        public static SliceFrame OrientationContaining(VecN from,VecN to,ReferenceSection current,out ReferenceSection section)
+        {
+            section=SectionContaining(from,to,current);var frame=section.Frame(default);var step=to-from;
+            double leave=0;foreach(int hidden in section.Hidden){double d=step.Axis(hidden);leave+=d*d;}
+            if(Math.Sqrt(leave)<1e-9)return frame;
+            var v=frame.Vectors;int n=v.Length;int tilt=-1;
+            // Slot 2 is display up; a horizontal slot is tilted when the step runs along one, the larger of the two first.
+            double along(int slot)=>Math.Abs(VecN.Dot(step,v[slot]));
+            if(along(0)>1e-9||along(1)>1e-9)tilt=along(1)>along(0)+1e-9?1:0;else if(along(2)>1e-9)tilt=2;
+            if(tilt<0)return frame;
+            // The tilted slot is the step without its parts along the other two slots, signed to keep the slot's direction.
+            // Its positive part along the old slot keeps the basis oriented; Gram-Schmidt then rebuilds the normals around it.
+            var u=step;for(int slot=0;slot<3;slot++)if(slot!=tilt)u=u-v[slot]*VecN.Dot(step,v[slot]);
+            if(VecN.Dot(u,v[tilt])<0)u=-u;v[tilt]=u*(1/u.Length);
+            for(int i=3;i<n;i++)
+            {
+                var w=v[i];for(int j=0;j<i;j++)w=w-v[j]*VecN.Dot(w,v[j]);
+                double length=w.Length;if(length<1e-12)throw new InvalidOperationException("Tilted frame lost a normal.");v[i]=w*(1/length);
+            }
+            return SliceFrame.FromVectors(default,v);
         }
     }
     public sealed class SliceAnimator
@@ -217,7 +250,7 @@ namespace Showcase.Geometry.Interaction
         public double SecondsPerLeg {get=>secondsPerLeg;set{if(!(value>0)||double.IsInfinity(value))throw new ArgumentOutOfRangeException(nameof(value));secondsPerLeg=value;}}
         readonly List<PlaneTurn> turns=new List<PlaneTurn>();
         readonly bool legacyFramesOnly;
-        ReferenceSection? stable,pending;ReferenceSection target;double elapsed,pendingSeconds;bool active;SliceFrame start;
+        ReferenceSection? stable,pending;ReferenceSection target;double elapsed,pendingSeconds;bool active;SliceFrame start;SliceFrame? tiltedEnd;
         readonly struct PlaneTurn
         {public readonly int A,B;public readonly double Angle;public PlaneTurn(int a,int b,double angle){A=a;B=b;Angle=angle;}}
         public PivotViewState DisplayState {get;private set;}
@@ -245,16 +278,26 @@ namespace Showcase.Geometry.Interaction
             if(active){if(target==section||pending==section)return false;pending=section;pendingSeconds=secondsPerLeg;return true;}
             if(stable==section)return false;Start(section,secondsPerLeg);return true;
         }
+        /// <summary>Turns to any orientation of this space (its centre is ignored); a reference pose is requested as its section.
+        /// A tilted pose replaces a running turn and its queue, and the display rests there with no stable section.</summary>
+        public bool Request(SliceFrame orientation)
+        {
+            if(orientation.Dimensions!=Frame.Dimensions)throw new ArgumentException("Orientation of a different dimension.");
+            var oriented=orientation.WithCenter(Center);SliceRotations.Validate(oriented);
+            var section=SliceAxes.SectionOf(oriented);if(section.HasValue)return Request(section.Value);
+            if(!active&&SliceAxes.SameOrientation(Frame,oriented))return false;
+            pending=null;Start(ReferenceSection.Initial(Frame.Dimensions),secondsPerLeg,oriented);return true;
+        }
         ReferenceSection Fit(ReferenceSection section)
         {
             if(section.Dimensions==Frame.Dimensions)return section;
             if(section.Shown.Any(axis=>axis>=Frame.Dimensions))throw new ArgumentException("Reference section of a different dimension.");
             return section.In(Frame.Dimensions);
         }
-        void Start(ReferenceSection section,double seconds)
+        void Start(ReferenceSection section,double seconds,SliceFrame? tilted=null)
         {
-            target=section;start=Frame;turns.Clear();elapsed=0;active=true;legSeconds=seconds;
-            var end=section.Frame(Center);
+            target=section;tiltedEnd=tilted;start=Frame;turns.Clear();elapsed=0;active=true;legSeconds=seconds;
+            var end=tilted??section.Frame(Center);
             var a=start.Vectors;var b=end.Vectors;int n=a.Length;
             if(b.Length!=n)throw new InvalidOperationException("Reference frame of a different dimension.");
             var relative=new double[n,n];
@@ -284,7 +327,7 @@ namespace Showcase.Geometry.Interaction
                 var pose=start.WithCenter(Center);
                 for(int i=turns.Count-1;i>=0;i--)pose=SliceRotations.Rotate(pose,turns[i].A,turns[i].B,turns[i].Angle*s);
                 DisplayState=DisplayState.WithOrientation(pose);ViewRevision++;
-                if(t>=1){stable=target;DisplayState=DisplayState.WithOrientation(target.Frame(Center));active=false;if(pending.HasValue){var next=pending.Value;pending=null;if(next!=stable)Start(next,pendingSeconds);}}
+                if(t>=1){stable=tiltedEnd.HasValue?(ReferenceSection?)null:target;DisplayState=DisplayState.WithOrientation(tiltedEnd?.WithCenter(Center)??target.Frame(Center));tiltedEnd=null;active=false;if(pending.HasValue){var next=pending.Value;pending=null;if(next!=stable)Start(next,pendingSeconds);}}
             }
             return true;
         }
@@ -299,12 +342,12 @@ namespace Showcase.Geometry.Interaction
         {
             if(state==null)throw new ArgumentNullException(nameof(state));
             SliceRotations.Validate(state.Frame);DisplayState=state;stable=SliceAxes.SectionOf(Frame);target=stable??ReferenceSection.Initial(Frame.Dimensions);
-            pending=null;turns.Clear();active=false;elapsed=0;ViewRevision++;
+            pending=null;turns.Clear();active=false;elapsed=0;tiltedEnd=null;ViewRevision++;
         }
         public bool SetOrientation(SliceFrame frame)
         {
             var state=DisplayState.WithOrientation(frame);bool changed=active||pending.HasValue||!SliceAxes.SameOrientation(Frame,frame);
-            DisplayState=state;active=false;pending=null;turns.Clear();elapsed=0;stable=SliceAxes.SectionOf(frame);target=stable??ReferenceSection.Initial(Frame.Dimensions);
+            DisplayState=state;active=false;pending=null;turns.Clear();elapsed=0;tiltedEnd=null;stable=SliceAxes.SectionOf(frame);target=stable??ReferenceSection.Initial(Frame.Dimensions);
             if(changed)ViewRevision++;return changed;
         }
         public bool SetCenter(VecN value){if(!value.IsFinite)throw new ArgumentException("Slice center must be finite.");if((value-Center).Length<1e-14)return false;DisplayState=DisplayState.WithCenter(value);ViewRevision++;return true;}

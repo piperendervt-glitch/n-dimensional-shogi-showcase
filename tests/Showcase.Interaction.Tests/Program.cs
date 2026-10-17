@@ -261,6 +261,30 @@ static class Program
         Check(SliceAxes.SectionContaining(c5,c5+VecN.Unit(4,5),xyz5)==xyv,"A step along V is shown by XYV");
         Check(SliceAxes.SectionContaining(c5,c5+VecN.Unit(1,5),xyz5)==xyz5,"A step along X stays in XYZ");
         Check(SliceAxes.SectionContaining(c5,c5+VecN.Unit(3,5),xyv)==xyw5,"A step along W from XYV picks XYW");
+        // Steps on hidden axes no one-swap neighbour holds: the section is built from the axes the step changes.
+        var c8=new VecN(0,0,3,0,0,0,0,0);var xzw8=ReferenceSection.Of(ReferenceView.XZW,8);
+        foreach(var (start,step) in new[]{(xzw8,new VecN(0,0,0,0,1,1,0,0)),(ReferenceSection.Initial(8),new VecN(0,0,0,0,2,0,1,0)),(xzw8,new VecN(0,0,0,0,1,-1,1,0)),(ReferenceSection.Initial(6),new VecN(0,0,0,1,1,1))})
+        {
+            var built=SliceAxes.SectionContaining(c8,c8+step,start);
+            Check(built.Hidden.All(axis=>Math.Abs(step.Axis(axis))<1e-12),"Section holds a step on up to three hidden axes ("+built.Name+")");
+            var held=SliceAxes.OrientationContaining(c8,c8+step,start,out var used);
+            Check(used==built&&SliceAxes.SectionOf(held)==built,"Such a step needs no tilt");
+        }
+        Check(SliceAxes.SectionContaining(c8,c8+new VecN(0,0,0,0,1,1,0,0),xzw8).Shown.Contains(1),"The built section keeps the current axes it can (X stays)");
+        // Four or more changed axes: a tilted frame holds the step, oriented and orthonormal; in 4D the full diagonal tilts too.
+        foreach(var (start,step) in new[]{(ReferenceSection.Initial(8),new VecN(1,1,0,0,1,1,0,0)),(ReferenceSection.Initial(8),new VecN(-1,1,1,-1,1,-1,1,1)),(ReferenceSection.Of(ReferenceView.XYZ),new VecN(1,-1,1,1)),(ReferenceSection.Initial(5),new VecN(0,3,-3,3,3))})
+        {
+            int n=start.Dimensions;var from=VecN.Zero(n)+new VecN(0,0,3);var held=SliceAxes.OrientationContaining(from,from+step,start,out var used);
+            SliceRotations.Validate(held);Check(SliceAxes.SectionOf(held)==null,"A step on four axes tilts the view");
+            foreach(var normal in held.Normals)Near(VecN.Dot(normal,step),0,"Tilted frame holds the step");
+            if(Math.Abs(step.Axis(used.Shown[0]))+Math.Abs(step.Axis(used.Shown[1]))>1e-9)Check((held.AxisZ-used.Frame().AxisZ).Length<1e-12,"Display up is kept when a horizontal slot can tilt");
+            var animator=new SliceAnimator(PivotViewState.CreateInitial(new Vec3(0,0,0),.1,dimensions:n));
+            Check(animator.Request(held)&&animator.IsAnimating,"The animator turns to a tilted pose");
+            animator.Advance(10);Check(!animator.IsAnimating&&animator.StableSection==null&&SliceAxes.SameOrientation(animator.Frame,held.WithCenter(animator.Center)),"The turn rests on the tilted pose");
+            Check(!animator.Request(held),"Requesting the same tilt again changes nothing");
+            Check(animator.Request(ReferenceSection.Initial(n)),"A reference section can be requested from a tilt");animator.Advance(10);
+            Check(animator.StableSection==ReferenceSection.Initial(n),"Back to the initial section");
+        }
         // Hyperplane relation in 5D: a one-constraint polygon, a two-constraint segment, and in 6D a three-constraint point.
         var frame5=xyz5.Frame(c5);var polygon=HyperplaneRelation.Build(frame5,xyv,1,11);
         Check(!polygon.IsCoincident&&polygon.Vertices.Count==4&&polygon.ViewRevision==11,"XYZ frame meets the XYV space in a square");
