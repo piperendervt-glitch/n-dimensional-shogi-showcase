@@ -6,9 +6,49 @@
       "bytes": 1288
     },
     {
+      "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs",
+      "sha256": "70e7278068eb84a328d7fbd8f8094056acdcd11d65aafa48fa5514207d906066",
+      "bytes": 13650
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/Interaction/FiniteSliceWindow.cs",
+      "sha256": "ed9eb532ad1b360b7b6c70502b9b3a8ef4c5350aa243a595bd174b7b07236f54",
+      "bytes": 21201
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/Interaction/InteractionInput.cs",
+      "sha256": "1f52efe3a716dd1174085482cea76ef63f460e7d1bd97e24a2c2dcf8b3d76d15",
+      "bytes": 6820
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/Interaction/PivotViewState.cs",
+      "sha256": "8f149e4c1b5e2cdca3b4dca3b6bbb18baf899f1b8cb2b81f8d89a6726a04494f",
+      "bytes": 9331
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/Interaction/SliceInteraction.cs",
+      "sha256": "6f72d43f55681f3d2e79f7adebfb16f1372eebd446f0b03348767678e7b02b58",
+      "bytes": 25587
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs",
+      "sha256": "90a92ae3a2379a762e57210d00111f2afea52beb17c89dcda95c18a65c7b8a5c",
+      "bytes": 16688
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs",
+      "sha256": "575435199c03e7b871173dda1bb463119fb0c216bc2dc9d082dc3fefe5a8db04",
+      "bytes": 6298
+    },
+    {
       "path": "src/Showcase.Geometry/Runtime/Showcase.Geometry.asmdef",
       "sha256": "de4a5979e4a73d9210bb2096dff7f71a93442ea87247d8591495193af645483a",
       "bytes": 294
+    },
+    {
+      "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs",
+      "sha256": "7b73762f13034e0db565d0624bede3e6b1405e4b31c69368fa6374e5f824f9bd",
+      "bytes": 2907
     },
     {
       "path": "src/Showcase.Geometry/Showcase.Geometry.csproj",
@@ -21,29 +61,9 @@
       "bytes": 172
     },
     {
-      "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs",
-      "sha256": "f416771f50b5dea682c50235f55d9ca3b501ae837c03dd6f3c303beb5d8c6da5",
-      "bytes": 13544
-    },
-    {
-      "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs",
-      "sha256": "912d170b78a74b07baaaae291d1ad5a318ceabca23f7042ef4b173c510edfaf9",
-      "bytes": 12229
-    },
-    {
-      "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs",
-      "sha256": "669e8a2fbc4c6030675de3b7f7435d35e96cd8302cd8dd33eb7a96380140ad58",
-      "bytes": 5851
-    },
-    {
-      "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs",
-      "sha256": "b46d9fecbf7f848f4f22e5192b3bde88116e8ac5dd27d90afbb46a47e6906317",
-      "bytes": 2960
-    },
-    {
       "path": "tests/Showcase.Geometry.Tests/Program.cs",
-      "sha256": "9e17f284b94487c679985cc7218a1852f3a07945dac7f3b3c2b1a50ae848abb0",
-      "bytes": 19779
+      "sha256": "3b820e6ad32b72d4d91d003379f8801f718676c481e6937676f66e1824d57359",
+      "bytes": 24535
     },
     {
       "path": "tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj",
@@ -51,7 +71,7 @@
       "bytes": 307
     }
   ],
-  "testAssemblySha256": "0108b9c09e2a6daaf7b5ae0b6c1a126f29a76bf994ef870af86657e5e88be39f",
-  "geometryAssemblySha256": "3173c5e7f5dddafbc948f73a34c6a44e2754eb9c6fc6c74943787df457a3ac38",
+  "testAssemblySha256": "3b1d5b6926271a70f09d944b543f8546642128ad8cdf5d48d57c2da7a87c294f",
+  "geometryAssemblySha256": "2ef0bba44c62f9a6a51f6c7a15803b93268aa5b6652dda05c8d193525012e7cb",
   "command": "dotnet run --project tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj --configuration Release -- evidence/geometry"
 }

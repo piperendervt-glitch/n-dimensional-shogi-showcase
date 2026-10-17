@@ -2,9 +2,9 @@
   "status": "TECHNICAL_PASS",
   "testVersion": "geometry-tests/0.1",
   "geometryVersion": "geometry/0.1",
-  "checks": 3372857,
-  "elapsedMilliseconds": 1031,
-  "runtime": "9.0.19",
+  "checks": 3456221,
+  "elapsedMilliseconds": 1590,
+  "runtime": "8.0.31",
   "provenance": {
     "sourceFiles": [
       {
@@ -13,9 +13,49 @@
         "bytes": 1288
       },
       {
+        "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs",
+        "sha256": "70e7278068eb84a328d7fbd8f8094056acdcd11d65aafa48fa5514207d906066",
+        "bytes": 13650
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/Interaction/FiniteSliceWindow.cs",
+        "sha256": "ed9eb532ad1b360b7b6c70502b9b3a8ef4c5350aa243a595bd174b7b07236f54",
+        "bytes": 21201
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/Interaction/InteractionInput.cs",
+        "sha256": "1f52efe3a716dd1174085482cea76ef63f460e7d1bd97e24a2c2dcf8b3d76d15",
+        "bytes": 6820
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/Interaction/PivotViewState.cs",
+        "sha256": "8f149e4c1b5e2cdca3b4dca3b6bbb18baf899f1b8cb2b81f8d89a6726a04494f",
+        "bytes": 9331
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/Interaction/SliceInteraction.cs",
+        "sha256": "6f72d43f55681f3d2e79f7adebfb16f1372eebd446f0b03348767678e7b02b58",
+        "bytes": 25587
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs",
+        "sha256": "90a92ae3a2379a762e57210d00111f2afea52beb17c89dcda95c18a65c7b8a5c",
+        "bytes": 16688
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs",
+        "sha256": "575435199c03e7b871173dda1bb463119fb0c216bc2dc9d082dc3fefe5a8db04",
+        "bytes": 6298
+      },
+      {
         "path": "src/Showcase.Geometry/Runtime/Showcase.Geometry.asmdef",
         "sha256": "de4a5979e4a73d9210bb2096dff7f71a93442ea87247d8591495193af645483a",
         "bytes": 294
+      },
+      {
+        "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs",
+        "sha256": "7b73762f13034e0db565d0624bede3e6b1405e4b31c69368fa6374e5f824f9bd",
+        "bytes": 2907
       },
       {
         "path": "src/Showcase.Geometry/Showcase.Geometry.csproj",
@@ -28,29 +68,9 @@
         "bytes": 172
       },
       {
-        "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs",
-        "sha256": "f416771f50b5dea682c50235f55d9ca3b501ae837c03dd6f3c303beb5d8c6da5",
-        "bytes": 13544
-      },
-      {
-        "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs",
-        "sha256": "912d170b78a74b07baaaae291d1ad5a318ceabca23f7042ef4b173c510edfaf9",
-        "bytes": 12229
-      },
-      {
-        "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs",
-        "sha256": "669e8a2fbc4c6030675de3b7f7435d35e96cd8302cd8dd33eb7a96380140ad58",
-        "bytes": 5851
-      },
-      {
-        "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs",
-        "sha256": "b46d9fecbf7f848f4f22e5192b3bde88116e8ac5dd27d90afbb46a47e6906317",
-        "bytes": 2960
-      },
-      {
         "path": "tests/Showcase.Geometry.Tests/Program.cs",
-        "sha256": "9e17f284b94487c679985cc7218a1852f3a07945dac7f3b3c2b1a50ae848abb0",
-        "bytes": 19779
+        "sha256": "3b820e6ad32b72d4d91d003379f8801f718676c481e6937676f66e1824d57359",
+        "bytes": 24535
       },
       {
         "path": "tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj",
@@ -58,8 +78,8 @@
         "bytes": 307
       }
     ],
-    "testAssemblySha256": "0108b9c09e2a6daaf7b5ae0b6c1a126f29a76bf994ef870af86657e5e88be39f",
-    "geometryAssemblySha256": "3173c5e7f5dddafbc948f73a34c6a44e2754eb9c6fc6c74943787df457a3ac38",
+    "testAssemblySha256": "3b1d5b6926271a70f09d944b543f8546642128ad8cdf5d48d57c2da7a87c294f",
+    "geometryAssemblySha256": "2ef0bba44c62f9a6a51f6c7a15803b93268aa5b6652dda05c8d193525012e7cb",
     "command": "dotnet run --project tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj --configuration Release -- evidence/geometry"
   },
   "primary": "Incremental convex polyhedron clipping",
@@ -197,7 +217,7 @@
       "status": "Volume3D",
       "vertices": 72,
       "triangles": 44,
-      "volume": 0.06191459359895279,
+      "volume": 0.0619145935989528,
       "oracleVertices": 24
     },
     {
@@ -253,7 +273,7 @@
       "status": "Volume3D",
       "vertices": 110,
       "triangles": 68,
-      "volume": 0.027774520136645952,
+      "volume": 0.027774520136645945,
       "oracleVertices": 36
     },
     {
@@ -396,7 +416,7 @@
     {
       "name": "parallel_serial_exact_equivalence",
       "jobs": 270,
-      "maxDegreeOfParallelism": 8,
+      "maxDegreeOfParallelism": 4,
       "angles": [
         0,
         1,
@@ -405,6 +425,97 @@
         90
       ],
       "comparison": "Exact status, volume, ordered indices, positions, normals, local4D, and provenance; shared immutable shapes, no shared options."
+    },
+    {
+      "name": "board_N3",
+      "status": "Volume3D",
+      "vertices": 96,
+      "triangles": 60,
+      "volume": 64.74022400000001,
+      "oracleVertices": 32
+    },
+    {
+      "name": "cell_N3",
+      "status": "Volume3D",
+      "vertices": 24,
+      "triangles": 12,
+      "volume": 1,
+      "oracleVertices": 8
+    },
+    {
+      "name": "piece_N3_A_-1",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184842,
+      "oracleVertices": 40
+    },
+    {
+      "name": "piece_N3_turned_A_-1",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184848,
+      "oracleVertices": 40
+    },
+    {
+      "name": "piece_N3_A_1",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184838,
+      "oracleVertices": 40
+    },
+    {
+      "name": "piece_N3_turned_A_1",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184845,
+      "oracleVertices": 40
+    },
+    {
+      "name": "piece_N3_C_-1",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.056472368181848406,
+      "oracleVertices": 40
+    },
+    {
+      "name": "piece_N3_turned_C_-1",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.056472368181848455,
+      "oracleVertices": 40
+    },
+    {
+      "name": "piece_N3_C_1",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184844,
+      "oracleVertices": 40
+    },
+    {
+      "name": "piece_N3_turned_C_1",
+      "status": "Volume3D",
+      "vertices": 120,
+      "triangles": 76,
+      "volume": 0.05647236818184845,
+      "oracleVertices": 40
+    },
+    {
+      "name": "three_dimensional_board",
+      "boardVolume": 64.74022400000001,
+      "boardPlanes": 18,
+      "note": "N=3 board, cell and pieces are the W=0 sections of the 4D solids; the 3D frame has no hidden axis."
+    },
+    {
+      "name": "face_ids_and_local_coordinates",
+      "vertices": 6462,
+      "note": "Board bevel ids unique for N=3..11, 4D ids 100\u002B8i\u002Bj; LocalPosition bit-identical to WorldToLocal(Lift(p))."
     }
   ],
   "sweep": [
@@ -648,10 +759,10 @@
     },
     {
       "degrees": 34,
-      "boardVolume": 78.09082017896328,
-      "boardWidth": 10.855961536535148,
-      "pawnAVolume": 0.06811798409546647,
-      "pawnCVolume": 0.06811798409546642
+      "boardVolume": 78.09082017896326,
+      "boardWidth": 10.85596153653515,
+      "pawnAVolume": 0.06811798409546638,
+      "pawnCVolume": 0.06811798409546665
     },
     {
       "degrees": 35,
@@ -697,10 +808,10 @@
     },
     {
       "degrees": 41,
-      "boardVolume": 85.7816379923126,
-      "boardWidth": 11.925116940139302,
-      "pawnAVolume": 0.06558725045858953,
-      "pawnCVolume": 0.07482662160612721
+      "boardVolume": 85.78163799231255,
+      "boardWidth": 11.9251169401393,
+      "pawnAVolume": 0.06558725045858951,
+      "pawnCVolume": 0.07482662160612766
     },
     {
       "degrees": 42,
@@ -725,9 +836,9 @@
     },
     {
       "degrees": 45,
-      "boardVolume": 91.18226041967041,
+      "boardVolume": 91.18226041967043,
       "boardWidth": 12.671353518862931,
-      "pawnAVolume": 0.061914593598952794,
+      "pawnAVolume": 0.06191459359895275,
       "pawnCVolume": 0.07986398898209687
     },
     {
@@ -797,7 +908,7 @@
       "degrees": 55,
       "boardVolume": 79.03322032992456,
       "boardWidth": 10.986971298853106,
-      "pawnAVolume": 0.05524997573472422,
+      "pawnAVolume": 0.05524997573472408,
       "pawnCVolume": 0.06894003204358183
     },
     {
@@ -816,17 +927,17 @@
     },
     {
       "degrees": 58,
-      "boardVolume": 76.34027396962449,
-      "boardWidth": 10.612605630258866,
-      "pawnAVolume": 0.05380051769340665,
-      "pawnCVolume": 0.06659099694674848
+      "boardVolume": 76.34027396962452,
+      "boardWidth": 10.612605630258868,
+      "pawnAVolume": 0.05380051769340671,
+      "pawnCVolume": 0.06659099694674865
     },
     {
       "degrees": 59,
       "boardVolume": 75.52810746160154,
       "boardWidth": 10.499700574937975,
-      "pawnAVolume": 0.05336420356327309,
-      "pawnCVolume": 0.06588255074078479
+      "pawnAVolume": 0.053364203563273135,
+      "pawnCVolume": 0.06588255074078492
     },
     {
       "degrees": 60,
@@ -1210,7 +1321,7 @@
       "degrees": 114,
       "boardVolume": 70.86699786900778,
       "boardWidth": 9.851726506554419,
-      "pawnAVolume": 0.05089150840859348,
+      "pawnAVolume": 0.05089150840859342,
       "pawnCVolume": 0.06181670294500184
     },
     {
@@ -1229,7 +1340,7 @@
     },
     {
       "degrees": 117,
-      "boardVolume": 72.65965202552584,
+      "boardVolume": 72.65965202552582,
       "boardWidth": 10.100936138709248,
       "pawnAVolume": 0.051832958357433095,
       "pawnCVolume": 0.06338042051183627
@@ -1271,10 +1382,10 @@
     },
     {
       "degrees": 123,
-      "boardVolume": 77.19386666757686,
+      "boardVolume": 77.19386666757687,
       "boardWidth": 10.731269635523528,
-      "pawnAVolume": 0.05425969617407282,
-      "pawnCVolume": 0.06733557887955303
+      "pawnAVolume": 0.05425969617407277,
+      "pawnCVolume": 0.06733557887955302
     },
     {
       "degrees": 124,
@@ -1362,24 +1473,24 @@
     },
     {
       "degrees": 136,
-      "boardVolume": 89.99950227906415,
-      "boardWidth": 12.511472319150107,
-      "pawnAVolume": 0.06276982149576411,
-      "pawnCVolume": 0.07850583014489448
+      "boardVolume": 89.99950227906419,
+      "boardWidth": 12.511472319150108,
+      "pawnAVolume": 0.06276982149576404,
+      "pawnCVolume": 0.07850583014489454
     },
     {
       "degrees": 137,
-      "boardVolume": 88.52108611287443,
-      "boardWidth": 12.30594714988736,
-      "pawnAVolume": 0.06366602664034786,
-      "pawnCVolume": 0.07721621980831206
+      "boardVolume": 88.52108611287444,
+      "boardWidth": 12.305947149887357,
+      "pawnAVolume": 0.06366602664034778,
+      "pawnCVolume": 0.0772162198083121
     },
     {
       "degrees": 138,
-      "boardVolume": 87.1165643364482,
-      "boardWidth": 12.110694566457386,
-      "pawnAVolume": 0.06460524550825907,
-      "pawnCVolume": 0.07599106694387706
+      "boardVolume": 87.11656433644826,
+      "boardWidth": 12.110694566457388,
+      "pawnAVolume": 0.0646052455082591,
+      "pawnCVolume": 0.07599106694387717
     },
     {
       "degrees": 139,
@@ -1442,7 +1553,7 @@
       "boardVolume": 77.19386666757687,
       "boardWidth": 10.731269635523525,
       "pawnAVolume": 0.0673355788795529,
-      "pawnCVolume": 0.06733557887955272
+      "pawnCVolume": 0.06733557887955281
     },
     {
       "degrees": 148,
