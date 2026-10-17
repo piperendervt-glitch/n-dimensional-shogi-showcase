@@ -123,7 +123,7 @@ namespace Showcase.Unity.Settings
         {
             if(settings==null)return;float spare=SettingsSpare();if(Mathf.Approximately(spare,settingsSpare))return;settingsSpare=spare;
             Place(settingsHeading,-spare,0,1536+2*spare,88);settingsTitle.rectTransform.anchoredPosition=new Vector2(560+spare,-15);((RectTransform)backButton.transform).anchoredPosition=new Vector2(1423+2*spare,-18);
-            Place(navPanel,6-spare,100,196,694);Place(pieceHost,212-spare,100,186,888);Place(detailHost,1148+spare,100,380,888);
+            Place(navPanel,6-spare,100,196,694);Place(pieceHost,212-spare,100,186,888);LayoutCategory();
             headerStatus.rectTransform.anchoredPosition=new Vector2(16-spare,-807);Place(statusText.rectTransform,410-spare,995,1100+2*spare,25);
             float width=730+2*spare;Place(centerPanel,408-spare,100,width,888);
             // Projection tab: the view takes what the controller (230 px, up to 330 when there is room) leaves.
@@ -131,6 +131,34 @@ namespace Showcase.Unity.Settings
             Place(projectionRect,10,104,width-30-controls,774);Place(projectionControls,width-10-controls,104,controls,774);projectionView.Layout();
             // Section tabs: the plane diagrams fill the room right of the section in as many 174 px columns as fit.
             Place(planeMiniHost,546,104,width-556,584);LayoutPlaneMinis();
+            // A page of its own spreads its columns over the new width.
+            if(category!=2)BuildDetails();
+        }
+        // 駒の動き設定 works with the piece list and the movement preview beside it; every other category is a page of its own
+        // over the whole width right of the categories.
+        void LayoutCategory()
+        {
+            if(settings==null)return;float spare=Mathf.Max(0,settingsSpare);bool pieces=category==2;
+            pieceHost.gameObject.SetActive(pieces);centerPanel.gameObject.SetActive(pieces);
+            if(pieces)Place(detailHost,1148+spare,100,380,888);else Place(detailHost,212-spare,100,1316+2*spare,888);
+        }
+        // The columns of a page, side by side from the left; each is as wide as the 330 px controls of the piece details.
+        // The content grows only if a column outruns the page, so the scroll bar stays a fallback.
+        RectTransform[] Columns(RectTransform c,int count)
+        {
+            float stride=Mathf.Min(c.sizeDelta.x/count,460);var columns=new RectTransform[count];
+            for(int i=0;i<count;i++)
+            {
+                columns[i]=CfgUi.Rect(c,"Column "+i,i*stride,0,346,c.sizeDelta.y);
+                if(i>0){var line=CfgUi.Rect(c,"Column divider",i*stride-(stride-346)/2,8,1,c.sizeDelta.y-16);var img=line.gameObject.AddComponent<Image>();img.color=new Color(.67f,.59f,.42f,.25f);img.raycastTarget=false;}
+            }
+            return columns;
+        }
+        static void FitColumns(RectTransform c,RectTransform[] columns)
+        {
+            float bottom=c.sizeDelta.y;
+            foreach(var column in columns)foreach(RectTransform child in column)bottom=Mathf.Max(bottom,-child.anchoredPosition.y+child.sizeDelta.y+8);
+            c.sizeDelta=new Vector2(c.sizeDelta.x,bottom);
         }
         // One diagram per coordinate plane of the current N (6 in 4D, 10 in 5D, 55 in 11D), in a scrolling grid. When the selected
         // piece slides on k≥3 axes at once, one diagram per k-axis subspace instead (10 in 5D for k=3), the first 48 of them at most.
@@ -278,7 +306,7 @@ namespace Showcase.Unity.Settings
         static readonly System.Collections.Generic.Dictionary<string,string> ShortNames=new System.Collections.Generic.Dictionary<string,string>
         {{"king-step","王（玉将）"},{"rook-h11","飛車"},{"bishop-h22","角行"},{"gold-legacy","金将"},{"silver-legacy","銀将"},{"knight-legacy","桂馬"},{"lance-legacy","香車"},{"pawn-step","歩兵"}};
         void SelectCategory(int index)
-        {RememberScroll();category=index;for(int i=0;i<6;i++)actions["category-"+i].GetComponent<Image>().color=i==index?CfgUi.Blue:Dark;BuildDetails();Record("Category",index.ToString());}
+        {RememberScroll();category=index;for(int i=0;i<6;i++)actions["category-"+i].GetComponent<Image>().color=i==index?CfgUi.Blue:Dark;LayoutCategory();BuildDetails();Record("Category",index.ToString());}
         void SelectDefinition(string id)
         {
             RememberScroll();selectedDefinition=id;
@@ -304,68 +332,78 @@ namespace Showcase.Unity.Settings
             {
                 string[] tabs={"基本設定","詳細設定","表示設定"};
                 for(int i=0;i<3;i++){int t=i;Button(detailHost,"detail-tab-"+i,tabs[i],12+i*119,59,115,42,()=>{RememberScroll();detailTab=t;BuildDetails();},i==detailTab);}
+                detailScroll=CfgUi.Scroll(detailHost,"Details only scroll",10,114,360,760,out var pc,850);
+                BuildPieceDetails(pc);
+                detailScroll.verticalNormalizedPosition=detailPositions.TryGetValue(detailContext,out var position)?position:1;
+                return;
             }
-            detailScroll=CfgUi.Scroll(detailHost,"Details only scroll",10,category==2?114:64,360,category==2?760:810,out var c,category==5?1636:850);
-            if(category==2)BuildPieceDetails(c);
-            else if(category==0)
+            // Every other category is one page in columns that fits without scrolling from 1536×1024 up.
+            detailScroll=CfgUi.Scroll(detailHost,"Details only scroll",10,64,detailHost.sizeDelta.x-20,810,out var c,810);
+            RectTransform[] cols;
+            if(category==0)
             {
-                int n=DraftDimensions;
-                CfgUi.Label(c,"王捕獲 "+n+"Dデモ",8,7,330,44,26,Gold);
-                CfgUi.Label(c,"N="+n+" · 対称"+n+"D\n\n王の捕獲で勝ち。\n着手できる手がなければ引分。\n時計が0になると負け。\n\n成り・打ち・反復判定なし。\n自玉安全による着手制限なし。",8,73,330,375,20);
-                CfgUi.Label(c,"今回のデモ用ルールです。\n正式ルールの確定ではありません。",8,473,330,89,17,Muted);
-                Field(c,"name","表示名",draft.Name,585,v=>{draft.Edit(d=>d.Name=v);AfterEdit();});
-                if(startupLoadError!="")Button(c,"recover-default","元保存を保持して新しい設定で復旧",8,720,330,58,RecoverToNewBundle);
+                int n=DraftDimensions;cols=Columns(c,2);
+                CfgUi.Label(cols[0],"王捕獲 "+n+"Dデモ",8,7,330,44,26,Gold);
+                CfgUi.Label(cols[0],"N="+n+" · 対称"+n+"D\n\n王の捕獲で勝ち。\n着手できる手がなければ引分。\n時計が0になると負け。\n\n成り・打ち・反復判定なし。\n自玉安全による着手制限なし。",8,73,330,375,20);
+                CfgUi.Label(cols[0],"今回のデモ用ルールです。\n正式ルールの確定ではありません。",8,473,330,89,17,Muted);
+                Field(cols[1],"name","表示名",draft.Name,7,v=>{draft.Edit(d=>d.Name=v);AfterEdit();});
+                if(startupLoadError!="")Button(cols[1],"recover-default","元保存を保持して新しい設定で復旧",8,142,330,58,RecoverToNewBundle);
             }
             else if(category==1)
             {
-                int n=DraftDimensions;var axes=SliceAxes.Axes(n);
-                CfgUi.Label(c,"次元数 N（"+BoundsN.MinDimensions+"〜"+BoundsN.MaxDimensions+"）",8,7,330,32,19);
+                int n=DraftDimensions;var axes=SliceAxes.Axes(n);cols=Columns(c,2);var left=cols[0];
+                CfgUi.Label(left,"次元数 N（"+BoundsN.MinDimensions+"〜"+BoundsN.MaxDimensions+"）",8,7,330,32,19);
                 int choices=BoundsN.MaxDimensions-BoundsN.MinDimensions+1;float choiceWidth=(330-3f*(choices-1))/choices;
-                for(int i=0;i<choices;i++){int k=BoundsN.MinDimensions+i;var b=Button(c,"dimensions-"+k,k.ToString(CultureInfo.InvariantCulture),8+i*(choiceWidth+3),45,choiceWidth,40,()=>SetDimensions(k),k==n);b.GetComponentInChildren<Text>().fontSize=16;}
+                for(int i=0;i<choices;i++){int k=BoundsN.MinDimensions+i;var b=Button(left,"dimensions-"+k,k.ToString(CultureInfo.InvariantCulture),8+i*(choiceWidth+3),45,choiceWidth,40,()=>SetDimensions(k),k==n);b.GetComponentInChildren<Text>().fontSize=16;}
                 // The one line the settings screen says about a large N; nothing else warns or asks.
-                if(n>=8)CfgUi.Label(c,"N が大きいと表示が混み合い、動作も重くなります。",8,92,330,30,15,Muted);
+                if(n>=8)CfgUi.Label(left,"N が大きいと表示が混み合い、動作も重くなります。",8,92,330,30,15,Muted);
                 // Initial layout: the flat 40 pieces, or that plane copied to all 9 cells of one more axis (any axis but X and Z).
                 int? copy=DraftCopyAxis;float y=n>=8?130:100;
-                CfgUi.Label(c,"初期配置",8,y,330,32,19);y+=38;
-                LayoutRow(c,DraftData.FlatLayout,"平面（従来）",40,y,!copy.HasValue);y+=46;
-                for(int core=2;core<n;core++){LayoutRow(c,DraftData.CopyLayout(core),SliceAxes.AxisName(SliceAxes.AxisOfCore(core))+"方向にコピー",360,y,copy==core);y+=46;}
+                CfgUi.Label(left,"初期配置",8,y,330,32,19);y+=38;
+                LayoutRow(left,DraftData.FlatLayout,"平面（従来）",40,y,!copy.HasValue);y+=46;
+                for(int core=2;core<n;core++){LayoutRow(left,DraftData.CopyLayout(core),SliceAxes.AxisName(SliceAxes.AxisOfCore(core))+"方向にコピー",360,y,copy==core);y+=46;}
+                // The right column says what the chosen N and layout make of the board.
+                var right=cols[1];
                 string copyName=copy.HasValue?SliceAxes.AxisName(SliceAxes.AxisOfCore(copy.Value)):"";
-                CfgUi.Label(c,copy.HasValue?"初期配置：360駒（40駒 × 9層）":"初期配置：40駒",8,y+8,330,44,25,Gold);y+=72;
+                CfgUi.Label(right,copy.HasValue?"初期配置：360駒（40駒 × 9層）":"初期配置：40駒",8,7,330,44,25,Gold);
                 string hidden=string.Join("、",Enumerable.Range(3,n-3).Select(core=>SliceAxes.AxisName(SliceAxes.AxisOfCore(core))+"=0"));
                 string layoutText=!copy.HasValue?"初期配置は両側20駒。\n表示の駒配置面はY=h"+(hidden==""?"":"、"+hidden)+"。\n開始中心Pは駒配置面の中央。"
                     :copyName+" = −4〜4 の 9 層すべてに\n従来の 40 駒をコピー。\n王は各陣 9 枚。\nどれか 1 枚を取られると負け。\n\n"+(copy==2?"表示では Y=−4 の層が盤に載り、\n9 層が上に積み重なります。":"表示の駒配置面はY=h"+(hidden==""?"":"、"+hidden)+"。\n"+copyName+" を動かすと別の層が現れます。")+"\n開始中心Pは中央層 "+copyName+"=0。";
-                var description=CfgUi.Label(c,"論理盤：各軸 −4〜4\n"+string.Join(" / ",axes.Select(SliceAxes.AxisName))+"\n\n先手 A：+Z方向\n後手 B：−Z方向\n\n"+layoutText+"\n先手Aから開始します。\n\n試し配置は対局に入りません。",8,y,330,copy.HasValue?560:450,20);y+=description.rectTransform.sizeDelta.y+41;
-                CfgUi.Label(c,"試し配置セル "+string.Join(",",axes.Select(SliceAxes.AxisName)),8,y,330,30,18);y+=44;
-                var coordinate=CfgUi.Input(c,string.Join(",",Enumerable.Repeat("0",n)),8,y,330,41,value=>{var p=value.Split(',');if(p.Length==n&&p.All(s=>int.TryParse(s,NumberStyles.Integer,CultureInfo.InvariantCulture,out _))){selectedCell=FromUiAxes(p.Select(s=>int.Parse(s,NumberStyles.Integer,CultureInfo.InvariantCulture)).ToArray(),n);if(!selectedCell.InBounds)Notice("各軸 −4〜4で指定してください。");}else Notice(n+"個の整数を入力してください。");});inputs["coordinate"]=coordinate;y+=54;
-                Button(c,"place-coordinate","指定セルに置く",8,y,330,42,()=>PlaceAt(selectedCell));y+=60;
-                if(c.sizeDelta.y<y)c.sizeDelta=new Vector2(c.sizeDelta.x,y);
+                CfgUi.Label(right,"論理盤：各軸 −4〜4\n"+string.Join(" / ",axes.Select(SliceAxes.AxisName))+"\n\n先手 A：+Z方向\n後手 B：−Z方向\n\n"+layoutText+"\n先手Aから開始します。\n\n試し配置は対局に入りません。",8,72,330,copy.HasValue?560:450,20);
             }
             else if(category==3)
             {
-                CfgUi.Label(c,"走り駒の遮蔽",8,8,330,35,21);
-                Button(c,"occlusion-lattice","格子直線 / 1",8,58,330,44,()=>{draft.Edit(d=>d.Occlusion="lattice-line/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="lattice-line/1");
-                Button(c,"occlusion-supercover","閉Supercover / 1",8,111,330,44,()=>{draft.Edit(d=>d.Occlusion="supercover-closed/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="supercover-closed/1");
-                Field(c,"time","双方の持ち時間（秒）",options.TimeSeconds,211,v=>{options.TimeSeconds=v;AfterEdit();});
-                CfgUi.Label(c,"加算・秒読みなし\n\n王捕獲／手なし／時間切れ\n成り・打ちなし\n自玉安全による制限なし",8,333,330,238,20);
+                cols=Columns(c,2);
+                CfgUi.Label(cols[0],"走り駒の遮蔽",8,8,330,35,21);
+                Button(cols[0],"occlusion-lattice","格子直線 / 1",8,58,330,44,()=>{draft.Edit(d=>d.Occlusion="lattice-line/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="lattice-line/1");
+                Button(cols[0],"occlusion-supercover","閉Supercover / 1",8,111,330,44,()=>{draft.Edit(d=>d.Occlusion="supercover-closed/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="supercover-closed/1");
+                Field(cols[0],"time","双方の持ち時間（秒）",options.TimeSeconds,211,v=>{options.TimeSeconds=v;AfterEdit();});
+                CfgUi.Label(cols[1],"加算・秒読みなし\n\n王捕獲／手なし／時間切れ\n成り・打ちなし\n自玉安全による制限なし",8,8,330,238,20);
             }
             else if(category==4)
             {
-                int n=DraftDimensions;
-                CfgUi.Label(c,"共通"+n+"D CPU",8,8,330,42,25,Gold);
-                CfgUi.Label(c,"全"+n+"Dの着手可能手から\n捕獲を優先します。\n\n両側が同じ規則で動きます。",8,69,330,165,20);
-                Field(c,"seed","同点処理 seed",options.CpuSeed,264,v=>{options.CpuSeed=v;AfterEdit();});
-                Field(c,"budget","照会予算",options.CpuBudget,389,v=>{options.CpuBudget=v;AfterEdit();});
-                CfgUi.Label(c,"CPU戦の演出",8,514,330,34,21,Gold);
-                CfgUi.Toggle(c,"着手前に"+n+"D回転で超平面を見せる",CpuShowEnabled,8,554,330,v=>{CpuShowEnabled=v;Record("Pref",CpuShowKey+"="+v);});
-                CfgUi.Toggle(c,"手番交代ごとに初期表示へ戻す",TurnResetEnabled,8,596,330,v=>{TurnResetEnabled=v;Record("Pref",TurnResetKey+"="+v);});
+                int n=DraftDimensions;cols=Columns(c,2);var left=cols[0];var right=cols[1];
+                CfgUi.Label(left,"共通"+n+"D CPU",8,8,330,42,25,Gold);
+                CfgUi.Label(left,"全"+n+"Dの着手可能手から\n捕獲を優先します。\n\n両側が同じ規則で動きます。",8,69,330,165,20);
+                Field(left,"seed","同点処理 seed",options.CpuSeed,264,v=>{options.CpuSeed=v;AfterEdit();});
+                Field(left,"budget","照会予算",options.CpuBudget,389,v=>{options.CpuBudget=v;AfterEdit();});
+                CfgUi.Label(left,"強さの段階設定はありません。",8,514,330,40,17,Muted);
+                CfgUi.Label(right,"CPU戦の演出",8,8,330,34,21,Gold);
+                CfgUi.Toggle(right,"着手前に"+n+"D回転で超平面を見せる",CpuShowEnabled,8,48,330,v=>{CpuShowEnabled=v;Record("Pref",CpuShowKey+"="+v);});
+                CfgUi.Toggle(right,"手番交代ごとに初期表示へ戻す",TurnResetEnabled,8,90,330,v=>{TurnResetEnabled=v;Record("Pref",TurnResetKey+"="+v);});
                 int delay=int.TryParse(options.CpuDelayMilliseconds,out var parsed)?parsed:500;
-                var delayLabel=CfgUi.Label(c,"",8,644,330,30,18);void ShowDelay(float ms)=>delayLabel.text="画面切り替えの待ち時間："+(ms/1000f).ToString("0.0")+" 秒";ShowDelay(delay);
-                Cfg2Ui.Slider(c,8,682,330,0,5000,Mathf.Clamp(delay,0,5000),v=>{int ms=Mathf.RoundToInt(v/100f)*100;ShowDelay(ms);options.CpuDelayMilliseconds=ms.ToString(System.Globalization.CultureInfo.InvariantCulture);AfterEdit();});
-                CfgUi.Label(c,"演出中と待ち時間の間は、CPUの\n持ち時間を消費しません。",8,718,330,52,16,Muted);
-                CfgUi.Label(c,"強さの段階設定はありません。",8,782,330,40,17,Muted);
+                var delayLabel=CfgUi.Label(right,"",8,138,330,30,18);void ShowDelay(float ms)=>delayLabel.text="画面切り替えの待ち時間："+(ms/1000f).ToString("0.0")+" 秒";ShowDelay(delay);
+                Cfg2Ui.Slider(right,8,176,330,0,5000,Mathf.Clamp(delay,0,5000),v=>{int ms=Mathf.RoundToInt(v/100f)*100;ShowDelay(ms);options.CpuDelayMilliseconds=ms.ToString(System.Globalization.CultureInfo.InvariantCulture);AfterEdit();});
+                CfgUi.Label(right,"演出中と待ち時間の間は、CPUの\n持ち時間を消費しません。",8,212,330,52,16,Muted);
             }
-            // The help text ends well inside its label, so the sound section fits above the fold.
-            else{BuildDisplay(c);BuildSound(c,816);BuildGraphics(c,1076);}
+            // 表示 and サウンド, 画質, then the controls help: three columns.
+            else
+            {
+                cols=Columns(c,3);
+                CfgUi.Label(cols[0],"表示",8,8,330,34,21,Gold);BuildDisplay(cols[0],50,cols[2]);BuildSound(cols[0],462);
+                BuildGraphics(cols[1],8);
+            }
+            FitColumns(c,cols);
             detailScroll.verticalNormalizedPosition=detailPositions.TryGetValue(detailContext,out var value)?value:1;
         }
         void Field(RectTransform c,string id,string label,string value,float y,Action<string> edited)
@@ -561,7 +599,8 @@ namespace Showcase.Unity.Settings
             if(startupLoadError==""&&!AutoSave())Record("OptionsLeftUnsaved",notice);
             ShowMenu();
         }
-        void BuildDisplay(RectTransform c,float y=8)
+        // The controls help follows the toggles, or heads a column of its own (helpColumn) on the 表示・操作 page.
+        void BuildDisplay(RectTransform c,float y=8,RectTransform helpColumn=null)
         {
             Toggle(c,"移動候補を表示",showCandidates,8,y,330,v=>showCandidates=v);Toggle(c,"攻撃範囲を表示",showAttacks,8,y+49,330,v=>showAttacks=v);Toggle(c,"座標グリッドを表示",showGrid,8,y+98,330,v=>showGrid=v);
             Toggle(c,"断面補助を表示",showHelpers,8,y+147,330,v=>showHelpers=v);
@@ -569,7 +608,8 @@ namespace Showcase.Unity.Settings
             Toggle(c,"拡大した超平面図に駒の点を表示",MagnifierDotsEnabled,8,y+245,330,v=>{MagnifierDotsEnabled=v;Record("Pref",MagnifierDotsKey+"="+v);});
             Toggle(c,"超平面図に駒の点を小さく表示",PanelDotsEnabled,8,y+294,330,v=>{PanelDotsEnabled=v;Record("Pref",PanelDotsKey+"="+v);});
             Toggle(c,"超平面図を盤の断面に合わせて並べ替える",PanelsFollowSection,8,y+343,330,v=>{PanelsFollowSection=v;Record("Pref",PanelsFollowKey+"="+v);});
-            helpText=CfgUi.Label(c,HelpText(),8,y+416,330,440,17);
+            if(helpColumn==null){helpText=CfgUi.Label(c,HelpText(),8,y+416,330,440,17);return;}
+            CfgUi.Label(helpColumn,"操作",8,8,330,34,21,Gold);helpText=CfgUi.Label(helpColumn,HelpText(),8,50,330,440,17);
         }
         Text helpText;
         // Ctrl+drag turns X and Y (Z with Shift) against the current rotation axis; a 3D board has nothing to turn against.
