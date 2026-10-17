@@ -20,9 +20,7 @@ namespace Showcase.Geometry
             if(instance.Shape.Planes.Count>options.MaxConstraints) return Failure(SectionStatus.CapacityExceeded,instance,"Constraint capacity exceeded.");
             // Projection of the source AABB encloses the true intersection; expand it so
             // seed faces can never be mistaken for physical source faces.
-            int cornerCount=instance.Shape.Bounds.CornerCount; var corners=new List<Vec3>(cornerCount);
-            for(int i=0;i<cornerCount;i++) corners.Add(frame.Project(instance.LocalToWorld(instance.Shape.Bounds.Corner(i))));
-            Bounds3 bound=BoundsOf(corners); double margin=Math.Max(.01,bound.Size.Length*.1);
+            Bounds3 bound=ProjectedBounds(instance,frame); double margin=Math.Max(.01,bound.Size.Length*.1);
             Vec3 lo=bound.Min-new Vec3(margin,margin,margin),hi=bound.Max+new Vec3(margin,margin,margin);
             var faces=Seed(lo,hi);
             // Invocation-local scratch: reuse classifications and signed distances,
@@ -137,6 +135,29 @@ namespace Showcase.Geometry
             f.Add(new Face(new List<Vec3>{new Vec3(lo.X,lo.Y,lo.Z),new Vec3(lo.X,hi.Y,lo.Z),new Vec3(hi.X,hi.Y,lo.Z),new Vec3(hi.X,lo.Y,lo.Z)},new Vec3(0,0,-1),-5,SurfaceKind.Bottom));
             f.Add(new Face(new List<Vec3>{new Vec3(lo.X,lo.Y,hi.Z),new Vec3(hi.X,lo.Y,hi.Z),new Vec3(hi.X,hi.Y,hi.Z),new Vec3(lo.X,hi.Y,hi.Z)},new Vec3(0,0,1),-6,SurfaceKind.Top));
             return f;
+        }
+        // Exact 3D bounds of the source box's 2^N projected corners. Up to 4D the corners are still projected one by one,
+        // so 4D sections stay bit-identical; beyond that the 2^N loop (2048 corners per cell at 11D) is replaced by an O(N)
+        // form: the projected centre plus, on each shown axis, the sum of |axis component| * half-width.
+        // LocalToWorldDirection only flips signs, which |.| ignores. Both give the same box up to rounding.
+        private static Bounds3 ProjectedBounds(InstanceN instance,SliceFrame frame)
+        {
+            var box=instance.Shape.Bounds;int n=box.Dimensions;
+            if(n<=4)
+            {
+                var corners=new List<Vec3>(box.CornerCount);
+                for(int i=0;i<box.CornerCount;i++) corners.Add(frame.Project(instance.LocalToWorld(box.Corner(i))));
+                return BoundsOf(corners);
+            }
+            var centre=new double[n];
+            for(int i=0;i<n;i++) centre[i]=(box.Min.Axis(i)+box.Max.Axis(i))*.5;
+            var c=frame.Project(instance.LocalToWorld(new VecN(centre)));double x=0,y=0,z=0;
+            for(int i=0;i<n;i++)
+            {
+                double half=(box.Max.Axis(i)-box.Min.Axis(i))*.5;
+                x+=Math.Abs(frame.AxisX.Axis(i))*half;y+=Math.Abs(frame.AxisY.Axis(i))*half;z+=Math.Abs(frame.AxisZ.Axis(i))*half;
+            }
+            var extent=new Vec3(x,y,z);return new Bounds3(c-extent,c+extent);
         }
         internal static void AddUnique(List<Vec3> points,Vec3 p,double eps) { foreach(var q in points) if((p-q).LengthSquared<=eps*eps) return; points.Add(p); }
         internal static Bounds3 BoundsOf(IReadOnlyList<Vec3> p)

@@ -180,7 +180,7 @@ namespace Showcase.Unity.Settings
                 string[] tabs={"基本設定","詳細設定","表示設定"};
                 for(int i=0;i<3;i++){int t=i;Button(detailHost,"detail-tab-"+i,tabs[i],12+i*119,59,115,42,()=>{RememberScroll();detailTab=t;BuildDetails();},i==detailTab);}
             }
-            detailScroll=CfgUi.Scroll(detailHost,"Details only scroll",10,category==2?114:64,360,category==2?760:810,out var c,850);
+            detailScroll=CfgUi.Scroll(detailHost,"Details only scroll",10,category==2?114:64,360,category==2?760:810,out var c,category==5?1380:850);
             if(category==2)BuildPieceDetails(c);
             else if(category==0)
             {
@@ -231,7 +231,7 @@ namespace Showcase.Unity.Settings
                 CfgUi.Label(c,"強さの段階設定はありません。",8,782,330,40,17,Muted);
             }
             // The help text ends well inside its label, so the sound section fits above the fold.
-            else{BuildDisplay(c);BuildSound(c,560);}
+            else{BuildDisplay(c);BuildSound(c,560);BuildGraphics(c,820);}
             detailScroll.verticalNormalizedPosition=detailPositions.TryGetValue(detailContext,out var value)?value:1;
         }
         void Field(RectTransform c,string id,string label,string value,float y,Action<string> edited)

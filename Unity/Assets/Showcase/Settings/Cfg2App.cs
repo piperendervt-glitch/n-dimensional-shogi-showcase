@@ -96,6 +96,7 @@ namespace Showcase.Unity.Settings
                 backgroundCamera=background.GetComponent<Camera>();backgroundCamera.depth=rig.Camera.depth-1;backgroundCamera.enabled=false;Destroy(background.GetComponent<AudioListener>());
                 backgroundCamera.cullingMask&=~(1<<30);
                 previewRenderer=new CfgPreviewRenderer(rig){Fill=true,StrictDefinitions=true};visuals=new Cfg2Visuals(rig);slice=NewPivotSlice();
+                InitializeGraphicsQuality(standalone&&Arg("--cfg2-smoke","")=="");
                 GameObject.Find("CFG1 exact cell sections").layer=30;GameObject.Find("CFG2 exact cell faces").layer=30;
                 previewRenderer.SetDisplayState(slice.DisplayState);
                 draft=SettingsDraft.CreateMatchDemo();options=new MatchOptionsRaw();preview=PreviewSession.CreateExperiment();
