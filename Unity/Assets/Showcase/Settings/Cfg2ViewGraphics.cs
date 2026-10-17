@@ -248,7 +248,8 @@ namespace Showcase.Unity.Settings
             float radius=DotRadius;
             var order=new List<(int index,float depth)>(Dots.Count);
             for(int i=0;i<Dots.Count;i++)order.Add((i,Cfg2Projection.Depth(Dots[i].At/h,CameraRotation)));
-            order.Sort((x,y)=>y.depth.CompareTo(x.depth));
+            // Hollow rings (pieces off the panel's space) go under every filled dot, so a ring never hides a piece that is there.
+            order.Sort((x,y)=>Dots[x.index].Off!=Dots[y.index].Off?(Dots[x.index].Off?-1:1):y.depth.CompareTo(x.depth));
             foreach(var (index,depth) in order)
             {
                 var dot=Dots[index];if(dot.Selected)continue;var at=P(dot.At);var color=Cfg2PanelDot.Of(dot.Side);float fade=Mathf.Clamp(1-depth*.45f,.5f,1);

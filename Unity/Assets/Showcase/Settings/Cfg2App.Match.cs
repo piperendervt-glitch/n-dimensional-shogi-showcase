@@ -34,7 +34,7 @@ namespace Showcase.Unity.Settings
         const float MagnifiableWidth=250;
         // A right click pins the magnifier: it stays when the pointer leaves, until another right click. Unpinned it stays while the
         // pointer is on its panel or on the magnifier itself, and a moment longer so the pointer can cross the gap between them.
-        bool magnifierPinned;float magnifierHoverTime;Text magnifierPinLabel;const float MagnifierGraceSeconds=.35f;
+        bool magnifierPinned;float magnifierHoverTime,hoverCandidateTime;Cfg2MiniView hoverCandidate;Text magnifierPinLabel;const float MagnifierGraceSeconds=.35f,MagnifierSwitchSeconds=.25f;
         // A clicked magnifier dot glides C to where that piece is on the board, the orientation unchanged.
         VecN sectionGlideFrom,sectionGlideTo;float sectionGlideStart=-1;const float SectionGlideSeconds=.4f;
         // In CPU games every hand-over returns the 4D view to the initial state (C=P, no rotation).
@@ -211,7 +211,12 @@ namespace Showcase.Unity.Settings
             {
                 if(ownership.Owner!=InputOwner.None){HideMagnifier();return;}
                 Vector2 pointer=Input.mousePosition;var hovered=magnifiable.FirstOrDefault(m=>m.IsPointerOver(pointer));
-                if(hovered!=null){magnifierHoverTime=Time.unscaledTime;ShowMagnifier(hovered);}
+                // With a magnifier up, another panel takes over only after the pointer rests on it a moment, so the pointer can
+                // cross the panels between its own and the magnifier.
+                if(hovered!=hoverCandidate){hoverCandidate=hovered;hoverCandidateTime=Time.unscaledTime;}
+                bool other=shown&&hovered!=null&&(RectTransform)hovered.transform!=magnifiedSource;
+                if(hovered!=null&&(!other||Time.unscaledTime-hoverCandidateTime>=MagnifierSwitchSeconds)){magnifierHoverTime=Time.unscaledTime;ShowMagnifier(hovered);}
+                else if(other)magnifierHoverTime=Time.unscaledTime;
                 else if(shown&&magnifier.IsPointerOver(pointer))magnifierHoverTime=Time.unscaledTime;
                 else if(!shown||Time.unscaledTime-magnifierHoverTime>MagnifierGraceSeconds){HideMagnifier();return;}
             }
