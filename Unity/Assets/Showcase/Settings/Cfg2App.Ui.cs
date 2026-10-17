@@ -365,7 +365,7 @@ namespace Showcase.Unity.Settings
                 // The right column says what the chosen N and layout make of the board.
                 var right=cols[1];
                 string copyName=copy.HasValue?SliceAxes.AxisName(SliceAxes.AxisOfCore(copy.Value)):"";
-                CfgUi.Label(right,copy.HasValue?"初期配置：360駒（40駒 × 9層）":"初期配置：40駒",8,7,330,44,25,Gold);
+                CfgUi.Label(right,copy.HasValue?"初期配置：360駒（40駒 × 9層）":"初期配置：40駒",8,7,420,44,23,Gold);
                 string hidden=string.Join("、",Enumerable.Range(3,n-3).Select(core=>SliceAxes.AxisName(SliceAxes.AxisOfCore(core))+"=0"));
                 string layoutText=!copy.HasValue?"初期配置は両側20駒。\n表示の駒配置面はY=h"+(hidden==""?"":"、"+hidden)+"。\n開始中心Pは駒配置面の中央。"
                     :copyName+" = −4〜4 の 9 層すべてに\n従来の 40 駒をコピー。\n王は各陣 9 枚。\nどれか 1 枚を取られると負け。\n\n"+(copy==2?"表示では Y=−4 の層が盤に載り、\n9 層が上に積み重なります。":"表示の駒配置面はY=h"+(hidden==""?"":"、"+hidden)+"。\n"+copyName+" を動かすと別の層が現れます。")+"\n開始中心Pは中央層 "+copyName+"=0。";
@@ -394,7 +394,7 @@ namespace Showcase.Unity.Settings
                 int delay=int.TryParse(options.CpuDelayMilliseconds,out var parsed)?parsed:500;
                 var delayLabel=CfgUi.Label(right,"",8,138,330,30,18);void ShowDelay(float ms)=>delayLabel.text="画面切り替えの待ち時間："+(ms/1000f).ToString("0.0")+" 秒";ShowDelay(delay);
                 Cfg2Ui.Slider(right,8,176,330,0,5000,Mathf.Clamp(delay,0,5000),v=>{int ms=Mathf.RoundToInt(v/100f)*100;ShowDelay(ms);options.CpuDelayMilliseconds=ms.ToString(System.Globalization.CultureInfo.InvariantCulture);AfterEdit();});
-                CfgUi.Label(right,"演出中と待ち時間の間は、CPUの\n持ち時間を消費しません。",8,212,330,52,16,Muted);
+                CfgUi.Label(right,"演出中と待ち時間の間は、CPUの\n持ち時間を消費しません。",8,222,330,52,16,Muted);
             }
             // 表示 and サウンド, 画質, then the controls help: three columns.
             else
