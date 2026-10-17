@@ -12,12 +12,12 @@ namespace Showcase.Unity.Settings
     internal enum Cfg2Plane { XY,XZ,XW,YZ }
     internal sealed class Cfg2PlaneView : MonoBehaviour
     {
-        Cfg2Plane plane;Cfg2PlaneGraphic graphic;Text heading,condition;Action<Q4,long> clicked;InputOwnership ownership;
+        Cfg2Plane plane;Cfg2PlaneGraphic graphic;Text heading,condition;Action<QN,long> clicked;InputOwnership ownership;
         readonly Dictionary<string,Graphic> icons=new Dictionary<string,Graphic>();
-        Q4 center,downCell;long revision,downRevision;int pointer;bool hasDown;Vector2 downPosition;
+        QN center,downCell;long revision,downRevision;int pointer;bool hasDown;Vector2 downPosition;
         Func<long> stateVersion,draftVersion;long downStateVersion,downDraftVersion,contentVersion,downContentVersion;
         int horizontal,vertical;bool showCandidates,showAttacks,showGrid;
-        HashSet<Q4> gs=new HashSet<Q4>(),ps=new HashSet<Q4>(),attacks=new HashSet<Q4>();
+        HashSet<QN> gs=new HashSet<QN>(),ps=new HashSet<QN>(),attacks=new HashSet<QN>();
         public Cfg2Plane Plane=>plane;
         public long Revision=>revision;
         public int VisiblePieceCount {get;private set;}
@@ -25,7 +25,7 @@ namespace Showcase.Unity.Settings
         public int VisibleAttacks=>attacks.Count(Contains);
         public string FixedCoordinates=>condition==null?"":condition.text;
         public int RejectedStaleCount {get;private set;}
-        public void Initialize(Cfg2Plane view,Action<Q4,long> selected,InputOwnership input=null,Func<long> stateRevision=null,Func<long> draftRevision=null)
+        public void Initialize(Cfg2Plane view,Action<QN,long> selected,InputOwnership input=null,Func<long> stateRevision=null,Func<long> draftRevision=null)
         {
             if(hasDown&&ownership!=null&&ownership.IsOwner(InputOwner.Board,pointer))ownership.Cancel();hasDown=false;
             Cfg2Ui.ClearOwned(transform);icons.Clear();
@@ -39,10 +39,10 @@ namespace Showcase.Unity.Settings
             graphic.raycastTarget=selected!=null;
             if(selected!=null){var surface=rect.gameObject.AddComponent<CfgPointerSurface>();surface.Down=OnDown;surface.Up=OnUp;}
         }
-        public void Refresh(IEnumerable<CfgVisualPiece> source,IEnumerable<Q4> g,IEnumerable<Q4> p,IEnumerable<Q4> attacked,Q4 selected,long stateRevision,bool candidates=true,bool attack=true,bool grid=true)
+        public void Refresh(IEnumerable<CfgVisualPiece> source,IEnumerable<QN> g,IEnumerable<QN> p,IEnumerable<QN> attacked,QN selected,long stateRevision,bool candidates=true,bool attack=true,bool grid=true)
         {
             center=selected;revision=stateRevision;contentVersion++;showCandidates=candidates;showAttacks=attack;showGrid=grid;
-            gs=new HashSet<Q4>(g??Array.Empty<Q4>());ps=new HashSet<Q4>(p??Array.Empty<Q4>());attacks=new HashSet<Q4>(attacked??Array.Empty<Q4>());
+            gs=new HashSet<QN>(g??Array.Empty<QN>());ps=new HashSet<QN>(p??Array.Empty<QN>());attacks=new HashSet<QN>(attacked??Array.Empty<QN>());
             condition.text=string.Join("  ",Enumerable.Range(0,4).Where(i=>i!=horizontal&&i!=vertical).Select(i=>AxisName(i)+"="+center[i]));
             var live=new HashSet<string>();VisiblePieceCount=0;
             foreach(var item in source??Array.Empty<CfgVisualPiece>())
@@ -58,16 +58,16 @@ namespace Showcase.Unity.Settings
             graphic.SetVerticesDirty();
         }
         static string AxisName(int axis)=>axis==0?"Z":axis==1?"X":axis==2?"Y":"W";
-        public bool Contains(Q4 cell)
+        public bool Contains(QN cell)
         {for(int axis=0;axis<4;axis++)if(axis!=horizontal&&axis!=vertical&&cell[axis]!=center[axis])return false;return true;}
-        public Q4 Cell(int h,int v)
-        {var q=center.ToArray();q[horizontal]=h;q[vertical]=v;return new Q4(q[0],q[1],q[2],q[3]);}
-        public Vector2 CellScreenCenter(Q4 cell,Camera eventCamera=null)
+        public QN Cell(int h,int v)
+        {var q=center.ToArray();q[horizontal]=h;q[vertical]=v;return new QN(q[0],q[1],q[2],q[3]);}
+        public Vector2 CellScreenCenter(QN cell,Camera eventCamera=null)
         {
             GridRect(out float left,out float top,out float pitch);
             return RectTransformUtility.WorldToScreenPoint(eventCamera,graphic.rectTransform.TransformPoint(new Vector3(left+(cell[horizontal]+4.5f)*pitch,-top-(4.5f-cell[vertical])*pitch)));
         }
-        public bool TryCellAt(Vector2 screen,Camera eventCamera,out Q4 cell)
+        public bool TryCellAt(Vector2 screen,Camera eventCamera,out QN cell)
         {
             cell=default;if(!RectTransformUtility.ScreenPointToLocalPointInRectangle(graphic.rectTransform,screen,eventCamera,out var local))return false;
             GridRect(out float left,out float top,out float pitch);float x=local.x-left,y=-local.y-top;

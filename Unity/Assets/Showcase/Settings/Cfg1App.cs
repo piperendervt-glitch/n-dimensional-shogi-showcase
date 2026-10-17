@@ -27,7 +27,7 @@ namespace Showcase.Unity.Settings
         readonly List<CfgMiniView> minis=new List<CfgMiniView>();
         readonly Dictionary<string,Button> actions=new Dictionary<string,Button>();
         string category="駒の動き設定",selectedDefinition="king-step",selectedPiece="subject",tool="選択",notice="";
-        string runRoot,runtimeRoot,savePath,lastSavedTrial="";Side placementSide=Side.A;Q4 selectedCell;
+        string runRoot,runtimeRoot,savePath,lastSavedTrial="";Side placementSide=Side.A;QN selectedCell;
         bool opened,geometryDirty=true,quitting;string historyOwner="draft";
         DraftData savedDraftBaseline;bool savedBaselinePersisted;string detailContext="",coordinateRaw="0,0,0,0";bool coordinateValid=true;
         float yaw=35,pitch=29,distance=.72f;Vector3 pan;Vector2 pointerStart,lastPointer;long pointerRevision;int pointerButton=-1;bool pointerMoved;
@@ -207,7 +207,7 @@ namespace Showcase.Unity.Settings
         void BuildCoordinateControls(RectTransform c,float y)
         {
             CfgUi.Label(c,"選択セル (X,Y,Z,W)",6,y,325,35,18);
-            CfgUi.Input(c,coordinateRaw,6,y+46,325,40,v=>{coordinateRaw=v;var a=v.Split(',');int[] n=new int[4];coordinateValid=a.Length==4;for(int i=0;i<4&&coordinateValid;i++)coordinateValid=int.TryParse(a[i],out n[i])&&n[i]>=-4&&n[i]<=4;if(coordinateValid){selectedCell=new Q4(n[2],n[0],n[1],n[3]);Notice("選択セル "+v);}else Notice("座標入力不正：−4〜4の整数をX,Y,Z,Wの順で4つ入力してください。配置は不可です。");},true);
+            CfgUi.Input(c,coordinateRaw,6,y+46,325,40,v=>{coordinateRaw=v;var a=v.Split(',');int[] n=new int[4];coordinateValid=a.Length==4;for(int i=0;i<4&&coordinateValid;i++)coordinateValid=int.TryParse(a[i],out n[i])&&n[i]>=-4&&n[i]<=4;if(coordinateValid){selectedCell=new QN(n[2],n[0],n[1],n[3]);Notice("選択セル "+v);}else Notice("座標入力不正：−4〜4の整数をX,Y,Z,Wの順で4つ入力してください。配置は不可です。");},true);
             Button(c,"coordinate-place","選択セルへ試し配置",6,y+103,325,42,()=>{if(!coordinateValid)throw new ArgumentException("不正な座標のため配置できません。入力は保持しています。");PlaceAt(selectedCell);});
             CfgUi.Label(c,"断面外を含む明示座標の配置です。\n盤域外・重複セルは拒否します。",6,y+161,325,80,17);
         }
@@ -255,7 +255,7 @@ namespace Showcase.Unity.Settings
         void Notice(string text){notice=text;if(statusText!=null)statusText.text=text;Record("Notice",text);}
         void SetTool(string value){tool=value;historyOwner="trial";Notice("試し盤ツール："+value+" / 配置陣営 "+placementSide);}
         void AfterTrial(){QueueQuery();UpdateHeader();geometryDirty=true;Record("Trial",preview.Hash);}
-        void PlaceAt(Q4 q)
+        void PlaceAt(QN q)
         {preview.Place(new TrialPiece("trial-"+Guid.NewGuid().ToString("N"),selectedDefinition,placementSide,q));historyOwner="trial";AfterTrial();}
         void RunPointer(Action action)
         {try{action();}catch(ArgumentException e){Notice(e.Message);Record("InputRejected",e.GetType().Name);}catch(InvalidOperationException e){Notice(e.Message);Record("InputRejected",e.GetType().Name);}}
@@ -263,8 +263,8 @@ namespace Showcase.Unity.Settings
         {if(ownership.Owner!=InputOwner.None){Notice("操作中です。現在のドラッグを完了または取消してください。");return;}slice.Request(SliceAxes.ViewForAxis((LogicalAxis)Enum.Parse(typeof(LogicalAxis),axis)));geometryDirty=true;Record("SliceRequest",axis);}
         internal void Translate(LogicalAxis axis,double delta)
         {slice.Translate(axis,delta);geometryDirty=true;Record("AxisDelta",axis+" "+delta);}
-        internal Vec4 SliceCenter=>slice.Frame.Center;
-        internal void RestoreCenter(Vec4 center){slice.SetCenter(center);geometryDirty=true;}
+        internal VecN SliceCenter=>slice.Frame.Center;
+        internal void RestoreCenter(VecN center){slice.SetCenter(center);geometryDirty=true;}
         internal void InputNotice(string message)=>Notice(message);
         void PreviewDown(PointerEventData e)
         {
@@ -297,7 +297,7 @@ namespace Showcase.Unity.Settings
         void UpdateCamera(){var rotation=Quaternion.Euler(pitch,yaw,0);var target=CfgPreviewRenderer.AirAnchor+pan;rig.Camera.transform.position=target+rotation*new Vector3(0,0,-distance);rig.Camera.transform.LookAt(target);cameraRevision++;}
         void OnApplicationFocus(bool focused){if(focused)return;ownership.FocusLost();pointerButton=-1;foreach(var mini in minis)mini.CancelDrag();Record("FocusLost","pointer ownership cancelled, uncommitted drag rolled back");}
         ViewSnapshot CaptureView()
-        {var f=slice.Frame;double[] V(Vec4 v)=>new[]{v.X,v.Y,v.Z,v.W};return new ViewSnapshot(V(f.Center),V(f.AxisX).Concat(V(f.AxisY)).Concat(V(f.AxisZ)).Concat(V(f.Normal)).ToArray(),new double[]{yaw,pitch,distance,pan.x,pan.y,pan.z});}
+        {var f=slice.Frame;double[] V(VecN v)=>new[]{v.X,v.Y,v.Z,v.W};return new ViewSnapshot(V(f.Center),V(f.AxisX).Concat(V(f.AxisY)).Concat(V(f.AxisZ)).Concat(V(f.Normal)).ToArray(),new double[]{yaw,pitch,distance,pan.x,pan.y,pan.z});}
         void Save(bool saveAs)
         {
             if(slice.IsAnimating)throw new InvalidOperationException("回転完了後に保存してください。現在の下書きと旧保存版は保持しています。");
@@ -329,12 +329,12 @@ namespace Showcase.Unity.Settings
         void RestoreView(ViewSnapshot view)
         {
             // Saved intermediate frames are validated, then restored without pretending to be a reference view.
-            var c=view.Center;var b=view.Basis;Vec4 V(double[] a,int o)=>new Vec4(a[o],a[o+1],a[o+2],a[o+3]);
+            var c=view.Center;var b=view.Basis;VecN V(double[] a,int o)=>new VecN(a[o],a[o+1],a[o+2],a[o+3]);
             slice.Restore(new SliceFrame(V(c,0),V(b,0),V(b,4),V(b,8),V(b,12)));
             var camera=view.Camera;yaw=(float)camera[0];pitch=(float)camera[1];distance=(float)camera[2];pan=new Vector3((float)camera[3],(float)camera[4],(float)camera[5]);UpdateCamera();geometryDirty=true;
         }
         void ValidateRestorableView(ViewSnapshot view)
-        {var c=view.Center;var b=view.Basis;Vec4 V(double[] a,int o)=>new Vec4(a[o],a[o+1],a[o+2],a[o+3]);new SliceAnimator().Restore(new SliceFrame(V(c,0),V(b,0),V(b,4),V(b,8),V(b,12)));if(view.Camera[2]<.24||view.Camera[2]>2||Math.Abs(view.Camera[1])>75)throw new ArgumentException("保存カメラはCFG1操作範囲外です。旧編集状態を保持しました。");}
+        {var c=view.Center;var b=view.Basis;VecN V(double[] a,int o)=>new VecN(a[o],a[o+1],a[o+2],a[o+3]);new SliceAnimator().Restore(new SliceFrame(V(c,0),V(b,0),V(b,4),V(b,8),V(b,12)));if(view.Camera[2]<.24||view.Camera[2]>2||Math.Abs(view.Camera[1])>75)throw new ArgumentException("保存カメラはCFG1操作範囲外です。旧編集状態を保持しました。");}
         void SaveAsDialog()
         {
             ShowDialog("別名で保存：新しいIDを作成します。",out var panel);string name=draft.Name+"（コピー）";CfgUi.Input(panel,name,25,85,550,42,v=>name=v);

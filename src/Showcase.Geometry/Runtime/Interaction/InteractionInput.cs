@@ -20,7 +20,7 @@ namespace Showcase.Geometry.Interaction
     {
         public const double PixelsPerCell=32,MinimumProjectedAxisPixels=6;
         readonly SliceAnimator slice;readonly InputOwnership ownership;
-        Vec4 original;PivotViewState? originalState;LogicalAxis axis;int pointer;double startX,startY,unitX,unitY;
+        VecN original;PivotViewState? originalState;LogicalAxis axis;int pointer;double startX,startY,unitX,unitY;
         public bool IsActive {get;private set;}
         public LogicalAxis Axis=>axis;
         public string RejectionReason {get;private set;}="";
@@ -40,7 +40,7 @@ namespace Showcase.Geometry.Interaction
             if(!IsActive||pointerId!=pointer||!ownership.IsOwner(InputOwner.Axis,pointerId)||!Finite(x)||!Finite(y))return false;
             double amount=((x-startX)*unitX+(y-startY)*unitY)/PixelsPerCell;
             // Board cells are whole numbers in core coordinates; the world Y axis also carries the embedding height.
-            if(snap){double start=Vec4.Dot(slice.DisplayState.WorldToCore(original),SliceAxes.WorldAxis(axis));amount=Math.Round(start+amount,MidpointRounding.AwayFromZero)-start;}
+            if(snap){double start=VecN.Dot(slice.DisplayState.WorldToCore(original),SliceAxes.WorldAxis(axis));amount=Math.Round(start+amount,MidpointRounding.AwayFromZero)-start;}
             return slice.SetCenter(original+SliceAxes.WorldAxis(axis)*amount);
         }
         public bool Complete(int pointerId)
@@ -53,7 +53,7 @@ namespace Showcase.Geometry.Interaction
     {
         public readonly int F,U,V,W;
         public CellId(int f,int u,int v,int w){F=f;U=u;V=v;W=w;}
-        public Vec4 Position=>new Vec4(F,U,V,W);
+        public VecN Position=>new VecN(F,U,V,W);
         public bool Equals(CellId other)=>F==other.F&&U==other.U&&V==other.V&&W==other.W;
         public override bool Equals(object? other)=>other is CellId id&&Equals(id);
         public override int GetHashCode()=>(((F*397)^U)*397^V)*397^W;

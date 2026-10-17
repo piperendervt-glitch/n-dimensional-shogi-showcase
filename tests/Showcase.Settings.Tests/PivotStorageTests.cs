@@ -15,7 +15,7 @@ static class PivotStorageTests
     static double[] Identity => new double[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
     static PivotViewSnapshot View(double[]? center = null, double[]? basis = null, double[]? anchor = null, double[]? camera = null)
         => new PivotViewSnapshot(3, center ?? new double[] { 0, 0, 3, 0 }, basis ?? Identity, anchor ?? new double[] { 0, 1.01, 0 }, 4.5, .05,
-            camera ?? new double[] { 32, 29, .82, 0, 0, 0 }, "subject", new Q4(0, 0, 0, 0), new Q4(0, 0, 0, 0));
+            camera ?? new double[] { 32, 29, .82, 0, 0, 0 }, "subject", new QN(0, 0, 0, 0), new QN(0, 0, 0, 0));
     static object State(LoadedPivotSettings loaded) => new
     {
         loaded.LogicalHash, loaded.PreviewHash, draftHash = loaded.Draft.ContentHash, ruleHash = loaded.Config?.RuleHash, settingsHash = loaded.Config?.SettingsHash,
@@ -297,6 +297,25 @@ static class PivotStorageTests
             PivotSettingsLocation.Select(root,target);var bytes=File.ReadAllBytes(selector);
             reject(()=>PivotSettingsLocation.Select(root,target,at=>{if(at==SaveStage.AfterFlush)File.WriteAllText(Directory.EnumerateFiles(root,".pivot-location-*.tmp").Single(),"<corrupt />");}));
             Check(bytes.SequenceEqual(File.ReadAllBytes(selector))&&PivotSettingsLocation.Resolve(root,target)==target&&!Directory.EnumerateFiles(root,".pivot-location-*.tmp").Any());
+        });
+        test("pivot-five-dimensional-bundle-round-trips-and-four-dimensional-form-is-unchanged", () =>
+        {
+            var draft = SettingsDraft.CreateMatchDemo();
+            draft.Edit(d => { d.Dimensions = "5"; foreach (var x in d.Definitions) { x.AxesMask = "31"; if (x.MaxAxes == "4") x.MaxAxes = "5"; } });
+            var preview = new PreviewSession(new BoundsN(dimensions: 5), new[] { new TrialPiece("subject", "king-step", Side.A, new QN(0, 0, 0, 0, 1)), new TrialPiece("flat", "pawn-step", Side.B, new QN(1, 0, 0, 0)) });
+            var identity5 = new double[25]; for (int i = 0; i < 5; i++) identity5[i * 5 + i] = 1;
+            var view5 = new PivotViewSnapshot(3, new double[] { 0, 0, 3, 0, .5 }, identity5, new double[] { 0, 1.01, 0 }, 4.5, .05, new double[] { 32, 29, .82, 0, 0, 0 }, "subject", new QN(0, 0, 0, 0, 1), new QN(0, 0, 0, 0));
+            Check(view5.Dimensions == 5 && View().Dimensions == 4, "snapshot N from the centre vector");
+            string path = Path.Combine(dataRoot, "pivot-5d.xml"); PivotSettingsStore.SaveValid(path, draft, new MatchOptionsRaw(), preview, view5);
+            var loaded = PivotSettingsStore.Load(path);
+            Check(loaded.View.Dimensions == 5 && loaded.View.Center.Length == 5 && loaded.View.Basis.Length == 25 && Math.Abs(loaded.View.Center[4] - .5) < 1e-12, "5D view restored");
+            Check(loaded.Preview.Bounds.Dimensions == 5 && loaded.Preview.Pieces.All(p => p.Position.Dimensions == 5) && loaded.Preview.Find("flat")!.Position == new QN(1, 0, 0, 0), "5D trial board restored, flat cell padded");
+            Check(loaded.View.SelectedCell == new QN(0, 0, 0, 0, 1) && loaded.Config!.Dimensions == 5, "5D selection and rules restored");
+            string xml = File.ReadAllText(path); Check(xml.Contains("center=\"0,0,3,0,0.5\"") && xml.Contains("cell=\"0,0,0,0,1\""), "5D vectors written with five components");
+            reject(() => new PivotViewSnapshot(3, new double[] { 0, 0, 3, 0, 0 }, Identity, new double[] { 0, 1.01, 0 }, 4.5, .05, new double[] { 32, 29, .82, 0, 0, 0 }, "subject", new QN(), new QN()));
+            reject(() => new PivotViewSnapshot(3, new double[] { 0, 0, 3, 0 }, Identity, new double[] { 0, 1.01, 0 }, 4.5, .05, new double[] { 32, 29, .82, 0, 0, 0 }, "subject", new QN(0, 0, 0, 0, 1), new QN()));
+            string four = Path.Combine(dataRoot, "pivot-4d.xml"); PivotSettingsStore.SaveValid(four, SettingsDraft.CreateMatchDemo(), new MatchOptionsRaw(), PreviewSession.CreateExperiment(), View());
+            string fourXml = File.ReadAllText(four); Check(fourXml.Contains("center=\"0,0,3,0\"") && fourXml.Contains("dimensions=\"4\"") && PivotSettingsStore.Load(four).View.Dimensions == 4, "4D bundle keeps its four-component form");
         });
     }
 }

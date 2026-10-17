@@ -19,7 +19,7 @@ namespace Showcase.Unity.Settings
             var basis=SliceAxes.Reference(view);
             foreach(LogicalAxis axis in Enum.GetValues(typeof(LogicalAxis)))
             {
-                var world=SliceAxes.WorldAxis(axis);var coord=new Vec3(Vec4.Dot(world,basis.AxisX),Vec4.Dot(world,basis.AxisY),Vec4.Dot(world,basis.AxisZ));
+                var world=SliceAxes.WorldAxis(axis);var coord=new Vec3(VecN.Dot(world,basis.AxisX),VecN.Dot(world,basis.AxisY),VecN.Dot(world,basis.AxisZ));
                 if(coord.Length<.1)continue;
                 var tip=CfgMiniGraphic.Project(coord*1.4);
                 var handle=CfgUi.Panel(transform,"Drag world "+axis,80+tip.x-11.5f,67-tip.y-11.5f,23,23,new Color(.08f,.14f,.23f,.75f));

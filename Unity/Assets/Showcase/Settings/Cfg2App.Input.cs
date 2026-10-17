@@ -80,12 +80,12 @@ namespace Showcase.Unity.Settings
             else ray=rig.Camera.ScreenPointToRay(e.position);
             if(TryPickCell(ray,pointerRevision,out var q))CommitCell(q,pointerRevision,pointerState,pointerGeneration);
         }
-        bool TryPickCell(Ray ray,long revision,out Q4 q)
+        bool TryPickCell(Ray ray,long revision,out QN q)
         {
             if(geometryDirty){q=default;return false;}
             return previewRenderer.Pick(ray,revision,out q,tool=="選択"||session!=null);
         }
-        void CommitCell(Q4 q,long viewRevision,long stateRevision,long generation)
+        void CommitCell(QN q,long viewRevision,long stateRevision,long generation)
         {
             if(viewRevision!=slice.ViewRevision||slice.IsAnimating||stateRevision!=(session?.Revision??preview.Revision)) {Record("StalePickRejected",q.ToString());return;}
             selectedCell=q;planeReferenceCell=q;stableDirty=true;saveDue=Time.unscaledTime+.3f;
@@ -112,7 +112,7 @@ namespace Showcase.Unity.Settings
         void PreviewScroll(PointerEventData e)
         {if(ownership.Owner!=InputOwner.None||session?.PresentationPaused==true)return;distance=Mathf.Clamp(distance-e.scrollDelta.y*.035f,.24f,2);manualCamera=true;UpdateCamera();Record("CameraZoom",distance.ToString());}
         void SetTool(string value){tool=value;historyOwner="trial";Notice("試し配置："+value+" / 陣営 "+placementSide);}
-        void PlaceAt(Q4 q)
+        void PlaceAt(QN q)
         {preview.Place(new TrialPiece("trial-"+Guid.NewGuid().ToString("N"),selectedDefinition,placementSide,q));AfterTrial();}
         void AfterTrial(){historyOwner="trial";QueueQuery();stableDirty=true;saveDue=Time.unscaledTime+.3f;Record("Trial",preview.Hash);}
         void OnApplicationFocus(bool focused)

@@ -146,7 +146,7 @@ namespace NDShogi.Showcase.Core.Match
             if (first.Status != MatchQueryStatus.Complete) SuspendProcessing("開始照会が未完了：" + first.Reason);
             else if (first.Moves.Count == 0) End(MatchOutcome.NoMovesDraw, null, "開始手番の完了済み着手候補が0件");
         }
-        public static MatchSession Create(MatchConfig config, MatchMode mode, IMonotonicClock clock) => new MatchSession(config, mode, clock, MatchRules.InitialPieces(), "normal-initial-40/1", Side.A);
+        public static MatchSession Create(MatchConfig config, MatchMode mode, IMonotonicClock clock) => new MatchSession(config, mode, clock, MatchRules.InitialPieces(config.Dimensions), "normal-initial-40/1", Side.A);
         public static MatchSession CreateFixture(MatchConfig config, MatchMode mode, IMonotonicClock clock, IEnumerable<Piece> pieces, string fixtureId, Side turn = Side.A)
         {
             if (string.IsNullOrWhiteSpace(fixtureId) || fixtureId == "normal-initial-40/1" || fixtureId.Any(char.IsControl)) throw new ArgumentException("検証配置には通常初期配置と異なる明示fixture IDが必要です。");

@@ -120,7 +120,7 @@ namespace Showcase.Unity.Settings
         PointerEventData SmokePointer2(Vector2 point,int id=171,PointerEventData.InputButton button=PointerEventData.InputButton.Left)
             =>new PointerEventData(EventSystem.current){pointerId=id,button=button,position=point,pressPosition=point};
         RectTransform SmokeBoardSurface=>opened?previewRect:matchSurface;
-        bool SmokePointForCell2(Q4 cell,out Vector2 point)
+        bool SmokePointForCell2(QN cell,out Vector2 point)
         {
             point=default;SectionResult section;string sourceKind;
             var source=session!=null&&!opened?session.ToPreview():preview;var occupant=source.At(cell);
@@ -165,7 +165,7 @@ namespace Showcase.Unity.Settings
         }
         // No cell is injected into CommitCell here: mesh pick and the actual pointer
         // surface decide which immutable four-dimensional cell the UI receives.
-        void SmokeClickCell(Q4 cell,string purpose)
+        void SmokeClickCell(QN cell,string purpose)
         {
             Canvas.ForceUpdateCanvases();RenderGeometry();
             if(!SmokePointForCell2(cell,out var point))throw new InvalidOperationException("CFG2 SMOKE no visible mesh pick for "+purpose+" "+cell+"; selected="+selectedPiece);
@@ -174,7 +174,7 @@ namespace Showcase.Unity.Settings
             ExecuteEvents.Execute(surface.gameObject,e,ExecuteEvents.pointerUpHandler);smokeLastPointer=e;
             Record("SmokeSimulatedPointer",purpose+"; cell="+cell+"; screen="+point);
         }
-        Tuple<GameObject,PointerEventData> SmokePlaneDown(Q4 cell,string purpose)
+        Tuple<GameObject,PointerEventData> SmokePlaneDown(QN cell,string purpose)
         {
             Canvas.ForceUpdateCanvases();RenderGeometry();
             if(!opened||planeTab==0||!planeView.Contains(cell))throw new InvalidOperationException("CFG2 SMOKE plane cell is not in active fixed plane: "+cell);
@@ -190,8 +190,8 @@ namespace Showcase.Unity.Settings
         }
         void SmokePlaneUp(Tuple<GameObject,PointerEventData> pointer)
         {ExecuteEvents.Execute(pointer.Item1,pointer.Item2,ExecuteEvents.pointerUpHandler);Record("SmokeSimulatedPlaneUp",planeView.Plane.ToString());}
-        void SmokePlaneClick(Q4 cell,string purpose)=>SmokePlaneUp(SmokePlaneDown(cell,purpose));
-        IEnumerator SmokeHumanMove(string id,Q4 destination,string label,Vector2? destinationCamera=null)
+        void SmokePlaneClick(QN cell,string purpose)=>SmokePlaneUp(SmokePlaneDown(cell,purpose));
+        IEnumerator SmokeHumanMove(string id,QN destination,string label,Vector2? destinationCamera=null)
         {
             yield return SmokeWait(()=>session!=null&&session.CanHumanAct,label+" human turn");
             int before=session.State.Ply;var piece=session.State.Find(id);
@@ -239,7 +239,7 @@ namespace Showcase.Unity.Settings
             StartMatch(mode,pieces,id);
             SmokeCheck(session!=null&&session.Snapshot.Mode==mode&&session.Snapshot.FixtureId==id,mode+" creates real explicit fixture session","fixture setup through normal session constructor");
         }
-        static Piece SP(string id,Side side,PieceKind kind,int f,int u,int v=0,int w=0)=>new Piece(id,side,kind,new Q4(f,u,v,w));
+        static Piece SP(string id,Side side,PieceKind kind,int f,int u,int v=0,int w=0)=>new Piece(id,side,kind,new QN(f,u,v,w));
         IEnumerator SmokeNormalModes()
         {
             for(int i=0;i<3;i++)
@@ -299,7 +299,7 @@ namespace Showcase.Unity.Settings
         {
             SmokeFixture(MatchMode.PvP,new[]{SP("a-king",Side.A,PieceKind.King,-2,-1),SP("a-rook",Side.A,PieceKind.Rook,0,-1),SP("b-pawn",Side.B,PieceKind.Pawn,0,1),SP("b-king",Side.B,PieceKind.King,2,1)},"smoke-pvp-capture-and-king/1");
             yield return null;var initialCamera=rig.Camera.transform.position;
-            yield return SmokeHumanMove("a-rook",new Q4(0,1,0,0),"PvP A pawn capture");
+            yield return SmokeHumanMove("a-rook",new QN(0,1,0,0),"PvP A pawn capture");
             SmokeCheck(session.State.CapturedBy(Side.A).Count==1&&session.State.CapturedBy(Side.B).Count==0,"PvP capture belongs to A tray only");
             SmokeCheck(visuals.CountFor(Side.A)==1&&visuals.CountFor(Side.B)==0,"actual captured-piece render model shows A=1 B=0");
             SmokeCheck(visuals.CapturedLabel(Side.A,"pawn-step")=="×1","A captured pawn count label is actual UI text ×1");
@@ -310,8 +310,8 @@ namespace Showcase.Unity.Settings
             SmokeCheck(clockNear.text.Contains("後手 B")&&clockFar.text.Contains("先手 A"),"PvP clocks follow current near/far player labels");
             SmokeCheck(rig.Camera.WorldToScreenPoint(visuals.TrayPosition(Side.B)).x>rig.Camera.WorldToScreenPoint(visuals.TrayPosition(Side.A)).x&&visuals.CountFor(Side.A)==1,"PvP B viewpoint puts B tray on its right without swapping captured ownership");
             yield return SmokeCapture("pvp-captured-A");
-            yield return SmokeHumanMove("b-king",new Q4(1,1,0,0),"PvP B real reply",new Vector2(-27,0));
-            yield return SmokeHumanMove("a-rook",new Q4(1,1,0,0),"PvP A royal capture");
+            yield return SmokeHumanMove("b-king",new QN(1,1,0,0),"PvP B real reply",new Vector2(-27,0));
+            yield return SmokeHumanMove("a-rook",new QN(1,1,0,0),"PvP A royal capture");
             SmokeCheck(session.State.Outcome==MatchOutcome.KingCapture&&session.State.Winner==Side.A&&session.State.Ply==3,"PvP reaches normal king-capture outcome through both UI players");
             SmokeCheck(session.State.CapturedBy(Side.A).Count==1&&session.State.Captured.Any(c=>c.Victim.Kind==PieceKind.King),"captured king is in history but excluded from normal captured tray");
             yield return SmokeTerminalFreeze("PvP");yield return SmokeCapture("pvp-result");
@@ -328,14 +328,14 @@ namespace Showcase.Unity.Settings
                 "PvC declared side camera exposes original destinations without changing position or moves","simulated public pointer drag; fixed fixture camera");
             Record("SmokeFixtureCamera","PvC original move sequence;yaw="+yaw+";pitch="+pitch);
             var humanCamera=rig.Camera.transform.position;
-            yield return SmokeHumanMove("a-king",new Q4(-2,0,0,0),"PvC A first UI move");
+            yield return SmokeHumanMove("a-king",new QN(-2,0,0,0),"PvC A first UI move");
             yield return SmokeWait(()=>session.State.Ply>=2||session.IsFinished,"PvC CPU pawn capture",30);
-            SmokeCheck(session.State.Find("a-pawn")==null&&session.State.CapturedBy(Side.B).Count==1&&session.State.Find("b-rook").Position==new Q4(0,1,0,0),"PvC CPU captures actual A pawn into B tray");
+            SmokeCheck(session.State.Find("a-pawn")==null&&session.State.CapturedBy(Side.B).Count==1&&session.State.Find("b-rook").Position==new QN(0,1,0,0),"PvC CPU captures actual A pawn into B tray");
             SmokeCheck(visuals.CountFor(Side.B)==1&&visuals.CountFor(Side.A)==0,"actual captured-piece render model shows B=1 A=0");
             SmokeCheck(visuals.CapturedLabel(Side.B,"pawn-step")=="×1","B captured pawn count label is actual UI text ×1");
             yield return SmokeWait(()=>session.CanHumanAct,"PvC A next turn");
             SmokeCheck((rig.Camera.transform.position-humanCamera).sqrMagnitude<1e-8,"PvC keeps human A viewpoint after CPU reply");yield return SmokeCapture("pvc-captured-B");
-            yield return SmokeHumanMove("a-king",new Q4(-1,1,0,0),"PvC A second UI move");
+            yield return SmokeHumanMove("a-king",new QN(-1,1,0,0),"PvC A second UI move");
             yield return SmokeWait(()=>session.IsFinished,"PvC CPU royal capture",30);
             SmokeCheck(session.State.Outcome==MatchOutcome.KingCapture&&session.State.Winner==Side.B&&session.State.Ply==4,"PvC reaches normal CPU king-capture outcome");
             SmokeCheck(session.State.CapturedBy(Side.B).Count==1,"PvC captured king does not become a drop inventory");yield return SmokeTerminalFreeze("PvC");yield return SmokeCapture("pvc-result");
@@ -437,7 +437,7 @@ namespace Showcase.Unity.Settings
                 SmokeCheck(planeMinis.All(m=>m.Revision==slice.ViewRevision),"four settings plane diagrams share current revision after "+axis);
             }
             // Stable trial fixture remains separate from all live match snapshots.
-            preview.Place(new TrialPiece("smoke-friend","pawn-step",Side.A,new Q4(0,1,0,0)));QueueQuery();RenderGeometry();
+            preview.Place(new TrialPiece("smoke-friend","pawn-step",Side.A,new QN(0,1,0,0)));QueueQuery();RenderGeometry();
             SmokeCheck(preview.Find("smoke-friend")!=null&&config.RuleHash==rule,"independent trial edits do not modify executable rule config","explicit preview fixture setup");
             SmokeInput("max-axes","2");yield return null;
             SmokeCheck(result!=null&&result.G.Count==32,"final edited king setting produces shared G=32","simulated InputField events");
@@ -466,39 +466,39 @@ namespace Showcase.Unity.Settings
             SmokeToggle("移動候補",false);SmokeToggle("座標グリッド",false);SmokeToggle("攻撃範囲",false);yield return null;RenderGeometry();
             SmokeCheck(!previewRenderer.Candidates&&!previewRenderer.Grid&&!previewRenderer.Attacks&&preview.Hash==hash&&result.G.SequenceEqual(g)&&result.P.SequenceEqual(p),"display OFF removes rendering aids without removing pieces from engine queries","simulated uGUI Toggle + common query");
             SmokeToggle("移動候補",true);SmokeToggle("座標グリッド",true);SmokeToggle("攻撃範囲",true);
-            preview.Place(new TrialPiece("plane-hidden","pawn-step",Side.B,new Q4(0,0,0,1)));QueueQuery();yield return null;
+            preview.Place(new TrialPiece("plane-hidden","pawn-step",Side.B,new QN(0,0,0,1)));QueueQuery();yield return null;
             for(int tab=1;tab<=4;tab++)
             {
                 SmokeAction("plane-"+tab);yield return null;RenderGeometry();
                 var source=preview.Find(selectedPiece).Position;
                 int a=tab==4?2:1,b=tab==1?2:tab==3?3:0;
-                bool InPlane(Q4 q)=>Enumerable.Range(0,4).All(i=>i==a||i==b||q[i]==source[i]);
+                bool InPlane(QN q)=>Enumerable.Range(0,4).All(i=>i==a||i==b||q[i]==source[i]);
                 int expectedPieces=preview.Pieces.Count(item=>InPlane(item.Position));
                 SmokeCheck(planeView.VisiblePieceCount==expectedPieces&&planeView.VisibleCandidates==result.P.Count(InPlane),"2D "+planeView.Plane+" uses exact selected-piece fixed coordinates","actual 2D view model versus independent two-axis filter");
                 SmokeCheck(!string.IsNullOrWhiteSpace(planeView.FixedCoordinates)&&planeMinis.Count(m=>m.gameObject.activeInHierarchy)==4,"2D "+planeView.Plane+" shows hidden-axis condition and preserves four XY XZ XW YZ diagrams");
-                if(tab==1)SmokeCheck(!planeView.Contains(new Q4(0,0,0,1)),"XY 2D confirmation excludes W-different piece rather than projecting it onto same cell");
+                if(tab==1)SmokeCheck(!planeView.Contains(new QN(0,0,0,1)),"XY 2D confirmation excludes W-different piece rather than projecting it onto same cell");
                 yield return SmokeCapture("settings-plane-"+planeView.Plane);
             }
             yield return SmokePlaneInputs();
-            SmokeAction("plane-0");preview.Erase(new Q4(0,0,0,1));QueueQuery();yield return null;
+            SmokeAction("plane-0");preview.Erase(new QN(0,0,0,1));QueueQuery();yield return null;
             SmokeCheck(preview.Hash==hash&&config.RuleHash==ruleHash,"2D view exercise and explicit fixture cleanup preserve original trial/rules");
-            preview.Place(new TrialPiece("trial-enemy","pawn-step",Side.B,new Q4(0,-1,0,0)));AfterTrial();yield return null;
-            string beforeCapture=preview.Hash;SmokeAction("tool-select");SmokeClickCell(new Q4(0,-1,0,0),"independent trial capture");yield return null;
-            SmokeCheck(preview.Find("trial-enemy")==null&&preview.Find("subject").Position==new Q4(0,-1,0,0),"independent trial capture passes actual section pointer and shared P","simulated uGUI pointer + actual section picker");
+            preview.Place(new TrialPiece("trial-enemy","pawn-step",Side.B,new QN(0,-1,0,0)));AfterTrial();yield return null;
+            string beforeCapture=preview.Hash;SmokeAction("tool-select");SmokeClickCell(new QN(0,-1,0,0),"independent trial capture");yield return null;
+            SmokeCheck(preview.Find("trial-enemy")==null&&preview.Find("subject").Position==new QN(0,-1,0,0),"independent trial capture passes actual section pointer and shared P","simulated uGUI pointer + actual section picker");
             SmokeAction("trial-undo");yield return null;SmokeCheck(preview.Hash==beforeCapture,"trial Undo restores captured enemy and source cell","simulated Undo button");
             SmokeAction("trial-redo");yield return null;SmokeCheck(preview.Find("trial-enemy")==null,"trial Redo reapplies capture without touching match state","simulated Redo button");
-            SmokeAction("trial-undo");preview.Erase(new Q4(0,-1,0,0));AfterTrial();yield return null;
+            SmokeAction("trial-undo");preview.Erase(new QN(0,-1,0,0));AfterTrial();yield return null;
             SmokeCheck(preview.Hash==hash,"trial fixture cleanup restores original independent position");
             SmokeToggle("攻撃範囲",false);
         }
         IEnumerator SmokePlaneInputs()
         {
             SmokeAction("plane-1");yield return null;SmokeAction("tool-select");
-            string original=preview.Hash;var from=preview.Find("subject").Position;var destination=new Q4(0,1,0,0);
+            string original=preview.Hash;var from=preview.Find("subject").Position;var destination=new QN(0,1,0,0);
             SmokePlaneClick(destination,"2D independent trial move");yield return null;
             SmokeCheck(preview.Find("subject").Position==destination,"XY actual pointer commits selected trial piece through shared P","simulated uGUI pointer + actual fixed-plane picker");
             SmokeAction("trial-undo");yield return null;SmokeCheck(preview.Hash==original,"2D move Undo restores exact independent trial hash","simulated Undo button");
-            var placed=new Q4(0,2,2,0);SmokeAction("side");SmokeAction("tool-place");SmokePlaneClick(placed,"2D B placement");yield return null;
+            var placed=new QN(0,2,2,0);SmokeAction("side");SmokeAction("tool-place");SmokePlaneClick(placed,"2D B placement");yield return null;
             SmokeCheck(preview.At(placed)?.Side==Side.B&&preview.At(placed)?.DefinitionId==selectedDefinition,"XY actual pointer places chosen definition for selected side B","simulated side/tool buttons + actual fixed-plane picker");
             SmokeAction("side");SmokeAction("tool-erase");SmokePlaneClick(placed,"2D erase");yield return null;
             SmokeCheck(preview.At(placed)==null,"XY actual pointer erases the intended fixed-plane cell","simulated erase tool + actual fixed-plane picker");
@@ -508,10 +508,10 @@ namespace Showcase.Unity.Settings
             SmokeAction("trial-undo");yield return null;SmokeCheck(preview.Hash==original,"clear Undo restores complete independent trial");
             SmokeAction("tool-select");
             int rejected=planeView.RejectedStaleCount;var pointer=SmokePlaneDown(destination,"2D stale state test");
-            preview.Place(new TrialPiece("stale-fixture","pawn-step",Side.B,new Q4(0,0,0,2)));AfterTrial();string changed=preview.Hash;
+            preview.Place(new TrialPiece("stale-fixture","pawn-step",Side.B,new QN(0,0,0,2)));AfterTrial();string changed=preview.Hash;
             SmokePlaneUp(pointer);yield return null;
             SmokeCheck(planeView.RejectedStaleCount==rejected+1&&preview.Hash==changed&&preview.Find("subject").Position==from,"2D down/up rejects changed trial revision even with unchanged 4D view","explicit trial fixture edit between simulated pointer down/up");
-            preview.Erase(new Q4(0,0,0,2));AfterTrial();yield return null;
+            preview.Erase(new QN(0,0,0,2));AfterTrial();yield return null;
             rejected=planeView.RejectedStaleCount;pointer=SmokePlaneDown(destination,"2D stale draft test");string name=draft.Name;
             draft.Edit(d=>d.Name=name+" smoke revision");AfterEdit();SmokePlaneUp(pointer);yield return null;
             SmokeCheck(planeView.RejectedStaleCount==rejected+1&&preview.Hash==original&&preview.Find("subject").Position==from,"2D down/up rejects changed draft revision without moving the trial piece","explicit next-game Draft edit between simulated pointer down/up");

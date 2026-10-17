@@ -23,11 +23,11 @@ namespace Showcase.Unity.Settings
         const float TurnChangeSeconds=1.6f;
         // CvC shows each CPU move in its hyperplane: slow 4D turn, slide of C along the normal, brief selection, then the move.
         const double CpuTurnSeconds=1.6;const float CpuSlideSeconds=.8f,CpuHoldSeconds=.5f;
-        CpuResult cpuShowResult;int cpuShowStage,cpuShowAxis;double cpuShowValue,cpuShowLift;Vec4 cpuShowFromCell,cpuShowToCell;Vec3 cpuShowAnchor;float cpuShowStart;Vec4 cpuShowFrom,cpuShowTo;ReferenceView cpuShowView;
+        CpuResult cpuShowResult;int cpuShowStage,cpuShowAxis;double cpuShowValue,cpuShowLift;VecN cpuShowFromCell,cpuShowToCell;Vec3 cpuShowAnchor;float cpuShowStart;VecN cpuShowFrom,cpuShowTo;ReferenceView cpuShowView;
         // In CPU games every hand-over returns the 4D view to the initial state (C=P, no rotation).
-        int resetStage;float resetStart,resetSeconds;Vec4 resetFrom;Vec3 resetAnchor;
+        int resetStage;float resetStart,resetSeconds;VecN resetFrom;Vec3 resetAnchor;
         // A committed CPU move glides its piece from origin to destination; a captured piece stays until it is reached.
-        sealed class PieceGlide {public string Id;public Vec4 From,To;public float Start,Seconds;public CfgVisualPiece Victim;}
+        sealed class PieceGlide {public string Id;public VecN From,To;public float Start,Seconds;public CfgVisualPiece Victim;}
         PieceGlide glide;bool playViewApplied;Text pauseLabel;
         const float GlideSecondsPerCell=.28f,GlideMinSeconds=.6f,GlideMaxSeconds=1.6f;
         // Display preferences of this machine, not match rules: kept out of the settings hash and match records.
@@ -116,7 +116,7 @@ namespace Showcase.Unity.Settings
         {
             if(!CpuShowEnabled||cpu.Status!=MatchQueryStatus.Complete||!cpu.Move.HasValue||ownership.Owner!=InputOwner.None)return false;
             var move=cpu.Move.Value;var embedding=slice.DisplayState.Embedding;
-            var from=new Vec4(move.From.F,move.From.U,move.From.V,move.From.W)+embedding;var to=new Vec4(move.To.F,move.To.U,move.To.V,move.To.W)+embedding;
+            var from=new VecN(move.From.F,move.From.U,move.From.V,move.From.W)+embedding;var to=new VecN(move.To.F,move.To.U,move.To.V,move.To.W)+embedding;
             cpuShowView=SliceAxes.ViewContaining(from,to,slice.StableView);cpuShowAxis=SliceAxes.NormalCoreAxis(cpuShowView);cpuShowValue=SliceAxes.Coordinate(from,cpuShowAxis);
             cpuShowFromCell=from;cpuShowToCell=to;
             cpuShowResult=cpu;cpuShowStage=1;slice.SecondsPerLeg=CpuTurnSeconds;if(slice.Request(cpuShowView))geometryDirty=true;
@@ -134,7 +134,7 @@ namespace Showcase.Unity.Settings
                 // Unity up is the section's third axis. A step that dips below the board surface would vanish inside the
                 // wooden board, so the whole section display is raised until both ends of the step sit on or above it.
                 cpuShowAnchor=slice.DisplayState.Anchor;var state=slice.DisplayState;double board=NewPivotSlice().DisplayState.Anchor.Y;
-                double lowest=Math.Min(Vec4.Dot(slice.Frame.AxisZ,cpuShowFromCell-cpuShowTo),Vec4.Dot(slice.Frame.AxisZ,cpuShowToCell-cpuShowTo));
+                double lowest=Math.Min(VecN.Dot(slice.Frame.AxisZ,cpuShowFromCell-cpuShowTo),VecN.Dot(slice.Frame.AxisZ,cpuShowToCell-cpuShowTo));
                 cpuShowLift=Math.Max(0,-(lowest+(cpuShowAnchor.Y-board)/state.CellScale))*state.CellScale;
                 cpuShowStage=2;cpuShowStart=Time.unscaledTime;
             }

@@ -90,13 +90,13 @@ namespace NDShogi.Showcase.Core
             var moves=pawn.Length>0?pawn:all.ToArray();if(moves.Length==0)throw new InvalidOperationException("No legal moves.");
             if(moves.Length>nodeBudget)throw new InvalidOperationException("Node budget too small to evaluate every root.");
             var hero=state.Find(HeroId)??throw new InvalidOperationException("ScenarioMismatch: hero missing.");var q=hero.Position;
-            Q4 goal;
-            if(q.W==0&&q.V==0&&q.F<0)goal=new Q4(0,0,0,0);
-            else if(q.W==0&&q.V<ScenarioRunner.ThreeDExchangeCount)goal=new Q4(q.F,0,q.V+1,0);
-            else if(q.W==0)goal=new Q4(q.F,0,q.V,1);
-            else if(q.F<4)goal=new Q4(4,0,q.V,q.W);
-            else if(q.V>0)goal=new Q4(4,0,0,q.W);
-            else goal=new Q4(4,0,0,0);
+            QN goal;
+            if(q.W==0&&q.V==0&&q.F<0)goal=new QN(0,0,0,0);
+            else if(q.W==0&&q.V<ScenarioRunner.ThreeDExchangeCount)goal=new QN(q.F,0,q.V+1,0);
+            else if(q.W==0)goal=new QN(q.F,0,q.V,1);
+            else if(q.F<4)goal=new QN(4,0,q.V,q.W);
+            else if(q.V>0)goal=new QN(4,0,0,q.W);
+            else goal=new QN(4,0,0,0);
             var scores=new List<CandidateScore>();
             foreach(var m in moves)
             {
@@ -118,7 +118,7 @@ namespace NDShogi.Showcase.Core
             public readonly string Id;public readonly Position3 From;public readonly Position3 To;
             public Move3(string id,Position3 from,Position3 to){Id=id;From=from;To=to;}
             public string Key=>Id+":"+From+">"+To;
-            public Move ToProposal()=>new Move(Id,new Q4(From.F,From.U,From.V,0),new Q4(To.F,To.U,To.V,0));
+            public Move ToProposal()=>new Move(Id,new QN(From.F,From.U,From.V,0),new QN(To.F,To.U,To.V,0));
         }
         private sealed class Board3
         {

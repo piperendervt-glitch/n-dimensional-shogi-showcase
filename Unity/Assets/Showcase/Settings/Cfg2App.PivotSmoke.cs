@@ -52,7 +52,7 @@ namespace Showcase.Unity.Settings
                     var r=section.Vertices[i].LocalPosition;
                     // Independent equation from original local solid coordinates,
                     // not a second call to renderer.MapPoint/Frame.Project.
-                    var q=new Vec4(item.Position.F+r.X*forward,item.Position.U+r.Y*forward,item.Position.V+chart.EmbeddingHeight+r.Z,item.Position.W+r.W)-f.Center;
+                    var q=new VecN(item.Position.F+r.X*forward,item.Position.U+r.Y*forward,item.Position.V+chart.EmbeddingHeight+r.Z,item.Position.W+r.W)-f.Center;
                     double u=q.X*f.AxisX.X+q.Y*f.AxisX.Y+q.Z*f.AxisX.Z+q.W*f.AxisX.W;
                     double v=q.X*f.AxisY.X+q.Y*f.AxisY.Y+q.Z*f.AxisY.Z+q.W*f.AxisY.W;
                     double w=q.X*f.AxisZ.X+q.Y*f.AxisZ.Y+q.Z*f.AxisZ.Z+q.W*f.AxisZ.W;
@@ -76,8 +76,8 @@ namespace Showcase.Unity.Settings
                 var cell=source.Find(selectedPiece).Position;
                 foreach(var vertex in cellSection.Vertices)
                 {
-                    var q=new Vec4(cell.F+vertex.LocalPosition.X,cell.U+vertex.LocalPosition.Y,cell.V+chart.EmbeddingHeight+vertex.LocalPosition.Z,cell.W+vertex.LocalPosition.W)-f.Center;
-                    var expected=new Vector3((float)(chart.Anchor.X+chart.CellScale*Vec4.Dot(q,f.AxisY)),(float)(chart.Anchor.Y+chart.CellScale*Vec4.Dot(q,f.AxisZ)),(float)(chart.Anchor.Z+chart.CellScale*Vec4.Dot(q,f.AxisX)));
+                    var q=new VecN(cell.F+vertex.LocalPosition.X,cell.U+vertex.LocalPosition.Y,cell.V+chart.EmbeddingHeight+vertex.LocalPosition.Z,cell.W+vertex.LocalPosition.W)-f.Center;
+                    var expected=new Vector3((float)(chart.Anchor.X+chart.CellScale*VecN.Dot(q,f.AxisY)),(float)(chart.Anchor.Y+chart.CellScale*VecN.Dot(q,f.AxisZ)),(float)(chart.Anchor.Z+chart.CellScale*VecN.Dot(q,f.AxisX)));
                     SmokeCheck(actualLines.Any(x=>Vector3.Distance(x,expected)<1e-6),label+" actual selected-color frame vertex shares independent C/B/A transform");
                 }
             }
@@ -111,7 +111,7 @@ namespace Showcase.Unity.Settings
                 yield break;
             }
             yield return SmokeCapture("approved-menu");OpenSettings();yield return null;RenderGeometry();
-            var initial=slice.DisplayState;var p=new Vec4(0,0,3,0);
+            var initial=slice.DisplayState;var p=new VecN(0,0,3,0);
             SmokeCheck((slice.Center-p).Length<1e-9&&initial.EmbeddingHeight==3&&initial.HalfWindow==4.5,"PV01 initial C=P height=3 and finite half-window=4.5");
             SmokeCheck(Math.Abs(initial.Anchor.Y-SectionView.Anchor.y)<1e-8,"PV01 initial A is the wooden board surface, so pieces at Y=h rest on it");
             SmokeCheck(visuals.VisibleBoardPieces==0&&previewRenderer.VisiblePieces==preview.Pieces.Count,"PV06 settings uses only one real piece section path");
@@ -120,7 +120,7 @@ namespace Showcase.Unity.Settings
             string hash=preview.Hash,logic=config.RuleHash;var gp=result.P.ToArray();var before=PieceWorldVertices("subject");
             slice.SetCenter(default);RenderGeometry();var after=PieceWorldVertices("subject");
             SmokeCheck(MeshSetError(before,after)<1e-6,"PV02 XYZ P to O keeps actual piece mesh at height h");
-            SmokeCheck((slice.Center-default(Vec4)).Length<1e-10&&Math.Abs(slice.DisplayState.Anchor.Y-(SectionView.Anchor.y-3*SectionView.Cell))<1e-7,"PV02 C and A return to O together, s*h below the board");
+            SmokeCheck((slice.Center-default(VecN)).Length<1e-10&&Math.Abs(slice.DisplayState.Anchor.Y-(SectionView.Anchor.y-3*SectionView.Cell))<1e-7,"PV02 C and A return to O together, s*h below the board");
             WritePivotDump("origin-O");yield return SmokeCapture("origin-O");
             slice.SetOrientation(SliceAxes.Reference(ReferenceView.XZW,slice.Center));RenderGeometry();
             SmokeCheck(previewRenderer.VisiblePieces==0&&previewRenderer.PieceSections.Values.All(v=>v.Last.Status==SectionStatus.Empty&&v.Object.GetComponent<MeshFilter>().sharedMesh.vertexCount==0),"PV04 YW90 at O has no initial elevated piece, including stale triangles");

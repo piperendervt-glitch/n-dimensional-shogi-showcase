@@ -11,7 +11,7 @@ namespace Showcase.Unity
         readonly GameObject obj;
         readonly Mesh mesh;
         readonly Material material;
-        readonly ConvexShape cell=ShapeFactory.CreateBox(new Vec4(-.5,-.5,-.5,-.5),new Vec4(.5,.5,.5,.5),0,"legal-cell");
+        readonly ConvexShape cell=ShapeFactory.CreateBox(new VecN(-.5,-.5,-.5,-.5),new VecN(.5,.5,.5,.5),0,"legal-cell");
         readonly List<Vector3> lines=new List<Vector3>();
         readonly List<int> indices=new List<int>();
         // Edge keys are quantised coordinates (1e-7), the same rounding the previous
@@ -44,13 +44,13 @@ namespace Showcase.Unity
             material.SetColor("_UnlitColor",new Color(1,.65f,.2f));material.SetFloat("_ExposureWeight",0);
             var renderer=obj.AddComponent<MeshRenderer>();renderer.sharedMaterial=material;renderer.shadowCastingMode=ShadowCastingMode.Off;renderer.receiveShadows=false;
         }
-        public void Update(IReadOnlyList<Vec4> cells,double angle,bool purple)
+        public void Update(IReadOnlyList<VecN> cells,double angle,bool purple)
         {
             lines.Clear();indices.Clear();mesh.Clear();
             material.SetColor("_UnlitColor",purple?new Color(.58f,.38f,1):new Color(.92f,.72f,.35f));
             foreach(var q in cells)
             {
-                var result=SectionBuilder.Build(new Instance4D(cell,q),SliceFrame.AtAngle(angle));
+                var result=SectionBuilder.Build(new InstanceN(cell,q),SliceFrame.AtAngle(angle));
                 if(result.Status!=SectionStatus.Volume3D)continue;
                 edges.Clear();
                 for(int i=0;i<result.Indices.Length;i+=3)for(int j=0;j<3;j++)

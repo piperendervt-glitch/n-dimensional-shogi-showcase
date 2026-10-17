@@ -122,7 +122,7 @@ namespace NDShogi.Showcase.Core.Match
         {
             var s = session.Snapshot; var c = s.Config;
             var root = new XElement(N + "match", new XAttribute("schema", "1"), new XAttribute("id", s.MatchId), new XAttribute("mode", s.Mode), new XAttribute("fixture", s.FixtureId),
-                new XAttribute("startedUtc", s.StartedUtc.ToString("o", CultureInfo.InvariantCulture)), new XAttribute("ruleId", MatchConfig.RuleId), new XAttribute("ruleVersion", MatchConfig.RuleVersion), new XAttribute("ruleHash", c.RuleHash),
+                new XAttribute("startedUtc", s.StartedUtc.ToString("o", CultureInfo.InvariantCulture)), new XAttribute("ruleId", c.EffectiveRuleId), new XAttribute("ruleVersion", MatchConfig.RuleVersion), new XAttribute("ruleHash", c.RuleHash),
                 new XAttribute("settingsHash", c.SettingsHash), new XAttribute("snapshotHash", s.Hash), new XAttribute("initialHash", s.InitialHash), new XAttribute("currentHash", session.State.Hash), new XAttribute("sideA", s.SideA), new XAttribute("sideB", s.SideB),
                 new XAttribute("occlusion", c.Preset.OcclusionId), new XAttribute("cpu", MatchConfig.CpuId), new XAttribute("seed", c.CpuSeed), new XAttribute("budget", c.CpuBudget), new XAttribute("clockPolicy", MatchConfig.ClockPolicy),
                 new XAttribute("outcome", session.State.Outcome), new XAttribute("winner", session.State.Winner?.ToString() ?? ""), new XAttribute("phase", session.Phase), new XAttribute("aSeconds", D(session.Clock.ASeconds)), new XAttribute("bSeconds", D(session.Clock.BSeconds)),

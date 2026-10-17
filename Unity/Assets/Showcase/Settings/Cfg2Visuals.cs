@@ -21,7 +21,7 @@ namespace Showcase.Unity.Settings
         readonly EnvironmentRig rig;
         readonly Dictionary<string,Material> labels=new Dictionary<string,Material>();
         readonly Dictionary<string,SectionView> boardPieces=new Dictionary<string,SectionView>();
-        readonly Dictionary<string,Q4> boardCells=new Dictionary<string,Q4>();
+        readonly Dictionary<string,QN> boardCells=new Dictionary<string,QN>();
         readonly Dictionary<string,SectionView> capturedPieces=new Dictionary<string,SectionView>();
         readonly Dictionary<string,Text> counts=new Dictionary<string,Text>();
         readonly Dictionary<string,RectTransform> countRoots=new Dictionary<string,RectTransform>();
@@ -32,11 +32,11 @@ namespace Showcase.Unity.Settings
         readonly List<Vector3> candidateVertices=new List<Vector3>();
         readonly List<Color> candidateColors=new List<Color>();
         readonly List<int> candidateIndices=new List<int>();
-        readonly HashSet<Q4> boardCandidateCells=new HashSet<Q4>();
+        readonly HashSet<QN> boardCandidateCells=new HashSet<QN>();
         public readonly GameObject Root;
         public int VisibleBoardPieces {get;private set;}
         public int VisibleBoardCandidates=>boardCandidateCells.Count;
-        public IReadOnlyCollection<Q4> BoardCandidateCells=>boardCandidateCells;
+        public IReadOnlyCollection<QN> BoardCandidateCells=>boardCandidateCells;
         public Vector3 TrayPosition(Side side)=>side==Side.A?new Vector3(.35f,.865f,-.25f):new Vector3(-.35f,.865f,.25f);
         public int CountFor(Side owner)=>totals[owner];
         public string CapturedLabel(Side owner,string definition)=>counts.TryGetValue(owner+":"+definition,out var label)?label.text:"";
@@ -86,7 +86,7 @@ namespace Showcase.Unity.Settings
             }
             foreach(var id in boardPieces.Keys.Where(id=>!live.Contains(id)).ToArray()){boardPieces[id].Dispose();boardPieces.Remove(id);}
         }
-        public bool PickBoard(Ray ray,out Q4 cell,out float distance,bool piecesOnly=false)
+        public bool PickBoard(Ray ray,out QN cell,out float distance,bool piecesOnly=false)
         {
             cell=default;distance=float.PositiveInfinity;bool found=false;
             foreach(var entry in boardPieces)
@@ -100,18 +100,18 @@ namespace Showcase.Unity.Settings
             }
             if(found||piecesOnly)return found;
             var plane=new Plane(Vector3.up,SectionView.Anchor);if(!plane.Raycast(ray,out float floor)||floor<=0)return false;var point=ray.GetPoint(floor)-SectionView.Anchor;
-            var q=new Q4(Mathf.RoundToInt(point.z/SectionView.Cell),Mathf.RoundToInt(point.x/SectionView.Cell),0,0);if(!q.InBounds)return false;
+            var q=new QN(Mathf.RoundToInt(point.z/SectionView.Cell),Mathf.RoundToInt(point.x/SectionView.Cell),0,0);if(!q.InBounds)return false;
             cell=q;distance=floor;return true;
         }
-        public void RefreshBoardCandidates(IEnumerable<Q4> p,Q4? selected,bool visible)
+        public void RefreshBoardCandidates(IEnumerable<QN> p,QN? selected,bool visible)
         {
             boardCandidateCells.Clear();candidateVertices.Clear();candidateColors.Clear();candidateIndices.Clear();
-            if(visible)foreach(var q in p??Array.Empty<Q4>())if(q.InBounds&&q.V==0&&q.W==0)boardCandidateCells.Add(q);
+            if(visible)foreach(var q in p??Array.Empty<QN>())if(q.InBounds&&q.V==0&&q.W==0)boardCandidateCells.Add(q);
             foreach(var q in boardCandidateCells)if(!selected.HasValue||selected.Value!=q)CandidateTile(q,new Color(.12f,.43f,1,.22f),new Color(.24f,.57f,1,.8f));
             if(selected.HasValue&&selected.Value.InBounds&&selected.Value.V==0&&selected.Value.W==0)CandidateTile(selected.Value,new Color(1,.74f,.18f,.26f),new Color(1,.75f,.2f,.95f));
             boardCandidateMesh.Clear();boardCandidateMesh.SetVertices(candidateVertices);boardCandidateMesh.SetColors(candidateColors);boardCandidateMesh.SetTriangles(candidateIndices,0);boardCandidateMesh.RecalculateBounds();
         }
-        void CandidateTile(Q4 q,Color fill,Color border)
+        void CandidateTile(QN q,Color fill,Color border)
         {
             float x=q.U*SectionView.Cell,z=q.F*SectionView.Cell,half=SectionView.Cell*.465f,width=.001f;
             CandidateQuad(x-half,z-half,half*2,half*2,fill);

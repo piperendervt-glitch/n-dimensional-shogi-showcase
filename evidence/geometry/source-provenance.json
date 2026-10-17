@@ -22,28 +22,28 @@
     },
     {
       "path": "src/Showcase.Geometry/Runtime/GeometryTypes.cs",
-      "sha256": "1dcd57cd9df7073c195d31f41e53eb5bbeddb6cb38ae7a1c267eb2429f0fabb1",
-      "bytes": 7067
+      "sha256": "a81ba66c88915d18173392ded16b7026760010becef52d78e69ea6482373304e",
+      "bytes": 13543
     },
     {
       "path": "src/Showcase.Geometry/Runtime/SectionBuilder.cs",
-      "sha256": "e1898e837f886b7b02b0a14984168105866adbb10a7d9b23742c9d9e884381bd",
-      "bytes": 11990
+      "sha256": "b78aeeca5873432dbca2b19fcafb800abaf52f37eb1a6dcddde5881b53038fbd",
+      "bytes": 12057
     },
     {
       "path": "src/Showcase.Geometry/Runtime/ShapeFactory.cs",
-      "sha256": "9fa23152a55edf706d1a5f9b44f2253abdd091ed88ae7385029f3f1e2160a664",
-      "bytes": 3840
+      "sha256": "5b7cd871b865b3c09c8a301e1558a8d2c82014fbc9567496dd24804baf4dbd8b",
+      "bytes": 5767
     },
     {
       "path": "src/Showcase.Geometry/Runtime/TriplePlaneOracle.cs",
-      "sha256": "ebde7b160c7e435b97845ea00082a99660ee05289c5fea9940e246fc911931c4",
-      "bytes": 2908
+      "sha256": "7b73762f13034e0db565d0624bede3e6b1405e4b31c69368fa6374e5f824f9bd",
+      "bytes": 2907
     },
     {
       "path": "tests/Showcase.Geometry.Tests/Program.cs",
-      "sha256": "7092742982d02ae5112d5f11086ad147bf31b65bcf0176c68c2194c6a2d0ebfb",
-      "bytes": 19586
+      "sha256": "fc4ffa697830882d4fe47dad9a1bcb55ac6fdad74beac6e89547292e7f52d5b2",
+      "bytes": 19560
     },
     {
       "path": "tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj",
@@ -51,7 +51,7 @@
       "bytes": 307
     }
   ],
-  "testAssemblySha256": "2a94c0695e75d0d7ddaf9ed322dbcbcb50d939d498967a82d8240c1513890420",
-  "geometryAssemblySha256": "fce1079536fd9066a09ea48eaa88e5d7afcec8619b4c6088990c44767b99e521",
+  "testAssemblySha256": "bc600e7c2cf971e4cbf125e9c1616845ecece4b42156a25eafe906ff5d197f7b",
+  "geometryAssemblySha256": "43f3f1f672a079bb1a28f5fb23619b23a0dbae64cdf4eb4c74f9461f5080b2d9",
   "command": "dotnet run --project tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj --configuration Release -- evidence/geometry"
 }

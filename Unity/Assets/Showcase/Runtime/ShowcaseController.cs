@@ -24,7 +24,7 @@ namespace Showcase.Unity
         RuntimeEvidence evidence;
         readonly Dictionary<string,SectionView> pieces=new Dictionary<string,SectionView>();
         readonly Dictionary<string,Material> labels=new Dictionary<string,Material>();
-        readonly List<Vec4> guideCells=new List<Vec4>();
+        readonly List<VecN> guideCells=new List<VecN>();
         SectionView board;
         GeometryGuides guides;
         ShapeVariant variant=ShapeVariant.C;
@@ -36,7 +36,7 @@ namespace Showcase.Unity
         long sectionVersion;
         float speed=1;
         string movingId;
-        Vec4 movingPosition;
+        VecN movingPosition;
         List<PlyRecord> records=new List<PlyRecord>();
         readonly Stopwatch watch=new Stopwatch();
         Texture2D captureTexture;
@@ -52,7 +52,7 @@ namespace Showcase.Unity
         float transitionPhase,endingGlowLumens;
         int requestedWidth,requestedHeight;
         readonly ParallelOptions sectionWorkers=new ParallelOptions{MaxDegreeOfParallelism=Math.Max(1,Math.Min(8,System.Environment.ProcessorCount-2))};
-        struct SectionJob {public SectionView view;public Vec4 q;public int forward;public SectionResult result;}
+        struct SectionJob {public SectionView view;public VecN q;public int forward;public SectionResult result;}
         readonly List<SectionJob> sectionJobs=new List<SectionJob>(41);
         long visibleVersion=-1;int visiblePieceSet=-1,visibleCount;string visibleIds="";
         readonly System.Text.StringBuilder visibleBuilder=new System.Text.StringBuilder(512);
@@ -183,7 +183,7 @@ namespace Showcase.Unity
                     yield return new WaitForEndOfFrame();
                 }
                 UpdateGuideCells(before,decision.Move);
-                movingId=decision.Move.PieceId;Vec4 from=ToVec(decision.Move.From),to=ToVec(decision.Move.To);
+                movingId=decision.Move.PieceId;VecN from=ToVec(decision.Move.From),to=ToVec(decision.Move.To);
                 Event("MoveAnimationStarted",decision.Move.ToString());
                 double t=0;double duration=ScenarioRunner.IsHeightEscapePly(ply)||dimensionalTurn?2.8:1.7;
                 while(t<duration)
@@ -258,8 +258,8 @@ namespace Showcase.Unity
             }
             foreach(double a in new[]{0d,30d,45d,60d,90d})
             {
-                angle=a;pieces["comparison-A"].UpdateSection(new Vec4(-1.3,0,0,0),1,a,++sectionVersion);
-                pieces["comparison-C"].UpdateSection(new Vec4(1.3,0,0,0),1,a,sectionVersion);
+                angle=a;pieces["comparison-A"].UpdateSection(new VecN(-1.3,0,0,0),1,a,++sectionVersion);
+                pieces["comparison-C"].UpdateSection(new VecN(1.3,0,0,0),1,a,sectionVersion);
                 board.UpdateSection(default,1,a,sectionVersion);
                 rig.Camera.transform.position=new Vector3(.25f,1.14f,-.32f);rig.Camera.transform.LookAt(new Vector3(0,.87f,0));
                 yield return Hold(3);Screenshot("shape-AC-"+a);yield return new WaitForEndOfFrame();while(passCapture!=null&&passCapture.IsBusy)yield return null;
@@ -389,7 +389,7 @@ namespace Showcase.Unity
         void RefreshGeometry()
         {
             watch.Restart();sectionVersion++;sectionJobs.Clear();
-            void Queue(SectionView view,Vec4 q,int forward)
+            void Queue(SectionView view,VecN q,int forward)
             {if(view.PrepareSection(q,forward,angle,sectionVersion))sectionJobs.Add(new SectionJob{view=view,q=q,forward=forward});}
             Queue(board,default,1);
             foreach(var p in tx.State.Pieces)if(pieces.TryGetValue(p.Id,out var view))Queue(view,p.Id==movingId?movingPosition:ToVec(p.Position),p.Side==Side.A?1:-1);
@@ -427,7 +427,7 @@ namespace Showcase.Unity
         }
         static int SceneNumber(int ply)=>ply<ScenarioRunner.First3DPly?1:ply==ScenarioRunner.First3DPly?2:ply<ScenarioRunner.First4DPly?3:ply<=ScenarioRunner.First4DPly+1?4:5;
         static double Smooth(double x)=>x*x*(3-2*x);
-        static Vec4 ToVec(Q4 q)=>new Vec4(q.F,q.U,q.V,q.W);
+        static VecN ToVec(QN q)=>new VecN(q.F,q.U,q.V,q.W);
         public void CommandTogglePause(){if(exitDialog)return;paused=!paused;Event("Pause",paused.ToString());}
         public void CommandToggleDebug(){debug=!debug;Event("DebugToggle","No timeline or camera change");}
         public void CommandToggleTransition(){transitionAllowed=!transitionAllowed;transition.EffectEnabled=profile=="ShowcaseRaster"&&transitionAllowed;Event("TransitionToggle",transition.EffectEnabled.ToString());}

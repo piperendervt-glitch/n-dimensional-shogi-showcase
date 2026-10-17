@@ -1,5 +1,5 @@
 TECHNICAL_PASS
 3372857 assertions
-898 ms
+970 ms
 Clipping and independent triple-plane oracle agree on recorded cases and sweeps.
 Unity visual / shadow / reflection / performance acceptance: NOT_RUN by this test.

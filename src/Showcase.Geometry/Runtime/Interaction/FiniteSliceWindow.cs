@@ -5,20 +5,20 @@ namespace Showcase.Geometry.Interaction
     public static class FiniteSliceWindow
     {
         public const double DefaultHalfExtent=2.5;
-        public static Instance4D ClipInstance(Instance4D source,SliceFrame frame,double halfExtent=DefaultHalfExtent)
+        public static InstanceN ClipInstance(InstanceN source,SliceFrame frame,double halfExtent=DefaultHalfExtent)
         {
             if(!frame.IsOrthonormal()||halfExtent<=0||double.IsNaN(halfExtent)||double.IsInfinity(halfExtent))throw new ArgumentException("A finite orthonormal frame and positive finite half extent are required.");
-            var planes=new List<Halfspace4>(source.Shape.Planes);int id=1000000;
+            var planes=new List<HalfspaceN>(source.Shape.Planes);int id=1000000;
             foreach(var p in planes)if(p.FaceId>=id)id=checked(p.FaceId+1);
             foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ})foreach(int sign in new[]{-1,1})
             {
                 var world=axis*sign;var local=source.WorldToLocalDirection(world);
-                planes.Add(new Halfspace4(local,halfExtent+Vec4.Dot(world,frame.Center-source.Position),id++,SurfaceKind.Side));
+                planes.Add(new HalfspaceN(local,halfExtent+VecN.Dot(world,frame.Center-source.Position),id++,SurfaceKind.Side));
             }
             var shape=new ConvexShape(source.Shape.Id+"/finite-window",planes,source.Shape.Bounds);
-            return new Instance4D(shape,source.Position,source.Forward,source.Id);
+            return new InstanceN(shape,source.Position,source.Forward,source.Id);
         }
-        public static SectionResult Build(Instance4D source,SliceFrame frame,double halfExtent=DefaultHalfExtent)
+        public static SectionResult Build(InstanceN source,SliceFrame frame,double halfExtent=DefaultHalfExtent)
             =>SectionBuilder.Build(ClipInstance(source,frame,halfExtent),frame);
     }
     public sealed class HyperplaneRelation
@@ -42,24 +42,24 @@ namespace Showcase.Geometry.Interaction
         {public readonly Vec3 N;public readonly double D;public Plane(Vec3 n,double d){N=n;D=d;}}
         // chartOrigin=null keeps the C-centred chart. A fixed origin (e.g. P) is first moved along the
         // reference normal into the reference space through C, so moving C shifts the drawn intersection.
-        public static HyperplaneRelation Build(SliceFrame frame,ReferenceView reference,double halfExtent=1,long viewRevision=0,double? mainHalfExtent=null,Vec4? chartOrigin=null)
+        public static HyperplaneRelation Build(SliceFrame frame,ReferenceView reference,double halfExtent=1,long viewRevision=0,double? mainHalfExtent=null,VecN? chartOrigin=null)
         {
             double mainHalf=mainHalfExtent??halfExtent;
             if(!frame.IsOrthonormal(1e-6)||halfExtent<=0||double.IsNaN(halfExtent)||double.IsInfinity(halfExtent)||mainHalf<=0||double.IsNaN(mainHalf)||double.IsInfinity(mainHalf))throw new ArgumentException("Finite orthonormal frame and windows required.");
             var referenceNormal=SliceAxes.Reference(reference).Normal;
-            var origin=chartOrigin.HasValue?chartOrigin.Value+referenceNormal*Vec4.Dot(frame.Center-chartOrigin.Value,referenceNormal):frame.Center;
+            var origin=chartOrigin.HasValue?chartOrigin.Value+referenceNormal*VecN.Dot(frame.Center-chartOrigin.Value,referenceNormal):frame.Center;
             if(!origin.IsFinite)throw new ArgumentException("Chart origin must be finite.");
             var basis=SliceAxes.Reference(reference,origin);
             var chartCenter=basis.Project(frame.Center);
-            var n=new Vec3(Vec4.Dot(frame.Normal,basis.AxisX),Vec4.Dot(frame.Normal,basis.AxisY),Vec4.Dot(frame.Normal,basis.AxisZ));
+            var n=new Vec3(VecN.Dot(frame.Normal,basis.AxisX),VecN.Dot(frame.Normal,basis.AxisY),VecN.Dot(frame.Normal,basis.AxisZ));
             var planes=new List<Plane>();
             foreach(var direction in new[]{new Vec3(1,0,0),new Vec3(0,1,0),new Vec3(0,0,1)})foreach(int sign in new[]{-1,1})planes.Add(new Plane(direction*sign,halfExtent));
             foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ})
             {
-                var restricted=new Vec3(Vec4.Dot(axis,basis.AxisX),Vec4.Dot(axis,basis.AxisY),Vec4.Dot(axis,basis.AxisZ));
+                var restricted=new Vec3(VecN.Dot(axis,basis.AxisX),VecN.Dot(axis,basis.AxisY),VecN.Dot(axis,basis.AxisZ));
                 foreach(int sign in new[]{-1,1})planes.Add(new Plane(restricted*sign,mainHalf+Vec3.Dot(restricted*sign,chartCenter)));
             }
-            double fixedCoordinate=reference==ReferenceView.XYZ?frame.Center.W:reference==ReferenceView.XYW?frame.Center.X:reference==ReferenceView.XZW?frame.Center.Z:frame.Center.Y;
+            double fixedCoordinate=frame.Center.Axis(SliceAxes.NormalCoreAxis(reference));
             double eps=1e-9*Math.Max(1,Math.Max(halfExtent,mainHalf+chartCenter.Length));
             var edges=new List<int>();var triangles=new List<int>();
             if(n.Length<1e-10)

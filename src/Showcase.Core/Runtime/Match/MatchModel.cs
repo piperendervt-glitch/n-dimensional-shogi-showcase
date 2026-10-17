@@ -30,6 +30,10 @@ namespace NDShogi.Showcase.Core.Match
     public sealed class MatchConfig
     {
         public const string RuleId = "CFG2_DEMO_4D";
+        /// <summary>Rule id of an N≠4 match. N=4 keeps <see cref="RuleId"/> so existing 4D hashes and records are unchanged.</summary>
+        public const string RuleIdND = "CFG2_DEMO_ND";
+        public int Dimensions => Preset.Bounds.Dimensions;
+        public string EffectiveRuleId => Dimensions == 4 ? RuleId : RuleIdND;
         public const string RuleVersion = "1";
         public const string CpuId = "capture-stable-seeded/1";
         public const string ClockPolicy = "monotonic; no-increment; presentation-pauses-both; explicit-cvc-pause; focus-does-not-pause/1";
@@ -44,7 +48,9 @@ namespace NDShogi.Showcase.Core.Match
         private MatchConfig(PreviewPreset preset, MatchOptionsRaw options, double time, int seed, int budget, int delay)
         {
             Preset = preset; raw = options.Clone(); TimeSeconds = time; CpuSeed = seed; CpuBudget = budget; CpuDelayMilliseconds = delay;
-            RuleHash = StableHash.Of(RuleId + "/" + RuleVersion + "|" + preset.RuleHash + "|king-capture;no-moves-draw;time-loss;no-self-check;no-promotion;no-drops;no-repetition|" + time.ToString("R", CultureInfo.InvariantCulture));
+            // N=4 hashes exactly as before; other N carry their rule id and dimension count in the hash.
+            string ruleId = preset.Bounds.Dimensions == 4 ? RuleId : RuleIdND + "/N" + preset.Bounds.Dimensions.ToString(CultureInfo.InvariantCulture);
+            RuleHash = StableHash.Of(ruleId + "/" + RuleVersion + "|" + preset.RuleHash + "|king-capture;no-moves-draw;time-loss;no-self-check;no-promotion;no-drops;no-repetition|" + time.ToString("R", CultureInfo.InvariantCulture));
             SettingsHash = StableHash.Of(RuleHash + "|" + CpuId + "|" + seed.ToString(CultureInfo.InvariantCulture) + "|" + budget.ToString(CultureInfo.InvariantCulture) + "|" + delay.ToString(CultureInfo.InvariantCulture) + "|" + ClockPolicy);
         }
         public MatchOptionsRaw ToRaw() => raw.Clone();
@@ -58,7 +64,7 @@ namespace NDShogi.Showcase.Core.Match
             if (!int.TryParse(options.CpuDelayMilliseconds, NumberStyles.Integer, CultureInfo.InvariantCulture, out int delay) || delay < 0 || delay > 60000) errors.Add("CPU表示待ちは0〜60000msです。");
             if (preset != null)
             {
-                if (preset.Bounds.Min != -4 || preset.Bounds.Max != 4 || preset.ForwardAxis != 0) errors.Add("今回の対局はN4・各軸−4..4・前方Z(F)です。");
+                if (preset.Bounds.Min != -4 || preset.Bounds.Max != 4 || preset.ForwardAxis != 0) errors.Add("対局は各軸−4..4・前方Z(F)です。");
                 foreach (PieceKind kind in Enum.GetValues(typeof(PieceKind)))
                 {
                     var definition = preset.Find(DefinitionId(kind));
@@ -95,11 +101,12 @@ namespace NDShogi.Showcase.Core.Match
         public MatchOutcome Outcome { get; }
         public Side? Winner { get; }
         public string Hash { get; }
-        private readonly Dictionary<Q4, Piece> occupied;
+        private readonly Dictionary<QN, Piece> occupied;
         private readonly Dictionary<string, Piece> byId;
         internal MatchState(IEnumerable<Piece> pieces, Side turn, int ply, long revision, MatchConfig config, IEnumerable<CapturedPiece>? captured = null, MatchOutcome outcome = MatchOutcome.Ongoing, Side? winner = null)
         {
-            var list = pieces.OrderBy(p => p.Id, StringComparer.Ordinal).ToArray();
+            var bounds = config.Preset.Bounds;
+            var list = pieces.Select(p => bounds.Contains(p.Position) ? p.At(bounds.Normalize(p.Position)) : p).OrderBy(p => p.Id, StringComparer.Ordinal).ToArray();
             if (list.Length > 256 || !Enum.IsDefined(typeof(Side), turn) || list.Any(p => string.IsNullOrWhiteSpace(p.Id) || p.Id.Length > 128 || p.Id.Any(char.IsControl) || !Enum.IsDefined(typeof(PieceKind), p.Kind) || !Enum.IsDefined(typeof(Side), p.Side) || !config.Preset.Bounds.Contains(p.Position))) throw new ArgumentException("Invalid match piece/side/bounds.");
             occupied = list.ToDictionary(p => p.Position); byId = list.ToDictionary(p => p.Id, StringComparer.Ordinal);
             Pieces = Array.AsReadOnly(list); Captured = Array.AsReadOnly((captured ?? Array.Empty<CapturedPiece>()).ToArray());
@@ -107,7 +114,7 @@ namespace NDShogi.Showcase.Core.Match
             Hash = StableHash.Of(config.RuleHash + "|" + turn + "|" + ply + "|" + outcome + "|" + winner + "|" + string.Join(";", list.Select(p => p.Id.Length + ":" + p.Id + ":" + p.Kind + ":" + p.Side + ":" + p.Position)) + "|captured:" + string.Join(";", Captured.Select(c => c.Captor + ":" + c.Victim.Id.Length + ":" + c.Victim.Id + ":" + c.Victim.Kind + ":" + c.Victim.Side)));
         }
         public Piece? Find(string id) => byId.TryGetValue(id, out var p) ? p : null;
-        public Piece? At(Q4 cell) => occupied.TryGetValue(cell, out var p) ? p : null;
+        public Piece? At(QN cell) => occupied.TryGetValue(cell, out var p) ? p : null;
         public IReadOnlyList<CapturedPiece> CapturedBy(Side side) => Array.AsReadOnly(Captured.Where(c => c.Captor == side && c.Victim.Kind != PieceKind.King).ToArray());
         public PreviewSession ToPreview(MatchConfig config) => new PreviewSession(config.Preset.Bounds, Pieces.Select(p => new TrialPiece(p.Id, MatchConfig.DefinitionId(p.Kind), p.Side, p.Position)));
     }
@@ -121,10 +128,12 @@ namespace NDShogi.Showcase.Core.Match
     }
     public static class MatchRules
     {
-        public static IReadOnlyList<Piece> InitialPieces()
+        public static IReadOnlyList<Piece> InitialPieces() => InitialPieces(4);
+        /// <summary>The flat shogi layout on the F×U plane, every further axis at 0, for a board of <paramref name="dimensions"/> axes.</summary>
+        public static IReadOnlyList<Piece> InitialPieces(int dimensions)
         {
             // Explicit data conversion only; old GameState/CPU/asymmetric rules never enter a match.
-            return Array.AsReadOnly(new RuleCore().InitialState().Pieces.Select(p => new Piece(p.Id, p.Side, p.Kind, new Q4(p.Position.F, p.Position.U, p.Position.V, p.Position.W))).ToArray());
+            return Array.AsReadOnly(new RuleCore().InitialState().Pieces.Select(p => new Piece(p.Id, p.Side, p.Kind, QN.Padded(p.Position.ToArray(), dimensions))).ToArray());
         }
         public static QueryResult Query(MatchConfig config, MatchState state, string pieceId, CancellationToken cancellation = default, int budget = int.MaxValue)
             => PreviewQuery.Execute(config.Preset, state.ToPreview(config), pieceId, cancellation, budget);

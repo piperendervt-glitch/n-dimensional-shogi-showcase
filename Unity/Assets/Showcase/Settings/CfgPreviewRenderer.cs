@@ -11,19 +11,19 @@ using NDimensionalShogi.Showcase.Environment;
 namespace Showcase.Unity.Settings
 {
     internal sealed class CfgVisualPiece
-    { public string Id,DefinitionId;public Q4 Position;public Side Side;public Vec4? Glide; }
+    { public string Id,DefinitionId;public QN Position;public Side Side;public VecN? Glide; }
 
     // Presentation only: all candidate sets arrive from the common pure-C# query.
     internal sealed class CfgPreviewRenderer : IDisposable
     {
         public static readonly Vector3 AirAnchor=new Vector3(0,1.1f,0);
         readonly EnvironmentRig rig;
-        readonly ConvexShape cell=ShapeFactory.CreateBox(new Vec4(-.5,-.5,-.5,-.5),new Vec4(.5,.5,.5,.5),0,"cfg1-logical-cell/1");
+        readonly ConvexShape cell=ShapeFactory.CreateBox(new VecN(-.5,-.5,-.5,-.5),new VecN(.5,.5,.5,.5),0,"cfg1-logical-cell/1");
         readonly Dictionary<string,SectionView> pieces=new Dictionary<string,SectionView>();
         readonly Dictionary<string,Material> labels=new Dictionary<string,Material>();
         readonly List<CellMesh> cells=new List<CellMesh>();
-        readonly Dictionary<string,Q4> pieceCells=new Dictionary<string,Q4>();
-        readonly HashSet<Q4> candidateCells=new HashSet<Q4>();
+        readonly Dictionary<string,QN> pieceCells=new Dictionary<string,QN>();
+        readonly HashSet<QN> candidateCells=new HashSet<QN>();
         readonly Mesh lineMesh;
         readonly Material lineMaterial;
         readonly GameObject lineObject;
@@ -71,7 +71,7 @@ namespace Showcase.Unity.Settings
         public Vector3 Anchor=AirAnchor;
         // CFG1 keeps its original zero embedding. The pivot entry supplies the
         // same immutable display state to cells, pieces and picking.
-        Vec4 embedding;
+        VecN embedding;
         float displayCell=SectionView.Cell;
         public IReadOnlyDictionary<string,SectionView> PieceSections=>pieces;
         public void SetDisplayState(PivotViewState state)
@@ -80,10 +80,10 @@ namespace Showcase.Unity.Settings
             embedding=state.Embedding;Anchor=new Vector3((float)state.Anchor.X,(float)state.Anchor.Y,(float)state.Anchor.Z);
             HalfWindow=state.HalfWindow;displayCell=(float)state.CellScale;
         }
-        public bool TryGetCellSection(Q4 id,out SectionResult section)
+        public bool TryGetCellSection(QN id,out SectionResult section)
         {foreach(var entry in cells)if(entry.Id==id){section=entry.Section;return true;}section=null;return false;}
         public double LastBuildMilliseconds {get;private set;}
-        struct CellMesh {public Q4 Id;public SectionResult Section;}
+        struct CellMesh {public QN Id;public SectionResult Section;}
         public CfgPreviewRenderer(EnvironmentRig environment)
         {
             rig=environment;
@@ -104,15 +104,15 @@ namespace Showcase.Unity.Settings
             fillMesh=new Mesh{name="CFG2 finite cell faces",indexFormat=IndexFormat.UInt32};fillMesh.MarkDynamic();
             fillObject.AddComponent<MeshFilter>().sharedMesh=fillMesh;fillObject.AddComponent<MeshRenderer>().sharedMaterial=fillMaterial;
         }
-        public static Vec4 V(Q4 p)=>new Vec4(p.F,p.U,p.V,p.W);
-        static double L1(Vec4 p)=>Math.Abs(p.X)+Math.Abs(p.Y)+Math.Abs(p.Z)+Math.Abs(p.W);
-        public void Rebuild(SliceFrame frame,long revision,IEnumerable<CfgVisualPiece> source,IEnumerable<Q4> g,IEnumerable<Q4> p,Q4? selected)
-            =>Rebuild(frame,revision,source,g,p,Array.Empty<Q4>(),selected);
-        public void Rebuild(SliceFrame frame,long revision,IEnumerable<CfgVisualPiece> source,IEnumerable<Q4> g,IEnumerable<Q4> p,IEnumerable<Q4> attacks,Q4? selected)
+        public static VecN V(QN p)=>new VecN(p.F,p.U,p.V,p.W);
+        static double L1(VecN p)=>Math.Abs(p.X)+Math.Abs(p.Y)+Math.Abs(p.Z)+Math.Abs(p.W);
+        public void Rebuild(SliceFrame frame,long revision,IEnumerable<CfgVisualPiece> source,IEnumerable<QN> g,IEnumerable<QN> p,QN? selected)
+            =>Rebuild(frame,revision,source,g,p,Array.Empty<QN>(),selected);
+        public void Rebuild(SliceFrame frame,long revision,IEnumerable<CfgVisualPiece> source,IEnumerable<QN> g,IEnumerable<QN> p,IEnumerable<QN> attacks,QN? selected)
         {
             var watch=System.Diagnostics.Stopwatch.StartNew();ViewRevision=revision;Diagnostic="";
-            var gs=new HashSet<Q4>(g??Array.Empty<Q4>());var ps=new HashSet<Q4>(p??Array.Empty<Q4>());
-            var attacked=new HashSet<Q4>(attacks??Array.Empty<Q4>());
+            var gs=new HashSet<QN>(g??Array.Empty<QN>());var ps=new HashSet<QN>(p??Array.Empty<QN>());
+            var attacked=new HashSet<QN>(attacks??Array.Empty<QN>());
             candidateCells.Clear();candidateCells.UnionWith(ps);pieceCells.Clear();
             VisibleG=VisibleP=VisibleAttacks=VisiblePieces=0;cells.Clear();lines.Clear();colors.Clear();indices.Clear();displayEdges.Clear();fillVertices.Clear();fillColors.Clear();fillIndices.Clear();
             double half=HalfWindow;if(half<=0||double.IsNaN(half)||double.IsInfinity(half))throw new ArgumentOutOfRangeException(nameof(HalfWindow));
@@ -120,10 +120,10 @@ namespace Showcase.Unity.Settings
             // Enumerate only temporary geometric candidates; no 9^4 state array is allocated.
             for(int f=-4;f<=4;f++)for(int u=-4;u<=4;u++)for(int v=-4;v<=4;v++)for(int w=-4;w<=4;w++)
             {
-                var q=new Q4(f,u,v,w);var d=V(q)+embedding-frame.Center;
-                if(Math.Abs(Vec4.Dot(d,frame.Normal))>normalRadius+1e-8)continue;
-                if(Math.Abs(Vec4.Dot(d,frame.AxisX))>half+.5*L1(frame.AxisX)||Math.Abs(Vec4.Dot(d,frame.AxisY))>half+.5*L1(frame.AxisY)||Math.Abs(Vec4.Dot(d,frame.AxisZ))>half+.5*L1(frame.AxisZ))continue;
-                var section=FiniteSliceWindow.Build(new Instance4D(cell,V(q)+embedding,1,q.ToString()),frame,half);
+                var q=new QN(f,u,v,w);var d=V(q)+embedding-frame.Center;
+                if(Math.Abs(VecN.Dot(d,frame.Normal))>normalRadius+1e-8)continue;
+                if(Math.Abs(VecN.Dot(d,frame.AxisX))>half+.5*L1(frame.AxisX)||Math.Abs(VecN.Dot(d,frame.AxisY))>half+.5*L1(frame.AxisY)||Math.Abs(VecN.Dot(d,frame.AxisZ))>half+.5*L1(frame.AxisZ))continue;
+                var section=FiniteSliceWindow.Build(new InstanceN(cell,V(q)+embedding,1,q.ToString()),frame,half);
                 if(section.Status==SectionStatus.NumericallyUncertain||section.Status==SectionStatus.CapacityExceeded){Diagnostic=section.Status.ToString();continue;}
                 if(section.Status!=SectionStatus.Volume3D)continue;
                 cells.Add(new CellMesh{Id=q,Section=section});if(gs.Contains(q))VisibleG++;if(ps.Contains(q))VisibleP++;if(attacked.Contains(q))VisibleAttacks++;
@@ -203,7 +203,7 @@ namespace Showcase.Unity.Settings
                 else displayEdges.Add(entry.Key,new DisplayEdge{A=edge.A,B=edge.B,Color=color,Priority=priority});
             }
         }
-        public bool Pick(Ray ray,long expectedRevision,out Q4 id,bool prioritizeSelection=true)
+        public bool Pick(Ray ray,long expectedRevision,out QN id,bool prioritizeSelection=true)
         {
             id=default;if(expectedRevision!=ViewRevision)return false;float nearest=float.PositiveInfinity;bool found=false;
             if(prioritizeSelection)
@@ -225,7 +225,7 @@ namespace Showcase.Unity.Settings
             }
             return found;
         }
-        public bool PickPieces(Ray ray,long expectedRevision,out Q4 id,out float distance)
+        public bool PickPieces(Ray ray,long expectedRevision,out QN id,out float distance)
         {
             id=default;distance=float.PositiveInfinity;if(!ShowPieces||expectedRevision!=ViewRevision)return false;bool found=false;
             foreach(var piece in pieces)

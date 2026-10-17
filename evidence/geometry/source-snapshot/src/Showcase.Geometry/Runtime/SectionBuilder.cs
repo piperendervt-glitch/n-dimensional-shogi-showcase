@@ -13,15 +13,15 @@ namespace Showcase.Geometry
             public readonly SurfaceKind Surface;
             public Face(List<Vec3> points,Vec3 normal,int id,SurfaceKind surface) { Points=points; Normal=normal; Id=id; Surface=surface; }
         }
-        public static SectionResult Build(Instance4D instance,SliceFrame frame,SectionOptions? options=null)
+        public static SectionResult Build(InstanceN instance,SliceFrame frame,SectionOptions? options=null)
         {
             options=options??new SectionOptions(); double eps=options.Tolerance;
             if(eps<=0||double.IsNaN(eps)||double.IsInfinity(eps)||!frame.IsOrthonormal()||!instance.Position.IsFinite) return Failure(SectionStatus.NumericallyUncertain,instance,"Invalid tolerance, position, or nonorthonormal frame.");
             if(instance.Shape.Planes.Count>options.MaxConstraints) return Failure(SectionStatus.CapacityExceeded,instance,"Constraint capacity exceeded.");
             // Projection of the source AABB encloses the true intersection; expand it so
             // seed faces can never be mistaken for physical source faces.
-            var corners=new List<Vec3>(16);
-            for(int i=0;i<16;i++) corners.Add(frame.Project(instance.LocalToWorld(instance.Shape.Bounds.Corner(i))));
+            int cornerCount=instance.Shape.Bounds.CornerCount; var corners=new List<Vec3>(cornerCount);
+            for(int i=0;i<cornerCount;i++) corners.Add(frame.Project(instance.LocalToWorld(instance.Shape.Bounds.Corner(i))));
             Bounds3 bound=BoundsOf(corners); double margin=Math.Max(.01,bound.Size.Length*.1);
             Vec3 lo=bound.Min-new Vec3(margin,margin,margin),hi=bound.Max+new Vec3(margin,margin,margin);
             var faces=Seed(lo,hi);
@@ -30,10 +30,10 @@ namespace Showcase.Geometry
             var distances=new double[128];var faceKinds=new byte[32];bool facesCanonical=false;
             foreach(var plane in instance.Shape.Planes)
             {
-                Vec4 worldN=instance.LocalToWorldDirection(plane.Normal);
-                double worldB=plane.Offset+Vec4.Dot(worldN,instance.Position);
-                Vec3 n=new Vec3(Vec4.Dot(frame.AxisX,worldN),Vec4.Dot(frame.AxisY,worldN),Vec4.Dot(frame.AxisZ,worldN));
-                double b=worldB-Vec4.Dot(worldN,frame.Center),length=n.Length;
+                VecN worldN=instance.LocalToWorldDirection(plane.Normal);
+                double worldB=plane.Offset+VecN.Dot(worldN,instance.Position);
+                Vec3 n=new Vec3(VecN.Dot(frame.AxisX,worldN),VecN.Dot(frame.AxisY,worldN),VecN.Dot(frame.AxisZ,worldN));
+                double b=worldB-VecN.Dot(worldN,frame.Center),length=n.Length;
                 if(length<1e-12)
                 {
                     if(b < -eps) return Failure(SectionStatus.Empty,instance,"Excluded by a parallel source constraint.");
@@ -126,7 +126,7 @@ namespace Showcase.Geometry
             if(volume<=eps*eps*eps||double.IsNaN(volume)) return Failure(SectionStatus.NumericallyUncertain,instance,"Nonpositive oriented volume.");
             return new SectionResult(SectionStatus.Volume3D,vertices.ToArray(),indices.ToArray(),BoundsOf(unique),volume,"",instance.Shape.Version);
         }
-        private static SectionResult Failure(SectionStatus status,Instance4D instance,string message) => new SectionResult(status,Array.Empty<SectionVertex>(),Array.Empty<int>(),default,0,message,instance.Shape.Version);
+        private static SectionResult Failure(SectionStatus status,InstanceN instance,string message) => new SectionResult(status,Array.Empty<SectionVertex>(),Array.Empty<int>(),default,0,message,instance.Shape.Version);
         private static List<Face> Seed(Vec3 lo,Vec3 hi)
         {
             var f=new List<Face>();

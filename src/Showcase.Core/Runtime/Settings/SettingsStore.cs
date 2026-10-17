@@ -137,15 +137,15 @@ namespace NDShogi.Showcase.Core.Settings
                 Attributes(d, "id", "name", "kind", "axes", "maxAxes", "distance", "forward", "sideways", "backward", "empty", "capture");
                 data.Definitions.Add(new RawPieceDefinition { Id = Attr(d, "id"), Name = Attr(d, "name"), Kind = Attr(d, "kind"), AxesMask = Attr(d, "axes"), MaxAxes = Attr(d, "maxAxes"), MaxDistance = Attr(d, "distance"), Forward = Bool(Attr(d, "forward")), Sideways = Bool(Attr(d, "sideways")), Backward = Bool(Attr(d, "backward")), AllowEmpty = Bool(Attr(d, "empty")), AllowCapture = Bool(Attr(d, "capture")) });
             }
-            var t = children[1]; Attributes(t, "min", "max"); var bounds = new Bounds4D(Int(Attr(t, "min")), Int(Attr(t, "max")));
+            var t = children[1]; Attributes(t, "min", "max"); var bounds = new BoundsN(Int(Attr(t, "min")), Int(Attr(t, "max")));
             var pieces = t.Elements().Select(p =>
             {
                 if (p.Name != T + "piece" || p.HasElements) throw new InvalidDataException("未知の試し駒要素です。");
                 Attributes(p, "id", "definition", "side", "cell");
-                var cell = Attr(p, "cell").Split(',').Select(Int).ToArray(); if (cell.Length != 4) throw new InvalidDataException("4D座標が必要です。");
+                if (!QN.TryParse(Attr(p, "cell"), 0, out var cell) || cell.Dimensions < BoundsN.MinDimensions) throw new InvalidDataException("N次元座標が必要です。");
                 string side = Attr(p, "side"); if (side != "A" && side != "B") throw new InvalidDataException("未知の陣営です。");
                 string definition = Attr(p, "definition"); if (kindText == "preview-preset" && !data.Definitions.Any(d => d.Id == definition)) throw new InvalidDataException("未知の試し駒定義参照です。");
-                return new TrialPiece(Attr(p, "id"), definition, side == "A" ? Side.A : Side.B, new Q4(cell[0], cell[1], cell[2], cell[3]));
+                return new TrialPiece(Attr(p, "id"), definition, side == "A" ? Side.A : Side.B, cell);
             }).ToArray();
             var preview = new PreviewSession(bounds, pieces);
             var v = children[2]; if (v.HasElements) throw new InvalidDataException("未知の表示設定要素です。"); Attributes(v, "center", "basis", "camera");

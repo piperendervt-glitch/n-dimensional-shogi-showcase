@@ -13,8 +13,8 @@ namespace Showcase.Unity.Settings
     {
         internal static Vector2 Project(Vec3 local,Quaternion cameraRotation,float scale)
         {var p=Quaternion.Inverse(cameraRotation)*SectionView.MapVector(local);return new Vector2(p.x,p.y)*scale;}
-        internal static Vec3 Tangent(SliceFrame f,Vec4 world)
-            =>new Vec3(Vec4.Dot(world,f.AxisX),Vec4.Dot(world,f.AxisY),Vec4.Dot(world,f.AxisZ));
+        internal static Vec3 Tangent(SliceFrame f,VecN world)
+            =>new Vec3(VecN.Dot(world,f.AxisX),VecN.Dot(world,f.AxisY),VecN.Dot(world,f.AxisZ));
         // Neon palette: X red, Y amber, Z cyan, W violet.
         internal static Color AxisColor(LogicalAxis a)
             =>a==LogicalAxis.X?new Color(1,.36f,.30f):a==LogicalAxis.Y?new Color(1,.78f,.26f):a==LogicalAxis.Z?new Color(.30f,.78f,1):new Color(.68f,.52f,1);
@@ -98,7 +98,7 @@ namespace Showcase.Unity.Settings
             {
                 var axis=entry.Key;var world=SliceAxes.WorldAxis(axis);var tangent=Cfg2Projection.Tangent(frame,world);var p=Cfg2Projection.Project(tangent,rotation,scale);
                 directions[axis]=p;
-                double normal=Vec4.Dot(frame.Normal,world);string symbol="";
+                double normal=VecN.Dot(frame.Normal,world);string symbol="";
                 if(tangent.Length<1e-7){p=Vector2.zero;symbol=normal>=0?" ⊙":" ⊗";}
                 else if(p.magnitude<4){p=new Vector2(0,-14);symbol=" ·";}
                 else p+=p.normalized*13;

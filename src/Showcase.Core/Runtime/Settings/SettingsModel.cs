@@ -8,16 +8,26 @@ namespace NDShogi.Showcase.Core.Settings
 {
     public enum PreviewMovementKind { Step, H11, H22, Unsupported, Gold, Silver, Knight, Lance }
 
-    public sealed class Bounds4D
+    /// <summary>Board domain: every one of <see cref="Dimensions"/> axes spans Min..Max. N=4 with -4..4 is the original 4D board.</summary>
+    public sealed class BoundsN
     {
+        public const int MinDimensions = 3, MaxDimensions = QN.MaxDimensions;
         public int Min { get; }
         public int Max { get; }
-        public Bounds4D(int min = -4, int max = 4)
+        public int Dimensions { get; }
+        public BoundsN(int min = -4, int max = 4, int dimensions = 4)
         {
-            if (min < -4 || max > 4 || min > max) throw new ArgumentException("CFG1 preview bounds must be within the existing -4..4 domain.");
-            Min = min; Max = max;
+            if (min < -4 || max > 4 || min > max) throw new ArgumentException("Preview bounds must be within the existing -4..4 domain.");
+            if (dimensions < MinDimensions || dimensions > MaxDimensions) throw new ArgumentException("N must be " + MinDimensions + ".." + MaxDimensions + ".");
+            Min = min; Max = max; Dimensions = dimensions;
         }
-        public bool Contains(Q4 q) => Enumerable.Range(0, 4).All(i => q[i] >= Min && q[i] <= Max);
+        public bool Contains(QN q) => q.Rank <= Dimensions && Enumerable.Range(0, Dimensions).All(i => q.Axis(i) >= Min && q.Axis(i) <= Max);
+        /// <summary>The same cell carrying exactly this board's N coordinates (the form that is hashed and saved).</summary>
+        public QN Normalize(QN q) => q.Dimensions == Dimensions ? q : QN.Padded(q.ToArray(), Dimensions);
+        public QN Origin => QN.Zero(Dimensions);
+        public bool SameDomain(BoundsN other) => Min == other.Min && Max == other.Max && Dimensions == other.Dimensions;
+        /// <summary>Bit mask with every axis set: the "all axes" value of a piece definition for this N.</summary>
+        public static int FullAxesMask(int dimensions) => (1 << dimensions) - 1;
     }
 
     // Raw input is deliberately separate from a validated preview preset.
@@ -98,14 +108,14 @@ namespace NDShogi.Showcase.Core.Settings
             Id = raw.Id; Name = raw.Name; KindId = raw.Kind; Kind = kind; AxesMask = axes; MaxAxes = maxAxes; MaxDistance = maxDistance;
             Forward = raw.Forward; Sideways = raw.Sideways; Backward = raw.Backward; AllowEmpty = raw.AllowEmpty; AllowCapture = raw.AllowCapture;
         }
-        internal bool Allows(Q4 delta, Side side, int forwardAxis)
+        internal bool Allows(QN delta, Side side, int forwardAxis)
         {
             if (!IsSupported) return false;
             // CFG2 fixed components delegate to the existing verified Movement definitions.
             // Legacy IDs remain unsupported; only the explicit cfg2/* version enters here.
             if (!IsEditable) return forwardAxis == 0 && Movement.Allows(FixedKind, side, delta.ToArray());
             int nonzero = 0, maximum = 0;
-            for (int axis = 0; axis < 4; axis++)
+            for (int axis = 0; axis < delta.Dimensions; axis++)
             {
                 int a = Math.Abs(delta[axis]);
                 if (a != 0) { if ((AxesMask & (1 << axis)) == 0) return false; nonzero++; }
@@ -117,7 +127,7 @@ namespace NDShogi.Showcase.Core.Settings
             if (Kind == PreviewMovementKind.Step) return maximum == 1 && nonzero <= MaxAxes;
             if (maximum > MaxDistance) return false;
             if (Kind == PreviewMovementKind.H11) return nonzero == 1;
-            return nonzero == 2 && Enumerable.Range(0, 4).Count(i => Math.Abs(delta[i]) == maximum) == 2;
+            return nonzero == 2 && Enumerable.Range(0, delta.Dimensions).Count(i => Math.Abs(delta[i]) == maximum) == 2;
         }
     }
 
@@ -127,7 +137,7 @@ namespace NDShogi.Showcase.Core.Settings
         private readonly DraftData source;
         public string Id => source.Id;
         public string Name => source.Name;
-        public Bounds4D Bounds { get; }
+        public BoundsN Bounds { get; }
         public int ForwardAxis { get; }
         public OcclusionKind Occlusion { get; }
         public string OcclusionId => Occlusion == OcclusionKind.LatticeLine ? "lattice-line/1" : "supercover-closed/1";
@@ -135,7 +145,7 @@ namespace NDShogi.Showcase.Core.Settings
         public string RuleHash { get; }
         public bool CanApply => false;
         public const string ApplyUnavailableReason = "CFG-2待ち：実行可能な対局モードに未接続のため適用できません。保存は編集・試し盤用です。";
-        internal PreviewPreset(DraftData data, Bounds4D bounds, int forwardAxis, OcclusionKind occlusion, IEnumerable<PieceDefinition> definitions)
+        internal PreviewPreset(DraftData data, BoundsN bounds, int forwardAxis, OcclusionKind occlusion, IEnumerable<PieceDefinition> definitions)
         {
             source = data.Clone(); Bounds = bounds; ForwardAxis = forwardAxis; Occlusion = occlusion;
             Definitions = Array.AsReadOnly(definitions.ToArray());
@@ -230,10 +240,11 @@ namespace NDShogi.Showcase.Core.Settings
             }
             bool ValidText(string value, int maximum) => value != null && value.Length > 0 && value.Length <= maximum && !value.Any(char.IsControl);
             if (!ValidText(data.Id, 128) || !ValidText(data.Name, 256) || !ValidText(data.SourceId, 256)) errors.Add("設定ID・名称・出所IDが不正です。");
-            Number(data.Dimensions, "N（初回は4のみ対応）", 4, 4);
+            int dimensions = Number(data.Dimensions, "N（次元数）", BoundsN.MinDimensions, BoundsN.MaxDimensions);
+            int fullMask = BoundsN.FullAxesMask(dimensions);
             int min = Number(data.Min, "盤最小値", -4, 4), max = Number(data.Max, "盤最大値", -4, 4);
             if (min > max) errors.Add("盤最小値が最大値を超えています。");
-            int forward = Number(data.ForwardAxis, "前方軸", 0, 3);
+            int forward = Number(data.ForwardAxis, "前方軸", 0, dimensions - 1);
             OcclusionKind occlusion = OcclusionKind.LatticeLine;
             if (data.Occlusion == "lattice-line/1") occlusion = OcclusionKind.LatticeLine;
             else if (data.Occlusion == "supercover-closed/1") occlusion = OcclusionKind.SupercoverClosed;
@@ -249,14 +260,14 @@ namespace NDShogi.Showcase.Core.Settings
                 else if (raw.Kind == "cfg2/silver/1") kind = PreviewMovementKind.Silver;
                 else if (raw.Kind == "cfg2/knight/1") kind = PreviewMovementKind.Knight;
                 else if (raw.Kind == "cfg2/lance/1") kind = PreviewMovementKind.Lance;
-                int axes = Number(raw.AxesMask, raw.Id + " 使用軸mask", 1, 15);
-                int maxAxes = Number(raw.MaxAxes, raw.Id + " 同時軸数", 1, 4);
+                int axes = Number(raw.AxesMask, raw.Id + " 使用軸mask", 1, fullMask);
+                int maxAxes = Number(raw.MaxAxes, raw.Id + " 同時軸数", 1, dimensions);
                 int distance = Number(raw.MaxDistance, raw.Id + " 最大座標変位", 1, 8);
                 if (kind == PreviewMovementKind.Step && distance != 1) errors.Add(raw.Id + "：一歩は各軸±1です。距離を変更して別方式へ置換できません。");
                 if (kind == PreviewMovementKind.Gold || kind == PreviewMovementKind.Silver || kind == PreviewMovementKind.Knight || kind == PreviewMovementKind.Lance)
                 {
                     int fixedDistance = kind == PreviewMovementKind.Knight ? 2 : kind == PreviewMovementKind.Lance ? 8 : 1;
-                    if (forward != 0 || axes != 15 || maxAxes != 4 || distance != fixedDistance || !raw.Forward || !raw.Sideways || !raw.Backward || !raw.AllowEmpty || !raw.AllowCapture)
+                    if (forward != 0 || axes != fullMask || maxAxes != dimensions || distance != fixedDistance || !raw.Forward || !raw.Sideways || !raw.Backward || !raw.AllowEmpty || !raw.AllowCapture)
                         errors.Add(raw.Id + "：CFG2固定成分の編集は未対応です。既存Movement定義を変更しません。");
                 }
                 if (kind == PreviewMovementKind.Unsupported)
@@ -265,11 +276,11 @@ namespace NDShogi.Showcase.Core.Settings
                     if (!knownLegacy.Contains(raw.Kind)) errors.Add(raw.Id + "：未知・未対応の移動機能 " + raw.Kind);
                     else warnings.Add(raw.Name + "：既存成分は読取専用。初回の共通G/Pには未対応です。");
                 }
-                if (axes != 15) warnings.Add(raw.Name + "：軸対称性を崩す実験設定。N=4と他駒座標は変わりません。");
+                if (axes != fullMask) warnings.Add(raw.Name + "：軸対称性を崩す実験設定。Nと他駒座標は変わりません。");
                 definitions.Add(new PieceDefinition(raw, kind, axes, maxAxes, distance));
             }
             report = new ValidationReport(errors, warnings);
-            preset = report.IsValid ? new PreviewPreset(data, new Bounds4D(min, max), forward, occlusion, definitions) : null;
+            preset = report.IsValid ? new PreviewPreset(data, new BoundsN(min, max, dimensions), forward, occlusion, definitions) : null;
             return report.IsValid;
         }
     }

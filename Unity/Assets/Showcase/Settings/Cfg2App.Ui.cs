@@ -256,8 +256,8 @@ namespace Showcase.Unity.Settings
                 CfgUi.Label(c,"味方のセルへは移動できません。\n\n王捕獲デモの着手候補です。\n完全合法性L・詰みは未評価。\n\n変更は試し盤と次局へ反映します。",8,389,330,217,18,Muted);
             }
         }
-        // The coordinate field is written in UI order X,Y,Z,W; Q4 is in core order.
-        static Q4 FromUiAxes(int[] xyzw){var core=new int[4];for(int i=0;i<4;i++)core[SliceAxes.CoreAxis((LogicalAxis)i)]=xyzw[i];return new Q4(core[0],core[1],core[2],core[3]);}
+        // The coordinate field is written in UI order X,Y,Z,W; QN is in core order.
+        static QN FromUiAxes(int[] xyzw){var core=new int[4];for(int i=0;i<4;i++)core[SliceAxes.CoreAxis((LogicalAxis)i)]=xyzw[i];return new QN(core[0],core[1],core[2],core[3]);}
         void BuildDisplay(RectTransform c,float y=8)
         {
             Toggle(c,"移動候補を表示",showCandidates,8,y,330,v=>showCandidates=v);Toggle(c,"攻撃範囲を表示",showAttacks,8,y+49,330,v=>showAttacks=v);Toggle(c,"座標グリッドを表示",showGrid,8,y+98,330,v=>showGrid=v);
@@ -272,7 +272,7 @@ namespace Showcase.Unity.Settings
             EventSystem.current?.SetSelectedGameObject(null);
             backgroundCamera.enabled=false;
             rig.Camera.targetTexture=null;rig.Camera.transform.position=new Vector3(.58f,1.38f,-.8f);rig.Camera.transform.LookAt(new Vector3(-.14f,1.02f,0));cameraRevision++;
-            geometryDirty=true;result=null;attackCells=Array.Empty<Q4>();visuals.RefreshCaptured(Array.Empty<Cfg2CapturedPiece>());Record("Menu");
+            geometryDirty=true;result=null;attackCells=Array.Empty<QN>();visuals.RefreshCaptured(Array.Empty<Cfg2CapturedPiece>());Record("Menu");
             WritePlayerIdentity("Menu");
         }
         void OpenSettings()

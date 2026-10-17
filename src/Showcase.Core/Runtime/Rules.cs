@@ -13,43 +13,83 @@ namespace NDShogi.Showcase.Core
     public enum OcclusionKind { LatticeLine, SupercoverClosed }
     public enum GameOutcome { Ongoing, KingCapture, NoLegalMovesDraw }
 
-    public readonly struct Q4 : IEquatable<Q4>
+    /// <summary>Cell of an N-dimensional board (axis 0 = F forward, 1 = U, 2 = V height, 3 = W, 4.. = further axes).
+    /// Axes a cell does not carry are zero: default(QN) is the origin of every board, and (1,0,0,0) equals (1,0,0,0,0).
+    /// A board normalizes the cells it stores to its own N (see BoundsN.Normalize), so persisted text always carries N coordinates.</summary>
+    public readonly struct QN : IEquatable<QN>
     {
-        public int F { get; }
-        public int U { get; }
-        public int V { get; }
-        public int W { get; }
-        public Q4(int f, int u, int v, int w) { F=f; U=u; V=v; W=w; }
-        public int this[int i] => i==0?F:i==1?U:i==2?V:i==3?W:throw new IndexOutOfRangeException();
-        public int[] ToArray() => new[] {F,U,V,W};
-        public bool InBounds => F>=-4&&F<=4&&U>=-4&&U<=4&&V>=-4&&V<=4&&W>=-4&&W<=4;
-        public bool Equals(Q4 x) => F==x.F&&U==x.U&&V==x.V&&W==x.W;
-        public override bool Equals(object? o) => o is Q4 q&&Equals(q);
-        public override int GetHashCode() => (((F*397)^U)*397^V)*397^W;
-        public static bool operator ==(Q4 a,Q4 b)=>a.Equals(b);
-        public static bool operator !=(Q4 a,Q4 b)=>!a.Equals(b);
-        public static Q4 operator +(Q4 a,Q4 b)=>new Q4(a.F+b.F,a.U+b.U,a.V+b.V,a.W+b.W);
-        public static Q4 operator -(Q4 a,Q4 b)=>new Q4(a.F-b.F,a.U-b.U,a.V-b.V,a.W-b.W);
-        public int Manhattan(Q4 x)=>Math.Abs(F-x.F)+Math.Abs(U-x.U)+Math.Abs(V-x.V)+Math.Abs(W-x.W);
+        public const int MinDimensions = 1, MaxDimensions = 7;
+        private readonly int[]? c;
+        public QN(params int[] coordinates)
+        {
+            if (coordinates == null || coordinates.Length < MinDimensions || coordinates.Length > MaxDimensions) throw new ArgumentException("A cell has 1 to " + MaxDimensions + " coordinates.");
+            c = (int[])coordinates.Clone();
+        }
+        private QN(int[] owned, bool _) { c = owned; }
+        public static QN Zero(int dimensions) => new QN(new int[Checked(dimensions)], true);
+        /// <summary>The first coordinates of <paramref name="values"/>, padded with zeros to <paramref name="dimensions"/>.</summary>
+        public static QN Padded(IReadOnlyList<int> values, int dimensions)
+        {
+            var v = new int[Checked(dimensions)];
+            for (int i = 0; i < values.Count; i++) { if (i < dimensions) v[i] = values[i]; else if (values[i] != 0) throw new ArgumentException("Too many coordinates for the board."); }
+            return new QN(v, true);
+        }
+        static int Checked(int dimensions) => dimensions >= MinDimensions && dimensions <= MaxDimensions ? dimensions : throw new ArgumentOutOfRangeException(nameof(dimensions));
+        public int Dimensions => c?.Length ?? 0;
+        /// <summary>Number of leading axes up to the last nonzero coordinate: the smallest board this cell lies on.</summary>
+        public int Rank { get { int n = Dimensions; while (n > 0 && c![n - 1] == 0) n--; return n; } }
+        public int this[int i] => c != null && i >= 0 && i < c.Length ? c[i] : throw new IndexOutOfRangeException();
+        /// <summary>Coordinate on <paramref name="axis"/>, or 0 when the board has fewer axes.</summary>
+        public int Axis(int axis) => c != null && axis >= 0 && axis < c.Length ? c[axis] : 0;
+        public int F => Axis(0);
+        public int U => Axis(1);
+        public int V => Axis(2);
+        public int W => Axis(3);
+        public int[] ToArray() => c == null ? Array.Empty<int>() : (int[])c.Clone();
+        public QN WithAxis(int axis, int value) { var v = ToArray(); v[axis] = value; return new QN(v, true); }
+        public bool InBounds => c == null || c.All(x => x >= -4 && x <= 4);
+        public bool Equals(QN x)
+        {
+            int n = Math.Max(Dimensions, x.Dimensions);
+            for (int i = 0; i < n; i++) if (Axis(i) != x.Axis(i)) return false;
+            return true;
+        }
+        public override bool Equals(object? o) => o is QN q && Equals(q);
+        // Over the leading Rank axes, so equal cells of different declared N hash alike; the origin hashes to 0.
+        public override int GetHashCode() { int n = Rank; if (n == 0) return 0; int h = c![0]; for (int i = 1; i < n; i++) h = (h * 397) ^ c[i]; return h; }
+        public static bool operator ==(QN a, QN b) => a.Equals(b);
+        public static bool operator !=(QN a, QN b) => !a.Equals(b);
+        public static QN operator +(QN a, QN b) { int n = Math.Max(a.Dimensions, b.Dimensions); var v = new int[n]; for (int i = 0; i < n; i++) v[i] = a.Axis(i) + b.Axis(i); return n == 0 ? default : new QN(v, true); }
+        public static QN operator -(QN a, QN b) { int n = Math.Max(a.Dimensions, b.Dimensions); var v = new int[n]; for (int i = 0; i < n; i++) v[i] = a.Axis(i) - b.Axis(i); return n == 0 ? default : new QN(v, true); }
+        public int Manhattan(QN x) { int n = Math.Max(Dimensions, x.Dimensions), d = 0; for (int i = 0; i < n; i++) d += Math.Abs(Axis(i) - x.Axis(i)); return d; }
         // Invariant on purpose: cells feed hashes, move keys (CPU tie-break) and saved files, so a locale whose
-        // minus sign is U+2212 must not change them.
-        public override string ToString()=>F.ToString(CultureInfo.InvariantCulture)+","+U.ToString(CultureInfo.InvariantCulture)+","+V.ToString(CultureInfo.InvariantCulture)+","+W.ToString(CultureInfo.InvariantCulture);
+        // minus sign is U+2212 must not change them. For N=4 the text is identical to the former Q4 ("f,u,v,w").
+        public override string ToString() => c == null ? "" : string.Join(",", c.Select(x => x.ToString(CultureInfo.InvariantCulture)));
+        /// <summary>Parses "a,b,c,..." (invariant integers); <paramref name="dimensions"/> 0 accepts any supported count.</summary>
+        public static bool TryParse(string? text, int dimensions, out QN cell)
+        {
+            cell = default; if (string.IsNullOrEmpty(text)) return false;
+            var parts = text!.Split(','); if (parts.Length < MinDimensions || parts.Length > MaxDimensions || dimensions != 0 && parts.Length != dimensions) return false;
+            var v = new int[parts.Length];
+            for (int i = 0; i < parts.Length; i++) if (!int.TryParse(parts[i], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out v[i])) return false;
+            cell = new QN(v, true); return true;
+        }
     }
     public sealed class Piece
     {
         public string Id {get;}
         public Side Side {get;}
         public PieceKind Kind {get;}
-        public Q4 Position {get;}
-        public Piece(string id,Side side,PieceKind kind,Q4 position) {Id=id;Side=side;Kind=kind;Position=position;}
-        public Piece At(Q4 position)=>new Piece(Id,Side,Kind,position);
+        public QN Position {get;}
+        public Piece(string id,Side side,PieceKind kind,QN position) {Id=id;Side=side;Kind=kind;Position=position;}
+        public Piece At(QN position)=>new Piece(Id,Side,Kind,position);
     }
     public readonly struct Move : IEquatable<Move>
     {
         public string PieceId {get;}
-        public Q4 From {get;}
-        public Q4 To {get;}
-        public Move(string id,Q4 from,Q4 to) {PieceId=id;From=from;To=to;}
+        public QN From {get;}
+        public QN To {get;}
+        public Move(string id,QN from,QN to) {PieceId=id;From=from;To=to;}
         public bool Equals(Move x)=>PieceId==x.PieceId&&From==x.From&&To==x.To;
         public override bool Equals(object? o)=>o is Move m&&Equals(m);
         public override int GetHashCode()=>PieceId.GetHashCode()^From.GetHashCode()^To.GetHashCode();
@@ -79,7 +119,7 @@ namespace NDShogi.Showcase.Core
     }
     public sealed class GameState
     {
-        private readonly Dictionary<Q4,Piece> occupied;
+        private readonly Dictionary<QN,Piece> occupied;
         private readonly Dictionary<string,Piece> byId;
         public IReadOnlyList<Piece> Pieces {get;}
         public IReadOnlyList<Piece> Captured {get;}
@@ -92,14 +132,14 @@ namespace NDShogi.Showcase.Core
         public GameState(IEnumerable<Piece> pieces,Side turn=Side.A,int ply=0,Ruleset? rules=null,IEnumerable<Piece>? captured=null,Side? winner=null,GameOutcome outcome=GameOutcome.Ongoing)
         {
             Rules=rules??new Ruleset(); Turn=turn;Ply=ply;Winner=winner;Outcome=outcome;
-            var copy=pieces.OrderBy(p=>p.Id,StringComparer.Ordinal).ToArray();
+            var copy=pieces.Select(p=>p.Position.Dimensions==4?p:p.At(QN.Padded(p.Position.ToArray(),4))).OrderBy(p=>p.Id,StringComparer.Ordinal).ToArray();
             if(copy.Any(p=>!p.Position.InBounds||p.Side==Side.B&&p.Position.W!=0))throw new ArgumentException("Invalid position or capability.");
             occupied=copy.ToDictionary(p=>p.Position);byId=copy.ToDictionary(p=>p.Id);
             Pieces=Array.AsReadOnly(copy);Captured=Array.AsReadOnly((captured??Array.Empty<Piece>()).OrderBy(p=>p.Id,StringComparer.Ordinal).ToArray());
             Hash=StableHash.Of(Ruleset.Version+"|"+Rules.OcclusionId+"|"+Ruleset.Capabilities+"|"+Turn+"|"+Ply+"|"+Outcome+"|"+Winner+"|"+
                 string.Join(";",Pieces.Select(p=>p.Id+":"+p.Side+":"+p.Kind+":"+p.Position))+"|captured:"+string.Join(";",Captured.Select(p=>p.Id)));
         }
-        public Piece? At(Q4 q)=>occupied.TryGetValue(q,out var p)?p:null;
+        public Piece? At(QN q)=>occupied.TryGetValue(q,out var p)?p:null;
         public Piece? Find(string id)=>byId.TryGetValue(id,out var p)?p:null;
     }
     public static class StableHash
@@ -198,16 +238,16 @@ namespace NDShogi.Showcase.Core
                 int s=side==Side.A?1:-1;
                 for(int u=-4;u<=4;u++)
                 {
-                    pieces.Add(new Piece(Id(side,back[u+4],u),side,back[u+4],new Q4(-4*s,u,0,0)));
-                    pieces.Add(new Piece(Id(side,PieceKind.Pawn,u),side,PieceKind.Pawn,new Q4(-2*s,u,0,0)));
+                    pieces.Add(new Piece(Id(side,back[u+4],u),side,back[u+4],new QN(-4*s,u,0,0)));
+                    pieces.Add(new Piece(Id(side,PieceKind.Pawn,u),side,PieceKind.Pawn,new QN(-2*s,u,0,0)));
                 }
-                pieces.Add(new Piece(side+"-Rook",side,PieceKind.Rook,new Q4(-3*s,-3*s,0,0)));
-                pieces.Add(new Piece(side+"-Bishop",side,PieceKind.Bishop,new Q4(-3*s,3*s,0,0)));
+                pieces.Add(new Piece(side+"-Rook",side,PieceKind.Rook,new QN(-3*s,-3*s,0,0)));
+                pieces.Add(new Piece(side+"-Bishop",side,PieceKind.Bishop,new QN(-3*s,3*s,0,0)));
             }
             return new GameState(pieces,rules:Rules);
         }
         public static string Id(Side side,PieceKind kind,int u)=>side+"-"+kind+"-"+u.ToString(CultureInfo.InvariantCulture);
-        private bool PathClear(GameState state,Piece p,Q4 to)
+        private bool PathClear(GameState state,Piece p,QN to)
         {
             if(!Movement.IsSlider(p.Kind))return true;
             var start=p.Position.ToArray();var end=to.ToArray();
@@ -226,11 +266,11 @@ namespace NDShogi.Showcase.Core
             var moves=new List<Move>();if(state.Outcome!=GameOutcome.Ongoing)return moves;
             foreach(var p in state.Pieces.Where(x=>x.Side==state.Turn))foreach(var d in Movement.Deltas(p.Kind,p.Side,p.Side==Side.B?3:4))
             {
-                var to=p.Position+new Q4(d[0],d[1],d[2],d.Length==4?d[3]:0);var m=new Move(p.Id,p.Position,to);if(IsLegal(state,m))moves.Add(m);
+                var to=p.Position+QN.Padded(d,4);var m=new Move(p.Id,p.Position,to);if(IsLegal(state,m))moves.Add(m);
             }
             return moves.OrderBy(m=>m.Key,StringComparer.Ordinal).ToArray();
         }
-        public IReadOnlyList<Piece> Attackers(GameState state,Q4 target,Side by)
+        public IReadOnlyList<Piece> Attackers(GameState state,QN target,Side by)
         {
             return state.Pieces.Where(p=>p.Side==by&&(by!=Side.B||target.W==0)&&Movement.Allows(p.Kind,p.Side,(target-p.Position).ToArray())&&PathClear(state,p,target)).ToArray();
         }

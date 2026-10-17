@@ -78,7 +78,7 @@ namespace NDShogi.Showcase.Core
             if(state.Ply>=First3DPly-1&&state.Ply<First4DPly&&(state.Ply&1)==0)
             {
                 if(Core.Attackers(state,hero.Position,Side.B).Count==0)throw new InvalidOperationException("ScenarioMismatch: required real pressure absent.");
-                var escape=hero.Position+new Q4(0,0,state.Ply<First4DPly-1?1:0,state.Ply==First4DPly-1?1:0);
+                var escape=hero.Position+new QN(0,0,state.Ply<First4DPly-1?1:0,state.Ply==First4DPly-1?1:0);
                 if(!Core.IsLegal(state,new Move(hero.Id,hero.Position,escape)))throw new InvalidOperationException("ScenarioMismatch: escape unavailable.");
             }
             if(state.Ply>=ExpectedPlies&&state.Outcome==GameOutcome.Ongoing)throw new InvalidOperationException("ScenarioLimit: expected ending exceeded.");
@@ -110,7 +110,7 @@ namespace NDShogi.Showcase.Core
             }
             if(state.Ply==ExpectedPlies)
             {
-                if(state.Outcome!=GameOutcome.KingCapture||state.Winner!=Side.A||hero.Position!=new Q4(4,0,0,0))throw new InvalidOperationException("ScenarioMismatch: required same-pawn king capture absent.");
+                if(state.Outcome!=GameOutcome.KingCapture||state.Winner!=Side.A||hero.Position!=new QN(4,0,0,0))throw new InvalidOperationException("ScenarioMismatch: required same-pawn king capture absent.");
                 guards.Add("same-pawn-captured-king");
             }
             return guards;
@@ -169,10 +169,10 @@ namespace NDShogi.Showcase.Core
             if(state.Hash!=record.BeforeHash||!Core.IsLegal(state,record.Move))throw new InvalidOperationException("Replay current state mismatch.");
             CheckBefore(state);return record.Decision;
         }
-        private static Q4 ParseQ(string text)
+        private static QN ParseQ(string text)
         {
             var fields=text.Split(',');if(fields.Length!=4)throw new FormatException("Replay coordinate requires four integers.");
-            return new Q4(int.Parse(fields[0],CultureInfo.InvariantCulture),int.Parse(fields[1],CultureInfo.InvariantCulture),int.Parse(fields[2],CultureInfo.InvariantCulture),int.Parse(fields[3],CultureInfo.InvariantCulture));
+            return new QN(int.Parse(fields[0],CultureInfo.InvariantCulture),int.Parse(fields[1],CultureInfo.InvariantCulture),int.Parse(fields[2],CultureInfo.InvariantCulture),int.Parse(fields[3],CultureInfo.InvariantCulture));
         }
     }
     public static class Bootstrap
@@ -192,9 +192,9 @@ namespace NDShogi.Showcase.Core
                 int front=side==Side.A?1:-1;
                 for(int u=-4;u<=4;u++)
                 {
-                    RequirePiece(initial,new Q4(-4*front,u,0,0),side,back[u+4]);RequirePiece(initial,new Q4(-2*front,u,0,0),side,PieceKind.Pawn);
+                    RequirePiece(initial,new QN(-4*front,u,0,0),side,back[u+4]);RequirePiece(initial,new QN(-2*front,u,0,0),side,PieceKind.Pawn);
                 }
-                RequirePiece(initial,new Q4(-3*front,-3*front,0,0),side,PieceKind.Rook);RequirePiece(initial,new Q4(-3*front,3*front,0,0),side,PieceKind.Bishop);
+                RequirePiece(initial,new QN(-3*front,-3*front,0,0),side,PieceKind.Rook);RequirePiece(initial,new QN(-3*front,3*front,0,0),side,PieceKind.Bishop);
             }
             var positions=initial.Pieces.ToDictionary(p=>p.Id,p=>p);var captured=new HashSet<string>();Side turn=Side.A;Side? winner=null;int ply=0;var currentHash=initial.Hash;
             foreach(var r in result.Records)
@@ -215,9 +215,9 @@ namespace NDShogi.Showcase.Core
             }
             if(result.FinalState.Hash!=currentHash||winner!=Side.A||result.FinalState.Outcome!=GameOutcome.KingCapture)throw new InvalidOperationException("Independent ending rejected.");
         }
-        private static void RequirePiece(GameState state,Q4 q,Side side,PieceKind kind)
+        private static void RequirePiece(GameState state,QN q,Side side,PieceKind kind)
         {if(!state.Pieces.Any(p=>p.Position==q&&p.Side==side&&p.Kind==kind))throw new InvalidOperationException("Independent initial arrangement rejected.");}
-        public static void CheckMove(IEnumerable<Piece> source,Piece p,Q4 to,OcclusionKind occlusion)
+        public static void CheckMove(IEnumerable<Piece> source,Piece p,QN to,OcclusionKind occlusion)
         {
             var pieces=source.ToArray();var d=to-p.Position;int sign=p.Side==Side.A?1:-1;
             int[] a={Math.Abs(d.F),Math.Abs(d.U),Math.Abs(d.V),Math.Abs(d.W)};int count=a.Count(x=>x>0),t=a.Skip(1).Count(x=>x>0);bool allowed=false;

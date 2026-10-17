@@ -14,15 +14,15 @@ namespace Showcase.Geometry
     // all source inequalities. No clipping polygons, seed AABB, or cap code is used.
     public static class TriplePlaneOracle
     {
-        public static OracleResult Build(Instance4D instance,SliceFrame frame,double tolerance=1e-8)
+        public static OracleResult Build(InstanceN instance,SliceFrame frame,double tolerance=1e-8)
         {
             var normals=new List<Vec3>();var offsets=new List<double>();
-            Vec4 origin=instance.WorldToLocal(frame.Center);
-            Vec4 bx=instance.WorldToLocalDirection(frame.AxisX),by=instance.WorldToLocalDirection(frame.AxisY),bz=instance.WorldToLocalDirection(frame.AxisZ);
+            VecN origin=instance.WorldToLocal(frame.Center);
+            VecN bx=instance.WorldToLocalDirection(frame.AxisX),by=instance.WorldToLocalDirection(frame.AxisY),bz=instance.WorldToLocalDirection(frame.AxisZ);
             foreach(var p in instance.Shape.Planes)
             {
-                Vec3 n=new Vec3(Vec4.Dot(p.Normal,bx),Vec4.Dot(p.Normal,by),Vec4.Dot(p.Normal,bz));
-                double b=p.Offset-Vec4.Dot(p.Normal,origin),len=n.Length;
+                Vec3 n=new Vec3(VecN.Dot(p.Normal,bx),VecN.Dot(p.Normal,by),VecN.Dot(p.Normal,bz));
+                double b=p.Offset-VecN.Dot(p.Normal,origin),len=n.Length;
                 if(len<1e-12) { if(b < -tolerance) return new OracleResult(SectionStatus.Empty,Array.Empty<Vec3>(),-1); continue; }
                 normals.Add(n/len); offsets.Add(b/len);
             }

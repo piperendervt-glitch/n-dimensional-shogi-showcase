@@ -12,12 +12,12 @@ namespace Showcase.Unity.Settings
 {
     public sealed partial class Cfg2App
     {
-        Q4 planeReferenceCell;bool migratedView;
-        string trialSelectedPiece="subject";Q4 trialSelectedCell,trialPlaneReference;
-        PivotViewSnapshot CapturePivotView(SliceAnimator animator,float cameraYaw,float cameraPitch,float cameraDistance,Vector3 cameraPan,string selected,Q4 cell,Q4 plane)
+        QN planeReferenceCell;bool migratedView;
+        string trialSelectedPiece="subject";QN trialSelectedCell,trialPlaneReference;
+        PivotViewSnapshot CapturePivotView(SliceAnimator animator,float cameraYaw,float cameraPitch,float cameraDistance,Vector3 cameraPan,string selected,QN cell,QN plane)
         {
             var state=animator.DisplayState;var f=state.Frame;
-            double[] V(Vec4 v)=>new[]{v.X,v.Y,v.Z,v.W};
+            double[] V(VecN v)=>new[]{v.X,v.Y,v.Z,v.W};
             return new PivotViewSnapshot(state.EmbeddingHeight,V(f.Center),V(f.AxisX).Concat(V(f.AxisY)).Concat(V(f.AxisZ)).Concat(V(f.Normal)).ToArray(),
                 new[]{state.Anchor.X,state.Anchor.Y,state.Anchor.Z},state.HalfWindow,state.CellScale,
                 new double[]{cameraYaw,cameraPitch,cameraDistance,cameraPan.x,cameraPan.y,cameraPan.z},selected??"",cell,plane);
@@ -27,7 +27,7 @@ namespace Showcase.Unity.Settings
         static SliceAnimator RestorePivotView(PivotViewSnapshot saved)
         {
             var c=saved.Center;var b=saved.Basis;var a=saved.Anchor;
-            Vec4 V(double[] values,int n)=>new Vec4(values[n],values[n+1],values[n+2],values[n+3]);
+            VecN V(double[] values,int n)=>new VecN(values[n],values[n+1],values[n+2],values[n+3]);
             return new SliceAnimator(new PivotViewState(saved.Height,new SliceFrame(V(c,0),V(b,0),V(b,4),V(b,8),V(b,12)),new Vec3(a[0],a[1],a[2]),saved.CellScale,saved.HalfWindow));
         }
         string DraftPathForBundle(string bundlePath)=>Path.Combine(runtimeRoot,Path.GetFileNameWithoutExtension(bundlePath)+"-draft.xml");

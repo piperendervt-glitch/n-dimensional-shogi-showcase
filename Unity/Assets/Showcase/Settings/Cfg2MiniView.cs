@@ -41,7 +41,7 @@ namespace Showcase.Unity.Settings
                 surface.Down=e=>drag.Down(captured,e,AxisScreenDirection(captured));surface.Drag=drag.Drag;surface.Up=drag.Up;handles.Add(axis,handle);
             }
         }
-        public void Refresh(SliceFrame frame,Quaternion cameraRotation,long cameraRevision,double halfWindow=4.5,Vec4? chartOrigin=null)
+        public void Refresh(SliceFrame frame,Quaternion cameraRotation,long cameraRevision,double halfWindow=4.5,VecN? chartOrigin=null)
         {
             ViewRevision=currentSlice().ViewRevision;CameraRevision=cameraRevision;graphic.CameraRotation=cameraRotation;
             graphic.Relation=HyperplaneRelation.Build(frame,reference,4.5,ViewRevision,halfWindow,chartOrigin);graphic.SetVerticesDirty();

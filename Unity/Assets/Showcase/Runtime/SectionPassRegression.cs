@@ -218,7 +218,7 @@ namespace Showcase.Unity
 
         void SetFixture(double height,bool empty)
         {
-            fixture.Renderer.enabled=true;fixture.UpdateSection(new Vec4(0,0,height,empty?1:0),1,0,++revision);
+            fixture.Renderer.enabled=true;fixture.UpdateSection(new VecN(0,0,height,empty?1:0),1,0,++revision);
             if(fixture.Last.Status!=(empty?SectionStatus.Empty:SectionStatus.Volume3D))throw new InvalidOperationException("Diagnostic fixed-solid configuration did not produce its required section status.");
         }
         IEnumerator Frames(int count){for(int i=0;i<count;i++){cube?.RequestRenderNextUpdate();planar?.RequestRenderNextUpdate();yield return new WaitForEndOfFrame();}}

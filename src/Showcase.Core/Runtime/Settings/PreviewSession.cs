@@ -10,14 +10,14 @@ namespace NDShogi.Showcase.Core.Settings
         public string Id { get; }
         public string DefinitionId { get; }
         public Side Side { get; }
-        public Q4 Position { get; }
-        public TrialPiece(string id, string definitionId, Side side, Q4 position)
+        public QN Position { get; }
+        public TrialPiece(string id, string definitionId, Side side, QN position)
         {
             if (string.IsNullOrWhiteSpace(id) || id.Length > 128 || id.Any(char.IsControl) || string.IsNullOrWhiteSpace(definitionId) || definitionId.Length > 128 || definitionId.Any(char.IsControl)) throw new ArgumentException("Invalid trial piece ID.");
             if (!Enum.IsDefined(typeof(Side), side)) throw new ArgumentException("Invalid side.");
             Id = id; DefinitionId = definitionId; Side = side; Position = position;
         }
-        public TrialPiece At(Q4 position) => new TrialPiece(Id, DefinitionId, Side, position);
+        public TrialPiece At(QN position) => new TrialPiece(Id, DefinitionId, Side, position);
         public TrialPiece WithDefinition(string id) => new TrialPiece(Id, id, Side, Position);
     }
 
@@ -37,32 +37,34 @@ namespace NDShogi.Showcase.Core.Settings
     public sealed class PreviewSession
     {
         private PreviewSnapshot snapshot;
-        private Dictionary<Q4, TrialPiece> occupied = new Dictionary<Q4, TrialPiece>();
+        private Dictionary<QN, TrialPiece> occupied = new Dictionary<QN, TrialPiece>();
         private Dictionary<string, TrialPiece> byId = new Dictionary<string, TrialPiece>(StringComparer.Ordinal);
         private readonly Stack<PreviewSnapshot> undo = new Stack<PreviewSnapshot>();
         private readonly Stack<PreviewSnapshot> redo = new Stack<PreviewSnapshot>();
-        public Bounds4D Bounds { get; }
+        public BoundsN Bounds { get; }
         public long Revision { get; private set; }
         public IReadOnlyList<TrialPiece> Pieces => snapshot.Pieces;
         public string Hash => snapshot.Hash;
         public bool CanUndo => undo.Count > 0;
         public bool CanRedo => redo.Count > 0;
-        public PreviewSession(Bounds4D? bounds = null, IEnumerable<TrialPiece>? pieces = null)
+        public PreviewSession(BoundsN? bounds = null, IEnumerable<TrialPiece>? pieces = null)
         {
-            Bounds = bounds ?? new Bounds4D(); snapshot = new PreviewSnapshot(pieces ?? Array.Empty<TrialPiece>()); Validate(snapshot); Reindex();
+            Bounds = bounds ?? new BoundsN(); snapshot = Normalized(new PreviewSnapshot(pieces ?? Array.Empty<TrialPiece>())); Validate(snapshot); Reindex();
         }
         private void Validate(PreviewSnapshot next)
         {
             if (next.Pieces.Any(p => !Bounds.Contains(p.Position))) throw new ArgumentException("Trial piece outside preview bounds.");
         }
+        // Stored (and hashed) cells always carry this board's N coordinates, whatever N the caller's cell declared.
+        private PreviewSnapshot Normalized(PreviewSnapshot next) => next.Pieces.All(p => p.Position.Dimensions == Bounds.Dimensions) ? next : new PreviewSnapshot(next.Pieces.Select(p => Bounds.Contains(p.Position) ? p.At(Bounds.Normalize(p.Position)) : p));
         private void Reindex() { occupied = Pieces.ToDictionary(p => p.Position); byId = Pieces.ToDictionary(p => p.Id, StringComparer.Ordinal); }
         private void Change(PreviewSnapshot next)
         {
-            Validate(next); if (next.Hash == snapshot.Hash) return;
+            next = Normalized(next); Validate(next); if (next.Hash == snapshot.Hash) return;
             undo.Push(snapshot); snapshot = next; redo.Clear(); Reindex(); Revision++;
         }
         public PreviewSnapshot Snapshot() => new PreviewSnapshot(Pieces);
-        public TrialPiece? At(Q4 q) => occupied.TryGetValue(q, out var piece) ? piece : null;
+        public TrialPiece? At(QN q) => occupied.TryGetValue(q, out var piece) ? piece : null;
         public TrialPiece? Find(string id) => byId.TryGetValue(id, out var piece) ? piece : null;
         public void Place(TrialPiece piece)
         {
@@ -70,7 +72,7 @@ namespace NDShogi.Showcase.Core.Settings
             if (occupant != null && occupant.Id != piece.Id) throw new InvalidOperationException("試し配置：同じセルに重ねられません。先に消去してください。");
             Change(new PreviewSnapshot(Pieces.Where(p => p.Id != piece.Id).Concat(new[] { piece })));
         }
-        public bool Erase(Q4 q)
+        public bool Erase(QN q)
         {
             var piece = At(q); if (piece == null) return false;
             Change(new PreviewSnapshot(Pieces.Where(p => p.Id != piece.Id))); return true;
@@ -88,7 +90,7 @@ namespace NDShogi.Showcase.Core.Settings
         {
             if (!CanRedo) return false; undo.Push(snapshot); snapshot = redo.Pop(); Reindex(); Revision++; return true;
         }
-        public bool TryMove(PreviewPreset preset, string pieceId, Q4 target, out string reason)
+        public bool TryMove(PreviewPreset preset, string pieceId, QN target, out string reason)
         {
             var result = PreviewQuery.Execute(preset, this, pieceId);
             if (result.Status != QueryStatus.Complete || !result.P.Contains(target)) { reason = "P（遮蔽・占有込み）の試し移動候補ではありません。Lは未評価です。"; return false; }
@@ -96,7 +98,7 @@ namespace NDShogi.Showcase.Core.Settings
             Change(new PreviewSnapshot(Pieces.Where(p => p.Id != pieceId && p.Position != target).Concat(new[] { piece.At(target) })));
             reason = "試し盤だけを移動しました（本番合法手ではありません）。"; return true;
         }
-        public static PreviewSession CreateExperiment() => new PreviewSession(new Bounds4D(), new[] { new TrialPiece("subject", "king-step", Side.A, new Q4(0, 0, 0, 0)) });
+        public static PreviewSession CreateExperiment(int dimensions = 4) => new PreviewSession(new BoundsN(dimensions: dimensions), new[] { new TrialPiece("subject", "king-step", Side.A, QN.Zero(dimensions)) });
     }
 
     public enum QueryStatus { Complete, Partial, Cancelled, Unsupported, Invalid }
@@ -118,12 +120,12 @@ namespace NDShogi.Showcase.Core.Settings
         public QueryStamp Stamp { get; }
         public QueryStatus Status { get; }
         public string Reason { get; }
-        public IReadOnlyList<Q4> G { get; }
-        public IReadOnlyList<Q4> P { get; }
+        public IReadOnlyList<QN> G { get; }
+        public IReadOnlyList<QN> P { get; }
         public int? TheoreticalCount { get; }
         public int EvaluatedCandidates { get; }
         public string LStatus => "未評価：完全合法性・王手回避・成り打ち・終局はCFG-2以降。";
-        internal QueryResult(QueryStamp stamp, QueryStatus status, string reason, IEnumerable<Q4> g, IEnumerable<Q4> p, int? theoretical, int evaluated)
+        internal QueryResult(QueryStamp stamp, QueryStatus status, string reason, IEnumerable<QN> g, IEnumerable<QN> p, int? theoretical, int evaluated)
         { Stamp = stamp; Status = status; Reason = reason; G = Array.AsReadOnly(g.ToArray()); P = Array.AsReadOnly(p.ToArray()); TheoreticalCount = theoretical; EvaluatedCandidates = evaluated; }
     }
     public sealed class LatestQueryGate
@@ -146,21 +148,28 @@ namespace NDShogi.Showcase.Core.Settings
 
     public static class PreviewQuery
     {
-        private static IEnumerable<Q4> Deltas(PieceDefinition definition, Side side, int forwardAxis)
+        private static IEnumerable<QN> Deltas(PieceDefinition definition, Side side, int forwardAxis, int dimensions)
         {
             if (definition.IsSupported && !definition.IsEditable)
             {
-                foreach (var d in Movement.Deltas(definition.FixedKind, side, 4)) yield return new Q4(d[0], d[1], d[2], d[3]);
+                foreach (var d in Movement.Deltas(definition.FixedKind, side, dimensions)) yield return new QN(d);
                 yield break;
             }
             int distance = definition.Kind == PreviewMovementKind.Step ? 1 : definition.MaxDistance;
-            for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) for (int z = -1; z <= 1; z++) for (int w = -1; w <= 1; w++)
+            // Every unit direction of {-1,0,1}^N in the same (lexicographic) order the former four nested loops produced for N=4.
+            var unit = new int[dimensions];
+            foreach (var u in UnitDirections(unit, 0))
             {
-                var unit = new Q4(x, y, z, w); if (!definition.Allows(unit, side, forwardAxis)) continue;
-                for (int scale = 1; scale <= distance; scale++) yield return new Q4(x * scale, y * scale, z * scale, w * scale);
+                var step = new QN(u); if (!definition.Allows(step, side, forwardAxis)) continue;
+                for (int scale = 1; scale <= distance; scale++) yield return new QN(u.Select(x => x * scale).ToArray());
             }
         }
-        private static bool PathClear(PreviewPreset preset, IReadOnlyList<TrialPiece> pieces, TrialPiece mover, Q4 target, PieceDefinition definition)
+        private static IEnumerable<int[]> UnitDirections(int[] unit, int axis)
+        {
+            if (axis == unit.Length) { yield return unit; yield break; }
+            for (int x = -1; x <= 1; x++) { unit[axis] = x; foreach (var u in UnitDirections(unit, axis + 1)) yield return u; }
+        }
+        private static bool PathClear(PreviewPreset preset, IReadOnlyList<TrialPiece> pieces, TrialPiece mover, QN target, PieceDefinition definition)
         {
             if (!definition.IsSlider) return true;
             return !pieces.Any(p => Occlusion.CellBlocks(mover.Position.ToArray(), target.ToArray(), p.Position.ToArray(), preset.Occlusion));
@@ -168,7 +177,7 @@ namespace NDShogi.Showcase.Core.Settings
         public static QueryResult Execute(PreviewPreset preset, PreviewSession session, string pieceId, CancellationToken cancellation = default, int candidateBudget = int.MaxValue, QueryStamp stamp = default)
         {
             var snapshot = session.Snapshot(); var mover = snapshot.Pieces.FirstOrDefault(p => p.Id == pieceId);
-            var g = new List<Q4>(); var p = new List<Q4>();
+            var g = new List<QN>(); var p = new List<QN>();
             QueryResult Result(QueryStatus status, string reason, int? theoretical = null, int evaluated = 0) => new QueryResult(stamp, status, reason, g, p, theoretical, evaluated);
             if (candidateBudget < 0) throw new ArgumentOutOfRangeException(nameof(candidateBudget));
             if (mover == null) return Result(QueryStatus.Invalid, "検証対象の駒がありません。Lは未評価です。");
@@ -177,7 +186,7 @@ namespace NDShogi.Showcase.Core.Settings
             if (!definition.IsSupported) return Result(QueryStatus.Unsupported, "この既存移動成分は初回のG/P照会に未対応です。置換していません。");
             if (session.Bounds.Min != preset.Bounds.Min || session.Bounds.Max != preset.Bounds.Max || snapshot.Pieces.Any(x => !preset.Bounds.Contains(x.Position))) return Result(QueryStatus.Invalid, "試し盤と設定の盤域が一致しません。");
             int total = 0; var occupied = snapshot.Pieces.ToDictionary(x => x.Position);
-            foreach (var delta in Deltas(definition, mover.Side, preset.ForwardAxis))
+            foreach (var delta in Deltas(definition, mover.Side, preset.ForwardAxis, preset.Bounds.Dimensions))
             {
                 if (cancellation.IsCancellationRequested) return Result(QueryStatus.Cancelled, "取消：確定全件数・合法手0件ではありません。", evaluated: total);
                 if (total >= candidateBudget) return Result(QueryStatus.Partial, "一部計算：未評価の候補があります。", evaluated: total);
@@ -192,7 +201,7 @@ namespace NDShogi.Showcase.Core.Settings
             }
             return Result(QueryStatus.Complete, "G/P計算完了。セル数です。L・成り別着手数・終局は未評価。", total, total);
         }
-        public static AttackQueryResult Attackers(PreviewPreset preset, PreviewSession session, Q4 target, Side by, CancellationToken cancellation = default)
+        public static AttackQueryResult Attackers(PreviewPreset preset, PreviewSession session, QN target, Side by, CancellationToken cancellation = default)
         {
             if (!preset.Bounds.Contains(target) || session.Bounds.Min != preset.Bounds.Min || session.Bounds.Max != preset.Bounds.Max) return new AttackQueryResult(QueryStatus.Invalid, Array.Empty<TrialPiece>());
             var pieces = session.Snapshot().Pieces; var attackers = new List<TrialPiece>(); bool unsupported = false;
@@ -210,11 +219,11 @@ namespace NDShogi.Showcase.Core.Settings
             var pieces = session.Snapshot().Pieces; var piece = pieces.FirstOrDefault(x => x.Id == pieceId);
             var definition = piece == null ? null : preset.Find(piece.DefinitionId);
             if (piece == null || definition == null || session.Bounds.Min != preset.Bounds.Min || session.Bounds.Max != preset.Bounds.Max)
-                return new AttackRangeResult(QueryStatus.Invalid, Array.Empty<Q4>());
-            if (!definition.IsSupported) return new AttackRangeResult(QueryStatus.Unsupported, Array.Empty<Q4>());
-            var cells = new List<Q4>();
+                return new AttackRangeResult(QueryStatus.Invalid, Array.Empty<QN>());
+            if (!definition.IsSupported) return new AttackRangeResult(QueryStatus.Unsupported, Array.Empty<QN>());
+            var cells = new List<QN>();
             if (!definition.AllowCapture) return new AttackRangeResult(QueryStatus.Complete, cells);
-            foreach (var delta in Deltas(definition, piece.Side, preset.ForwardAxis))
+            foreach (var delta in Deltas(definition, piece.Side, preset.ForwardAxis, preset.Bounds.Dimensions))
             {
                 if (cancellation.IsCancellationRequested) return new AttackRangeResult(QueryStatus.Cancelled, cells);
                 var target = piece.Position + delta;
@@ -226,8 +235,8 @@ namespace NDShogi.Showcase.Core.Settings
     public sealed class AttackRangeResult
     {
         public QueryStatus Status { get; }
-        public IReadOnlyList<Q4> Cells { get; }
+        public IReadOnlyList<QN> Cells { get; }
         public string Meaning => "全4Dの幾何攻撃（味方を守るセルを含む）。自玉安全による完全合法性ではありません。";
-        internal AttackRangeResult(QueryStatus status, IEnumerable<Q4> cells) { Status = status; Cells = Array.AsReadOnly(cells.ToArray()); }
+        internal AttackRangeResult(QueryStatus status, IEnumerable<QN> cells) { Status = status; Cells = Array.AsReadOnly(cells.ToArray()); }
     }
 }

@@ -22,7 +22,7 @@ namespace Showcase.Unity.Settings
     {
         EnvironmentRig rig; Camera backgroundCamera; CfgPreviewRenderer previewRenderer; Cfg2Visuals visuals; SliceAnimator slice,trialSlice;
         SettingsDraft draft; MatchOptionsRaw options; MatchConfig config; PreviewPreset preset;
-        PreviewSession preview; QueryResult result; IReadOnlyList<Q4> attackCells=Array.Empty<Q4>();
+        PreviewSession preview; QueryResult result; IReadOnlyList<QN> attackCells=Array.Empty<QN>();
         MatchSession session; ValidationReport validation;
         Canvas canvas; CanvasGroup inputGate; RectTransform root,menu,settings,matchHud,detailHost,pieceHost,previewRect,planeRect,resultPanel;
         Text headerStatus,counts,statusText,clockNear,clockFar,matchStatus,resultText; ScrollRect detailScroll;
@@ -35,7 +35,7 @@ namespace Showcase.Unity.Settings
         readonly List<string> eventTrace=new List<string>(); readonly InputOwnership ownership=new InputOwnership();
         readonly string[] categories={"ルールプリセット","盤・初期配置","駒の動き設定","対局ルール","CPU設定","表示・操作"};
         string runRoot,runtimeRoot,validPath,draftPath,trialPath,recordRoot,notice="",startupLoadError="",selectedDefinition="king-step",selectedPiece="subject",tool="選択";
-        int category=2,detailTab,planeTab; Side placementSide=Side.A; Q4 selectedCell;
+        int category=2,detailTab,planeTab; Side placementSide=Side.A; QN selectedCell;
         bool opened,geometryDirty=true,quitting,showCandidates=true,showAttacks,showGrid=true,showHelpers=true;
         bool settingsDirty,stableDirty; float saveDue; string detailContext="",lastRecordedMatch="";
         float yaw=32,pitch=29,distance=.58f; Vector3 pan;
@@ -134,7 +134,7 @@ namespace Showcase.Unity.Settings
         {draft.Edit(d=>edit(d.Definitions.Single(x=>x.Id==selectedDefinition)));AfterEdit();if(rebuild)BuildDetails();}
         void QueueQuery()
         {
-            result=null;attackCells=Array.Empty<Q4>();
+            result=null;attackCells=Array.Empty<QN>();
             var source=session!=null&&!opened?session.ToPreview():preview;
             var rule=session!=null&&!opened?session.Snapshot.Config.Preset:preset;
             if(rule!=null&&source.Find(selectedPiece)!=null)
@@ -150,16 +150,16 @@ namespace Showcase.Unity.Settings
             var source=session!=null&&!opened?session.ToPreview():preview;
             var ps=source.Pieces.Select(p=>new CfgVisualPiece{Id=p.Id,DefinitionId=p.DefinitionId,Position=p.Position,Side=p.Side}).ToArray();
             if(session!=null&&!opened)ps=WithGlide(ps);
-            if(!opened&&session==null)ps=new[]{new CfgVisualPiece{Id="menu-king",DefinitionId="king-step",Side=Side.A,Position=new Q4(0,0,0,0)},new CfgVisualPiece{Id="menu-rook",DefinitionId="rook-h11",Side=Side.A,Position=new Q4(-2,-2,0,0)},new CfgVisualPiece{Id="menu-bishop",DefinitionId="bishop-h22",Side=Side.A,Position=new Q4(1,2,0,0)}};
+            if(!opened&&session==null)ps=new[]{new CfgVisualPiece{Id="menu-king",DefinitionId="king-step",Side=Side.A,Position=new QN(0,0,0,0)},new CfgVisualPiece{Id="menu-rook",DefinitionId="rook-h11",Side=Side.A,Position=new QN(-2,-2,0,0)},new CfgVisualPiece{Id="menu-bishop",DefinitionId="bishop-h22",Side=Side.A,Position=new QN(1,2,0,0)}};
             previewRenderer.SetDisplayState(slice.DisplayState);previewRenderer.Candidates=showCandidates;previewRenderer.Attacks=showAttacks;previewRenderer.Grid=showGrid;
             bool mainMenu=!opened&&session==null;
             previewRenderer.ShowPieces=!mainMenu;if(mainMenu){previewRenderer.Grid=false;previewRenderer.Candidates=false;previewRenderer.Attacks=false;}
-            previewRenderer.Rebuild(slice.Frame,slice.ViewRevision,ps,result?.G,result?.P,attackCells,mainMenu?(Q4?)null:source.Find(selectedPiece)?.Position);
+            previewRenderer.Rebuild(slice.Frame,slice.ViewRevision,ps,result?.G,result?.P,attackCells,mainMenu?(QN?)null:source.Find(selectedPiece)?.Position);
             foreach(var section in previewRenderer.PieceSections.Values)section.Object.layer=30;
             // Only menu dressing uses the fixed board path. In play and settings
             // every piece, candidate, selected cell and hit uses one real section.
             visuals.RefreshBoard(mainMenu?ps:Array.Empty<CfgVisualPiece>());
-            visuals.RefreshBoardCandidates(Array.Empty<Q4>(),null,false);
+            visuals.RefreshBoardCandidates(Array.Empty<QN>(),null,false);
             foreach(var panel in helperPanels)panel.gameObject.SetActive(showHelpers);
             RefreshAuxiliaryViews();
             geometryDirty=false;UpdateCounts();

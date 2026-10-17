@@ -50,10 +50,10 @@ namespace Showcase.Unity.Settings
         {return RectTransformUtility.WorldToScreenPoint(null,rect.TransformPoint(rect.rect.center));}
         PointerEventData SmokePointer(Vector2 point,int id=71,PointerEventData.InputButton button=PointerEventData.InputButton.Left)
         {return new PointerEventData(EventSystem.current){pointerId=id,button=button,position=point,pressPosition=point};}
-        bool SmokePointForCell(Q4 cell,out Vector2 screen)
+        bool SmokePointForCell(QN cell,out Vector2 screen)
         {
             screen=default;var frame=slice.Frame;
-            var logical=CfgPreviewRenderer.V(cell)+new Vec4(0,0,.08,0);
+            var logical=CfgPreviewRenderer.V(cell)+new VecN(0,0,.08,0);
             var world=CfgPreviewRenderer.AirAnchor+SectionView.MapVector(frame.Project(logical))*SectionView.Cell;
             var viewport=rig.Camera.WorldToViewportPoint(world);if(viewport.z<=0)return false;
             var rect=previewRect.rect;
@@ -73,7 +73,7 @@ namespace Showcase.Unity.Settings
             }
             return false;
         }
-        void SmokeClickCell(Q4 cell,string purpose)
+        void SmokeClickCell(QN cell,string purpose)
         {
             if(!SmokePointForCell(cell,out var point))throw new InvalidOperationException("SMOKE: no visible pickable pixel for "+purpose+" "+cell);
             var e=SmokePointer(point);e.pointerCurrentRaycast=new RaycastResult{gameObject=previewRect.gameObject,screenPosition=point};
@@ -88,7 +88,7 @@ namespace Showcase.Unity.Settings
             Check(selectedPiece=="friend"&&selectedDefinition=="pawn-step","simulated uGUI pointer selects a real wooden piece and its definition");
             SmokeClickCell(source,"reselect subject");yield return WaitQuery();
             Check(selectedPiece=="subject"&&selectedDefinition=="king-step","simulated uGUI pointer restores subject selection");
-            Q4 destination=default;bool found=false;
+            QN destination=default;bool found=false;
             foreach(var candidate in result.P.Where(q=>preview.At(q)==null&&q.W==0))if(SmokePointForCell(candidate,out _)){destination=candidate;found=true;break;}
             if(!found)throw new InvalidOperationException("SMOKE: no visible empty P candidate for actual picker");
             SmokeClickCell(destination,"P trial movement");yield return WaitQuery();
@@ -120,12 +120,12 @@ namespace Showcase.Unity.Settings
             OnApplicationFocus(false);ExecuteEvents.Execute(previewRect.gameObject,cancel,ExecuteEvents.pointerUpHandler);
             Check((rig.Camera.transform.position-cancelPosition).sqrMagnitude<1e-10&&ownership.Owner==InputOwner.None,"simulated focus loss rolls back an active camera pointer drag");
             RestoreView(saved);yield return null;
-            var origin=slice.Center;Vec4 firstDelta=default;
+            var origin=slice.Center;VecN firstDelta=default;
             for(int index=0;index<2;index++)
             {
                 var handle=minis[index].GetComponentsInChildren<CfgPointerSurface>().Single(h=>h.name=="Drag world X");
                 var basis=SliceAxes.Reference((ReferenceView)index);var worldAxis=SliceAxes.WorldAxis(LogicalAxis.X);
-                var projected=CfgMiniGraphic.Project(new Vec3(Vec4.Dot(worldAxis,basis.AxisX),Vec4.Dot(worldAxis,basis.AxisY),Vec4.Dot(worldAxis,basis.AxisZ))*1.4).normalized;
+                var projected=CfgMiniGraphic.Project(new Vec3(VecN.Dot(worldAxis,basis.AxisX),VecN.Dot(worldAxis,basis.AxisY),VecN.Dot(worldAxis,basis.AxisZ))*1.4).normalized;
                 var e=SmokePointer(SmokeScreenCenter((RectTransform)handle.transform),90+index);
                 ExecuteEvents.Execute(handle.gameObject,e,ExecuteEvents.pointerDownHandler);
                 Check(ownership.Owner==InputOwner.Axis&&ownership.PointerId==e.pointerId,"simulated mini "+index+" axis starts actual pointer ownership");
@@ -217,10 +217,10 @@ namespace Showcase.Unity.Settings
             numeric.text="4";yield return WaitQuery();Check(result.G.Count==80,"valid live input resumes common query");
             actions["save"].onClick.Invoke();
             Check(savePath!=invalidCopy&&SettingsStore.Load(savePath).Kind==SavedSettingsKind.PreviewPreset&&invalidCopyBytes.SequenceEqual(File.ReadAllBytes(invalidCopy))&&!draft.IsDirty,"simulated normal Save after raw correction writes a Preset and preserves the invalid Draft");
-            preview.Place(new TrialPiece("friend","pawn-step",Side.A,new Q4(0,1,0,0)));preview.Place(new TrialPiece("enemy","pawn-step",Side.B,new Q4(0,-1,0,0)));AfterTrial();yield return WaitQuery();
+            preview.Place(new TrialPiece("friend","pawn-step",Side.A,new QN(0,1,0,0)));preview.Place(new TrialPiece("enemy","pawn-step",Side.B,new QN(0,-1,0,0)));AfterTrial();yield return WaitQuery();
             Check(result.G.Count==80&&result.P.Count==79,"occupancy reduces P without changing G");
             yield return SmokeBoardInputPaths();
-            Check(preview.TryMove(preset,"subject",new Q4(0,-1,0,0),out _)&&preview.Find("enemy")==null,"Core direct P trial capture updates only preview");
+            Check(preview.TryMove(preset,"subject",new QN(0,-1,0,0),out _)&&preview.Find("enemy")==null,"Core direct P trial capture updates only preview");
             preview.Undo();AfterTrial();yield return WaitQuery();Check(preview.Find("enemy")!=null,"Core direct trial capture undo restores enemy");
             yield return SmokeCameraAndMiniInputs();
             var logical=preview.Hash;var rule=preset.RuleHash;
@@ -230,7 +230,7 @@ namespace Showcase.Unity.Settings
             yield return new WaitForSeconds(.16f);yield return Capture("intermediate-"+Screen.width+"x"+Screen.height);yield return WaitSlice();
             Check(slice.StableView==ReferenceView.XYW,"Z reaches XYW");
             foreach(string a in new[]{"Y","X","W"}){actions["axis-"+a].onClick.Invoke();yield return WaitSlice();Check(slice.StableView==SliceAxes.ViewForAxis((LogicalAxis)Enum.Parse(typeof(LogicalAxis),a)),a+" reaches matching reference");}
-            Translate(LogicalAxis.X,1);yield return null;Check((slice.Center-new Vec4(0,1,0,0)).Length<1e-10,"tangent translation moves finite window origin");
+            Translate(LogicalAxis.X,1);yield return null;Check((slice.Center-new VecN(0,1,0,0)).Length<1e-10,"tangent translation moves finite window origin");
             Translate(LogicalAxis.W,1);yield return null;Check(slice.Center.W==1,"normal translation changes cutting hyperplane");
             actions["axis-Z"].onClick.Invoke();yield return WaitSlice();actions["axis-W"].onClick.Invoke();yield return WaitSlice();
             Check(slice.Center.W==1&&slice.Center.Y==1,"W return preserves translation");Check(preview.Hash==logical&&preset.RuleHash==rule,"all view operations preserve logical state and rule hash");

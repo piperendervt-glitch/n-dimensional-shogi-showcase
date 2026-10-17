@@ -8,7 +8,7 @@ static class PivotTests
     static Action<bool,string> check=null!;
     static void Near(double a,double b,string message,double epsilon=1e-9)=>check(Math.Abs(a-b)<=epsilon,message+": "+a+" != "+b);
     static void Same(Vec3 a,Vec3 b,string message)=>Near((a-b).Length,0,message);
-    static void Same(Vec4 a,Vec4 b,string message)=>Near((a-b).Length,0,message);
+    static void Same(VecN a,VecN b,string message)=>Near((a-b).Length,0,message);
     static void Pose(SliceFrame a,SliceFrame b,string message)
     {Same(a.Center,b.Center,message+" C");Same(a.AxisX,b.AxisX,message+" b1");Same(a.AxisY,b.AxisY,message+" b2");Same(a.AxisZ,b.AxisZ,message+" b3");Same(a.Normal,b.Normal,message+" n");}
     static PivotViewState Initial()=>PivotViewState.CreateInitial(new Vec3(0,.86,0));
@@ -24,22 +24,22 @@ static class PivotTests
         // Axis drag snapping: the dragged coordinate of C lands on whole cells, so the start cell is reachable exactly.
         var a=new SliceAnimator(Initial());var ownership=new InputOwnership();var drag=new AxisDrag(a,ownership);
         check(drag.Begin(LogicalAxis.W,1,0,0,40,0),"W drag begins");
-        drag.Update(1,AxisDrag.PixelsPerCell*1.37,0,true);Same(a.Center,new Vec4(0,0,3,1),"Snap rounds W 1.37 to 1");
-        drag.Update(1,AxisDrag.PixelsPerCell*.2,0,true);Same(a.Center,new Vec4(0,0,3,0),"Snap returns exactly to the start cell");
-        drag.Update(1,AxisDrag.PixelsPerCell*.2,0);Same(a.Center,new Vec4(0,0,3,.2),"Without snap the drag stays continuous");
+        drag.Update(1,AxisDrag.PixelsPerCell*1.37,0,true);Same(a.Center,new VecN(0,0,3,1),"Snap rounds W 1.37 to 1");
+        drag.Update(1,AxisDrag.PixelsPerCell*.2,0,true);Same(a.Center,new VecN(0,0,3,0),"Snap returns exactly to the start cell");
+        drag.Update(1,AxisDrag.PixelsPerCell*.2,0);Same(a.Center,new VecN(0,0,3,.2),"Without snap the drag stays continuous");
         drag.Complete(1);
-        a.SetCenter(new Vec4(0,0,3,.3));check(drag.Begin(LogicalAxis.W,2,0,0,40,0),"Second W drag begins");
-        drag.Update(2,AxisDrag.PixelsPerCell*.1,0,true);Same(a.Center,new Vec4(0,0,3,0),"Snap is to the absolute grid from a fractional start");
-        drag.Update(2,-AxisDrag.PixelsPerCell*1.9,0,true);Same(a.Center,new Vec4(0,0,3,-2),"Snap below zero");drag.Complete(2);
+        a.SetCenter(new VecN(0,0,3,.3));check(drag.Begin(LogicalAxis.W,2,0,0,40,0),"Second W drag begins");
+        drag.Update(2,AxisDrag.PixelsPerCell*.1,0,true);Same(a.Center,new VecN(0,0,3,0),"Snap is to the absolute grid from a fractional start");
+        drag.Update(2,-AxisDrag.PixelsPerCell*1.9,0,true);Same(a.Center,new VecN(0,0,3,-2),"Snap below zero");drag.Complete(2);
         // Reference hyperplane for a CPU step.
-        var p=new Vec4(1,2,3,0);
-        check(SliceAxes.ViewContaining(p,new Vec4(2,3,3,0))==ReferenceView.XYZ,"W-preserving step uses XYZ");
-        check(SliceAxes.ViewContaining(p,new Vec4(2,2,3,1))==ReferenceView.XZW,"W step on the board plane uses XZW");
-        check(SliceAxes.ViewContaining(p,new Vec4(2,2,3,1),ReferenceView.XYW)==ReferenceView.XZW,"Current view is kept only when it holds the step");
-        check(SliceAxes.ViewContaining(p,new Vec4(1,2,4,1),ReferenceView.XYW)==ReferenceView.XYW,"Current view that holds the step beats the fixed order");
-        check(SliceAxes.ViewContaining(p,new Vec4(1,3,4,1))==ReferenceView.XYW,"F-preserving step uses XYW");
-        check(SliceAxes.ViewContaining(p,new Vec4(4,3,4,2))==ReferenceView.XZW,"Smallest normal step wins when nothing holds the step; ties keep the order");
-        check(SliceAxes.ViewContaining(p,new Vec4(2,4,5,3))==ReferenceView.XYW,"Fully 4D step picks the least-leaving view");
+        var p=new VecN(1,2,3,0);
+        check(SliceAxes.ViewContaining(p,new VecN(2,3,3,0))==ReferenceView.XYZ,"W-preserving step uses XYZ");
+        check(SliceAxes.ViewContaining(p,new VecN(2,2,3,1))==ReferenceView.XZW,"W step on the board plane uses XZW");
+        check(SliceAxes.ViewContaining(p,new VecN(2,2,3,1),ReferenceView.XYW)==ReferenceView.XZW,"Current view is kept only when it holds the step");
+        check(SliceAxes.ViewContaining(p,new VecN(1,2,4,1),ReferenceView.XYW)==ReferenceView.XYW,"Current view that holds the step beats the fixed order");
+        check(SliceAxes.ViewContaining(p,new VecN(1,3,4,1))==ReferenceView.XYW,"F-preserving step uses XYW");
+        check(SliceAxes.ViewContaining(p,new VecN(4,3,4,2))==ReferenceView.XZW,"Smallest normal step wins when nothing holds the step; ties keep the order");
+        check(SliceAxes.ViewContaining(p,new VecN(2,4,5,3))==ReferenceView.XYW,"Fully 4D step picks the least-leaving view");
         foreach(ReferenceView view in Enum.GetValues(typeof(ReferenceView)))
         {
             int n=SliceAxes.NormalCoreAxis(view);var normal=SliceAxes.Reference(view).Normal;
@@ -49,45 +49,45 @@ static class PivotTests
         var slow=new SliceAnimator(Initial());slow.SecondsPerLeg=1.6;slow.Request(ReferenceView.XZW);slow.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;
         slow.Advance(1.0);check(slow.IsAnimating,"1.6 s leg still turning after 1 s");slow.Advance(.6);check(!slow.IsAnimating&&slow.StableView==ReferenceView.XZW,"1.6 s leg lands on XZW");
         // Place glides C and the anchor while a turn keeps running, then the turn lands on its reference pose.
-        var glide=new SliceAnimator(Initial());glide.Request(ReferenceView.XZW);glide.Advance(.2);glide.Place(new Vec4(1,0,3,2),new Vec3(.1,.8,0));
-        check(glide.IsAnimating,"Place keeps the turn running");Same(glide.Center,new Vec4(1,0,3,2),"Place sets C");Same(glide.DisplayState.Anchor,new Vec3(.1,.8,0),"Place sets A");
-        glide.Advance(1);check(!glide.IsAnimating&&glide.StableView==ReferenceView.XZW,"Turn lands after Place");Same(glide.Center,new Vec4(1,0,3,2),"Turn keeps the placed C");Same(glide.DisplayState.Anchor,new Vec3(.1,.8,0),"Turn keeps the placed A");
+        var glide=new SliceAnimator(Initial());glide.Request(ReferenceView.XZW);glide.Advance(.2);glide.Place(new VecN(1,0,3,2),new Vec3(.1,.8,0));
+        check(glide.IsAnimating,"Place keeps the turn running");Same(glide.Center,new VecN(1,0,3,2),"Place sets C");Same(glide.DisplayState.Anchor,new Vec3(.1,.8,0),"Place sets A");
+        glide.Advance(1);check(!glide.IsAnimating&&glide.StableView==ReferenceView.XZW,"Turn lands after Place");Same(glide.Center,new VecN(1,0,3,2),"Turn keeps the placed C");Same(glide.DisplayState.Anchor,new Vec3(.1,.8,0),"Turn keeps the placed A");
         // A queued leg keeps the duration it was requested with, even when SecondsPerLeg changes before it starts.
         var queued=new SliceAnimator(Initial());queued.SecondsPerLeg=1.6;queued.Request(ReferenceView.XZW);queued.Request(ReferenceView.XYW);queued.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;
         queued.Advance(1.6);check(queued.IsAnimating&&queued.TargetView==ReferenceView.XYW,"Queued leg starts after the first");
         queued.Advance(1.0);check(queued.IsAnimating,"Queued 1.6 s leg still turning after 1 s");queued.Advance(.6);check(!queued.IsAnimating&&queued.StableView==ReferenceView.XYW,"Queued leg lands on XYW");
         // Snapping is to whole core cells, so a fractional embedding height does not shift the grid on Y.
-        var half=new SliceAnimator(new PivotViewState(2.5,SliceAxes.Reference(ReferenceView.XYZ,new Vec4(0,0,2.5,0)),new Vec3(0,.86,0),ShapeFactory.CellPitchMetres,FiniteSliceWindow.DefaultHalfExtent));
+        var half=new SliceAnimator(new PivotViewState(2.5,SliceAxes.Reference(ReferenceView.XYZ,new VecN(0,0,2.5,0)),new Vec3(0,.86,0),ShapeFactory.CellPitchMetres,FiniteSliceWindow.DefaultHalfExtent));
         var yDrag=new AxisDrag(half,new InputOwnership());check(yDrag.Begin(LogicalAxis.Y,3,0,0,40,0),"Y drag begins");
-        yDrag.Update(3,AxisDrag.PixelsPerCell*1.37,0,true);Same(half.Center,new Vec4(0,0,3.5,0),"Y snap lands on core V=1, world 3.5");
-        Same(half.DisplayState.WorldToCore(half.Center),new Vec4(0,0,1,0),"Snapped Y is a whole core cell");yDrag.Complete(3);
+        yDrag.Update(3,AxisDrag.PixelsPerCell*1.37,0,true);Same(half.Center,new VecN(0,0,3.5,0),"Y snap lands on core V=1, world 3.5");
+        Same(half.DisplayState.WorldToCore(half.Center),new VecN(0,0,1,0),"Snapped Y is a whole core cell");yDrag.Complete(3);
         Reject(()=>{try{slow.SecondsPerLeg=0;}catch(ArgumentOutOfRangeException e){throw new ArgumentException(e.Message);}},"Zero leg duration rejected");
     }
     static void EmbeddingAndPivots()
     {
-        var initial=Initial();Same(initial.Frame.Center,new Vec4(0,0,3,0),"C=P uses Core V");Same(initial.Embedding,new Vec4(0,0,3,0),"Fixed E uses Core V");
+        var initial=Initial();Same(initial.Frame.Center,new VecN(0,0,3,0),"C=P uses Core V");Same(initial.Embedding,new VecN(0,0,3,0),"Fixed E uses Core V");
         Same(initial.Anchor,new Vec3(0,.86,0),"Initial A=board surface: the Y=h piece plane rests on the wood");
-        var q=new Vec4(2,-1,0,0);var world=initial.CoreToWorld(q);Same(world,new Vec4(2,-1,3,0),"Q4 unchanged by fixed embedding");Same(initial.WorldToCore(world),q,"Embedding inverse");
+        var q=new VecN(2,-1,0,0);var world=initial.CoreToWorld(q);Same(world,new VecN(2,-1,3,0),"QN unchanged by fixed embedding");Same(initial.WorldToCore(world),q,"Embedding inverse");
         Same(initial.WorldToDisplay(world),new Vec3(-.05,.86,.1),"Independent T and s");Same(initial.DisplayToWorld(new Vec3(-.05,.86,.1)),world,"Display inverse on H");
         var origin=initial.WithCenter(default);Same(origin.Anchor,new Vec3(0,.71,0),"P to O anchor update: O is s*h below the board");Same(origin.WorldToDisplay(world),initial.WorldToDisplay(world),"P to O preserves height");Same(origin.Embedding,initial.Embedding,"P to O preserves E");
         check(3+ShapeFactory.CreatePiece(ShapeVariant.A).Bounds.Max.Z<origin.HalfWindow,"Initial piece clearance at O");
-        var pawn=new Instance4D(ShapeFactory.CreatePiece(ShapeVariant.A),default,1,"central-pawn");
+        var pawn=new InstanceN(ShapeFactory.CreatePiece(ShapeVariant.A),default,1,"central-pawn");
         var xw=initial.WithOrientation(SliceRotations.RotateDrag(initial.Frame,90,0));
-        Same(xw.Frame.Normal,new Vec4(0,-1,0,0),"XW90 normal is -Core U");
+        Same(xw.Frame.Normal,new VecN(0,-1,0,0),"XW90 normal is -Core U");
         foreach(double x in new[]{-1d,0,1})
         {
-            var point=new Vec4(2,x,3,0);Near(Vec4.Dot(xw.Frame.Normal,point-xw.Frame.Center),-x,"XW90 reference-point cut x=0");
-            var piece=new Instance4D(pawn.Shape,new Vec4(2,x,0,0));var result=FiniteSliceWindow.Build(xw.Embed(piece),xw.Frame,xw.HalfWindow);
+            var point=new VecN(2,x,3,0);Near(VecN.Dot(xw.Frame.Normal,point-xw.Frame.Center),-x,"XW90 reference-point cut x=0");
+            var piece=new InstanceN(pawn.Shape,new VecN(2,x,0,0));var result=FiniteSliceWindow.Build(xw.Embed(piece),xw.Frame,xw.HalfWindow);
             check((result.Status==SectionStatus.Volume3D)==(x==0),"XW90 actual wooden shape finite extent");
         }
         var ywP=initial.WithOrientation(SliceRotations.RotateDrag(initial.Frame,0,90));
         var ywO=origin.WithOrientation(SliceRotations.RotateDrag(origin.Frame,0,90));
-        Same(ywP.Frame.Normal,new Vec4(0,0,-1,0),"YW90 normal is -Core V");
-        Near(Vec4.Dot(ywP.Frame.Normal,initial.CoreToWorld(default)-ywP.Frame.Center),0,"YW90 C=P reference plane Y=h");
-        Near(Vec4.Dot(ywO.Frame.Normal,origin.CoreToWorld(default)-ywO.Frame.Center),-3,"YW90 C=O reference plane Y=0");
+        Same(ywP.Frame.Normal,new VecN(0,0,-1,0),"YW90 normal is -Core V");
+        Near(VecN.Dot(ywP.Frame.Normal,initial.CoreToWorld(default)-ywP.Frame.Center),0,"YW90 C=P reference plane Y=h");
+        Near(VecN.Dot(ywO.Frame.Normal,origin.CoreToWorld(default)-ywO.Frame.Center),-3,"YW90 C=O reference plane Y=0");
         check(FiniteSliceWindow.Build(ywP.Embed(pawn),ywP.Frame,ywP.HalfWindow).Status==SectionStatus.Volume3D,"YW90 P intersects actual wooden bottom facet");
         check(FiniteSliceWindow.Build(ywO.Embed(pawn),ywO.Frame,ywO.HalfWindow).Status==SectionStatus.Empty,"YW90 O removes h=3 pawn completely");
-        var movedW=xw.WithCenter(xw.Frame.Center+new Vec4(0,0,0,1));
+        var movedW=xw.WithCenter(xw.Frame.Center+new VecN(0,0,0,1));
         Same(movedW.Anchor,xw.Anchor+new Vec3(.05,0,0),"W tangent after XW90 maps to Unity X, not down");
         Same(movedW.WorldToDisplay(xw.Frame.Lift(new Vec3(.4,.2,.1))),xw.WorldToDisplay(xw.Frame.Lift(new Vec3(.4,.2,.1))),"W tangent displacement cancels chart translation");
         var general=initial.WithOrientation(SliceRotations.RotateDrag(initial.Frame,37,-23,true));var sample=general.Frame.Lift(new Vec3(.2,.3,-.4));
@@ -102,9 +102,9 @@ static class PivotTests
     {
         var initial=Initial();
         // Independent closed-form matrix for R_VW(beta) R_UW(alpha).
-        double alpha=37*Math.PI/180,beta=-23*Math.PI/180;var expected=new SliceFrame(initial.Frame.Center,new Vec4(1,0,0,0),
-            new Vec4(0,Math.Cos(alpha),-Math.Sin(beta)*Math.Sin(alpha),Math.Cos(beta)*Math.Sin(alpha)),
-            new Vec4(0,0,Math.Cos(beta),Math.Sin(beta)),new Vec4(0,-Math.Sin(alpha),-Math.Sin(beta)*Math.Cos(alpha),Math.Cos(beta)*Math.Cos(alpha)));
+        double alpha=37*Math.PI/180,beta=-23*Math.PI/180;var expected=new SliceFrame(initial.Frame.Center,new VecN(1,0,0,0),
+            new VecN(0,Math.Cos(alpha),-Math.Sin(beta)*Math.Sin(alpha),Math.Cos(beta)*Math.Sin(alpha)),
+            new VecN(0,0,Math.Cos(beta),Math.Sin(beta)),new VecN(0,-Math.Sin(alpha),-Math.Sin(beta)*Math.Cos(alpha),Math.Cos(beta)*Math.Cos(alpha)));
         var actual=SliceRotations.RotateDrag(initial.Frame,37,-23);Pose(actual,expected,"Independent composed 4D rotation");
         var animator=new SliceAnimator(initial);animator.Request(ReferenceView.XYW);animator.Advance(.11);animator.Request(ReferenceView.XZW);
         var takeover=animator.Frame;var fixedAnchor=animator.DisplayState.Anchor;animator.SetOrientation(takeover);
@@ -129,10 +129,10 @@ static class PivotTests
             SliceFrame end=rotationStart;for(int i=1;i<=events;i++)end=SliceRotations.RotateDrag(rotationStart,52d*i/events,-41d*i/events);
             Pose(end,whole,"Cumulative drag independent of event partition");
         }
-        animator.Restore(initial.WithOrientation(actual).WithCenter(new Vec4(.1,.2,2.9,.4)));check(animator.StableView==null&&!animator.IsAnimating,"Arbitrary full-state restore is not reference-rounded");
+        animator.Restore(initial.WithOrientation(actual).WithCenter(new VecN(.1,.2,2.9,.4)));check(animator.StableView==null&&!animator.IsAnimating,"Arbitrary full-state restore is not reference-rounded");
         var before=animator.DisplayState;var f=before.Frame;
         Reject(()=>animator.SetOrientation(new SliceFrame(f.Center,f.AxisX*(-1),f.AxisY,f.AxisZ,f.Normal)),"Reflected frame rejected");check(ReferenceEquals(before,animator.DisplayState),"Rejected pose preserves state atomically");
-        Reject(()=>animator.SetOrientation(new SliceFrame(f.Center+new Vec4(1,0,0,0),f.AxisX,f.AxisY,f.AxisZ,f.Normal)),"Rotation cannot move C");
+        Reject(()=>animator.SetOrientation(new SliceFrame(f.Center+new VecN(1,0,0,0),f.AxisX,f.AxisY,f.AxisZ,f.Normal)),"Rotation cannot move C");
         Reject(()=>new PivotViewState(double.NaN,initial.Frame,default),"Nonfinite E rejected");
     }
     static double IndependentDeterminant(SliceFrame frame)
@@ -163,20 +163,20 @@ static class PivotTests
             foreach(var p in relation.Vertices)
             {
                 var delta=basis.AxisX*p.X+basis.AxisY*p.Y+basis.AxisZ*p.Z;
-                Near(Vec4.Dot(frame.Normal,delta),0,"Independent H equation in C-based mini",1e-8);
+                Near(VecN.Dot(frame.Normal,delta),0,"Independent H equation in C-based mini",1e-8);
                 check(Math.Max(Math.Abs(p.X),Math.Max(Math.Abs(p.Y),Math.Abs(p.Z)))<=4.5+1e-8,"Reference box constraint");
-                foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ})check(Math.Abs(Vec4.Dot(axis,delta))<=2.25+1e-8,"Main window six inequalities");
+                foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ})check(Math.Abs(VecN.Dot(axis,delta))<=2.25+1e-8,"Main window six inequalities");
             }
             check(relation.Edges.All(i=>i>=0&&i<relation.Vertices.Count)&&relation.TriangleIndices.All(i=>i>=0&&i<relation.Vertices.Count),"Relation topology uses actual clipped vertices");
         }
         Near(HyperplaneRelation.Build(initial.Frame,ReferenceView.XZW).FixedCoordinate,3,"XZW mini is Y=h initially");
         Near(HyperplaneRelation.Build(initial.WithCenter(default).Frame,ReferenceView.XZW).FixedCoordinate,0,"XZW mini is Y=0 after Home");
         // P-anchored charts: moving C along W shifts the XYW/XZW/YZW intersection by the same amount.
-        var pivot=initial.Embedding;var moved=initial.WithCenter(pivot+new Vec4(0,0,0,.76)).Frame;
+        var pivot=initial.Embedding;var moved=initial.WithCenter(pivot+new VecN(0,0,0,.76)).Frame;
         foreach(ReferenceView reference in new[]{ReferenceView.XYW,ReferenceView.XZW,ReferenceView.YZW})
         {
             var still=HyperplaneRelation.Build(initial.Frame,reference,4.5,1,4.5,pivot);var shifted=HyperplaneRelation.Build(moved,reference,4.5,1,4.5,pivot);
-            var basis=SliceAxes.Reference(reference);var w=new Vec3(Vec4.Dot(SliceAxes.WorldAxis(LogicalAxis.W),basis.AxisX),Vec4.Dot(SliceAxes.WorldAxis(LogicalAxis.W),basis.AxisY),Vec4.Dot(SliceAxes.WorldAxis(LogicalAxis.W),basis.AxisZ));
+            var basis=SliceAxes.Reference(reference);var w=new Vec3(VecN.Dot(SliceAxes.WorldAxis(LogicalAxis.W),basis.AxisX),VecN.Dot(SliceAxes.WorldAxis(LogicalAxis.W),basis.AxisY),VecN.Dot(SliceAxes.WorldAxis(LogicalAxis.W),basis.AxisZ));
             check(still.Vertices.Count==4&&shifted.Vertices.Count==4,"P-anchored "+reference+" stays a square");
             foreach(var v in still.Vertices)Near(Vec3.Dot(v,w),0,"P-anchored "+reference+" initial plane W=0");
             foreach(var v in shifted.Vertices)Near(Vec3.Dot(v,w),.76,"P-anchored "+reference+" plane follows W=0.76");
@@ -184,16 +184,16 @@ static class PivotTests
         }
         var inSpace=HyperplaneRelation.Build(moved,ReferenceView.XYZ,4.5,1,4.5,pivot);
         check(inSpace.IsCoincident&&inSpace.ChartCenter.Length<1e-12,"Normal move keeps C at the XYZ chart origin");
-        var tilted=SliceRotations.RotateDrag(initial.Frame,33,-71,true);var offsetFrame=new SliceFrame(pivot+new Vec4(.4,-1.1,.7,1.3),tilted.AxisX,tilted.AxisY,tilted.AxisZ,tilted.Normal);
+        var tilted=SliceRotations.RotateDrag(initial.Frame,33,-71,true);var offsetFrame=new SliceFrame(pivot+new VecN(.4,-1.1,.7,1.3),tilted.AxisX,tilted.AxisY,tilted.AxisZ,tilted.Normal);
         foreach(ReferenceView reference in Enum.GetValues<ReferenceView>())
         {
             var relation=HyperplaneRelation.Build(offsetFrame,reference,4.5,2,2.25,pivot);var refNormal=SliceAxes.Reference(reference).Normal;
-            var origin=pivot+refNormal*Vec4.Dot(offsetFrame.Center-pivot,refNormal);var basis=SliceAxes.Reference(reference,origin);
+            var origin=pivot+refNormal*VecN.Dot(offsetFrame.Center-pivot,refNormal);var basis=SliceAxes.Reference(reference,origin);
             foreach(var v in relation.Vertices)
             {
-                var world=basis.Lift(v);Near(Vec4.Dot(offsetFrame.Normal,world-offsetFrame.Center),0,"P-anchored "+reference+" vertex on H",1e-8);
+                var world=basis.Lift(v);Near(VecN.Dot(offsetFrame.Normal,world-offsetFrame.Center),0,"P-anchored "+reference+" vertex on H",1e-8);
                 check(Math.Max(Math.Abs(v.X),Math.Max(Math.Abs(v.Y),Math.Abs(v.Z)))<=4.5+1e-8,"P-anchored reference box");
-                foreach(var axis in new[]{offsetFrame.AxisX,offsetFrame.AxisY,offsetFrame.AxisZ})check(Math.Abs(Vec4.Dot(axis,world-offsetFrame.Center))<=2.25+1e-8,"P-anchored main window");
+                foreach(var axis in new[]{offsetFrame.AxisX,offsetFrame.AxisY,offsetFrame.AxisZ})check(Math.Abs(VecN.Dot(axis,world-offsetFrame.Center))<=2.25+1e-8,"P-anchored main window");
             }
         }
     }
@@ -204,7 +204,7 @@ static class PivotTests
         {
             var a=new SliceAnimator(original);var ownership=new InputOwnership();var drag=new AxisDrag(a,ownership);double length=Math.Sqrt(screen.X*screen.X+screen.Y*screen.Y);
             check(drag.Begin(LogicalAxis.W,3,20,30,screen.X,screen.Y),"Different mini starts same W drag");drag.Update(3,20+64*screen.X/length,30+64*screen.Y/length);
-            Same(a.Center,original.Frame.Center+new Vec4(0,0,0,2),"Same world delta from different mini");Same(a.DisplayState.Anchor,original.Anchor+new Vec3(.1,0,0),"Same A from different mini");
+            Same(a.Center,original.Frame.Center+new VecN(0,0,0,2),"Same world delta from different mini");Same(a.DisplayState.Anchor,original.Anchor+new Vec3(.1,0,0),"Same A from different mini");
             ownership.FocusLost();check(ReferenceEquals(a.DisplayState,original),"Focus loss restores exact original C/B/A snapshot");
         }
         var token=new PickToken(new CellId(0,0,0,0),1,2,3,4,5,6,7);var hit=new CellHit(token,new Vec3(.1,.2,.3));

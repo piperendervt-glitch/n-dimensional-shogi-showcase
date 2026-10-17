@@ -112,7 +112,7 @@ namespace NDShogi.Showcase.Core.Settings
         private static int Integer(string text) => int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int number) ? number : throw new InvalidDataException("整数が必要です。");
         private static double Number(string text) => double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double number) ? number : throw new InvalidDataException("有限数値が必要です。");
         private static double[] Vector(string text, int size) { var values = text.Split(','); if (values.Length != size) throw new InvalidDataException("ベクトル次元が不正です。"); return values.Select(Number).ToArray(); }
-        private static Q4 Cell(string text) { var v = text.Split(','); if (v.Length != 4) throw new InvalidDataException("4Dセルが必要です。"); return new Q4(Integer(v[0]), Integer(v[1]), Integer(v[2]), Integer(v[3])); }
+        private static QN Cell(string text) => QN.TryParse(text, 0, out var cell) && cell.Dimensions >= BoundsN.MinDimensions ? cell : throw new InvalidDataException("N次元セル（3〜7個の整数）が必要です。");
         private static LoadedPivotSettings Parse(XDocument document)
         {
             if (document.DocumentType != null || document.Nodes().Any(n => !(n is XElement) && !(n is XText t && string.IsNullOrWhiteSpace(t.Value)))) throw new InvalidDataException("宣言的XML以外は対応しません。");
@@ -133,14 +133,16 @@ namespace NDShogi.Showcase.Core.Settings
                 if (side != "A" && side != "B") throw new InvalidDataException("未知の陣営です。");
                 return new TrialPiece(A(p, "id"), A(p, "definition"), side == "A" ? Side.A : Side.B, Cell(A(p, "cell")));
             }).ToArray();
-            var preview = new PreviewSession(new Bounds4D(Integer(A(trial, "min")), Integer(A(trial, "max"))), pieces);
+            int dimensions = int.TryParse(logical.Draft.Current.Dimensions, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsedN) && parsedN >= BoundsN.MinDimensions && parsedN <= BoundsN.MaxDimensions ? parsedN : 4;
+            var preview = new PreviewSession(new BoundsN(Integer(A(trial, "min")), Integer(A(trial, "max")), dimensions), pieces);
             string previewHash = PreviewBinding(preview);
             if (A(trial, "hash") != previewHash) throw new InvalidDataException("試し盤hashが一致しません。");
             var v = children[2]; if (v.HasElements) throw new InvalidDataException("未知の表示子要素です。");
             Exact(v, "schema", "embedding", "height", "center", "basis", "anchor", "halfWindow", "cellScale", "camera", "selectedPiece", "selectedCell", "planeReference", "logicalHash", "previewHash");
             if (A(v, "schema") != "1") throw new InvalidDataException("未知の表示schema版です。");
             if (A(v, "logicalHash") != logicalHash || A(v, "previewHash") != previewHash) throw new InvalidDataException("表示と論理設定・試し盤の対応hashが一致しません。");
-            var view = new PivotViewSnapshot(Number(A(v, "height")), Vector(A(v, "center"), 4), Vector(A(v, "basis"), 16), Vector(A(v, "anchor"), 3),
+            var center = Vector(A(v, "center"), dimensions);
+            var view = new PivotViewSnapshot(Number(A(v, "height")), center, Vector(A(v, "basis"), dimensions * dimensions), Vector(A(v, "anchor"), 3),
                 Number(A(v, "halfWindow")), Number(A(v, "cellScale")), Vector(A(v, "camera"), 6), A(v, "selectedPiece"), Cell(A(v, "selectedCell")), Cell(A(v, "planeReference")), A(v, "embedding"));
             // The snapshot itself already migrated a /1 view; say so, so the caller saves the new form once.
             string notice = A(v, "embedding") == PivotViewSnapshot.LegacyBoardAtOriginVersion ? "表示の保存形式を更新しました（駒配置面を盤面に表示する形式）。次の自動保存で新形式になります。" : "";

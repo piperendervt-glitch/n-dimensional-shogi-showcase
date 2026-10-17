@@ -47,35 +47,35 @@ internal static class Program
     }
     private static void KnownCases()
     {
-        var box=ShapeFactory.CreateBox(new Vec4(-1,-1,-1,-.2),new Vec4(1,1,1,.2));
-        var instance=new Instance4D(box,default);
+        var box=ShapeFactory.CreateBox(new VecN(-1,-1,-1,-.2),new VecN(1,1,1,.2));
+        var instance=new InstanceN(box,default);
         var h0=Check(instance,SliceFrame.AtAngle(0),"box_H0");Near(h0.Volume,8,1e-8,"Box H0 volume");
         Near(Check(instance,SliceFrame.AtAngle(90),"box_H90").Volume,1.6,1e-8,"Box H90 volume");
         foreach(double edge in new []{-.2,.2})
-        { var exact=Check(instance,SliceFrame.AtAngle(0,new Vec4(0,0,0,edge)),"exact_w_endpoint_"+edge);Assert(exact.Status==SectionStatus.Volume3D,"Extrusion end is a full volume");Near(exact.Volume,8,1e-8,"Exact endpoint volume"); }
-        var outside=Check(instance,SliceFrame.AtAngle(0,new Vec4(0,0,0,.200001)),"beyond_endpoint");Assert(outside.Status==SectionStatus.Empty,"Outside w endpoint");
-        Near(Check(instance,SliceFrame.AtAngle(0,new Vec4(0,0,0,.199999)),"inside_endpoint").Volume,8,1e-8,"Inside endpoint");
-        var cube=ShapeFactory.CreateBox(new Vec4(-1,-1,-1,-1),new Vec4(1,1,1,1));
+        { var exact=Check(instance,SliceFrame.AtAngle(0,new VecN(0,0,0,edge)),"exact_w_endpoint_"+edge);Assert(exact.Status==SectionStatus.Volume3D,"Extrusion end is a full volume");Near(exact.Volume,8,1e-8,"Exact endpoint volume"); }
+        var outside=Check(instance,SliceFrame.AtAngle(0,new VecN(0,0,0,.200001)),"beyond_endpoint");Assert(outside.Status==SectionStatus.Empty,"Outside w endpoint");
+        Near(Check(instance,SliceFrame.AtAngle(0,new VecN(0,0,0,.199999)),"inside_endpoint").Volume,8,1e-8,"Inside endpoint");
+        var cube=ShapeFactory.CreateBox(new VecN(-1,-1,-1,-1),new VecN(1,1,1,1));
         foreach(int support in new []{2,3,4})
         {
-            Vec4 n=support==2?new Vec4(1,1,0,0):support==3?new Vec4(1,1,1,0):new Vec4(1,1,1,1);n=n*(1/n.Length);
-            Vec4 center=support==2?new Vec4(1,1,0,0):support==3?new Vec4(1,1,1,0):new Vec4(1,1,1,1);
-            var r=Check(new Instance4D(cube,default),Frame(n,center),"contact_dimension_"+(4-support));Assert(r.Status==SectionStatus.ContactLowerDimensional,"Tangent rank status");
-            Assert(TriplePlaneOracle.Build(new Instance4D(cube,default),Frame(n,center)).Dimension==4-support,"Oracle tangent rank");
+            VecN n=support==2?new VecN(1,1,0,0):support==3?new VecN(1,1,1,0):new VecN(1,1,1,1);n=n*(1/n.Length);
+            VecN center=support==2?new VecN(1,1,0,0):support==3?new VecN(1,1,1,0):new VecN(1,1,1,1);
+            var r=Check(new InstanceN(cube,default),Frame(n,center),"contact_dimension_"+(4-support));Assert(r.Status==SectionStatus.ContactLowerDimensional,"Tangent rank status");
+            Assert(TriplePlaneOracle.Build(new InstanceN(cube,default),Frame(n,center)).Dimension==4-support,"Oracle tangent rank");
         }
         Assert(SectionBuilder.Build(instance,SliceFrame.AtAngle(0),new SectionOptions{MaxVertices=4}).Status==SectionStatus.CapacityExceeded,"Capacity distinguished from Empty");
-        Assert(SectionBuilder.Build(instance,new SliceFrame(default,new Vec4(2,0,0,0),new Vec4(0,1,0,0),new Vec4(0,0,1,0),new Vec4(0,0,0,1))).Status==SectionStatus.NumericallyUncertain,"Invalid frame distinguished");
+        Assert(SectionBuilder.Build(instance,new SliceFrame(default,new VecN(2,0,0,0),new VecN(0,1,0,0),new VecN(0,0,1,0),new VecN(0,0,0,1))).Status==SectionStatus.NumericallyUncertain,"Invalid frame distinguished");
         Assert(SectionBuilder.Build(instance,SliceFrame.AtAngle(double.NaN)).Status==SectionStatus.NumericallyUncertain,"NaN frame distinguished");
-        Assert(SectionBuilder.Build(new Instance4D(box,new Vec4(double.PositiveInfinity,0,0,0)),SliceFrame.AtAngle(0)).Status==SectionStatus.NumericallyUncertain,"Nonfinite instance distinguished");
+        Assert(SectionBuilder.Build(new InstanceN(box,new VecN(double.PositiveInfinity,0,0,0)),SliceFrame.AtAngle(0)).Status==SectionStatus.NumericallyUncertain,"Nonfinite instance distinguished");
         // Two nonintersecting convex components must not be replaced by one support interval.
-        var left=Check(new Instance4D(box,new Vec4(0,0,0,-1)),SliceFrame.AtAngle(0),"component_left");
-        var right=Check(new Instance4D(box,new Vec4(0,0,0,1)),SliceFrame.AtAngle(0),"component_right");
+        var left=Check(new InstanceN(box,new VecN(0,0,0,-1)),SliceFrame.AtAngle(0),"component_left");
+        var right=Check(new InstanceN(box,new VecN(0,0,0,1)),SliceFrame.AtAngle(0),"component_right");
         Assert(left.Status==SectionStatus.Empty&&right.Status==SectionStatus.Empty,"Disjoint component gap remains empty");
     }
     private static void PieceComparison()
     {
-        var a=new Instance4D(ShapeFactory.CreatePawn(ShapeVariant.A),default);
-        var c=new Instance4D(ShapeFactory.CreatePawn(ShapeVariant.C),default);
+        var a=new InstanceN(ShapeFactory.CreatePawn(ShapeVariant.A),default);
+        var c=new InstanceN(ShapeFactory.CreatePawn(ShapeVariant.C),default);
         var a0=Check(a,SliceFrame.AtAngle(0),"pawn_A_0");var c0=Check(c,SliceFrame.AtAngle(0),"pawn_C_0");var c90=Check(c,SliceFrame.AtAngle(90),"pawn_C_90");
         Near(a0.Volume,c0.Volume,1e-8,"A/C common center section");Near(c0.Volume,c90.Volume,1e-8,"C zero/ninety equality");
         Match(a0.Vertices.Select(x=>x.Position).ToArray(),c0.Vertices.Select(x=>x.Position).ToArray(),2e-7,"A/C central vertices");
@@ -86,19 +86,19 @@ internal static class Program
         foreach(var variant in new[]{ShapeVariant.A,ShapeVariant.C})
         {
             var shape=ShapeFactory.CreatePawn(variant);
-            Assert(Check(new Instance4D(shape,new Vec4(2,0,1,1)),SliceFrame.AtAngle(0),"returned_"+variant).Status==SectionStatus.Empty,"Escaped pawn actually empty");
-            Assert(Check(new Instance4D(shape,new Vec4(2,0,1,1)),SliceFrame.AtAngle(90),"escaped_H90_"+variant).Status==SectionStatus.Volume3D,"w movement visible at fixed H90");
+            Assert(Check(new InstanceN(shape,new VecN(2,0,1,1)),SliceFrame.AtAngle(0),"returned_"+variant).Status==SectionStatus.Empty,"Escaped pawn actually empty");
+            Assert(Check(new InstanceN(shape,new VecN(2,0,1,1)),SliceFrame.AtAngle(90),"escaped_H90_"+variant).Status==SectionStatus.Volume3D,"w movement visible at fixed H90");
         }
     }
     private static void FullSweeps()
     {
-        var board=new Instance4D(ShapeFactory.CreateBoard(),default);
-        var a=new Instance4D(ShapeFactory.CreatePawn(ShapeVariant.A),new Vec4(2,0,1,0));
-        var c=new Instance4D(ShapeFactory.CreatePawn(ShapeVariant.C),new Vec4(2,0,1,0));
+        var board=new InstanceN(ShapeFactory.CreateBoard(),default);
+        var a=new InstanceN(ShapeFactory.CreatePawn(ShapeVariant.A),new VecN(2,0,1,0));
+        var c=new InstanceN(ShapeFactory.CreatePawn(ShapeVariant.C),new VecN(2,0,1,0));
         for(int degree=0;degree<=180;degree++)
         {
             var frame=SliceFrame.AtAngle(degree);Assert(frame.IsOrthonormal(),"Frame orthonormality "+degree);
-            var testPoint=new Vec4(1.3,-2.1,.7,.4);var rebuilt=frame.Lift(frame.Project(testPoint))+frame.Normal*Vec4.Dot(frame.Normal,testPoint-frame.Center);
+            var testPoint=new VecN(1.3,-2.1,.7,.4);var rebuilt=frame.Lift(frame.Project(testPoint))+frame.Normal*VecN.Dot(frame.Normal,testPoint-frame.Center);
             Near((rebuilt-testPoint).Length,0,1e-10,"Orthogonal rotation inverse reconstruction");
             var br=Check(board,frame,"board_sweep_"+degree,false);var ar=Check(a,frame,"A_sweep_"+degree,false);var cr=Check(c,frame,"C_sweep_"+degree,false);
             Assert(br.Bounds.Min.Z>=-.800001&&br.Bounds.Max.Z<=.000001,"Board vertical bounds never change");
@@ -111,21 +111,21 @@ internal static class Program
             var shape=ShapeFactory.CreatePawn(variant);
             for(int step=0;step<=40;step++)
             {
-                double w=step/40.0;var result=Check(new Instance4D(shape,new Vec4(2,0,1,w)),SliceFrame.AtAngle(90),"fixed_H90_move_"+variant+"_"+step,false);
+                double w=step/40.0;var result=Check(new InstanceN(shape,new VecN(2,0,1,w)),SliceFrame.AtAngle(90),"fixed_H90_move_"+variant+"_"+step,false);
                 Assert(result.Status==SectionStatus.Volume3D,"Fixed H90 remains volumetric during w move");
             }
-            for(int degree=90;degree>=0;degree--)Check(new Instance4D(shape,new Vec4(2,0,1,1)),SliceFrame.AtAngle(degree),"return_"+variant+"_"+degree,false);
+            for(int degree=90;degree>=0;degree--)Check(new InstanceN(shape,new VecN(2,0,1,1)),SliceFrame.AtAngle(degree),"return_"+variant+"_"+degree,false);
         }
-        var shifted=new Instance4D(ShapeFactory.CreatePawn(ShapeVariant.C),new Vec4(-3,.21,.75,.12),-1);
+        var shifted=new InstanceN(ShapeFactory.CreatePawn(ShapeVariant.C),new VecN(-3,.21,.75,.12),-1);
         foreach(double degree in new[]{-90.0,-45,-.00001,0,.00001,37,89.99999,90,90.00001,180,270,360}) Check(shifted,SliceFrame.AtAngle(degree),"translated_oriented_"+degree);
     }
     private static void SceneVisibility()
     {
-        var pieces=new List<Instance4D>();var shape=ShapeFactory.CreatePawn(ShapeVariant.C);
+        var pieces=new List<InstanceN>();var shape=ShapeFactory.CreatePawn(ShapeVariant.C);
         foreach(int side in new[]{-1,1})
         {
-            for(int u=-4;u<=4;u++){pieces.Add(new Instance4D(shape,new Vec4(side*4,u,0,0),-side,$"back_{side}_{u}"));pieces.Add(new Instance4D(shape,new Vec4(side*2,u,0,0),-side,$"pawn_{side}_{u}"));}
-            pieces.Add(new Instance4D(shape,new Vec4(side*3,-2,0,0),-side,$"rook_{side}"));pieces.Add(new Instance4D(shape,new Vec4(side*3,2,0,0),-side,$"bishop_{side}"));
+            for(int u=-4;u<=4;u++){pieces.Add(new InstanceN(shape,new VecN(side*4,u,0,0),-side,$"back_{side}_{u}"));pieces.Add(new InstanceN(shape,new VecN(side*2,u,0,0),-side,$"pawn_{side}_{u}"));}
+            pieces.Add(new InstanceN(shape,new VecN(side*3,-2,0,0),-side,$"rook_{side}"));pieces.Add(new InstanceN(shape,new VecN(side*3,2,0,0),-side,$"bishop_{side}"));
         }
         var h0=pieces.Where(p=>SectionBuilder.Build(p,SliceFrame.AtAngle(0)).Status==SectionStatus.Volume3D).Select(p=>p.Id).ToArray();
         var h90=pieces.Where(p=>SectionBuilder.Build(p,SliceFrame.AtAngle(90)).Status==SectionStatus.Volume3D).Select(p=>p.Id).ToArray();
@@ -134,7 +134,7 @@ internal static class Program
     }
     private static void FloatTransfer()
     {
-        var r=SectionBuilder.Build(new Instance4D(ShapeFactory.CreateBoard(),default),SliceFrame.AtAngle(45));double maxError=0;
+        var r=SectionBuilder.Build(new InstanceN(ShapeFactory.CreateBoard(),default),SliceFrame.AtAngle(45));double maxError=0;
         foreach(var v in r.Vertices)
         {
             var p=new Vec3((float)v.Position.X,(float)v.Position.Y,(float)v.Position.Z);maxError=Math.Max(maxError,(p-v.Position).Length);
@@ -145,10 +145,10 @@ internal static class Program
     }
     private static void ParallelEquivalence()
     {
-        var jobs=new List<(Instance4D instance,SliceFrame frame)>();
+        var jobs=new List<(InstanceN instance,SliceFrame frame)>();
         var shapes=new[]{ShapeFactory.CreatePawn(ShapeVariant.A),ShapeFactory.CreatePawn(ShapeVariant.C),ShapeFactory.CreateBoard()};
         foreach(double angle in new[]{0.0,1,2,45,90})foreach(int side in new[]{-1,1})for(int u=-4;u<=4;u++)
-            foreach(var shape in shapes)jobs.Add((new Instance4D(shape,new Vec4(side*2,u,shape.Id=="board"?0:1,0),side),SliceFrame.AtAngle(angle)));
+            foreach(var shape in shapes)jobs.Add((new InstanceN(shape,new VecN(side*2,u,shape.Id=="board"?0:1,0),side),SliceFrame.AtAngle(angle)));
         var serial=jobs.Select(j=>SectionBuilder.Build(j.instance,j.frame)).ToArray();
         var parallel=new SectionResult[jobs.Count];int degree=Math.Min(8,Environment.ProcessorCount);
         Parallel.For(0,jobs.Count,new ParallelOptions{MaxDegreeOfParallelism=degree},i=>parallel[i]=SectionBuilder.Build(jobs[i].instance,jobs[i].frame));
@@ -168,7 +168,7 @@ internal static class Program
         }
         cases.Add(new{name="parallel_serial_exact_equivalence",jobs=jobs.Count,maxDegreeOfParallelism=degree,angles=new[]{0,1,2,45,90},comparison="Exact status, volume, ordered indices, positions, normals, local4D, and provenance; shared immutable shapes, no shared options."});
     }
-    private static SectionResult Check(Instance4D instance,SliceFrame frame,string name,bool record=true)
+    private static SectionResult Check(InstanceN instance,SliceFrame frame,string name,bool record=true)
     {
         var r=SectionBuilder.Build(instance,frame);var oracle=TriplePlaneOracle.Build(instance,frame);
         Assert(r.Status==oracle.Status,$"Status discrepancy {name}: clip {r.Status} ({r.Diagnostic}), oracle {oracle.Status}");
@@ -183,7 +183,7 @@ internal static class Program
         foreach(var p in a)Assert(b.Any(q=>(p-q).Length<eps),context+" missing point "+p);
         foreach(var p in b)Assert(a.Any(q=>(p-q).Length<eps),context+" additional point "+p);
     }
-    private static void Topology(SectionResult result,Instance4D instance,SliceFrame frame,string name)
+    private static void Topology(SectionResult result,InstanceN instance,SliceFrame frame,string name)
     {
         var unique=new List<Vec3>();var ids=new int[result.Vertices.Length];
         for(int i=0;i<ids.Length;i++)
@@ -192,11 +192,11 @@ internal static class Program
             Assert(v.Position.IsFinite&&v.Normal.IsFinite,"Finite mesh "+name);Near(v.Normal.Length,1,1e-7,"Unit normal");
             Near((instance.LocalToWorld(v.LocalPosition)-frame.Lift(v.Position)).Length,0,2e-7,"Material coordinates map to source position");
             var sourceFace=instance.Shape.Planes.Single(p=>p.FaceId==v.FaceId);
-            Near(Vec4.Dot(sourceFace.Normal,v.LocalPosition),sourceFace.Offset,1e-7,"Face provenance identifies containing source constraint");
+            Near(VecN.Dot(sourceFace.Normal,v.LocalPosition),sourceFace.Offset,1e-7,"Face provenance identifies containing source constraint");
             var worldNormal=instance.LocalToWorldDirection(sourceFace.Normal);
-            var expectedNormal=new Vec3(Vec4.Dot(worldNormal,frame.AxisX),Vec4.Dot(worldNormal,frame.AxisY),Vec4.Dot(worldNormal,frame.AxisZ)).Normalized;
+            var expectedNormal=new Vec3(VecN.Dot(worldNormal,frame.AxisX),VecN.Dot(worldNormal,frame.AxisY),VecN.Dot(worldNormal,frame.AxisZ)).Normalized;
             Near((v.Normal-expectedNormal).Length,0,1e-7,"Restricted source normal");
-            foreach(var plane in instance.Shape.Planes)Assert(Vec4.Dot(plane.Normal,v.LocalPosition)<=plane.Offset+1e-7,"Vertex satisfies 4D source constraint "+name);
+            foreach(var plane in instance.Shape.Planes)Assert(VecN.Dot(plane.Normal,v.LocalPosition)<=plane.Offset+1e-7,"Vertex satisfies 4D source constraint "+name);
         }
         var edges=new Dictionary<(int,int),(int count,int orientation)>();var triangles=new HashSet<string>();
         for(int i=0;i<result.Indices.Length;i+=3)
@@ -210,10 +210,10 @@ internal static class Program
         foreach(var e in edges)Assert(e.Value.count==2&&e.Value.orientation==0,"Closed manifold with paired edge winding "+name+" "+e.Key);
         Assert(unique.Count-edges.Count+result.Indices.Length/3==2,"Convex closed surface Euler characteristic "+name);
     }
-    private static SliceFrame Frame(Vec4 n,Vec4 center)
+    private static SliceFrame Frame(VecN n,VecN center)
     {
-        var axes=new List<Vec4>();foreach(var e in new[]{new Vec4(1,0,0,0),new Vec4(0,1,0,0),new Vec4(0,0,1,0),new Vec4(0,0,0,1)})
-        {var x=e-n*Vec4.Dot(e,n);foreach(var b in axes)x=x-b*Vec4.Dot(x,b);if(x.Length>1e-8)axes.Add(x*(1/x.Length));if(axes.Count==3)break;}
+        var axes=new List<VecN>();foreach(var e in new[]{new VecN(1,0,0,0),new VecN(0,1,0,0),new VecN(0,0,1,0),new VecN(0,0,0,1)})
+        {var x=e-n*VecN.Dot(e,n);foreach(var b in axes)x=x-b*VecN.Dot(x,b);if(x.Length>1e-8)axes.Add(x*(1/x.Length));if(axes.Count==3)break;}
         return new SliceFrame(center,axes[0],axes[1],axes[2],n);
     }
 }

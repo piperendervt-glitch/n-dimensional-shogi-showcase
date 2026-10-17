@@ -17,7 +17,7 @@ namespace Showcase.Unity
     [Serializable] public sealed class ReplayPly
     {
         public int ply;public string pieceId,beforeHash,afterHash;public int[] from,to;
-        public Move Move=>new Move(pieceId,new Q4(from[0],from[1],from[2],from[3]),new Q4(to[0],to[1],to[2],to[3]));
+        public Move Move=>new Move(pieceId,new QN(from[0],from[1],from[2],from[3]),new QN(to[0],to[1],to[2],to[3]));
     }
     [Serializable] public sealed class CpuEvidence
     {

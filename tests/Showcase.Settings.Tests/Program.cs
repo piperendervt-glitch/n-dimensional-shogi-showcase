@@ -28,14 +28,14 @@ SettingsDraft Fixture(int k = 4, string kind = "step/1", int distance = 1)
     return new SettingsDraft(data);
 }
 PreviewPreset Compile(SettingsDraft draft) { Assert(draft.TryCompile(out var preset, out var report), string.Join(";", report.Errors)); return preset!; }
-var center = new Q4(2, 2, 2, 2); var zero = new Q4(0, 0, 0, 0);
-PreviewSession Position(params TrialPiece[] other) => new PreviewSession(new Bounds4D(0, 4), new[] { new TrialPiece("subject", "m", Side.A, center) }.Concat(other));
-HashSet<Q4> IndependentStep(Q4 source, int k, int mask = 15)
+var center = new QN(2, 2, 2, 2); var zero = new QN(0, 0, 0, 0);
+PreviewSession Position(params TrialPiece[] other) => new PreviewSession(new BoundsN(0, 4), new[] { new TrialPiece("subject", "m", Side.A, center) }.Concat(other));
+HashSet<QN> IndependentStep(QN source, int k, int mask = 15)
 {
-    var expected = new HashSet<Q4>();
+    var expected = new HashSet<QN>();
     for (int x = 0; x <= 4; x++) for (int y = 0; y <= 4; y++) for (int z = 0; z <= 4; z++) for (int w = 0; w <= 4; w++)
     {
-        var target = new Q4(x, y, z, w); int changed = 0; bool allowed = true;
+        var target = new QN(x, y, z, w); int changed = 0; bool allowed = true;
         for (int i = 0; i < 4; i++) { int d = target[i] - source[i]; if (d != 0) changed++; if (Math.Abs(d) > 1 || (d != 0 && (mask & (1 << i)) == 0)) allowed = false; }
         if (allowed && changed > 0 && changed <= k) expected.Add(target);
     }
@@ -58,7 +58,7 @@ Test("F1-original-80-32-8-full-coordinate-sets-and-26-18-6-slice", () =>
 Test("F2-original-disabled-W-preserves-N-and-other-pieces", () =>
 {
     var draft = Fixture(); draft.Edit(d => d.Definitions[0].AxesMask = "7");
-    var session = Position(new TrialPiece("off", "m", Side.B, new Q4(0, 0, 0, 4))); string before = session.Hash;
+    var session = Position(new TrialPiece("off", "m", Side.B, new QN(0, 0, 0, 4))); string before = session.Hash;
     var result = PreviewQuery.Execute(Compile(draft), session, "subject");
     Assert(result.G.Count == 26 && IndependentStep(center, 4, 7).SetEquals(result.G));
     Assert(session.Hash == before && session.Find("off")!.Position.W == 4 && draft.Current.Dimensions == "4");
@@ -66,35 +66,35 @@ Test("F2-original-disabled-W-preserves-N-and-other-pieces", () =>
 });
 Test("F3-original-occupancy-and-capture-79-78", () =>
 {
-    var session = Position(new TrialPiece("friend", "m", Side.A, new Q4(3, 2, 2, 2)), new TrialPiece("enemy", "m", Side.B, new Q4(2, 3, 2, 2)));
+    var session = Position(new TrialPiece("friend", "m", Side.A, new QN(3, 2, 2, 2)), new TrialPiece("enemy", "m", Side.B, new QN(2, 3, 2, 2)));
     var draft = Fixture(); var withCapture = PreviewQuery.Execute(Compile(draft), session, "subject");
-    Assert(withCapture.G.Count == 80 && withCapture.P.Count == 79 && !withCapture.P.Contains(new Q4(3, 2, 2, 2)));
+    Assert(withCapture.G.Count == 80 && withCapture.P.Count == 79 && !withCapture.P.Contains(new QN(3, 2, 2, 2)));
     draft.Edit(d => d.Definitions[0].AllowCapture = false); var emptyOnly = PreviewQuery.Execute(Compile(draft), session, "subject"); Assert(emptyOnly.P.Count == 78);
-    draft.Edit(d => { d.Definitions[0].AllowCapture = true; d.Definitions[0].AllowEmpty = false; }); Assert(PreviewQuery.Execute(Compile(draft), session, "subject").P.SequenceEqual(new[] { new Q4(2, 3, 2, 2) }));
+    draft.Edit(d => { d.Definitions[0].AllowCapture = true; d.Definitions[0].AllowEmpty = false; }); Assert(PreviewQuery.Execute(Compile(draft), session, "subject").P.SequenceEqual(new[] { new QN(2, 3, 2, 2) }));
     Reject(() => session.Place(new TrialPiece("overlap", "m", Side.A, center)));
 });
 Test("F4-original-hidden-B-rook-W4-attacks-king-W2", () =>
 {
-    var session = Position(new TrialPiece("enemy-rook", "rook", Side.B, new Q4(2, 2, 2, 4)), new TrialPiece("enemy-king", "m", Side.B, zero));
+    var session = Position(new TrialPiece("enemy-rook", "rook", Side.B, new QN(2, 2, 2, 4)), new TrialPiece("enemy-king", "m", Side.B, zero));
     var preset = Compile(Fixture()); string before = session.Hash;
     var attack = PreviewQuery.Attackers(preset, session, center, Side.B); Assert(attack.Status == QueryStatus.Complete && attack.Attackers.Single().Id == "enemy-rook");
     Assert(attack.Meaning.Contains("王捕獲許可") && session.Hash == before);
     Assert(PreviewQuery.Execute(preset, session, "enemy-rook").G.Any(q => q.W == 3));
-    session.Place(new TrialPiece("hidden-blocker", "m", Side.A, new Q4(2, 2, 2, 3))); Assert(PreviewQuery.Attackers(preset, session, center, Side.B).Attackers.Count == 0);
+    session.Place(new TrialPiece("hidden-blocker", "m", Side.A, new QN(2, 2, 2, 3))); Assert(PreviewQuery.Attackers(preset, session, center, Side.B).Attackers.Count == 0);
 });
 Test("all-four-forward-axes-both-sides-and-sideways", () =>
 {
     for (int axis = 0; axis < 4; axis++) foreach (Side side in new[] { Side.A, Side.B })
     {
         var draft = Fixture(); draft.Edit(d => { d.ForwardAxis = axis.ToString(); d.Definitions[0].Backward = false; d.Definitions[0].Sideways = false; });
-        var session = new PreviewSession(new Bounds4D(0, 4), new[] { new TrialPiece("subject", "m", side, center) });
+        var session = new PreviewSession(new BoundsN(0, 4), new[] { new TrialPiece("subject", "m", side, center) });
         var result = PreviewQuery.Execute(Compile(draft), session, "subject"); Assert(result.G.Count == 27 && result.G.All(q => q[axis] - center[axis] == (side == Side.A ? 1 : -1)));
         draft.Edit(d => { d.Definitions[0].Forward = false; d.Definitions[0].Sideways = true; }); Assert(PreviewQuery.Execute(Compile(draft), session, "subject").G.Count == 26);
     }
 });
 Test("step-board-edge-and-distance-two-rejected", () =>
 {
-    var draft = Fixture(); var session = new PreviewSession(new Bounds4D(0, 4), new[] { new TrialPiece("subject", "m", Side.A, zero) });
+    var draft = Fixture(); var session = new PreviewSession(new BoundsN(0, 4), new[] { new TrialPiece("subject", "m", Side.A, zero) });
     var result = PreviewQuery.Execute(Compile(draft), session, "subject"); Assert(result.TheoreticalCount == 80 && result.G.Count == 15 && IndependentStep(zero, 4).SetEquals(result.G));
     draft.Edit(d => d.Definitions[0].MaxDistance = "2"); Assert(!draft.TryCompile(out _, out _));
 });
@@ -103,10 +103,10 @@ Test("H11-H22-distance-and-board-edge-independent-sets", () =>
     foreach (string kind in new[] { "h11/1", "h22/1" }) foreach (int max in new[] { 1, 2, 8 })
     {
         var preset = Compile(Fixture(4, kind, max)); var result = PreviewQuery.Execute(preset, Position(), "subject");
-        var expected = new HashSet<Q4>();
+        var expected = new HashSet<QN>();
         for (int x = 0; x <= 4; x++) for (int y = 0; y <= 4; y++) for (int z = 0; z <= 4; z++) for (int w = 0; w <= 4; w++)
         {
-            var q = new Q4(x, y, z, w); var components = Enumerable.Range(0, 4).Select(i => Math.Abs(q[i] - 2)).Where(v => v != 0).ToArray();
+            var q = new QN(x, y, z, w); var components = Enumerable.Range(0, 4).Select(i => Math.Abs(q[i] - 2)).Where(v => v != 0).ToArray();
             if (components.Length == (kind == "h11/1" ? 1 : 2) && components.Distinct().Count() == 1 && components.Max() <= max) expected.Add(q);
         }
         Assert(expected.SetEquals(result.G) && expected.SetEquals(result.P)); Assert(result.TheoreticalCount == (kind == "h11/1" ? 8 : 24) * max);
@@ -117,28 +117,28 @@ Test("both-occlusion-versions-H11-H22-middle-endpoint-and-corner", () =>
     foreach (string mode in new[] { "lattice-line/1", "supercover-closed/1" }) foreach (string kind in new[] { "h11/1", "h22/1" })
     {
         var draft = Fixture(4, kind, 4); draft.Edit(d => d.Occlusion = mode); var preset = Compile(draft);
-        var start = zero; var target = kind == "h11/1" ? new Q4(2, 0, 0, 0) : new Q4(2, 2, 0, 0); var middle = kind == "h11/1" ? new Q4(1, 0, 0, 0) : new Q4(1, 1, 0, 0);
-        var session = new PreviewSession(new Bounds4D(0, 4), new[] { new TrialPiece("subject", "m", Side.A, start), new TrialPiece("block", "m", Side.B, middle) });
+        var start = zero; var target = kind == "h11/1" ? new QN(2, 0, 0, 0) : new QN(2, 2, 0, 0); var middle = kind == "h11/1" ? new QN(1, 0, 0, 0) : new QN(1, 1, 0, 0);
+        var session = new PreviewSession(new BoundsN(0, 4), new[] { new TrialPiece("subject", "m", Side.A, start), new TrialPiece("block", "m", Side.B, middle) });
         Assert(!PreviewQuery.Execute(preset, session, "subject").P.Contains(target));
         session.Erase(middle); session.Place(new TrialPiece("target", "m", Side.B, target)); Assert(PreviewQuery.Execute(preset, session, "subject").P.Contains(target), "endpoint is capturable, not a path blocker");
-        if (kind == "h22/1") { session.Place(new TrialPiece("corner", "m", Side.B, new Q4(1, 0, 0, 0))); Assert(PreviewQuery.Execute(preset, session, "subject").P.Contains(target) == (mode == "lattice-line/1")); }
+        if (kind == "h22/1") { session.Place(new TrialPiece("corner", "m", Side.B, new QN(1, 0, 0, 0))); Assert(PreviewQuery.Execute(preset, session, "subject").P.Contains(target) == (mode == "lattice-line/1")); }
         Assert(preset.OcclusionId == mode);
     }
 });
 Test("one-step-checks-endpoint-only-not-supercover-corner", () =>
 {
     var draft = Fixture(); draft.Edit(d => d.Occlusion = "supercover-closed/1");
-    var session = new PreviewSession(new Bounds4D(0, 4), new[] { new TrialPiece("subject", "m", Side.A, zero), new TrialPiece("corner", "m", Side.A, new Q4(1, 0, 0, 0)) });
-    Assert(PreviewQuery.Execute(Compile(draft), session, "subject").P.Contains(new Q4(1, 1, 0, 0)));
+    var session = new PreviewSession(new BoundsN(0, 4), new[] { new TrialPiece("subject", "m", Side.A, zero), new TrialPiece("corner", "m", Side.A, new QN(1, 0, 0, 0)) });
+    Assert(PreviewQuery.Execute(Compile(draft), session, "subject").P.Contains(new QN(1, 1, 0, 0)));
 });
 Test("preview-move-capture-erase-clear-undo-redo-and-legacy-isolation", () =>
 {
-    var legacy = new RuleCore().InitialState(); string legacyHash = legacy.Hash; var draft = Fixture(); string rule = Compile(draft).RuleHash; var session = Position(new TrialPiece("enemy", "m", Side.B, new Q4(2, 3, 2, 2))); string before = session.Hash;
-    Assert(session.TryMove(Compile(draft), "subject", new Q4(2, 3, 2, 2), out _)); Assert(session.Pieces.Count == 1 && session.Find("enemy") == null); Assert(session.Undo() && session.Hash == before); Assert(session.Redo() && session.Pieces.Count == 1);
+    var legacy = new RuleCore().InitialState(); string legacyHash = legacy.Hash; var draft = Fixture(); string rule = Compile(draft).RuleHash; var session = Position(new TrialPiece("enemy", "m", Side.B, new QN(2, 3, 2, 2))); string before = session.Hash;
+    Assert(session.TryMove(Compile(draft), "subject", new QN(2, 3, 2, 2), out _)); Assert(session.Pieces.Count == 1 && session.Find("enemy") == null); Assert(session.Undo() && session.Hash == before); Assert(session.Redo() && session.Pieces.Count == 1);
     session.Clear(); Assert(session.Pieces.Count == 0 && session.Undo() && session.Pieces.Count == 1);
     Assert(session.Erase(session.Pieces[0].Position) && session.Undo());
     Assert(legacy.Hash == legacyHash && Compile(draft).RuleHash == rule && legacy.Pieces.Count == 40);
-    Assert(!session.TryMove(Compile(draft), "subject", new Q4(4, 4, 4, 4), out _));
+    Assert(!session.TryMove(Compile(draft), "subject", new QN(4, 4, 4, 4), out _));
 });
 Test("selection-definition-preserves-position-obstacles-and-draft", () =>
 {
@@ -176,7 +176,7 @@ Test("query-stamp-session-trial-request-piece-all-contribute", () =>
 });
 Test("save-valid-preset-reload-separate-trial-view-and-no-apply", () =>
 {
-    string path = Path.Combine(dataRoot, "valid.xml"); var draft = Fixture(); var session = Position(new TrialPiece("hidden", "m", Side.B, new Q4(0, 0, 0, 4)));
+    string path = Path.Combine(dataRoot, "valid.xml"); var draft = Fixture(); var session = Position(new TrialPiece("hidden", "m", Side.B, new QN(0, 0, 0, 4)));
     var view = new ViewSnapshot(new double[] { 1, 2, 3, 4 }, ViewSnapshot.Default.Basis, new double[] { 20, 30, 11, 4, 5, 6 });
     SettingsStore.SavePreset(path, draft, session, view); Assert(!draft.IsDirty && draft.IsUnapplied);
     var loaded = SettingsStore.Load(path); Assert(loaded.Kind == SavedSettingsKind.PreviewPreset && loaded.Draft.ContentHash == draft.ContentHash && loaded.Preview.Hash == session.Hash && loaded.View.Center.SequenceEqual(view.Center));
@@ -233,7 +233,7 @@ Test("load-bounds-reference-duplicate-cell-and-nonfinite-view-rejected", () =>
     string source = Path.Combine(dataRoot, "strict-more.xml"); SettingsStore.SavePreset(source, Fixture(), Position(), ViewSnapshot.Default); string text = File.ReadAllText(source);
     var mutations = new[] { text.Replace("cell=\"2,2,2,2\"", "cell=\"5,2,2,2\""), text.Replace("definition=\"m\"", "definition=\"missing\""), text.Replace("center=\"0,0,0,0\"", "center=\"NaN,0,0,0\""), text.Replace("side=\"A\"", "side=\"99\"") };
     for (int i = 0; i < mutations.Length; i++) { string path = Path.Combine(dataRoot, "bad-more-" + i + ".xml"); File.WriteAllText(path, mutations[i]); Reject(() => SettingsStore.Load(path)); }
-    Reject(() => new PreviewSession(new Bounds4D(0, 4), new[] { new TrialPiece("a", "m", Side.A, center), new TrialPiece("b", "m", Side.B, center) }));
+    Reject(() => new PreviewSession(new BoundsN(0, 4), new[] { new TrialPiece("a", "m", Side.A, center), new TrialPiece("b", "m", Side.B, center) }));
     Reject(() => new ViewSnapshot(new double[4], new double[16], ViewSnapshot.Default.Camera));
 });
 Test("bounded-declarative-file-and-no-all-cell-state-array", () =>
@@ -245,8 +245,8 @@ Test("bounded-declarative-file-and-no-all-cell-state-array", () =>
 Test("bounded-load-query-measurement-256-sparse-pieces", () =>
 {
     var draft = Fixture(4, "h22/1", 8); var pieces = new List<TrialPiece> { new TrialPiece("subject", "m", Side.A, center) };
-    for (int x = 0; x < 5 && pieces.Count < 256; x++) for (int y = 0; y < 5 && pieces.Count < 256; y++) for (int z = 0; z < 5 && pieces.Count < 256; z++) for (int w = 0; w < 5 && pieces.Count < 256; w++) { var q = new Q4(x, y, z, w); if (q != center) pieces.Add(new TrialPiece("b" + pieces.Count, "m", Side.B, q)); }
-    var session = new PreviewSession(new Bounds4D(0, 4), pieces); var preset = Compile(draft); long before = GC.GetAllocatedBytesForCurrentThread(); var watch = Stopwatch.StartNew(); var result = PreviewQuery.Execute(preset, session, "subject"); watch.Stop();
+    for (int x = 0; x < 5 && pieces.Count < 256; x++) for (int y = 0; y < 5 && pieces.Count < 256; y++) for (int z = 0; z < 5 && pieces.Count < 256; z++) for (int w = 0; w < 5 && pieces.Count < 256; w++) { var q = new QN(x, y, z, w); if (q != center) pieces.Add(new TrialPiece("b" + pieces.Count, "m", Side.B, q)); }
+    var session = new PreviewSession(new BoundsN(0, 4), pieces); var preset = Compile(draft); long before = GC.GetAllocatedBytesForCurrentThread(); var watch = Stopwatch.StartNew(); var result = PreviewQuery.Execute(preset, session, "subject"); watch.Stop();
     Assert(result.Status == QueryStatus.Complete && result.TheoreticalCount == 192 && session.Pieces.Count == 256);
     File.WriteAllText(Path.Combine(evidence, "performance.json"), JsonSerializer.Serialize(new { fixture = "N4 0..4 H22 max8 256 sparse pieces", milliseconds = watch.Elapsed.TotalMilliseconds, allocatedBytes = GC.GetAllocatedBytesForCurrentThread() - before, processWorkingSetBytes = Environment.WorkingSet, candidateCount = result.G.Count, noProductThresholdAdopted = true }, new JsonSerializerOptions { WriteIndented = true }));
 });
