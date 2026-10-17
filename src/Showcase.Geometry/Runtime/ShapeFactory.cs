@@ -7,17 +7,25 @@ namespace Showcase.Geometry
     {
         public const double CellPitchMetres=0.05;
         public static ConvexShape CreatePawn(ShapeVariant variant=ShapeVariant.A) => CreatePiece(variant);
-        /// <summary>The piece solid of an N-dimensional board: the 4D solid, with the W thickness repeated along every further axis.</summary>
+        /// <summary>The piece solid of an N-dimensional board: the 4D solid, with the W thickness repeated along every further axis.
+        /// A 3D board has no W: its piece is the W=0 section of the 4D solid.</summary>
         public static ConvexShape CreatePiece(ShapeVariant variant,double size,int dimensions)
         {
             var piece=CreatePiece(variant,size); if(dimensions==4) return piece;
             if(dimensions<3||dimensions>VecN.MaxDimensions) throw new ArgumentOutOfRangeException(nameof(dimensions));
+            var planes=new List<HalfspaceN>();
+            if(dimensions==3)
+            {
+                // Each constraint restricted to W=0; the W end caps hold everywhere there and drop out.
+                foreach(var p in piece.Planes) { var n=new VecN(p.Normal.X,p.Normal.Y,p.Normal.Z); if(n.Length>1e-12) planes.Add(new HalfspaceN(n,p.Offset,p.FaceId,p.Surface)); }
+                var lo=piece.Bounds.Min;var hi=piece.Bounds.Max;
+                return new ConvexShape(piece.Id+"/N3",planes,new VecBounds(new VecN(lo.X,lo.Y,lo.Z),new VecN(hi.X,hi.Y,hi.Z)));
+            }
             double halfW=(variant==ShapeVariant.A?.2:.29)*size;
-            var planes=new List<HalfspaceN>(piece.Planes);
+            planes.AddRange(piece.Planes);
             for(int axis=4;axis<dimensions;axis++) { planes.Add(new HalfspaceN(VecN.Unit(axis,dimensions),halfW,100+2*axis,SurfaceKind.End)); planes.Add(new HalfspaceN(-VecN.Unit(axis,dimensions),halfW,101+2*axis,SurfaceKind.End)); }
             var min=piece.Bounds.Min.ToArray(dimensions);var max=piece.Bounds.Max.ToArray(dimensions);
             for(int axis=4;axis<dimensions;axis++) { min[axis]=-halfW; max[axis]=halfW; }
-            // A 3D board has no W: the piece is the W=0 section of the 4D solid, which the W end caps already bound.
             return new ConvexShape(piece.Id+"/N"+dimensions,planes,new VecBounds(new VecN(min),new VecN(max)));
         }
         public static ConvexShape CreatePiece(ShapeVariant variant,double size=1)
@@ -63,10 +71,10 @@ namespace Showcase.Geometry
             for(int i=0;i<dimensions;i++) { min[i]=i==2?-.8:-4.5; max[i]=i==2?0:4.5; }
             return CreateBox(new VecN(min),new VecN(max),.04,"board/N"+dimensions);
         }
-        // The N of the box is the larger declared N of its corners, at least 4; the 4D form is bit-identical to before.
+        // The N of the box is the larger declared N of its corners, at least 3; the 4D form is bit-identical to before.
         public static ConvexShape CreateBox(VecN min,VecN max,double bevel=0,string id="box")
         {
-            int n=Math.Max(4,Math.Max(min.Dimensions,max.Dimensions)); if(n>VecN.MaxDimensions) throw new ArgumentOutOfRangeException(nameof(min));
+            int n=Math.Max(3,Math.Max(min.Dimensions,max.Dimensions)); if(n>VecN.MaxDimensions) throw new ArgumentOutOfRangeException(nameof(min));
             for(int i=0;i<n;i++) if(min.Axis(i)>=max.Axis(i)) throw new ArgumentException("Box extents must be positive.");
             var p=new List<HalfspaceN>();
             for(int i=0;i<n;i++)
@@ -77,7 +85,7 @@ namespace Showcase.Geometry
             if(bevel<0) throw new ArgumentOutOfRangeException(nameof(bevel));
             int faces=2*n;
             if(bevel>0) for(int i=0;i<faces;i++) for(int j=i+1;j<faces;j++)
-            { if(Math.Abs(VecN.Dot(p[i].Normal,p[j].Normal))>.5) continue; p.Add(new HalfspaceN(p[i].Normal+p[j].Normal,p[i].Offset+p[j].Offset-bevel,100+i*8+j,SurfaceKind.Bevel)); }
+            { if(Math.Abs(VecN.Dot(p[i].Normal,p[j].Normal))>.5) continue; p.Add(new HalfspaceN(p[i].Normal+p[j].Normal,p[i].Offset+p[j].Offset-bevel,100+i*faces+j,SurfaceKind.Bevel)); }
             return new ConvexShape(id,p,new VecBounds(min,max));
         }
     }

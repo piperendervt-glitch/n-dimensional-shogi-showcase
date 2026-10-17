@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Showcase.Geometry;
+using Showcase.Geometry.Interaction;
 
 internal static class Program
 {
@@ -21,7 +22,7 @@ internal static class Program
         var watch=Stopwatch.StartNew();
         try
         {
-            KnownCases(); PieceComparison(); FullSweeps(); SceneVisibility(); FloatTransfer(); ParallelEquivalence();
+            KnownCases(); PieceComparison(); FullSweeps(); SceneVisibility(); FloatTransfer(); ParallelEquivalence(); ThreeDimensional(); FaceIdsAndLocalCoordinates();
             var provenance=CaptureProvenance(output);
             watch.Stop();
             var report=new { status="TECHNICAL_PASS", testVersion="geometry-tests/0.1", geometryVersion="geometry/0.1", checks, elapsedMilliseconds=watch.ElapsedMilliseconds, runtime=Environment.Version.ToString(), provenance, primary="Incremental convex polyhedron clipping", independentOracle="Triple-plane intersections, all-halfspace feasibility, independent Gram-Schmidt rank", toleranceCells=1e-9, oracleComparisonToleranceCells=2e-6, materialFields=new { referenceA="M3(local.f, local.u, local.v)", visualC="M3(local.f, local.u + local.w, local.v)", approval="Fixed material coordinates only. Visual quality remains HUMAN_PENDING." }, cases, sweep, limitations=new [] { "Geometry CPU tests do not certify Unity render passes, GPU performance, visual appearance, or human acceptance.", "Near-zero numerical tolerance bands classify equivalent boundary points; they are not a thick viewing slab.", "Runtime implementation allocates managed lists; zero-GC optimization requires profiling and is not claimed." } };
@@ -33,7 +34,7 @@ internal static class Program
     }
     private static object CaptureProvenance(string output)
     {
-        var files=new List<string>(Directory.GetFiles(Path.Combine("src","Showcase.Geometry","Runtime"),"*.cs"));
+        var files=new List<string>(Directory.GetFiles(Path.Combine("src","Showcase.Geometry","Runtime"),"*.cs",SearchOption.AllDirectories));
         files.AddRange(new[]{"src/Showcase.Geometry/Showcase.Geometry.csproj","src/Showcase.Geometry/package.json","src/Showcase.Geometry/Runtime/Showcase.Geometry.asmdef","tests/Showcase.Geometry.Tests/Program.cs","tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj","scenarios/geometry-v1.json"});
         files.Sort(StringComparer.Ordinal);var manifest=new List<object>();
         foreach(string file in files)
@@ -167,6 +168,54 @@ internal static class Program
             }
         }
         cases.Add(new{name="parallel_serial_exact_equivalence",jobs=jobs.Count,maxDegreeOfParallelism=degree,angles=new[]{0,1,2,45,90},comparison="Exact status, volume, ordered indices, positions, normals, local4D, and provenance; shared immutable shapes, no shared options."});
+    }
+    // N=3: the board, a cell and a piece are 3D solids; the 3D frame (no normal) is the W=0 section of the 4D ones.
+    private static void ThreeDimensional()
+    {
+        var frame=SliceAxes.ReferenceFrame(new[]{0,1,2},3,default);var frame4=SliceAxes.Reference(ReferenceView.XYZ);
+        Assert(frame.Dimensions==3&&frame.Normals.Count==0&&frame.IsOrthonormal(),"3D frame");
+        var board=ShapeFactory.CreateBoard(3);Assert(board.Dimensions==3&&board.Planes.Count==6+12,"3D board: six faces and twelve edge bevels");
+        var b=Check(new InstanceN(board,default),frame,"board_N3");var b4=SectionBuilder.Build(new InstanceN(ShapeFactory.CreateBoard(),default),frame4);
+        Assert(b.Status==SectionStatus.Volume3D,"3D board solid");Near(b.Volume,b4.Volume,1e-9,"3D board is the 4D board at W=0");
+        Match(b.Vertices.Select(v=>v.Position).ToArray(),b4.Vertices.Select(v=>v.Position).ToArray(),1e-9,"3D board vertices");
+        var cell=ShapeFactory.CreateBox(new VecN(-.5,-.5,-.5),new VecN(.5,.5,.5));Assert(cell.Dimensions==3&&cell.Planes.Count==6,"3D cell");
+        Near(Check(new InstanceN(cell,new VecN(1,-2,3)),frame.WithCenter(new VecN(1.2,-2,3)),"cell_N3").Volume,1,1e-12,"3D cell volume");
+        Near(FiniteSliceWindow.Build(new InstanceN(cell,default),frame,.25).Volume,.125,1e-12,"3D cell in a finite window");
+        foreach(var variant in new[]{ShapeVariant.A,ShapeVariant.C})foreach(int forward in new[]{-1,1})
+        {
+            var piece=ShapeFactory.CreatePiece(variant,1,3);Assert(piece.Dimensions==3&&piece.Planes.All(x=>x.Normal.Dimensions==3),"3D piece "+variant);
+            var position=new VecN(2,-1,0);var r=Check(new InstanceN(piece,position,forward),frame,"piece_N3_"+variant+"_"+forward);
+            var r4=SectionBuilder.Build(new InstanceN(ShapeFactory.CreatePiece(variant),position,forward),frame4);
+            Near(r.Volume,r4.Volume,1e-12,"3D piece is the 4D piece at W=0");Match(r.Vertices.Select(v=>v.Position).ToArray(),r4.Vertices.Select(v=>v.Position).ToArray(),1e-9,"3D piece vertices "+variant);
+            // A turned 3D window still cuts the same solid.
+            var turned=SliceRotations.Rotate(frame.WithCenter(position+new VecN(0,0,.1)),0,1,.4);Assert(Check(new InstanceN(piece,position,forward),turned,"piece_N3_turned_"+variant+"_"+forward).Status==SectionStatus.Volume3D,"Turned 3D window");
+        }
+        var relation=HyperplaneRelation.Build(frame,ReferenceSection.Initial(3),1);
+        Assert(relation.IsCoincident&&relation.Vertices.Count==8&&relation.Edges.Count==24&&relation.TriangleIndices.Count==36,"3D relation is the whole chart cube");
+        cases.Add(new{name="three_dimensional_board",boardVolume=b.Volume,boardPlanes=board.Planes.Count,note="N=3 board, cell and pieces are the W=0 sections of the 4D solids; the 3D frame has no hidden axis."});
+    }
+    // Bevel face ids are unique in every N and unchanged in 4D; local coordinates are those of WorldToLocal(Lift(p)) to the bit.
+    private static void FaceIdsAndLocalCoordinates()
+    {
+        for(int n=3;n<=VecN.MaxDimensions;n++){var ids=ShapeFactory.CreateBoard(n).Planes.Select(p=>p.FaceId).ToList();Assert(ids.Distinct().Count()==ids.Count,"Unique board face ids N="+n);}
+        var four=ShapeFactory.CreateBoard().Planes;int k=8;
+        for(int i=0;i<8;i++)for(int j=i+1;j<8;j++)if(i/2!=j/2)Assert(four[k++].FaceId==100+i*8+j,"4D bevel id unchanged");
+        var rnd=new Random(3);long bits(double x)=>BitConverter.DoubleToInt64Bits(x);int vertices=0;
+        for(int job=0;job<300;job++)
+        {
+            int n=rnd.Next(3,VecN.MaxDimensions+1);var frame=SliceAxes.ReferenceFrame(new[]{0,1,2},n,new VecN(Enumerable.Range(0,n).Select(_=>rnd.NextDouble()-.5).ToArray()));
+            for(int r=0;r<3;r++){int a=rnd.Next(n),b=rnd.Next(n);if(a!=b)frame=SliceRotations.Rotate(frame,a,b,rnd.NextDouble()*6.3);}
+            var shape=n==4&&rnd.Next(2)==0?ShapeFactory.CreatePiece(ShapeVariant.C):ShapeFactory.CreatePiece(rnd.Next(2)==0?ShapeVariant.A:ShapeVariant.C,1,n);
+            var instance=new InstanceN(shape,new VecN(Enumerable.Range(0,n).Select(_=>(rnd.NextDouble()-.5)*.4).ToArray()),rnd.Next(2)*2-1);
+            foreach(var v in SectionBuilder.Build(instance,frame).Vertices)
+            {
+                var expected=instance.WorldToLocal(frame.Lift(v.Position));vertices++;
+                Assert(v.LocalPosition.Dimensions==expected.Dimensions,"Local dimensions");
+                for(int i=0;i<expected.Dimensions;i++)Assert(bits(v.LocalPosition.Axis(i))==bits(expected.Axis(i)),"Local coordinate bits");
+            }
+        }
+        Assert(vertices>1000,"Local coordinate sample");
+        cases.Add(new{name="face_ids_and_local_coordinates",vertices,note="Board bevel ids unique for N=3..11, 4D ids 100+8i+j; LocalPosition bit-identical to WorldToLocal(Lift(p))."});
     }
     private static SectionResult Check(InstanceN instance,SliceFrame frame,string name,bool record=true)
     {

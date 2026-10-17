@@ -16,6 +16,7 @@ static class Program
         try
         {
             Baselines();Animation();Sections();Relations();Input();Picking();NDimensional();ReferenceSections();PivotTests.Run(Check,value=>cases.Add(value));
+            SliceRobustnessTests.Run(Check,value=>cases.Add(value));
             var result=new{status="PASS",assertions,startedUtc=started,finishedUtc=DateTime.UtcNow,cases,
                 note="Pure C# tests; does not certify Unity input, rendering, Japanese text or Windows execution."};
             if(args.Length>0){Directory.CreateDirectory(args[0]);File.WriteAllText(Path.Combine(args[0],"interaction-results.json"),JsonSerializer.Serialize(result,new JsonSerializerOptions{WriteIndented=true}));}
@@ -143,10 +144,13 @@ static class Program
         Check(drag.Begin(LogicalAxis.W,0,0,0,0,50),"W drag begins");drag.Update(0,0,64);Check(drag.Complete(0),"W drag commits");ownership.FocusLost();Vec(a.Center,new VecN(0,0,0,2),"Committed displacement survives focus loss");
         foreach(var axis in Enum.GetValues<LogicalAxis>())
         {
-            VecN? expected=null;
+            // The legacy animator is 4D: the fifth to eleventh axes are not part of its space and are refused before anything moves.
+            int dimensions=Math.Max(4,SliceAxes.CoreAxis(axis)+1);VecN? expected=null;
+            var legacy=new SliceAnimator();var refusal=new AxisDrag(legacy,new InputOwnership());
+            Check(refusal.Begin(axis,0,5,9,20,0)==(dimensions==4)&&(dimensions==4||refusal.RejectionReason!=""&&legacy.Center==default),"Axis beyond the 4D space refused "+axis);
             foreach(var screenDirection in new[]{new[]{20d,0},new[]{0d,25},new[]{-30d,40}})
             {
-                var s=new SliceAnimator();var o=new InputOwnership();var d=new AxisDrag(s,o);var dx=screenDirection[0];var dy=screenDirection[1];double length=Math.Sqrt(dx*dx+dy*dy);
+                var s=new SliceAnimator(PivotViewState.CreateInitial(default,dimensions:dimensions).WithCenter(default));var o=new InputOwnership();var d=new AxisDrag(s,o);var dx=screenDirection[0];var dy=screenDirection[1];double length=Math.Sqrt(dx*dx+dy*dy);
                 Check(d.Begin(axis,0,5,9,dx,dy),"Mini-view axis begins");d.Update(0,5+32*dx/length,9+32*dy/length);d.Complete(0);
                 Vec(s.Center,SliceAxes.WorldAxis(axis),"Same logical axis translation across different screen views");if(expected.HasValue)Vec(s.Center,expected.Value,"View independence");expected=s.Center;
             }

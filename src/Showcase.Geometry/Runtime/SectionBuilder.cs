@@ -34,11 +34,11 @@ namespace Showcase.Geometry
         [ThreadStatic] private static Scratch? scratch;
         public static SectionResult Build(InstanceN instance,SliceFrame frame,SectionOptions? options=null)=>Build(instance,instance.Shape.Planes,frame,options);
         // planes are the instance's own constraints, or those followed by a finite window's (FiniteSliceWindow), so a
-        // window cut needs no new ConvexShape per call.
-        internal static SectionResult Build(InstanceN instance,IReadOnlyList<HalfspaceN> planes,SliceFrame frame,SectionOptions? options)
+        // window cut needs no new ConvexShape per call. frameChecked: the caller has already rejected a nonorthonormal frame.
+        internal static SectionResult Build(InstanceN instance,IReadOnlyList<HalfspaceN> planes,SliceFrame frame,SectionOptions? options,bool frameChecked=false)
         {
             options=options??new SectionOptions(); double eps=options.Tolerance;
-            if(eps<=0||double.IsNaN(eps)||double.IsInfinity(eps)||!frame.IsOrthonormal()||!instance.Position.IsFinite) return Failure(SectionStatus.NumericallyUncertain,instance,"Invalid tolerance, position, or nonorthonormal frame.");
+            if(eps<=0||double.IsNaN(eps)||double.IsInfinity(eps)||!frameChecked&&!frame.IsOrthonormal()||!instance.Position.IsFinite) return Failure(SectionStatus.NumericallyUncertain,instance,"Invalid tolerance, position, or nonorthonormal frame.");
             if(planes.Count>options.MaxConstraints) return Failure(SectionStatus.CapacityExceeded,instance,"Constraint capacity exceeded.");
             var work=scratch??=new Scratch();
             // Projection of the source AABB encloses the true intersection; expand it so
@@ -126,7 +126,7 @@ namespace Showcase.Geometry
             if(unique.Count==0) return Failure(SectionStatus.Empty,instance,"No feasible vertices.");
             if(Dimension(unique,eps*8)<3)
             {
-                var contacts=new SectionVertex[unique.Count]; for(int i=0;i<unique.Count;i++) contacts[i]=new SectionVertex(unique[i],default,instance.WorldToLocal(frame.Lift(unique[i])),-1,SurfaceKind.Side);
+                var contacts=new SectionVertex[unique.Count]; for(int i=0;i<unique.Count;i++) contacts[i]=new SectionVertex(unique[i],default,Local(instance,frame,unique[i]),-1,SurfaceKind.Side);
                 return new SectionResult(SectionStatus.ContactLowerDimensional,contacts,Array.Empty<int>(),BoundsOf(unique),0,"Feasible intersection has dimension below three.",instance.Shape.Version);
             }
             var vertices=work.Vertices; var indices=work.Indices; vertices.Clear(); indices.Clear(); double volume=0;
@@ -139,7 +139,7 @@ namespace Showcase.Geometry
                 foreach(var p in ring)
                 {
                     if(!p.IsFinite) return Failure(SectionStatus.NumericallyUncertain,instance,"Nonfinite section vertex.");
-                    vertices.Add(new SectionVertex(p,face.Normal,instance.WorldToLocal(frame.Lift(p)),face.Id,face.Surface));
+                    vertices.Add(new SectionVertex(p,face.Normal,Local(instance,frame,p),face.Id,face.Surface));
                 }
                 for(int i=1;i<ring.Count-1;i++)
                 {
@@ -153,6 +153,22 @@ namespace Showcase.Geometry
             var result=new SectionResult(SectionStatus.Volume3D,vertices.ToArray(),indices.ToArray(),BoundsOf(unique),volume,"",instance.Shape.Version);
             foreach(var face in faces) work.Return(face.Points);
             work.Return(unique);return result;
+        }
+        // instance.WorldToLocal(frame.Lift(p)) in one array instead of about seven: the same operations in the same order,
+        // with a missing component read as 0 just as VecN.Axis does, so every double (and the sign of every zero) is unchanged.
+        private static VecN Local(InstanceN instance,SliceFrame frame,Vec3 p)
+        {
+            VecN c=frame.Center,x=frame.AxisX,y=frame.AxisY,z=frame.AxisZ,o=instance.Position;
+            int n=Math.Max(Math.Max(Math.Max(c.Dimensions,x.Dimensions),Math.Max(y.Dimensions,z.Dimensions)),o.Dimensions);
+            var v=new double[instance.Forward==1?n:Math.Max(n,2)]; if(v.Length==0) return default;
+            for(int i=0;i<n;i++)
+            {
+                double w=c.Axis(i)+(i<x.Dimensions?x.Axis(i)*p.X:0);
+                w+=i<y.Dimensions?y.Axis(i)*p.Y:0; w+=i<z.Dimensions?z.Axis(i)*p.Z:0;
+                v[i]=w-o.Axis(i);
+            }
+            if(instance.Forward!=1) { v[0]=-v[0]; v[1]=-v[1]; }
+            return VecN.Own(v);
         }
         private static SectionResult Failure(SectionStatus status,InstanceN instance,string message) => new SectionResult(status,Array.Empty<SectionVertex>(),Array.Empty<int>(),default,0,message,instance.Shape.Version);
         private static void Seed(List<Face> f,Vec3 lo,Vec3 hi,Scratch work)

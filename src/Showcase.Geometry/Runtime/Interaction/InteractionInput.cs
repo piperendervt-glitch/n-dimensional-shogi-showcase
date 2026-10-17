@@ -30,7 +30,7 @@ namespace Showcase.Geometry.Interaction
             RejectionReason="";double length=Math.Sqrt(projectedAxisX*projectedAxisX+projectedAxisY*projectedAxisY);
             if(!Finite(x)||!Finite(y)||!Finite(length)||length<=MinimumProjectedAxisPixels){RejectionReason="Axis is nearly perpendicular to the screen; choose another view.";return false;}
             if(IsActive||slice.IsAnimating){RejectionReason="Wait for the current slice rotation or drag.";return false;}
-            SliceAxes.WorldAxis(axis);
+            if(SliceAxes.CoreAxis(axis)>=slice.Frame.Dimensions){RejectionReason="This board has no "+SliceAxes.AxisName(axis)+" axis.";return false;}
             if(!ownership.TryBegin(InputOwner.Axis,pointerId,Rollback)){RejectionReason="Another control owns the pointer.";return false;}
             this.axis=axis;pointer=pointerId;startX=x;startY=y;unitX=projectedAxisX/length;unitY=projectedAxisY/length;original=slice.Center;originalState=slice.DisplayState;IsActive=true;return true;
         }
@@ -49,6 +49,7 @@ namespace Showcase.Geometry.Interaction
         void Rollback(){if(!IsActive)return;if(originalState!=null)slice.Restore(originalState);IsActive=false;}
         static bool Finite(double value)=>!double.IsNaN(value)&&!double.IsInfinity(value);
     }
+    // CellId and PickToken are the 4D cells of the CFG1 pick tests; N-dimensional cells are QN (Showcase.Core).
     public readonly struct CellId : IEquatable<CellId>
     {
         public readonly int F,U,V,W;

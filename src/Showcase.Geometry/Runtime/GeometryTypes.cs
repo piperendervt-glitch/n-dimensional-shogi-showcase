@@ -35,6 +35,7 @@ namespace Showcase.Geometry
             c = (double[])components.Clone();
         }
         private VecN(double[] owned, bool _) { c = owned; }
+        internal static VecN Own(double[] owned) => new VecN(owned, true);
         public static VecN Zero(int dimensions) => new VecN(new double[Check(dimensions)], true);
         /// <summary>Unit vector along a core axis, carrying <paramref name="dimensions"/> components (at least axis+1).</summary>
         public static VecN Unit(int axis, int dimensions = 4)
@@ -87,12 +88,12 @@ namespace Showcase.Geometry
         public Bounds3(Vec3 min, Vec3 max) { Min=min; Max=max; }
         public Vec3 Size => Max-Min;
     }
-    /// <summary>Axis-aligned box of a logical N-space; <see cref="Corner"/> enumerates its 2^N corners.</summary>
+    /// <summary>Axis-aligned box of a logical N-space (N at least 3, the shown axes); <see cref="Corner"/> enumerates its 2^N corners.</summary>
     public readonly struct VecBounds
     {
         public readonly VecN Min, Max;
         public VecBounds(VecN min, VecN max) { Min=min; Max=max; }
-        public int Dimensions => Math.Max(4, Math.Max(Min.Dimensions, Max.Dimensions));
+        public int Dimensions => Math.Max(3, Math.Max(Min.Dimensions, Max.Dimensions));
         public int CornerCount => 1 << Dimensions;
         public VecN Corner(int bits)
         {

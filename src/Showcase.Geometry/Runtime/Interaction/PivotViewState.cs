@@ -24,6 +24,10 @@ namespace Showcase.Geometry.Interaction
                 !Finite(cellScale) || cellScale <= 0 || !Finite(halfWindow) || halfWindow <= 0)
                 throw new ArgumentException("Display embedding, anchor, scale and window must be finite and in range.");
             SliceRotations.Validate(frame);
+            if (frame.Center.Rank > frame.Dimensions) throw new ArgumentException("The center must lie in the frame's " + frame.Dimensions + "D space.");
+            // Validate accepts 1e-6 (a saved or hand-edited file), but every cut needs 1e-9. A frame between the two is
+            // re-orthonormalised once here rather than failing every section; a frame already within 1e-9 is kept bit for bit.
+            if (!frame.IsOrthonormal()) frame = SliceRotations.Orthonormalize(frame);
             EmbeddingHeight = embeddingHeight; Frame = frame; Anchor = anchor;
             CellScale = cellScale; HalfWindow = halfWindow;
         }
@@ -75,7 +79,23 @@ namespace Showcase.Geometry.Interaction
         public static void Validate(SliceFrame frame)
         {
             if (!frame.IsOrthonormal(1e-6) || Determinant(frame) < 1 - 4e-6)
-                throw new ArgumentException("A finite positively oriented orthonormal 4D frame is required.");
+                throw new ArgumentException("A finite positively oriented orthonormal frame is required.");
+        }
+
+        /// <summary>Gram-Schmidt over the frame's basis in slot order (AxisX, AxisY, AxisZ, then the normals), each vector cut to the frame's N
+        /// components. For a frame Validate accepts this moves each vector by about the error it had and keeps the orientation.</summary>
+        internal static SliceFrame Orthonormalize(SliceFrame frame)
+        {
+            var vectors = frame.Vectors; int n = vectors.Length;
+            for (int i = 0; i < n; i++)
+            {
+                var v = new VecN(vectors[i].ToArray(n));
+                for (int j = 0; j < i; j++) v -= vectors[j] * VecN.Dot(v, vectors[j]);
+                double length = v.Length;
+                if (!(length > 1e-3) || double.IsInfinity(length)) throw new ArgumentException("The frame's basis is degenerate.");
+                vectors[i] = v * (1 / length);
+            }
+            return SliceFrame.FromVectors(frame.Center, vectors);
         }
 
         // Determinant of the N×N matrix whose columns are the frame's basis vectors (Gaussian elimination with pivoting).
@@ -95,10 +115,12 @@ namespace Showcase.Geometry.Interaction
             return det;
         }
 
-        /// <summary>R_YH(vertical) R_XH(horizontal) F0 where H is the hidden core axis being rotated against (W by default); Ctrl+Shift substitutes ZH for XH.</summary>
+        /// <summary>R_YH(vertical) R_XH(horizontal) F0 where H is the hidden core axis being rotated against (W by default, the one hidden axis
+        /// every N of 4 and up has; a 3D frame has none and cannot turn); Ctrl+Shift substitutes ZH for XH.</summary>
         public static SliceFrame RotateDrag(SliceFrame start, double horizontalDegrees, double verticalDegrees, bool zInsteadOfX = false, int hiddenCoreAxis = 3)
         {
             Validate(start);
+            if (start.Dimensions <= 3) throw new ArgumentException("A 3D frame has no hidden axis to turn against.");
             var first = Rotate(start, zInsteadOfX ? 0 : 1, hiddenCoreAxis, horizontalDegrees * Math.PI / 180);
             return Rotate(first, 2, hiddenCoreAxis, verticalDegrees * Math.PI / 180);
         }

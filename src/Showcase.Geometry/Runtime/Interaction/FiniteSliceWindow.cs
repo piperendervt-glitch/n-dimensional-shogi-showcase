@@ -7,14 +7,15 @@ namespace Showcase.Geometry.Interaction
         public const double DefaultHalfExtent=2.5;
         public static InstanceN ClipInstance(InstanceN source,SliceFrame frame,double halfExtent=DefaultHalfExtent)
         {
-            var planes=new List<HalfspaceN>();WindowPlanes(planes,source,frame,halfExtent);
+            Check(frame,halfExtent);var planes=new List<HalfspaceN>();WindowPlanes(planes,source,frame,halfExtent);
             var shape=new ConvexShape(source.Shape.Id+"/finite-window",planes,source.Shape.Bounds);
             return new InstanceN(shape,source.Position,source.Forward,source.Id);
         }
+        static void Check(SliceFrame frame,double halfExtent)
+        {if(!frame.IsOrthonormal()||halfExtent<=0||double.IsNaN(halfExtent)||double.IsInfinity(halfExtent))throw new ArgumentException("A finite orthonormal frame and positive finite half extent are required.");}
         // The source's constraints followed by the six window planes, as ClipInstance's shape holds them.
         static void WindowPlanes(List<HalfspaceN> planes,InstanceN source,SliceFrame frame,double halfExtent)
         {
-            if(!frame.IsOrthonormal()||halfExtent<=0||double.IsNaN(halfExtent)||double.IsInfinity(halfExtent))throw new ArgumentException("A finite orthonormal frame and positive finite half extent are required.");
             planes.AddRange(source.Shape.Planes);int id=1000000;
             foreach(var p in planes)if(p.FaceId>=id)id=checked(p.FaceId+1);
             foreach(var axis in new[]{frame.AxisX,frame.AxisY,frame.AxisZ})foreach(int sign in new[]{-1,1})
@@ -25,16 +26,123 @@ namespace Showcase.Geometry.Interaction
         }
         [ThreadStatic] static List<HalfspaceN>? windowPlanes;
         // Same cut as SectionBuilder.Build(ClipInstance(...)), without building a ConvexShape per call.
-        public static SectionResult Build(InstanceN source,SliceFrame frame,double halfExtent=DefaultHalfExtent)
+        public static SectionResult Build(InstanceN source,SliceFrame frame,double halfExtent=DefaultHalfExtent){Check(frame,halfExtent);return Cut(source,frame,halfExtent);}
+        /// <summary><see cref="Build"/> for many solids under one frame and window (the cell grid): the frame is checked here, once,
+        /// instead of twice per cut. The function may be called from several threads at once.</summary>
+        public static Func<InstanceN,SectionResult> Cutter(SliceFrame frame,double halfExtent=DefaultHalfExtent){Check(frame,halfExtent);return source=>Cut(source,frame,halfExtent);}
+        static SectionResult Cut(InstanceN source,SliceFrame frame,double halfExtent)
         {
             var planes=windowPlanes??=new List<HalfspaceN>();planes.Clear();WindowPlanes(planes,source,frame,halfExtent);
-            return SectionBuilder.Build(source,planes,frame,null);
+            return SectionBuilder.Build(source,planes,frame,null,true);
+        }
+        /// <summary>The cells q in [min,max]^N whose unit cube about origin+q meets the window (|t|&lt;=halfExtent on the frame's three axes),
+        /// passed to <paramref name="cell"/> in lexicographic order (the array is reused; copy it). A cell whose cut can be solid is never
+        /// missed: the slabs and the window are widened by 1e-7, far beyond the cut's 1e-9 tolerance. Returns false, after <paramref name="cap"/>
+        /// cells, when there are more.</summary>
+        public static bool Cells(SliceFrame frame,VecN origin,double halfExtent,int min,int max,int cap,Action<int[]> cell)
+        {
+            Check(frame,halfExtent);if(!origin.IsFinite||origin.Rank>frame.Dimensions||min>max||cap<0||cell==null)throw new ArgumentException("A finite origin in the frame's space, a range and a callback are required.");
+            return new CellWalk(frame,origin,halfExtent,min,max,cap,cell).Run();
+        }
+        // The cells are walked in the window's own coordinates t, not over the 9^N board: fixing q on one more axis keeps the part of the
+        // window inside that cell's slab, and the next axis takes only the values that part reaches. Every board axis already bounds the
+        // window at the root, so nearly every step leads to a cell and the work follows the cells met. Regions are convex polyhedra kept
+        // as face polygons and clipped like SectionBuilder's cut.
+        sealed class CellWalk
+        {
+            const double Slack=1e-7,Snap=1e-11;
+            readonly int n,min,max,cap;readonly double half;readonly Vec3[] rows;readonly double[] offsets;readonly int[] q;readonly Action<int[]> emit;int found;
+            readonly Stack<List<Vec3>> freePoints=new Stack<List<Vec3>>();readonly Stack<List<List<Vec3>>> freeRegions=new Stack<List<List<Vec3>>>();
+            readonly Angle angle=new Angle();
+            sealed class Angle : IComparer<Vec3>
+            {
+                public Vec3 C,X,Y;
+                public int Compare(Vec3 a,Vec3 b)=>Math.Atan2(Vec3.Dot(a-C,Y),Vec3.Dot(a-C,X)).CompareTo(Math.Atan2(Vec3.Dot(b-C,Y),Vec3.Dot(b-C,X)));
+            }
+            public CellWalk(SliceFrame frame,VecN origin,double half,int min,int max,int cap,Action<int[]> emit)
+            {
+                n=frame.Dimensions;this.half=half;this.min=min;this.max=max;this.cap=cap;this.emit=emit;rows=new Vec3[n];offsets=new double[n];q=new int[n];
+                // Axis i of the point at t is offsets[i]+rows[i].t in cell units.
+                for(int i=0;i<n;i++){rows[i]=new Vec3(frame.AxisX.Axis(i),frame.AxisY.Axis(i),frame.AxisZ.Axis(i));offsets[i]=frame.Center.Axis(i)-origin.Axis(i);}
+            }
+            public bool Run()
+            {
+                double h=half+Slack;var region=RentRegion();
+                foreach(var (axis,sign) in new[]{(0,-1),(0,1),(1,-1),(1,1),(2,-1),(2,1)})
+                {
+                    var face=RentPoints();
+                    for(int corner=0;corner<4;corner++)
+                    {
+                        // Corners in cyclic order on the face where t[axis]=sign*h.
+                        double a=corner==0||corner==3?-h:h,b=corner<2?-h:h;
+                        face.Add(axis==0?new Vec3(sign*h,a,b):axis==1?new Vec3(a,sign*h,b):new Vec3(a,b,sign*h));
+                    }
+                    region.Add(face);
+                }
+                for(int i=0;i<n;i++){var next=Slab(region,i,min-.5-Slack,max+.5+Slack);if(next!=region)Release(region);if(next==null)return true;region=next;}
+                bool complete=Visit(0,region);Release(region);return complete;
+            }
+            bool Visit(int axis,List<List<Vec3>> region)
+            {
+                if(axis==n){if(found==cap)return false;found++;emit(q);return true;}
+                var r=rows[axis];double c=offsets[axis],lo=c,hi=c;
+                if(r.Length>=1e-12){lo=double.PositiveInfinity;hi=double.NegativeInfinity;foreach(var face in region)foreach(var p in face){double g=Vec3.Dot(r,p)+c;if(g<lo)lo=g;if(g>hi)hi=g;}}
+                int first=Math.Max(min,(int)Math.Ceiling(lo-.5-Slack)),last=Math.Min(max,(int)Math.Floor(hi+.5+Slack));
+                for(int value=first;value<=last;value++)
+                {
+                    var part=Slab(region,axis,value-.5-Slack,value+.5+Slack);if(part==null)continue;
+                    q[axis]=value;bool more=Visit(axis+1,part);if(part!=region)Release(part);
+                    if(!more)return false;
+                }
+                return true;
+            }
+            // The part of the region whose coordinate on the axis lies in [lo,hi]: the region itself when nothing is cut off, null when empty.
+            List<List<Vec3>>? Slab(List<List<Vec3>> region,int axis,double lo,double hi)
+            {
+                var r=rows[axis];double length=r.Length,c=offsets[axis];
+                if(length<1e-12)return c>=lo&&c<=hi?region:null;
+                var normal=r/length;var below=Clip(region,normal,(hi-c)/length);if(below==null)return null;
+                var part=Clip(below,-normal,(c-lo)/length);if(below!=region&&part!=below)Release(below);
+                return part;
+            }
+            List<List<Vec3>>? Clip(List<List<Vec3>> region,Vec3 normal,double offset)
+            {
+                bool inside=false,outside=false;
+                foreach(var face in region)foreach(var p in face){if(Distance(normal,p,offset)>0)outside=true;else inside=true;}
+                if(!outside)return region;if(!inside)return null;
+                var result=RentRegion();var cap=RentPoints();
+                foreach(var face in region)
+                {
+                    var kept=RentPoints();int count=face.Count;
+                    for(int i=0;i<count;i++)
+                    {
+                        Vec3 a=face[i],z=face[(i+1)%count];double da=Distance(normal,a,offset),dz=Distance(normal,z,offset);
+                        if(da<=0){Add(kept,a);if(da==0)Add(cap,a);}
+                        if((da<=0)!=(dz<=0)){var hit=a+(z-a)*(da/(da-dz));Add(kept,hit);Add(cap,hit);}
+                    }
+                    if(kept.Count>0)result.Add(kept);else Return(kept);
+                }
+                if(cap.Count>2)
+                {
+                    Vec3 center=default;foreach(var p in cap)center+=p;center/=cap.Count;
+                    angle.C=center;angle.X=Vec3.Cross(Math.Abs(normal.Z)<.8?new Vec3(0,0,1):new Vec3(0,1,0),normal).Normalized;angle.Y=Vec3.Cross(normal,angle.X);cap.Sort(angle);
+                }
+                if(cap.Count>0)result.Add(cap);else Return(cap);
+                return result;
+            }
+            static double Distance(Vec3 normal,Vec3 p,double offset){double d=Vec3.Dot(normal,p)-offset;return Math.Abs(d)<=Snap?0:d;}
+            static void Add(List<Vec3> points,Vec3 p){foreach(var x in points)if((x-p).LengthSquared<=Snap*Snap)return;points.Add(p);}
+            List<Vec3> RentPoints()=>freePoints.Count>0?freePoints.Pop():new List<Vec3>(8);
+            void Return(List<Vec3> points){points.Clear();freePoints.Push(points);}
+            List<List<Vec3>> RentRegion()=>freeRegions.Count>0?freeRegions.Pop():new List<List<Vec3>>(16);
+            void Release(List<List<Vec3>> region){foreach(var face in region)Return(face);region.Clear();freeRegions.Push(region);}
         }
     }
     public sealed class HyperplaneRelation
     {
         public ReferenceSection Reference {get;}
-        // The current frame's first normal restricted to the reference chart; zero when the frame lies in the reference space.
+        // The current frame's first normal restricted to the reference chart; zero when the frame lies in the reference space,
+        // and also (N>=5) when that normal is perpendicular to the chart while a later one still cuts it.
         public Vec3 RestrictedNormal {get;}
         public bool IsCoincident {get;}
         // Coincident: clipped convex volume. One constraint: ordered clipped intersection polygon.
@@ -68,13 +176,15 @@ namespace Showcase.Geometry.Interaction
             var basis=reference.Frame(origin);
             var chartCenter=basis.Project(frame.Center);
             // The frame's normals restricted to the chart, made orthonormal; each one is a plane constraint on the intersection.
-            var constraints=new List<Vec3>();Vec3 first=default;bool firstSet=false;
+            // planeNormal is the vector constraints[0] was normalised from: the first normal's own restriction in 4D, but a later
+            // normal's when the first one is perpendicular to the chart (N>=5, the Ctrl rotation axis turned away from W).
+            var constraints=new List<Vec3>();Vec3 first=default,planeNormal=default;bool firstSet=false;
             foreach(var normal in frame.Normals)
             {
                 var restrictedNormal=new Vec3(VecN.Dot(normal,basis.AxisX),VecN.Dot(normal,basis.AxisY),VecN.Dot(normal,basis.AxisZ));
                 if(!firstSet){first=restrictedNormal;firstSet=true;}
                 foreach(var c in constraints)restrictedNormal-=c*Vec3.Dot(restrictedNormal,c);
-                if(restrictedNormal.Length>1e-10)constraints.Add(restrictedNormal.Normalized);
+                if(restrictedNormal.Length>1e-10){if(constraints.Count==0)planeNormal=restrictedNormal;constraints.Add(restrictedNormal.Normalized);}
             }
             var planes=new List<Plane>();
             foreach(var direction in new[]{new Vec3(1,0,0),new Vec3(0,1,0),new Vec3(0,0,1)})foreach(int sign in new[]{-1,1})planes.Add(new Plane(direction*sign,halfExtent));
@@ -146,7 +256,7 @@ namespace Showcase.Geometry.Interaction
             }
             // Sort around the polygon's own centroid: with a fixed origin the plane need not pass through 0.
             Vec3 middle=default;foreach(var point in polygon)middle+=point;if(polygon.Count>0)middle/=polygon.Count;
-            Basis(n,out var px,out var py);polygon.Sort((a,b)=>Angle(a-middle,px,py).CompareTo(Angle(b-middle,px,py)));
+            Basis(planeNormal,out var px,out var py);polygon.Sort((a,b)=>Angle(a-middle,px,py).CompareTo(Angle(b-middle,px,py)));
             // Sutherland-Hodgman on the plane polygon; all inequalities are in the same C-based chart.
             for(int p=6;p<planes.Count&&polygon.Count>0;p++)
             {

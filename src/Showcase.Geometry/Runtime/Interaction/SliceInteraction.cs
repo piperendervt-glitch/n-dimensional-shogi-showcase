@@ -142,10 +142,11 @@ namespace Showcase.Geometry.Interaction
             if(current.Dimensions==4)return current;
             int removed=current.Shown.OrderByDescending(axis=>(int)AxisOfCore(axis)).First();return current.Swap(removed,core);
         }
-        /// <summary>The 4D reference frame when the space is 4D; the same three shown axes with N-3 normals otherwise (N given, or taken from the centre).</summary>
+        /// <summary>The 4D reference frame when the space is 4D; the same three shown axes with N-3 normals otherwise. N is given, or else
+        /// the number of components the centre carries (at least 4), so a centre with trailing zeros still names its space.</summary>
         public static SliceFrame Reference(ReferenceView view,VecN center=default,int dimensions=0)
         {
-            int n=dimensions>0?dimensions:Math.Max(4,center.Rank);
+            int n=dimensions>0?dimensions:Math.Max(4,center.Dimensions);
             return n==4?OnLeg(view,90,center):ReferenceFrame(ShownAxes(view),n,center);
         }
         public static SliceFrame Reference(ReferenceSection section,VecN center=default)=>section.Frame(center);
@@ -304,6 +305,11 @@ namespace Showcase.Geometry.Interaction
             if(!center.IsFinite||!anchor.IsFinite)throw new ArgumentException("Slice center and anchor must be finite.");
             DisplayState=new PivotViewState(DisplayState.EmbeddingHeight,Frame.WithCenter(center),anchor,DisplayState.CellScale,DisplayState.HalfWindow);ViewRevision++;
         }
-        public bool Translate(LogicalAxis axis,double cells){if(double.IsNaN(cells)||double.IsInfinity(cells))throw new ArgumentOutOfRangeException(nameof(cells));return SetCenter(Center+SliceAxes.WorldAxis(axis)*cells);}
+        public bool Translate(LogicalAxis axis,double cells)
+        {
+            if(double.IsNaN(cells)||double.IsInfinity(cells))throw new ArgumentOutOfRangeException(nameof(cells));
+            if(SliceAxes.CoreAxis(axis)>=Frame.Dimensions)throw new ArgumentOutOfRangeException(nameof(axis),"The axis is not part of the frame's "+Frame.Dimensions+"D space.");
+            return SetCenter(Center+SliceAxes.WorldAxis(axis)*cells);
+        }
     }
 }
