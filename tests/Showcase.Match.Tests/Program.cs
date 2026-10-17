@@ -122,7 +122,9 @@ Test("C2-04-invalid-draft-unknown-missing-fixed-components-no-apply", () =>
 });
 Test("C2-04-initial-kings-IDs-cells-side-kind-bounds-validation", () =>
 {
-    Reject(() => Fixture(Kings().Take(1))); Reject(() => Fixture(Kings().Concat(new[] { P("AK2", Side.A, PieceKind.King, 0) })));
+    Reject(() => Fixture(Kings().Take(1)));
+    // Several kings a side are allowed since the layer-copy layouts (ND-05); losing any one of them still ends the match.
+    Assert(Fixture(Kings().Concat(new[] { P("AK2", Side.A, PieceKind.King, 0) })).State.Pieces.Count == 3, "two kings a side are accepted");
     Reject(() => Fixture(Kings().Concat(new[] { P("AK", Side.A, PieceKind.Pawn, 0) })));
     Reject(() => Fixture(Kings().Concat(new[] { P("dup", Side.A, PieceKind.Pawn, -4, -4, -4, -4) })));
     Reject(() => Fixture(Kings().Concat(new[] { P("bad", (Side)8, PieceKind.Pawn, 0) })));
@@ -321,6 +323,28 @@ Test("C2-17-CFG1-legacy-unsupported-fixture-and-original-game-unchanged", () =>
     var legacy = new RuleCore().InitialState(); string before = legacy.Hash; var current = MatchSession.Create(Compile(), MatchMode.CvC, new ManualClock()); One(current); One(current); Assert(legacy.Hash == before && legacy.Pieces.All(p => p.Side != Side.B || p.Position.W == 0));
 });
 
+Test("ND-05-layer-copy-layout-copies-the-flat-layout-along-one-axis-and-any-king-capture-ends-the-match", () =>
+{
+    var draft = DemoN(5); draft.Edit(d => d.InitialLayout = DraftData.CopyLayout(2));
+    var config = Compile(draft, new MatchOptionsRaw { CpuBudget = "5000000" }); Assert(config.Preset.LayoutCopyAxis == 2 && config.Preset.InitialLayout == "copy/2" && config.RuleHash != Compile(DemoN(5)).RuleHash, "layout is part of the rules");
+    var pieces = MatchRules.InitialPieces(config.Preset); var flat = MatchRules.InitialPieces(5);
+    Assert(pieces.Count == 360 && MatchRules.InitialPieceCount(config.Preset) == 360 && pieces.Select(p => p.Id).Distinct().Count() == 360, "360 distinct pieces");
+    Assert(pieces.Count(p => p.Kind == PieceKind.King && p.Side == Side.A) == 9 && pieces.Count(p => p.Kind == PieceKind.King && p.Side == Side.B) == 9, "nine kings a side");
+    Assert(Enumerable.Range(-4, 9).All(k => pieces.Count(p => p.Position.Axis(2) == k) == 40), "40 pieces on every layer");
+    Assert(pieces.Where(p => p.Position.Axis(2) == 0).Select(p => p.Id + p.Position).SequenceEqual(flat.Select(p => p.Id + p.Position)), "the middle layer is the flat layout with its ids");
+    Assert(pieces.Where(p => p.Position.Axis(2) == 3).All(p => p.Id.EndsWith("/L3") && p.Position.WithAxis(2, 0) == flat.Single(f => f.Id + "/L3" == p.Id).Position), "other layers are translated copies");
+    Assert(MatchRules.InitialPieces(Compile(DemoN(5)).Preset).Select(p => p.Id + p.Position).SequenceEqual(flat.Select(p => p.Id + p.Position)) && MatchRules.InitialFixtureId(Compile().Preset) == "normal-initial-40/1", "flat presets are unchanged");
+    var m = MatchSession.Create(config, MatchMode.CvC, new ManualClock()); Assert(m.Snapshot.FixtureId == "layer-copy-initial-360/axis2/1" && m.State.Pieces.Count == 360 && m.Phase == MatchPhase.Active, "a copied match starts"); One(m); One(m); Assert(m.State.Ply == 2, "a copied match plays");
+    Reject(() => MatchSession.CreateFixture(config, MatchMode.PvP, new ManualClock(), pieces, "layer-copy-initial-360/axis2/1"));
+    var kings = new[] { P("AK", Side.A, PieceKind.King, 0), P("AK2", Side.A, PieceKind.King, -4, -4), P("BK", Side.B, PieceKind.King, 1), P("BK2", Side.B, PieceKind.King, 4, 4) };
+    var s = Fixture(kings, config: config); Assert(s.TryMove(new Move("AK", new QN(), new QN(1, 0, 0, 0)), out _) && s.State.Outcome == MatchOutcome.KingCapture && s.State.Winner == Side.A, "capturing one of two kings wins");
+    Reject(() => Fixture(new[] { P("AK", Side.A, PieceKind.King, 0), P("BG", Side.B, PieceKind.Gold, 4) }, config: config));
+    string file = Path.Combine(data, "layout-settings.xml"); MatchSettingsStore.SaveValid(file, draft, new MatchOptionsRaw());
+    Assert(File.ReadAllText(file).Contains("initialLayout=\"copy/2\"") && MatchSettingsStore.Load(file).Draft.Current.InitialLayout == "copy/2" && Compile(MatchSettingsStore.Load(file).Draft).RuleHash == config.RuleHash, "layout round trip");
+    string flatFile = Path.Combine(data, "flat-settings.xml"); MatchSettingsStore.SaveValid(flatFile, DemoN(5), new MatchOptionsRaw()); Assert(!File.ReadAllText(flatFile).Contains("initialLayout"), "flat files carry no layout attribute");
+    foreach (var bad in new[] { "copy/0", "copy/1", "copy/5", "copy/x", "stack", "" }) { var b = DemoN(5); b.Edit(d => d.InitialLayout = bad); Assert(!MatchConfig.TryCreate(b, new MatchOptionsRaw(), out _, out var report) && report.Errors.Any(e => e.Contains("初期配置")), "rejected layout " + bad); }
+    var four = SettingsDraft.CreateMatchDemo(); four.Edit(d => d.InitialLayout = DraftData.CopyLayout(3)); Assert(Compile(four).Preset.LayoutCopyAxis == 3 && MatchRules.InitialPieces(Compile(four).Preset).All(p => p.Position.Dimensions == 4), "4D copy along W");
+});
 SettingsDraft DemoN(int n)
 {
     var draft = SettingsDraft.CreateMatchDemo();

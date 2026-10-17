@@ -160,7 +160,7 @@ namespace Showcase.Unity.Settings
                 foreach(int hidden in cpuShowView.Hidden)cpuShowTo=SliceAxes.WithCoordinate(cpuShowTo,hidden,SliceAxes.Coordinate(cpuShowFromCell,hidden));
                 // Unity up is the section's third axis. A step that dips below the board surface would vanish inside the
                 // wooden board, so the whole section display is raised until both ends of the step sit on or above it.
-                cpuShowAnchor=slice.DisplayState.Anchor;var state=slice.DisplayState;double board=NewPivotSlice().DisplayState.Anchor.Y;
+                cpuShowAnchor=slice.DisplayState.Anchor;var state=slice.DisplayState;double board=SectionView.Anchor.y;
                 double lowest=Math.Min(VecN.Dot(slice.Frame.AxisZ,cpuShowFromCell-cpuShowTo),VecN.Dot(slice.Frame.AxisZ,cpuShowToCell-cpuShowTo));
                 cpuShowLift=Math.Max(0,-(lowest+(cpuShowAnchor.Y-board)/state.CellScale))*state.CellScale;
                 cpuShowStage=2;cpuShowStart=Time.unscaledTime;
@@ -268,7 +268,7 @@ namespace Showcase.Unity.Settings
         }
         void SetMatchCamera(Side side,bool animate)
         {
-            cameraSide=side;var target=SectionView.Anchor+new Vector3(0,.015f,0);var rot=Quaternion.Euler(31,side==Side.A?27:207,0);var position=target+rot*new Vector3(0,0,-1.04f);
+            cameraSide=side;var target=CameraBase+new Vector3(0,.015f,0);var rot=Quaternion.Euler(31,side==Side.A?27:207,0);var position=target+rot*new Vector3(0,0,-1.04f);
             yaw=side==Side.A?27:207;pitch=31;distance=1.04f;pan=target-CameraBase;
             cameraFrom=rig.Camera.transform.position;targetFrom=cameraFrom+rig.Camera.transform.forward*1.04f;cameraTo=position;targetTo=target;
             if(!animate){rig.Camera.transform.position=position;rig.Camera.transform.LookAt(target);cameraRevision++;RefreshAuxiliaryViews();}

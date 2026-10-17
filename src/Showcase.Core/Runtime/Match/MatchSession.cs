@@ -139,17 +139,18 @@ namespace NDShogi.Showcase.Core.Match
         {
             time = clock ?? throw new ArgumentNullException(nameof(clock));
             State = new MatchState(pieces, turn, 0, 0, config);
-            if (State.Pieces.Count(p => p.Side == Side.A && p.Kind == PieceKind.King) != 1 || State.Pieces.Count(p => p.Side == Side.B && p.Kind == PieceKind.King) != 1) throw new ArgumentException("開始配置には両陣営の王が各1枚必要です。");
+            // A copied layout starts with several kings a side; capturing any one of them still ends the match.
+            if (!State.Pieces.Any(p => p.Side == Side.A && p.Kind == PieceKind.King) || !State.Pieces.Any(p => p.Side == Side.B && p.Kind == PieceKind.King)) throw new ArgumentException("開始配置には両陣営の王が各1枚以上必要です。");
             Snapshot = new MatchSnapshot(config, mode, State, fixture); aSeconds = bSeconds = config.TimeSeconds; LastTickSeconds = ReadTime(); Phase = MatchPhase.Active;
             events.Add(new MatchEvent("start", this, State.Hash, detail: config.SettingsHash));
             var first = QueryLegal();
             if (first.Status != MatchQueryStatus.Complete) SuspendProcessing("開始照会が未完了：" + first.Reason);
             else if (first.Moves.Count == 0) End(MatchOutcome.NoMovesDraw, null, "開始手番の完了済み着手候補が0件");
         }
-        public static MatchSession Create(MatchConfig config, MatchMode mode, IMonotonicClock clock) => new MatchSession(config, mode, clock, MatchRules.InitialPieces(config.Dimensions), "normal-initial-40/1", Side.A);
+        public static MatchSession Create(MatchConfig config, MatchMode mode, IMonotonicClock clock) => new MatchSession(config, mode, clock, MatchRules.InitialPieces(config.Preset), MatchRules.InitialFixtureId(config.Preset), Side.A);
         public static MatchSession CreateFixture(MatchConfig config, MatchMode mode, IMonotonicClock clock, IEnumerable<Piece> pieces, string fixtureId, Side turn = Side.A)
         {
-            if (string.IsNullOrWhiteSpace(fixtureId) || fixtureId == "normal-initial-40/1" || fixtureId.Any(char.IsControl)) throw new ArgumentException("検証配置には通常初期配置と異なる明示fixture IDが必要です。");
+            if (string.IsNullOrWhiteSpace(fixtureId) || fixtureId == MatchRules.FlatFixtureId || fixtureId.StartsWith("layer-copy-initial-", StringComparison.Ordinal) || fixtureId.Any(char.IsControl)) throw new ArgumentException("検証配置には通常初期配置と異なる明示fixture IDが必要です。");
             return new MatchSession(config, mode, clock, pieces, fixtureId, turn);
         }
         private double ReadTime()

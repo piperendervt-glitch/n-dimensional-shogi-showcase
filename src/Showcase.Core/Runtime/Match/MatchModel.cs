@@ -60,7 +60,7 @@ namespace NDShogi.Showcase.Core.Match
             config = null; draft.TryCompile(out var preset, out var previewReport); var errors = previewReport.Errors.ToList();
             if (!double.TryParse(options.TimeSeconds, NumberStyles.Float, CultureInfo.InvariantCulture, out double time) || double.IsNaN(time) || double.IsInfinity(time) || time <= 0 || time > TimeSpan.MaxValue.TotalSeconds) errors.Add("持ち時間は有限の正の秒数です。生入力を保持しています。");
             if (!int.TryParse(options.CpuSeed, NumberStyles.Integer, CultureInfo.InvariantCulture, out int seed)) errors.Add("CPU seedは32bit整数です。");
-            if (!int.TryParse(options.CpuBudget, NumberStyles.Integer, CultureInfo.InvariantCulture, out int budget) || budget < 1 || budget > 10000000) errors.Add("CPU候補予算は1〜10000000です。予算終了を引分にはしません。");
+            if (!int.TryParse(options.CpuBudget, NumberStyles.Integer, CultureInfo.InvariantCulture, out int budget) || budget < 1 || budget > 100000000) errors.Add("CPU候補予算は1〜100000000です。予算終了を引分にはしません。");
             if (!int.TryParse(options.CpuDelayMilliseconds, NumberStyles.Integer, CultureInfo.InvariantCulture, out int delay) || delay < 0 || delay > 60000) errors.Add("CPU表示待ちは0〜60000msです。");
             if (preset != null)
             {
@@ -107,7 +107,8 @@ namespace NDShogi.Showcase.Core.Match
         {
             var bounds = config.Preset.Bounds;
             var list = pieces.Select(p => bounds.Contains(p.Position) ? p.At(bounds.Normalize(p.Position)) : p).OrderBy(p => p.Id, StringComparer.Ordinal).ToArray();
-            if (list.Length > 256 || !Enum.IsDefined(typeof(Side), turn) || list.Any(p => string.IsNullOrWhiteSpace(p.Id) || p.Id.Length > 128 || p.Id.Any(char.IsControl) || !Enum.IsDefined(typeof(PieceKind), p.Kind) || !Enum.IsDefined(typeof(Side), p.Side) || !config.Preset.Bounds.Contains(p.Position))) throw new ArgumentException("Invalid match piece/side/bounds.");
+            // 1024 leaves room for a layer-copied layout (40 pieces x 9 layers = 360) and its captures/edits.
+            if (list.Length > 1024 || !Enum.IsDefined(typeof(Side), turn) || list.Any(p => string.IsNullOrWhiteSpace(p.Id) || p.Id.Length > 128 || p.Id.Any(char.IsControl) || !Enum.IsDefined(typeof(PieceKind), p.Kind) || !Enum.IsDefined(typeof(Side), p.Side) || !config.Preset.Bounds.Contains(p.Position))) throw new ArgumentException("Invalid match piece/side/bounds.");
             occupied = list.ToDictionary(p => p.Position); byId = list.ToDictionary(p => p.Id, StringComparer.Ordinal);
             Pieces = Array.AsReadOnly(list); Captured = Array.AsReadOnly((captured ?? Array.Empty<CapturedPiece>()).ToArray());
             Turn = turn; Ply = ply; Revision = revision; Outcome = outcome; Winner = winner;
@@ -130,11 +131,27 @@ namespace NDShogi.Showcase.Core.Match
     {
         public static IReadOnlyList<Piece> InitialPieces() => InitialPieces(4);
         /// <summary>The flat shogi layout on the F×U plane, every further axis at 0, for a board of <paramref name="dimensions"/> axes.</summary>
-        public static IReadOnlyList<Piece> InitialPieces(int dimensions)
+        public static IReadOnlyList<Piece> InitialPieces(int dimensions) => InitialPieces(dimensions, null, -4, 4);
+        /// <summary>The preset's initial position: the flat layout, or that layout copied along its copy axis.</summary>
+        public static IReadOnlyList<Piece> InitialPieces(PreviewPreset preset) => InitialPieces(preset.Bounds.Dimensions, preset.LayoutCopyAxis, preset.Bounds.Min, preset.Bounds.Max);
+        /// <summary>With a copy axis, the flat layout is placed at every coordinate of that axis; the copy at 0 keeps the original ids,
+        /// the others get "/L&lt;coordinate&gt;" appended, so a flat position is a sub-position of every copied one.</summary>
+        public static IReadOnlyList<Piece> InitialPieces(int dimensions, int? copyAxis, int min = -4, int max = 4)
         {
             // Explicit data conversion only; old GameState/CPU/asymmetric rules never enter a match.
-            return Array.AsReadOnly(new RuleCore().InitialState().Pieces.Select(p => new Piece(p.Id, p.Side, p.Kind, QN.Padded(p.Position.ToArray(), dimensions))).ToArray());
+            var flat = new RuleCore().InitialState().Pieces.Select(p => new Piece(p.Id, p.Side, p.Kind, QN.Padded(p.Position.ToArray(), dimensions))).ToArray();
+            if (!copyAxis.HasValue) return Array.AsReadOnly(flat);
+            int axis = copyAxis.Value; if (axis < 2 || axis >= dimensions || min > 0 || max < 0) throw new ArgumentOutOfRangeException(nameof(copyAxis));
+            var list = new List<Piece>();
+            for (int layer = min; layer <= max; layer++) foreach (var p in flat)
+                list.Add(new Piece(layer == 0 ? p.Id : p.Id + "/L" + layer.ToString(CultureInfo.InvariantCulture), p.Side, p.Kind, p.Position.WithAxis(axis, layer)));
+            return Array.AsReadOnly(list.ToArray());
         }
+        public const string FlatFixtureId = "normal-initial-40/1";
+        /// <summary>Fixture id of the preset's initial position; the flat layout keeps the original id.</summary>
+        public static string InitialFixtureId(PreviewPreset preset) => preset.LayoutCopyAxis.HasValue
+            ? "layer-copy-initial-" + InitialPieceCount(preset).ToString(CultureInfo.InvariantCulture) + "/axis" + preset.LayoutCopyAxis.Value.ToString(CultureInfo.InvariantCulture) + "/1" : FlatFixtureId;
+        public static int InitialPieceCount(PreviewPreset preset) => 40 * (preset.LayoutCopyAxis.HasValue ? preset.Bounds.Max - preset.Bounds.Min + 1 : 1);
         public static QueryResult Query(MatchConfig config, MatchState state, string pieceId, CancellationToken cancellation = default, int budget = int.MaxValue)
             => PreviewQuery.Execute(config.Preset, state.ToPreview(config), pieceId, cancellation, budget);
         // Explicit mapping instead of matching enum names as strings: an unmapped value fails here, by name.

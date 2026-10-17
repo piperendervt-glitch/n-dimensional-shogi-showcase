@@ -183,6 +183,16 @@ Test("save-valid-preset-reload-separate-trial-view-and-no-apply", () =>
     Assert(Compile(loaded.Draft).RuleHash == Compile(draft).RuleHash && !loaded.Draft.CanApply);
     loaded.Preview.Clear(); loaded.Draft.Edit(d => d.Definitions[0].MaxAxes = "1"); Assert(session.Pieces.Count == 2 && draft.Current.Definitions[0].MaxAxes == "4");
 });
+Test("initial-layout-attribute-is-optional-and-flat-files-are-unchanged", () =>
+{
+    string flat = Path.Combine(dataRoot, "layout-flat.xml"); var draft = Fixture(); SettingsStore.SavePreset(flat, draft, Position(), ViewSnapshot.Default);
+    Assert(!File.ReadAllText(flat).Contains("initialLayout") && SettingsStore.Load(flat).Draft.Current.InitialLayout == DraftData.FlatLayout);
+    string copy = Path.Combine(dataRoot, "layout-copy.xml"); var copied = Fixture(); copied.Edit(d => d.InitialLayout = DraftData.CopyLayout(2));
+    Assert(copied.ContentHash != draft.ContentHash && Compile(copied).RuleHash != Compile(draft).RuleHash && Compile(copied).LayoutCopyAxis == 2);
+    SettingsStore.SavePreset(copy, copied, Position(), ViewSnapshot.Default); var loaded = SettingsStore.Load(copy);
+    Assert(File.ReadAllText(copy).Contains("initialLayout=\"copy/2\"") && loaded.Draft.Current.InitialLayout == "copy/2" && loaded.Draft.ContentHash == copied.ContentHash);
+    string other = Path.Combine(dataRoot, "layout-unknown.xml"); File.WriteAllText(other, File.ReadAllText(copy).Replace("initialLayout=", "futureLayout=")); Reject(() => SettingsStore.Load(other));
+});
 Test("save-as-new-ID-preserves-original-and-does-not-overwrite", () =>
 {
     string original = Path.Combine(dataRoot, "original.xml"), other = Path.Combine(dataRoot, "other.xml"); var draft = Fixture(); var session = Position();

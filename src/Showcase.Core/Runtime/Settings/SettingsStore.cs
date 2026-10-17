@@ -83,6 +83,8 @@ namespace NDShogi.Showcase.Core.Settings
                 new XAttribute("forward", d.Forward), new XAttribute("sideways", d.Sideways), new XAttribute("backward", d.Backward), new XAttribute("empty", d.AllowEmpty), new XAttribute("capture", d.AllowCapture)));
             var settings = new XElement(S + "settings", new XAttribute("id", data.Id), new XAttribute("name", data.Name), new XAttribute("source", data.SourceId), new XAttribute("dimensions", data.Dimensions),
                 new XAttribute("min", data.Min), new XAttribute("max", data.Max), new XAttribute("forwardAxis", data.ForwardAxis), new XAttribute("occlusion", data.Occlusion), definitions);
+            // Written only when it says something, so a flat-layout file is byte-identical to one saved before the attribute existed.
+            if (data.InitialLayout != DraftData.FlatLayout) settings.Add(new XAttribute("initialLayout", data.InitialLayout));
             var trial = new XElement(T + "preview", new XAttribute("min", preview.Bounds.Min), new XAttribute("max", preview.Bounds.Max), snapshot.Pieces.Select(p => new XElement(T + "piece", new XAttribute("id", p.Id), new XAttribute("definition", p.DefinitionId), new XAttribute("side", p.Side.ToString()), new XAttribute("cell", p.Position.ToString()))));
             string Vector(double[] values) => string.Join(",", values.Select(x => x.ToString("R", CultureInfo.InvariantCulture)));
             var viewElement = new XElement(V + "view", new XAttribute("center", Vector(viewCopy.Center)), new XAttribute("basis", Vector(viewCopy.Basis)), new XAttribute("camera", Vector(viewCopy.Camera)));
@@ -105,9 +107,10 @@ namespace NDShogi.Showcase.Core.Settings
             using (var reader = XmlReader.Create(path, options)) return Parse(XDocument.Load(reader, LoadOptions.None));
         }
         private static string Attr(XElement e, string name) => (string?)e.Attribute(name) ?? throw new InvalidDataException("必須属性がありません：" + name);
-        private static void Attributes(XElement e, params string[] names)
+        private static void Attributes(XElement e, params string[] names) => Attributes(e, Array.Empty<string>(), names);
+        private static void Attributes(XElement e, string[] optional, params string[] names)
         {
-            if (e.Attributes().Any(a => !a.IsNamespaceDeclaration && (a.Name.Namespace != XNamespace.None || !names.Contains(a.Name.LocalName))) || names.Any(n => e.Attribute(n) == null)) throw new InvalidDataException("未知または欠損した属性：" + e.Name);
+            if (e.Attributes().Any(a => !a.IsNamespaceDeclaration && (a.Name.Namespace != XNamespace.None || !names.Contains(a.Name.LocalName) && !optional.Contains(a.Name.LocalName))) || names.Any(n => e.Attribute(n) == null)) throw new InvalidDataException("未知または欠損した属性：" + e.Name);
             if (e.Nodes().Any(n => !(n is XElement) && !(n is XText text && string.IsNullOrWhiteSpace(text.Value)))) throw new InvalidDataException("未知のXML内容：" + e.Name);
         }
         private static int Int(string value)
@@ -128,8 +131,8 @@ namespace NDShogi.Showcase.Core.Settings
             var kindText = Attr(root, "kind"); if (kindText != "draft" && kindText != "preview-preset") throw new InvalidDataException("未知の保存種別です。");
             var children = root.Elements().ToArray();
             if (children.Length != 3 || children[0].Name != S + "settings" || children[1].Name != T + "preview" || children[2].Name != V + "view") throw new InvalidDataException("未知・欠損・重複の設定要素です。");
-            var s = children[0]; Attributes(s, "id", "name", "source", "dimensions", "min", "max", "forwardAxis", "occlusion");
-            var data = new DraftData { Id = Attr(s, "id"), Name = Attr(s, "name"), SourceId = Attr(s, "source"), Dimensions = Attr(s, "dimensions"), Min = Attr(s, "min"), Max = Attr(s, "max"), ForwardAxis = Attr(s, "forwardAxis"), Occlusion = Attr(s, "occlusion") };
+            var s = children[0]; Attributes(s, new[] { "initialLayout" }, "id", "name", "source", "dimensions", "min", "max", "forwardAxis", "occlusion");
+            var data = new DraftData { Id = Attr(s, "id"), Name = Attr(s, "name"), SourceId = Attr(s, "source"), Dimensions = Attr(s, "dimensions"), Min = Attr(s, "min"), Max = Attr(s, "max"), ForwardAxis = Attr(s, "forwardAxis"), Occlusion = Attr(s, "occlusion"), InitialLayout = (string?)s.Attribute("initialLayout") ?? DraftData.FlatLayout };
             if (s.Elements().Count() > 64) throw new InvalidDataException("駒定義数が上限を超えています。");
             foreach (var d in s.Elements())
             {

@@ -57,6 +57,16 @@ namespace NDShogi.Showcase.Core.Settings
         public string Max = "4";
         public string ForwardAxis = "0";
         public string Occlusion = "lattice-line/1";
+        /// <summary>"flat": the 40 pieces on the F×U plane only. "copy/&lt;axis&gt;": that layout copied to every cell of one more core axis (2..N−1).</summary>
+        public string InitialLayout = FlatLayout;
+        public const string FlatLayout = "flat";
+        public static string CopyLayout(int coreAxis) => "copy/" + coreAxis.ToString(CultureInfo.InvariantCulture);
+        /// <summary>The copy axis named by a "copy/&lt;axis&gt;" layout (2 or more); null for the flat layout or malformed text. The validator also requires axis &lt; N.</summary>
+        public static int? CopyAxisOf(string? layout)
+        {
+            var parts = (layout ?? "").Split('/');
+            return parts.Length == 2 && parts[0] == "copy" && int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int axis) && axis >= 2 ? axis : (int?)null;
+        }
         public List<RawPieceDefinition> Definitions = new List<RawPieceDefinition>();
         public DraftData Clone()
         {
@@ -67,7 +77,8 @@ namespace NDShogi.Showcase.Core.Settings
         internal string Canonical()
         {
             string S(string text) => text.Length.ToString(CultureInfo.InvariantCulture) + ":" + text;
-            return S(Id) + S(Name) + S(SourceId) + S(Dimensions) + S(Min) + S(Max) + S(ForwardAxis) + S(Occlusion) +
+            // The flat layout adds nothing, so every hash of an unchanged 4D setting stays as it was.
+            return S(Id) + S(Name) + S(SourceId) + S(Dimensions) + S(Min) + S(Max) + S(ForwardAxis) + S(Occlusion) + (InitialLayout == FlatLayout ? "" : S(InitialLayout)) +
                 string.Concat(Definitions.Select(d => S(d.Id) + S(d.Name) + S(d.Kind) + S(d.AxesMask) + S(d.MaxAxes) + S(d.MaxDistance) +
                     ":" + d.Forward + ":" + d.Sideways + ":" + d.Backward + ":" + d.AllowEmpty + ":" + d.AllowCapture));
         }
@@ -142,12 +153,15 @@ namespace NDShogi.Showcase.Core.Settings
         public OcclusionKind Occlusion { get; }
         public string OcclusionId => Occlusion == OcclusionKind.LatticeLine ? "lattice-line/1" : "supercover-closed/1";
         public IReadOnlyList<PieceDefinition> Definitions { get; }
+        /// <summary>Core axis the flat initial layout is copied along, or null for the flat layout alone.</summary>
+        public int? LayoutCopyAxis { get; }
+        public string InitialLayout => source.InitialLayout;
         public string RuleHash { get; }
         public bool CanApply => false;
         public const string ApplyUnavailableReason = "CFG-2待ち：実行可能な対局モードに未接続のため適用できません。保存は編集・試し盤用です。";
-        internal PreviewPreset(DraftData data, BoundsN bounds, int forwardAxis, OcclusionKind occlusion, IEnumerable<PieceDefinition> definitions)
+        internal PreviewPreset(DraftData data, BoundsN bounds, int forwardAxis, OcclusionKind occlusion, IEnumerable<PieceDefinition> definitions, int? layoutCopyAxis = null)
         {
-            source = data.Clone(); Bounds = bounds; ForwardAxis = forwardAxis; Occlusion = occlusion;
+            source = data.Clone(); Bounds = bounds; ForwardAxis = forwardAxis; Occlusion = occlusion; LayoutCopyAxis = layoutCopyAxis;
             Definitions = Array.AsReadOnly(definitions.ToArray());
             var rule = data.Clone(); rule.Id = ""; rule.Name = ""; rule.SourceId = "";
             foreach (var definition in rule.Definitions) definition.Name = "";
@@ -245,6 +259,14 @@ namespace NDShogi.Showcase.Core.Settings
             int min = Number(data.Min, "盤最小値", -4, 4), max = Number(data.Max, "盤最大値", -4, 4);
             if (min > max) errors.Add("盤最小値が最大値を超えています。");
             int forward = Number(data.ForwardAxis, "前方軸", 0, dimensions - 1);
+            // The layout plane is F×U, so a copy axis is any other axis of the board.
+            int? copyAxis = null;
+            if (data.InitialLayout != DraftData.FlatLayout)
+            {
+                int? axis = DraftData.CopyAxisOf(data.InitialLayout);
+                if (axis.HasValue && axis.Value < dimensions) copyAxis = axis;
+                else errors.Add("初期配置：flat または copy/<軸番号 2〜" + (dimensions - 1) + "> を指定してください。入力は保持されています。");
+            }
             OcclusionKind occlusion = OcclusionKind.LatticeLine;
             if (data.Occlusion == "lattice-line/1") occlusion = OcclusionKind.LatticeLine;
             else if (data.Occlusion == "supercover-closed/1") occlusion = OcclusionKind.SupercoverClosed;
@@ -280,7 +302,7 @@ namespace NDShogi.Showcase.Core.Settings
                 definitions.Add(new PieceDefinition(raw, kind, axes, maxAxes, distance));
             }
             report = new ValidationReport(errors, warnings);
-            preset = report.IsValid ? new PreviewPreset(data, new BoundsN(min, max, dimensions), forward, occlusion, definitions) : null;
+            preset = report.IsValid ? new PreviewPreset(data, new BoundsN(min, max, dimensions), forward, occlusion, definitions, copyAxis) : null;
             return report.IsValid;
         }
     }

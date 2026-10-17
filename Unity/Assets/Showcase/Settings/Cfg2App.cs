@@ -44,8 +44,15 @@ namespace Showcase.Unity.Settings
         long cameraRevision,layoutRevision; string historyOwner="draft";
         int previousWidth,previousHeight; bool manualCamera;
         // The piece plane Y=h is displayed on the wooden board surface, so the orbit pivot is the board itself.
-        Vector3 CameraBase=>SectionView.Anchor;
-        SliceAnimator NewPivotSlice()=>new SliceAnimator(PivotViewState.CreateInitial(new Vec3(SectionView.Anchor.x,SectionView.Anchor.y,SectionView.Anchor.z),SectionView.Cell,dimensions:CurrentDimensions));
+        // A layout copied along Y stacks 9 layers; its display is raised by the 4 layers below the plane (board min −4),
+        // so the lowest layer rests on the wood and the ±4.5-cell window shows the whole stack.
+        const int LayersBelowPlane=4;
+        Vector3 DisplayAnchor=>SectionView.Anchor+new Vector3(0,CurrentCopyAxis==2?LayersBelowPlane*SectionView.Cell:0,0);
+        Vector3 CameraBase=>DisplayAnchor;
+        SliceAnimator NewPivotSlice(){var a=DisplayAnchor;return new SliceAnimator(PivotViewState.CreateInitial(new Vec3(a.x,a.y,a.z),SectionView.Cell,dimensions:CurrentDimensions));}
+        // Copy axis of the initial layout on screen: the match's while playing, the next match's (the draft's) otherwise.
+        int? DraftCopyAxis{get{var axis=draft==null?null:DraftData.CopyAxisOf(draft.Current.InitialLayout);return axis.HasValue&&axis.Value<DraftDimensions?axis:null;}}
+        int? CurrentCopyAxis=>session!=null&&!opened?session.Config.Preset.LayoutCopyAxis:DraftCopyAxis;
         // N of the board on screen: the match's while playing, the next match's (the draft's) otherwise; 4 before the draft exists.
         int DraftDimensions=>draft!=null&&int.TryParse(draft.Current.Dimensions,NumberStyles.Integer,CultureInfo.InvariantCulture,out var n)&&n>=BoundsN.MinDimensions&&n<=BoundsN.MaxDimensions?n:4;
         int CurrentDimensions=>session!=null&&!opened?session.Config.Dimensions:DraftDimensions;

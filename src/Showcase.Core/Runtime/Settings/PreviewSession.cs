@@ -28,7 +28,8 @@ namespace NDShogi.Showcase.Core.Settings
         public PreviewSnapshot(IEnumerable<TrialPiece> pieces)
         {
             var copy = pieces.OrderBy(p => p.Id, StringComparer.Ordinal).ToArray();
-            if (copy.Length > 256 || copy.Select(p => p.Id).Distinct(StringComparer.Ordinal).Count() != copy.Length || copy.Select(p => p.Position).Distinct().Count() != copy.Length) throw new ArgumentException("Trial pieces must have unique IDs and cells; limit 256.");
+            // 1024 so that a layer-copied match position (360 pieces) can be queried through the same snapshot type.
+            if (copy.Length > 1024 || copy.Select(p => p.Id).Distinct(StringComparer.Ordinal).Count() != copy.Length || copy.Select(p => p.Position).Distinct().Count() != copy.Length) throw new ArgumentException("Trial pieces must have unique IDs and cells; limit 1024.");
             Pieces = Array.AsReadOnly(copy);
             Hash = StableHash.Of(string.Join(";", copy.Select(p => p.Id.Length + ":" + p.Id + "|" + p.DefinitionId.Length + ":" + p.DefinitionId + "|" + p.Side + "|" + p.Position)));
         }

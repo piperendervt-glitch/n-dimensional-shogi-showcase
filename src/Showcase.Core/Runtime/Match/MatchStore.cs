@@ -45,6 +45,8 @@ namespace NDShogi.Showcase.Core.Match
         }
         internal static XElement RulesElement(DraftData data) => new XElement(N + "rules", new XAttribute("id", data.Id), new XAttribute("name", data.Name), new XAttribute("source", data.SourceId),
             new XAttribute("dimensions", data.Dimensions), new XAttribute("min", data.Min), new XAttribute("max", data.Max), new XAttribute("forwardAxis", data.ForwardAxis), new XAttribute("occlusion", data.Occlusion),
+            // Only a non-flat layout is written, so flat-layout files keep their exact former form.
+            data.InitialLayout == DraftData.FlatLayout ? null : new XAttribute("initialLayout", data.InitialLayout),
             data.Definitions.Select(d => new XElement(N + "definition", new XAttribute("id", d.Id), new XAttribute("name", d.Name), new XAttribute("kind", d.Kind), new XAttribute("axes", d.AxesMask), new XAttribute("maxAxes", d.MaxAxes), new XAttribute("distance", d.MaxDistance), new XAttribute("forward", d.Forward), new XAttribute("sideways", d.Sideways), new XAttribute("backward", d.Backward), new XAttribute("empty", d.AllowEmpty), new XAttribute("capture", d.AllowCapture))));
         internal static XElement OptionsElement(MatchOptionsRaw raw) => new XElement(N + "options", new XAttribute("timeSeconds", raw.TimeSeconds), new XAttribute("cpuSeed", raw.CpuSeed), new XAttribute("cpuBudget", raw.CpuBudget), new XAttribute("cpuDelayMilliseconds", raw.CpuDelayMilliseconds));
         public static LoadedMatchSettings Load(string path)
@@ -53,9 +55,10 @@ namespace NDShogi.Showcase.Core.Match
             var options = new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null, MaxCharactersInDocument = MaxBytes };
             using (var reader = XmlReader.Create(path, options)) return Parse(XDocument.Load(reader, LoadOptions.None));
         }
-        private static void Exact(XElement e, params string[] attributes)
+        private static void Exact(XElement e, params string[] attributes) => Exact(e, Array.Empty<string>(), attributes);
+        private static void Exact(XElement e, string[] optional, params string[] attributes)
         {
-            if (e.Attributes().Any(a => !a.IsNamespaceDeclaration && (a.Name.Namespace != XNamespace.None || !attributes.Contains(a.Name.LocalName))) || attributes.Any(a => e.Attribute(a) == null)) throw new InvalidDataException("未知/欠損属性：" + e.Name);
+            if (e.Attributes().Any(a => !a.IsNamespaceDeclaration && (a.Name.Namespace != XNamespace.None || !attributes.Contains(a.Name.LocalName) && !optional.Contains(a.Name.LocalName))) || attributes.Any(a => e.Attribute(a) == null)) throw new InvalidDataException("未知/欠損属性：" + e.Name);
             if (e.Nodes().Any(n => !(n is XElement) && !(n is XText t && string.IsNullOrWhiteSpace(t.Value)))) throw new InvalidDataException("未知XML内容：" + e.Name);
         }
         private static string A(XElement e, string name) => (string)e.Attribute(name)!;
@@ -70,8 +73,8 @@ namespace NDShogi.Showcase.Core.Match
             string kind = A(root, "kind"); if (A(root, "schema") != "1" || kind != "next-match" && kind != "raw-draft") throw new InvalidDataException("未知schema版/保存種別");
             var children = root.Elements().ToArray();
             if (children.Length != 2 || children[0].Name != N + "rules" || children[1].Name != N + "options") throw new InvalidDataException("未知/欠損要素");
-            var rules = children[0]; Exact(rules, "id", "name", "source", "dimensions", "min", "max", "forwardAxis", "occlusion");
-            var data = new DraftData { Id = A(rules, "id"), Name = A(rules, "name"), SourceId = A(rules, "source"), Dimensions = A(rules, "dimensions"), Min = A(rules, "min"), Max = A(rules, "max"), ForwardAxis = A(rules, "forwardAxis"), Occlusion = A(rules, "occlusion") };
+            var rules = children[0]; Exact(rules, new[] { "initialLayout" }, "id", "name", "source", "dimensions", "min", "max", "forwardAxis", "occlusion");
+            var data = new DraftData { Id = A(rules, "id"), Name = A(rules, "name"), SourceId = A(rules, "source"), Dimensions = A(rules, "dimensions"), Min = A(rules, "min"), Max = A(rules, "max"), ForwardAxis = A(rules, "forwardAxis"), Occlusion = A(rules, "occlusion"), InitialLayout = (string?)rules.Attribute("initialLayout") ?? DraftData.FlatLayout };
             if (rules.Elements().Count() > 64) throw new InvalidDataException("定義数上限64");
             foreach (var d in rules.Elements())
             {

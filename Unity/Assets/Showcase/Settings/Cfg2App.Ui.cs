@@ -199,12 +199,21 @@ namespace Showcase.Unity.Settings
                 for(int i=0;i<choices;i++){int k=BoundsN.MinDimensions+i;var b=Button(c,"dimensions-"+k,k.ToString(CultureInfo.InvariantCulture),8+i*(choiceWidth+3),45,choiceWidth,40,()=>SetDimensions(k),k==n);b.GetComponentInChildren<Text>().fontSize=16;}
                 // The one line the settings screen says about a large N; nothing else warns or asks.
                 if(n>=8)CfgUi.Label(c,"N が大きいと表示が混み合い、動作も重くなります。",8,92,330,30,15,Muted);
-                CfgUi.Label(c,"初期配置：40駒",8,137,330,44,25,Gold);
+                // Initial layout: the flat 40 pieces, or that plane copied to all 9 cells of one more axis (any axis but X and Z).
+                int? copy=DraftCopyAxis;float y=n>=8?130:100;
+                CfgUi.Label(c,"初期配置",8,y,330,32,19);y+=38;
+                LayoutRow(c,DraftData.FlatLayout,"平面（従来）",40,y,!copy.HasValue);y+=46;
+                for(int core=2;core<n;core++){LayoutRow(c,DraftData.CopyLayout(core),SliceAxes.AxisName(SliceAxes.AxisOfCore(core))+"方向にコピー",360,y,copy==core);y+=46;}
+                string copyName=copy.HasValue?SliceAxes.AxisName(SliceAxes.AxisOfCore(copy.Value)):"";
+                CfgUi.Label(c,copy.HasValue?"初期配置：360駒（40駒 × 9層）":"初期配置：40駒",8,y+8,330,44,25,Gold);y+=72;
                 string hidden=string.Join("、",Enumerable.Range(3,n-3).Select(core=>SliceAxes.AxisName(SliceAxes.AxisOfCore(core))+"=0"));
-                CfgUi.Label(c,"論理盤：各軸 −4〜4\n"+string.Join(" / ",axes.Select(SliceAxes.AxisName))+"\n\n先手 A：+Z方向\n後手 B：−Z方向\n\n初期配置は両側20駒。\n表示の駒配置面はY=h"+(hidden==""?"":"、"+hidden)+"。\n開始中心Pは駒配置面の中央。\n先手Aから開始します。\n\n試し配置は対局に入りません。",8,201,330,450,20);
-                CfgUi.Label(c,"試し配置セル "+string.Join(",",axes.Select(SliceAxes.AxisName)),8,692,330,30,18);
-                var coordinate=CfgUi.Input(c,string.Join(",",Enumerable.Repeat("0",n)),8,736,330,41,value=>{var p=value.Split(',');if(p.Length==n&&p.All(s=>int.TryParse(s,NumberStyles.Integer,CultureInfo.InvariantCulture,out _))){selectedCell=FromUiAxes(p.Select(s=>int.Parse(s,NumberStyles.Integer,CultureInfo.InvariantCulture)).ToArray(),n);if(!selectedCell.InBounds)Notice("各軸 −4〜4で指定してください。");}else Notice(n+"個の整数を入力してください。");});inputs["coordinate"]=coordinate;
-                Button(c,"place-coordinate","指定セルに置く",8,790,330,42,()=>PlaceAt(selectedCell));
+                string layoutText=!copy.HasValue?"初期配置は両側20駒。\n表示の駒配置面はY=h"+(hidden==""?"":"、"+hidden)+"。\n開始中心Pは駒配置面の中央。"
+                    :copyName+" = −4〜4 の 9 層すべてに\n従来の 40 駒をコピー。\n王は各陣 9 枚。\nどれか 1 枚を取られると負け。\n\n"+(copy==2?"表示では Y=−4 の層が盤に載り、\n9 層が上に積み重なります。":"表示の駒配置面はY=h"+(hidden==""?"":"、"+hidden)+"。\n"+copyName+" を動かすと別の層が現れます。")+"\n開始中心Pは中央層 "+copyName+"=0。";
+                var description=CfgUi.Label(c,"論理盤：各軸 −4〜4\n"+string.Join(" / ",axes.Select(SliceAxes.AxisName))+"\n\n先手 A：+Z方向\n後手 B：−Z方向\n\n"+layoutText+"\n先手Aから開始します。\n\n試し配置は対局に入りません。",8,y,330,copy.HasValue?560:450,20);y+=description.rectTransform.sizeDelta.y+41;
+                CfgUi.Label(c,"試し配置セル "+string.Join(",",axes.Select(SliceAxes.AxisName)),8,y,330,30,18);y+=44;
+                var coordinate=CfgUi.Input(c,string.Join(",",Enumerable.Repeat("0",n)),8,y,330,41,value=>{var p=value.Split(',');if(p.Length==n&&p.All(s=>int.TryParse(s,NumberStyles.Integer,CultureInfo.InvariantCulture,out _))){selectedCell=FromUiAxes(p.Select(s=>int.Parse(s,NumberStyles.Integer,CultureInfo.InvariantCulture)).ToArray(),n);if(!selectedCell.InBounds)Notice("各軸 −4〜4で指定してください。");}else Notice(n+"個の整数を入力してください。");});inputs["coordinate"]=coordinate;y+=54;
+                Button(c,"place-coordinate","指定セルに置く",8,y,330,42,()=>PlaceAt(selectedCell));y+=60;
+                if(c.sizeDelta.y<y)c.sizeDelta=new Vector2(c.sizeDelta.x,y);
             }
             else if(category==3)
             {
@@ -278,7 +287,29 @@ namespace Showcase.Unity.Settings
         static bool IsEditable(RawPieceDefinition d)=>d.Kind=="step/1"||d.Kind=="h11/1"||d.Kind=="h22/1";
         // Candidates at the initial position grow about threefold per axis: 46,591 in 8D fit the default budget of 65,536,
         // 138,601 in 9D do not, and 11D needs 1,241,209. A budget is a ceiling, not a cost, so one generous value serves 9D and up.
-        static int RequiredCpuBudget(int dimensions)=>dimensions>=9?5000000:0;
+        // A copied layout has nine times the pieces: 7D already exceeds the default, and 11D needs about 11.2 million.
+        static int RequiredCpuBudget(int dimensions,bool copied)=>copied?(dimensions>=11?20000000:dimensions>=7?5000000:0):(dimensions>=9?5000000:0);
+        void EnsureCpuBudget(int dimensions,bool copied)
+        {
+            int required=RequiredCpuBudget(dimensions,copied);
+            if(!int.TryParse(options.CpuBudget,NumberStyles.Integer,CultureInfo.InvariantCulture,out int budget)||budget<required)options.CpuBudget=required.ToString(CultureInfo.InvariantCulture);
+        }
+        // One row of the initial-layout list: the name on the left, the piece count on the right.
+        void LayoutRow(RectTransform c,string layout,string name,int pieces,float y,bool selected)
+        {
+            var b=Button(c,"layout-"+layout.Replace('/','-'),name,8,y,330,40,()=>SetLayout(layout),selected);
+            var text=b.GetComponentInChildren<Text>();text.alignment=TextAnchor.MiddleLeft;text.rectTransform.anchoredPosition+=new Vector2(8,0);text.rectTransform.sizeDelta-=new Vector2(16,0);
+            var count=CfgUi.Label(b.transform,pieces.ToString(CultureInfo.InvariantCulture)+"駒",8,0,314,40,14,selected?new Color(.81f,.88f,1):Muted);count.alignment=TextAnchor.MiddleRight;
+        }
+        // The next match's initial layout. The display anchor depends on it, so the slice is rebuilt like SetDimensions does.
+        void SetLayout(string layout)
+        {
+            if(layout==draft.Current.InitialLayout)return;
+            var axis=DraftData.CopyAxisOf(layout);if(layout!=DraftData.FlatLayout&&!(axis.HasValue&&axis.Value<DraftDimensions))return;
+            draft.Edit(d=>d.InitialLayout=layout);EnsureCpuBudget(DraftDimensions,axis.HasValue);
+            slice=trialSlice=NewPivotSlice();previewRenderer.SetDisplayState(slice.DisplayState);
+            AfterEdit();BuildDetails();Record("InitialLayout",layout);
+        }
         // The next match's N. Masks that meant "every axis" keep meaning that; fixed definitions always use every axis;
         // a per-axis mask or a step count that no longer fits is clipped. Trial pieces outside the new board are dropped.
         void SetDimensions(int n)
@@ -297,7 +328,9 @@ namespace Showcase.Unity.Settings
                     if(!IsEditable(x)||axes==old||axes>n||axes<=0)x.MaxAxes=Inv(n);
                 }
             });
-            if(!int.TryParse(options.CpuBudget,NumberStyles.Integer,CultureInfo.InvariantCulture,out int budget)||budget<RequiredCpuBudget(n))options.CpuBudget=Inv(RequiredCpuBudget(n));
+            // A copy axis the smaller board no longer has falls back to the flat layout.
+            var copy=DraftData.CopyAxisOf(draft.Current.InitialLayout);if(copy.HasValue&&copy.Value>=n){draft.Edit(d=>d.InitialLayout=DraftData.FlatLayout);copy=null;}
+            EnsureCpuBudget(n,copy.HasValue);
             var bounds=new BoundsN(dimensions:n);
             preview=new PreviewSession(bounds,preview.Pieces.Where(p=>bounds.Contains(p.Position)).Select(p=>p.At(bounds.Normalize(p.Position))));
             if(preview.Find(selectedPiece)==null)selectedPiece=preview.Pieces.FirstOrDefault()?.Id??"";
