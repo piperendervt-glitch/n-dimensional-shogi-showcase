@@ -28,7 +28,7 @@ namespace Showcase.Unity.Settings
         Cfg2ProjectionDial activeDial,dragDial;Camera dragCamera;Vector2 dialLast;
         readonly List<(int a,int b)> listedPlanes=new List<(int a,int b)>();Button resetButton,clearButton;
         // One check box per axis: unchecked axes (UI order) are hidden.
-        readonly List<Toggle> shownToggles=new List<Toggle>();readonly HashSet<int> hiddenAxes=new HashSet<int>();
+        readonly List<Toggle> shownToggles=new List<Toggle>();readonly List<Text> shownNames=new List<Text>();readonly HashSet<int> hiddenAxes=new HashSet<int>();
         // Board and piece shown.
         int dimensions=4;string pieceName="",refreshKey;
         // Directions in UI axis order (X Y Z W V ...), one int[dimensions] each, and the ray length in cells.
@@ -63,7 +63,7 @@ namespace Showcase.Unity.Settings
         {
             controls=controller;ownership=input;uiScale=scale;record=recorder;
             Cfg2Ui.ClearOwned(transform,true);Cfg2Ui.ClearOwned(controls,true);
-            axisLabels.Clear();rowLabels.Clear();columnLabels.Clear();axisButtons.Clear();shownToggles.Clear();stepButtons.Clear();listDials.Clear();listValues.Clear();listedPlanes.Clear();activeDial=dragDial=null;
+            axisLabels.Clear();rowLabels.Clear();columnLabels.Clear();axisButtons.Clear();shownToggles.Clear();shownNames.Clear();stepButtons.Clear();listDials.Clear();listValues.Clear();listedPlanes.Clear();activeDial=dragDial=null;
             // Rays near a hidden-axis camera project far outside the panel: everything in the view is clipped to it.
             if(!TryGetComponent<RectMask2D>(out _))gameObject.AddComponent<RectMask2D>();
             var rect=CfgUi.Rect(transform,"Projected directions",0,0,1,1);CfgUi.Fill(rect);
@@ -342,11 +342,11 @@ namespace Showcase.Unity.Settings
         {
             if(shownToggles.Count!=dimensions)
             {
-                foreach(var t in shownToggles)Destroy(t.gameObject);shownToggles.Clear();
+                foreach(var t in shownToggles)Destroy(t.gameObject);shownToggles.Clear();shownNames.Clear();
                 for(int axis=0;axis<dimensions;axis++)
                 {
                     int a=axis;var t=CfgUi.Toggle(transform,AxisName(a)+"軸",AxisShown(a),0,0,60,v=>{if(syncing)return;SetAxisShown(a,v);record?.Invoke("ProjectionShown",AxisName(a)+"="+v);});
-                    var text=t.GetComponentsInChildren<Text>().First(x=>x.text!="✓");text.fontSize=dimensions<=6?14:12;text.color=AxisColor(a);shownToggles.Add(t);
+                    var text=t.GetComponentsInChildren<Text>().First(x=>x.text!="✓");text.fontSize=14;text.color=AxisColor(a);text.horizontalOverflow=HorizontalWrapMode.Overflow;shownToggles.Add(t);shownNames.Add(text);
                 }
             }
             syncing=true;for(int i=0;i<shownToggles.Count;i++)shownToggles[i].isOn=AxisShown(i);syncing=false;
@@ -356,8 +356,14 @@ namespace Showcase.Unity.Settings
         {
             if(graphic==null||controls==null)return;float w=((RectTransform)transform).rect.width,h=((RectTransform)transform).rect.height,cw=controls.rect.width,ch=controls.rect.height;
             countLabel.rectTransform.sizeDelta=new Vector2(w-20,22);rotationLabel.rectTransform.sizeDelta=new Vector2(w-20,20);
-            float tw=Mathf.Clamp((w-110)/Math.Max(1,dimensions),48,72);
-            for(int i=0;i<shownToggles.Count;i++){var r=(RectTransform)shownToggles[i].transform;r.anchoredPosition=new Vector2(100+i*tw,-48);r.sizeDelta=new Vector2(tw,32);}
+            // Check boxes after the title: "X軸" while they fit in one row, then just "X", then two rows of short names.
+            int nb=Math.Max(1,shownToggles.Count);float room=w-110;bool longNames=room>=nb*62;
+            int perRow=longNames||room>=nb*40?nb:(nb+1)/2;float tw=longNames?Mathf.Min(72,room/nb):Mathf.Min(48,room/perRow);
+            for(int i=0;i<shownToggles.Count;i++)
+            {
+                var r=(RectTransform)shownToggles[i].transform;r.anchoredPosition=new Vector2(100+(i%perRow)*tw,-48-(i/perRow)*28);r.sizeDelta=new Vector2(tw,32);
+                shownNames[i].text=AxisName(i)+(longNames?"軸":"");shownNames[i].rectTransform.sizeDelta=new Vector2(Mathf.Max(10,tw-31),32);
+            }
             float bw=Mathf.Clamp((w-20)/Math.Max(1,dimensions)-4,24,46);
             axisHint.rectTransform.anchoredPosition=new Vector2(10,-(h-104));axisHint.rectTransform.sizeDelta=new Vector2(w-20,34);
             for(int i=0;i<axisButtons.Count;i++){int axis=i/2,row=i%2;var r=(RectTransform)axisButtons[i].transform;r.anchoredPosition=new Vector2(10+axis*(bw+4),-(h-66+row*30));r.sizeDelta=new Vector2(bw,26);}
@@ -495,7 +501,7 @@ namespace Showcase.Unity.Settings
                 for(int i=-qr;i<=qr;i++)for(int j=-sr;j<=sr;j++)
                 {
                     int onEdge=(qr>0&&Math.Abs(i)==g?1:0)+(sr>0&&Math.Abs(j)==g?1:0);
-                    float alpha=edges>0&&onEdge==edges?.2f:onEdge>0?.08f:i==0||j==0?.07f:.035f;
+                    float alpha=edges>0&&onEdge==edges?.2f:onEdge>0?.09f:i==0||j==0?.08f:.05f;
                     Array.Clear(a,0,n);Array.Clear(b,0,n);a[q]=b[q]=i;a[s]=b[s]=j;a[p]=-g;b[p]=g;
                     Cfg2Glow.Line(vh,View.ToScreen(View.Project(a,out _)),View.ToScreen(View.Project(b,out _)),new Color(.5f,.58f,.75f,alpha),onEdge==edges&&edges>0?1.4f:1.1f);
                 }
