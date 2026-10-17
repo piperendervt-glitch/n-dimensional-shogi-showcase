@@ -423,6 +423,22 @@ Test("ND-02-five-dimensional-match-compiles-starts-moves-along-the-fifth-axis-an
     var wrongMask = DemoN(5); wrongMask.Edit(d => d.Definitions.Single(x => x.Id == "gold-legacy").AxesMask = "15"); Assert(!MatchConfig.TryCreate(wrongMask, new MatchOptionsRaw(), out _, out _), "fixed pieces must use every axis");
 });
 
+Test("ND-06-five-dimensional-match-with-3-axis-rook-and-4-axis-bishop-starts-moves-and-saves", () =>
+{
+    // The expert's pairing: in 5D a 3-axis slider and a 4-axis slider both have 80 directions.
+    var draft = DemoN(5);
+    draft.Edit(d => { var r = d.Definitions.Single(x => x.Id == "rook-h11"); r.Kind = "hkk/1"; r.MaxAxes = "3"; var b = d.Definitions.Single(x => x.Id == "bishop-h22"); b.Kind = "hkk/1"; b.MaxAxes = "4"; });
+    var config = Compile(draft); Assert(config.RuleHash != Compile(DemoN(5)).RuleHash, "the axis count is part of the rules");
+    Assert(config.Preset.Find("rook-h11")!.SlideAxes == 3 && config.Preset.Find("bishop-h22")!.SlideAxes == 4);
+    var s = MatchSession.Create(config, MatchMode.PvP, new ManualClock()); var legal = s.QueryLegal(); Assert(legal.Status == MatchQueryStatus.Complete);
+    var rook = s.State.Find("A-Rook")!; var rookMoves = legal.Moves.Where(m => m.PieceId == rook.Id).ToArray();
+    Assert(rookMoves.Length > 0 && rookMoves.All(m => { var d = m.To - rook.Position; var c = Enumerable.Range(0, 5).Select(i => Math.Abs(d[i])).Where(v => v != 0).ToArray(); return c.Length == 3 && c.Distinct().Count() == 1; }), "the rook moves on exactly three axes");
+    Assert(legal.Moves.Where(m => m.PieceId == "A-Bishop").All(m => { var d = m.To - new QN(-3, 3, 0, 0, 0); return Enumerable.Range(0, 5).Count(i => d[i] != 0) == 4; }), "the bishop moves on exactly four axes");
+    Assert(s.TryMove(rookMoves[0], out var why), why); Assert(s.State.Turn == Side.B);
+    string file = Path.Combine(data, "hkk-settings.xml"); MatchSettingsStore.SaveValid(file, draft, new MatchOptionsRaw());
+    var loaded = MatchSettingsStore.Load(file); Assert(loaded.IsValidSettings && loaded.Config!.RuleHash == config.RuleHash && loaded.Config.Preset.Find("rook-h11")!.SlideAxes == 3);
+    string xml = MatchRecordStore.Serialize(s); Assert(xml.Contains("kind=\"hkk/1\"") && xml.Contains("maxAxes=\"3\""));
+});
 Test("ND-03-lower-dimensional-cells-are-accepted-and-normalized-to-the-board", () =>
 {
     var config = Compile(DemoN(5)); var s = Fixture(Kings(), config: config);

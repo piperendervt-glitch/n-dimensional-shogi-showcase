@@ -496,7 +496,7 @@ namespace Showcase.Unity.Settings
         }
         IEnumerator SmokePlaneInputs()
         {
-            SmokeAction("plane-1");yield return null;SmokeAction("tool-select");
+            SmokeAction("plane-2");yield return null;SmokeAction("tool-select");
             string original=preview.Hash;var from=preview.Find("subject").Position;var destination=new QN(0,1,0,0);
             SmokePlaneClick(destination,"2D independent trial move");yield return null;
             SmokeCheck(preview.Find("subject").Position==destination,"XY actual pointer commits selected trial piece through shared P","simulated uGUI pointer + actual fixed-plane picker");

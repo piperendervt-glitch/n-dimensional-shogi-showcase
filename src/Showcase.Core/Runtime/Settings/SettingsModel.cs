@@ -6,7 +6,8 @@ using System.Linq;
 
 namespace NDShogi.Showcase.Core.Settings
 {
-    public enum PreviewMovementKind { Step, H11, H22, Unsupported, Gold, Silver, Knight, Lance }
+    /// <summary>Hkk slides on exactly MaxAxes axes at once (kind text "hkk/1"); H11 and H22 are its k=1 and k=2 forms kept under their own ids so existing data hashes alike.</summary>
+    public enum PreviewMovementKind { Step, H11, H22, Unsupported, Gold, Silver, Knight, Lance, Hkk }
 
     /// <summary>Board domain: every one of <see cref="Dimensions"/> axes spans Min..Max. N=4 with -4..4 is the original 4D board.</summary>
     public sealed class BoundsN
@@ -117,15 +118,24 @@ namespace NDShogi.Showcase.Core.Settings
         public bool AllowEmpty { get; }
         public bool AllowCapture { get; }
         public bool IsSupported => Kind != PreviewMovementKind.Unsupported;
-        public bool IsEditable => Kind == PreviewMovementKind.Step || Kind == PreviewMovementKind.H11 || Kind == PreviewMovementKind.H22;
-        public bool IsSlider => Kind == PreviewMovementKind.H11 || Kind == PreviewMovementKind.H22 || Kind == PreviewMovementKind.Lance;
-        internal PieceKind FixedKind => Kind == PreviewMovementKind.Gold ? PieceKind.Gold : Kind == PreviewMovementKind.Silver ? PieceKind.Silver : Kind == PreviewMovementKind.Knight ? PieceKind.Knight : PieceKind.Lance;
+        public bool IsEditable => Kind == PreviewMovementKind.Step || Kind == PreviewMovementKind.H11 || Kind == PreviewMovementKind.H22 || Kind == PreviewMovementKind.Hkk;
+        public bool IsSlider => Kind == PreviewMovementKind.H11 || Kind == PreviewMovementKind.H22 || Kind == PreviewMovementKind.Hkk || Kind == PreviewMovementKind.Lance;
+        /// <summary>Axes an editable slider moves at once: 1 (rook-like), 2 (bishop-like) or MaxAxes for Hkk; 0 for non-sliders.</summary>
+        public int SlideAxes => Kind == PreviewMovementKind.H11 ? 1 : Kind == PreviewMovementKind.H22 ? 2 : Kind == PreviewMovementKind.Hkk ? MaxAxes : 0;
+        /// <summary>Directions a k-axis slider has on an N-board with every axis in use: C(N,k)·2^k.</summary>
+        public static int SlideDirections(int dimensions, int k)
+        {
+            if (k < 1 || k > dimensions) return 0;
+            long c = 1; for (int i = 1; i <= k; i++) c = c * (dimensions - k + i) / i;
+            return (int)Math.Min(int.MaxValue, c << k);
+        }
+        public PieceKind FixedKind => Kind == PreviewMovementKind.Gold ? PieceKind.Gold : Kind == PreviewMovementKind.Silver ? PieceKind.Silver : Kind == PreviewMovementKind.Knight ? PieceKind.Knight : PieceKind.Lance;
         internal PieceDefinition(RawPieceDefinition raw, PreviewMovementKind kind, int axes, int maxAxes, int maxDistance)
         {
             Id = raw.Id; Name = raw.Name; KindId = raw.Kind; Kind = kind; AxesMask = axes; MaxAxes = maxAxes; MaxDistance = maxDistance;
             Forward = raw.Forward; Sideways = raw.Sideways; Backward = raw.Backward; AllowEmpty = raw.AllowEmpty; AllowCapture = raw.AllowCapture;
         }
-        internal bool Allows(QN delta, Side side, int forwardAxis)
+        public bool Allows(QN delta, Side side, int forwardAxis)
         {
             if (!IsSupported) return false;
             // CFG2 fixed components delegate to the existing verified Movement definitions.
@@ -143,8 +153,9 @@ namespace NDShogi.Showcase.Core.Settings
             if ((forward > 0 && !Forward) || (forward == 0 && !Sideways) || (forward < 0 && !Backward)) return false;
             if (Kind == PreviewMovementKind.Step) return maximum == 1 && nonzero <= MaxAxes;
             if (maximum > MaxDistance) return false;
-            if (Kind == PreviewMovementKind.H11) return nonzero == 1;
-            return nonzero == 2 && Enumerable.Range(0, delta.Dimensions).Count(i => Math.Abs(delta[i]) == maximum) == 2;
+            int k = SlideAxes; if (nonzero != k) return false;
+            if (k == 1) return true;
+            return Enumerable.Range(0, delta.Dimensions).Count(i => Math.Abs(delta[i]) == maximum) == k;
         }
     }
 
@@ -286,7 +297,7 @@ namespace NDShogi.Showcase.Core.Settings
             {
                 if (!ValidText(raw.Id, 128) || !ids.Add(raw.Id)) errors.Add("駒定義IDが不正または重複しています：" + raw.Id);
                 if (!ValidText(raw.Name, 256)) errors.Add("駒名称が不正です：" + raw.Id);
-                PreviewMovementKind kind = raw.Kind == "step/1" ? PreviewMovementKind.Step : raw.Kind == "h11/1" ? PreviewMovementKind.H11 : raw.Kind == "h22/1" ? PreviewMovementKind.H22 : PreviewMovementKind.Unsupported;
+                PreviewMovementKind kind = raw.Kind == "step/1" ? PreviewMovementKind.Step : raw.Kind == "h11/1" ? PreviewMovementKind.H11 : raw.Kind == "h22/1" ? PreviewMovementKind.H22 : raw.Kind == "hkk/1" ? PreviewMovementKind.Hkk : PreviewMovementKind.Unsupported;
                 if (raw.Kind == "cfg2/gold/1") kind = PreviewMovementKind.Gold;
                 else if (raw.Kind == "cfg2/silver/1") kind = PreviewMovementKind.Silver;
                 else if (raw.Kind == "cfg2/knight/1") kind = PreviewMovementKind.Knight;

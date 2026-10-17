@@ -79,12 +79,15 @@ namespace Showcase.Unity.Settings
             pieceHost=Cfg2Ui.Panel(settings,"Piece list",212,100,186,888,Dark);BuildPieces();
             var center=Cfg2Ui.Panel(settings,"Movement preview",408,100,730,888,Dark);
             CfgUi.Label(center,"駒の動きプレビュー",14,10,440,36,22);
-            string[] names={"断面ビュー","XY平面","XZ平面","XW平面","YZ平面"};
-            for(int i=0;i<5;i++){int tab=i;Button(center,"plane-"+i,names[i],12+i*143,51,137,43,()=>SelectPlane(tab),i==0);}
+            // Tab 0 is the live section, tab 1 the N→3D projection of the selected piece's directions, tabs 2.. the fixed planes.
+            string[] names={"断面ビュー","投影ビュー","XY平面","XZ平面","XW平面","YZ平面"};
+            for(int i=0;i<names.Length;i++){int tab=i;var b=Button(center,"plane-"+i,names[i],12+i*119,51,114,43,()=>SelectPlane(tab),i==0);b.GetComponentInChildren<Text>().fontSize=16;}
             previewRect=CfgUi.Rect(center,"Actual section surface",10,104,526,584);previewImage=previewRect.gameObject.AddComponent<RawImage>();previewImage.color=Color.white;
             AttachPointer(previewRect);
             planeRect=Cfg2Ui.Panel(center,"2D confirmation",10,104,526,584,new Color(.025f,.04f,.07f,.98f),true);planeView=planeRect.gameObject.AddComponent<Cfg2PlaneView>();
             planeView.Initialize(Cfg2Plane.XY,(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);planeRect.gameObject.SetActive(false);
+            projectionRect=Cfg2Ui.Panel(center,"Direction projection",10,104,526,584,new Color(.025f,.04f,.07f,.98f),true);projectionView=projectionRect.gameObject.AddComponent<Cfg2ProjectionView>();
+            projectionView.Initialize(ownership,()=>canvas.scaleFactor,(name,data)=>Record(name,data));projectionRect.gameObject.SetActive(false);
             CreateGizmo(center,356,109,"settings-",174,130);
             for(int i=0;i<4;i++)
             {
@@ -141,10 +144,11 @@ namespace Showcase.Unity.Settings
             var ps=preview.Pieces.Select(p=>new CfgVisualPiece{Id=p.Id,DefinitionId=p.DefinitionId,Position=p.Position,Side=p.Side}).ToArray();
             var selected=preview.Find(selectedPiece)?.Position??planeReferenceCell;
             // The XW plane needs a fourth axis: in 3D its tab and its diagram are gone.
-            planeView.Dimensions=n;if(actions.TryGetValue("plane-3",out var xw))xw.gameObject.SetActive(n>3);
+            planeView.Dimensions=n;if(actions.TryGetValue("plane-4",out var xw))xw.gameObject.SetActive(n>3);
             foreach(var diagram in planeMinis){diagram.Dimensions=n;diagram.gameObject.SetActive(diagram.Plane!=Cfg2Plane.XW||n>3);}
             foreach(var diagram in planeMinis.Where(d=>d.gameObject.activeSelf))diagram.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
-            if(planeTab>0)planeView.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
+            if(planeTab>=2)planeView.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
+            if(planeTab==1)projectionView.Refresh(preset,selectedDefinition,ShortNames.TryGetValue(selectedDefinition,out var shortName)?shortName:selectedDefinition);
         }
         void BuildPieces()
         {
@@ -173,10 +177,10 @@ namespace Showcase.Unity.Settings
         }
         void SelectPlane(int tab)
         {
-            if(tab==3&&CurrentDimensions<4)tab=0;
-            planeTab=tab;previewRect.gameObject.SetActive(tab==0);planeRect.gameObject.SetActive(tab!=0);
-            if(tab>0)planeView.Initialize((Cfg2Plane)(tab-1),(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);
-            for(int i=0;i<5;i++)actions["plane-"+i].GetComponent<Image>().color=i==tab?CfgUi.Blue:Dark;
+            if(tab==4&&CurrentDimensions<4)tab=0;
+            planeTab=tab;previewRect.gameObject.SetActive(tab==0);projectionRect.gameObject.SetActive(tab==1);planeRect.gameObject.SetActive(tab>=2);
+            if(tab>=2)planeView.Initialize((Cfg2Plane)(tab-2),(q,revision)=>CommitCell(q,revision,preview.Revision,0),ownership,()=>preview.Revision,()=>draft.Revision);
+            for(int i=0;i<6;i++)actions["plane-"+i].GetComponent<Image>().color=i==tab?CfgUi.Blue:Dark;
             geometryDirty=true;Record("Plane",tab.ToString());
         }
         void RememberScroll(){if(detailScroll!=null)detailPositions[detailContext]=detailScroll.verticalNormalizedPosition;}
@@ -267,6 +271,7 @@ namespace Showcase.Unity.Settings
             if(!editable){CfgUi.Label(c,"既存の移動定義を使用\n\nこの駒の動きは固定です。\n両側の全"+n+"Dに適用します。\n\n成り・打ちはありません。",8,71,330,290,20);return;}
             if(detailTab==0)
             {
+                float sliderBottom=431;
                 if(d.Kind=="step/1")
                 {
                     CfgUi.Label(c,"1手で動ける最大距離：1",8,65,330,37,20);
@@ -275,12 +280,14 @@ namespace Showcase.Unity.Settings
                     Button(c,"pattern-all","全方向（全近傍）",8,302,330,42,()=>Edit(x=>x.MaxAxes=n.ToString(CultureInfo.InvariantCulture)),d.MaxAxes==n.ToString(CultureInfo.InvariantCulture));
                     Button(c,"pattern-axis","軸方向のみ",8,353,330,42,()=>Edit(x=>x.MaxAxes="1"),d.MaxAxes=="1");
                 }
-                else {CfgUi.Label(c,d.Kind=="h11/1"?"軸方向の走り H(1,1)":"2軸の走り H(2,2)",8,65,330,45,20);Field(c,"distance","最大距離",d.MaxDistance,130,v=>Edit(x=>x.MaxDistance=v,false));}
-                CfgUi.Label(c,"使用する軸",8,431,330,32,19);int.TryParse(d.AxesMask,out var mask);
+                else BuildSliderDetails(c,d,n,out sliderBottom);
+                float ay=sliderBottom;
+                CfgUi.Label(c,"使用する軸",8,ay,330,32,19);int.TryParse(d.AxesMask,out var mask);
                 // Four toggles per row: X Y Z W, then V U T S, then R Q P for the largest N.
                 var axes=SliceAxes.Axes(n);int rows=(axes.Length+3)/4;
-                for(int i=0;i<axes.Length;i++){var axis=axes[i];int bit=1<<SliceAxes.CoreAxis(axis);Toggle(c,SliceAxes.AxisName(axis),(mask&bit)!=0,8+i%4*83,476+i/4*40,82,v=>Edit(x=>{int.TryParse(x.AxesMask,out int m);x.AxesMask=(v?m|bit:m&~bit).ToString();}));}
-                CfgUi.Label(c,"青：移動候補   赤：攻撃範囲\n金：選択中の駒\n\n全"+n+"Dで照会し、表示内を描きます。",8,508+rows*40,330,146,18,Muted);
+                for(int i=0;i<axes.Length;i++){var axis=axes[i];int bit=1<<SliceAxes.CoreAxis(axis);Toggle(c,SliceAxes.AxisName(axis),(mask&bit)!=0,8+i%4*83,ay+45+i/4*40,82,v=>Edit(x=>{int.TryParse(x.AxesMask,out int m);x.AxesMask=(v?m|bit:m&~bit).ToString();}));}
+                var legend=CfgUi.Label(c,"青：移動候補   赤：攻撃範囲\n金：選択中の駒\n\n全"+n+"Dで照会し、表示内を描きます。",8,ay+77+rows*40,330,146,18,Muted);
+                float bottom=legend.rectTransform.anchoredPosition.y*-1+146+20;if(c.sizeDelta.y<bottom)c.sizeDelta=new Vector2(c.sizeDelta.x,bottom);
             }
             else
             {
@@ -294,7 +301,72 @@ namespace Showcase.Unity.Settings
         }
         // The coordinate field is written in UI order X,Y,Z,W,V...; QN is in core order.
         static QN FromUiAxes(int[] ui,int dimensions){var axes=SliceAxes.Axes(dimensions);var core=new int[dimensions];for(int i=0;i<dimensions;i++)core[SliceAxes.CoreAxis(axes[i])]=ui[i];return new QN(core);}
-        static bool IsEditable(RawPieceDefinition d)=>d.Kind=="step/1"||d.Kind=="h11/1"||d.Kind=="h22/1";
+        static bool IsEditable(RawPieceDefinition d)=>d.Kind=="step/1"||IsSliderKind(d.Kind);
+        static bool IsSliderKind(string kind)=>kind=="h11/1"||kind=="h22/1"||kind=="hkk/1";
+        // Axes an editable slider moves at once. h11/h22 keep their own kind ids so existing 4D data and hashes are untouched; k>=3 is "hkk/1" with k in MaxAxes.
+        static int SlideAxesOf(RawPieceDefinition d)=>d.Kind=="h11/1"?1:d.Kind=="h22/1"?2:d.Kind=="hkk/1"&&int.TryParse(d.MaxAxes,NumberStyles.Integer,CultureInfo.InvariantCulture,out int k)?k:0;
+        static void SetSlideAxes(RawPieceDefinition d,int k)
+        {
+            if(k==1)d.Kind="h11/1";else if(k==2)d.Kind="h22/1";else{d.Kind="hkk/1";d.MaxAxes=k.ToString(CultureInfo.InvariantCulture);}
+        }
+        // The two axis counts whose direction counts C(N,k)·2^k tie at the maximum (N=2,5,8,11: (N+1)/3 pairs with (2N+2)/3), or null.
+        static (int a,int b)? EqualSlidePair(int n)
+        {
+            int best=0;var ks=new System.Collections.Generic.List<int>();
+            for(int k=1;k<=n;k++){int v=PieceDefinition.SlideDirections(n,k);if(v>best){best=v;ks.Clear();}if(v==best)ks.Add(k);}
+            return ks.Count==2?(ks[0],ks[1]):((int,int)?)null;
+        }
+        static string Compact(int value)=>value>=10000?(value/10000.0).ToString("0.#",CultureInfo.InvariantCulture)+"万":value.ToString("N0",CultureInfo.InvariantCulture);
+        // 基本設定 of 飛車/角行: the "同時に動かす軸の数" row, its direction count, the tie note and pair button, then 最大距離.
+        void BuildSliderDetails(RectTransform c,RawPieceDefinition d,int n,out float bottom)
+        {
+            int k=SlideAxesOf(d);var pair=EqualSlidePair(n);
+            CfgUi.Label(c,"同時に動かす軸の数",8,65,330,32,19);
+            float gap=n<=5?6:3,bw=(330-gap*(n-1))/n;
+            for(int i=1;i<=n;i++)
+            {
+                int kk=i;float bx=8+(i-1)*(bw+gap);
+                var b=Button(c,"slide-axes-"+i,i.ToString(CultureInfo.InvariantCulture),bx,105,bw,58,()=>SetSlideAxesSelected(kk),kk==k);
+                var t=b.GetComponentInChildren<Text>();t.fontSize=n<=5?22:16;t.rectTransform.anchoredPosition=new Vector2(0,7);
+                var count=CfgUi.Label(b.transform,Compact(PieceDefinition.SlideDirections(n,kk)),0,32,bw,22,n<=5?13:n<=8?10:8,kk==k?new Color(.81f,.88f,1):Muted);count.alignment=TextAnchor.MiddleCenter;
+            }
+            float y=170;
+            if(pair.HasValue)
+            {
+                // A gold bracket under the two buttons whose counts tie.
+                float ax=8+(pair.Value.a-1)*(bw+gap)+bw/2,bx2=8+(pair.Value.b-1)*(bw+gap)+bw/2;
+                var bracket=CfgUi.Rect(c,"Equal-direction bracket",ax,166,bx2-ax,8);var img=bracket.gameObject.AddComponent<Image>();img.color=Gold;img.raycastTarget=false;
+                var label=CfgUi.Label(c,"同数",ax,176,bx2-ax,18,12,Gold);label.alignment=TextAnchor.MiddleCenter;y=200;
+            }
+            int directions=PieceDefinition.SlideDirections(n,k);
+            CfgUi.Label(c,(k==1?"軸方向の走り":k+"軸の斜め走り")+"："+directions.ToString("N0",CultureInfo.InvariantCulture)+"方向",8,y,330,36,22,Gold);y+=38;
+            long combos=k>0?directions>>k:0;
+            CfgUi.Label(c,"（軸の選び方 "+combos.ToString("N0",CultureInfo.InvariantCulture)+"通り × 向き "+(1<<Math.Max(0,k)).ToString("N0",CultureInfo.InvariantCulture)+"通り）",8,y,330,26,14,Muted);y+=30;
+            CfgUi.Label(c,k==1?"1本の軸に沿ってまっすぐ進みます。":k+"本の座標が同じマス数ずつ進みます。\nほかの軸は動きません。",8,y,330,50,16);y+=56;
+            if(pair.HasValue)
+            {
+                int a=pair.Value.a,pb=pair.Value.b;int tie=PieceDefinition.SlideDirections(n,a);
+                CfgUi.Label(c,n+"次元では "+a+"軸 と "+pb+"軸 が同じ"+tie.ToString("N0",CultureInfo.InvariantCulture)+"方向。\n飛車と角のような「対の駒」になります。",8,y,330,50,15,Gold);y+=56;
+                Button(c,"slide-pair","方向数がそろう組にする（"+a+"軸・"+pb+"軸）",8,y,330,42,()=>SetSlidePair(a,pb));y+=52;
+            }
+            else{CfgUi.Label(c,n+"次元には方向数がそろう組はありません\n（5・8・11次元にあります）。",8,y,330,50,15,Muted);y+=56;}
+            // The other slider's current setting, so the pair reads as one decision.
+            string otherId=d.Id=="rook-h11"?"bishop-h22":"rook-h11";var other=draft.Current.Definitions.FirstOrDefault(x=>x.Id==otherId);
+            if(other!=null&&IsSliderKind(other.Kind)){int ok=SlideAxesOf(other);CfgUi.Label(c,(ShortNames.TryGetValue(otherId,out var on)?on:other.Name)+"："+ok+"軸（"+PieceDefinition.SlideDirections(n,ok).ToString("N0",CultureInfo.InvariantCulture)+"方向）",8,y,330,26,14,Muted);y+=34;}
+            Field(c,"distance","最大距離",d.MaxDistance,y,v=>Edit(x=>x.MaxDistance=v,false));y+=120;
+            bottom=y;
+        }
+        void SetSlideAxesSelected(int k)
+        {
+            int n=DraftDimensions;if(k<1||k>n)return;
+            Edit(x=>{if(IsSliderKind(x.Kind))SetSlideAxes(x,k);});Record("SlideAxes",selectedDefinition+"="+k.ToString(CultureInfo.InvariantCulture));
+        }
+        // 飛車 takes the smaller axis count of the tie, 角行 the larger: one edit, so one Undo restores both.
+        void SetSlidePair(int a,int b)
+        {
+            draft.Edit(d=>{foreach(var x in d.Definitions){if(!IsSliderKind(x.Kind))continue;if(x.Id=="rook-h11")SetSlideAxes(x,a);else if(x.Id=="bishop-h22")SetSlideAxes(x,b);}});
+            AfterEdit();BuildDetails();Record("SlidePair",a+"/"+b);
+        }
         // Candidates at the initial position grow about threefold per axis: 46,591 in 8D fit the default budget of 65,536,
         // 138,601 in 9D do not, and 11D needs 1,241,209. A budget is a ceiling, not a cost, so one generous value serves 9D and up.
         // A copied layout has nine times the pieces: 7D already exceeds the default, and 11D needs about 11.2 million.
@@ -336,7 +408,9 @@ namespace Showcase.Unity.Settings
                     bool every=!IsEditable(x)||mask==BoundsN.FullAxesMask(old)||mask<=0;
                     x.AxesMask=Inv(every?BoundsN.FullAxesMask(n):mask&BoundsN.FullAxesMask(n));
                     int.TryParse(x.MaxAxes,NumberStyles.Integer,CultureInfo.InvariantCulture,out int axes);
-                    if(!IsEditable(x)||axes==old||axes>n||axes<=0)x.MaxAxes=Inv(n);
+                    // A slider's axis count is a rule choice, not "every axis": it only shrinks when the new board has fewer axes.
+                    if(x.Kind=="hkk/1"){if(axes>n||axes<=0)SetSlideAxes(x,Math.Max(1,Math.Min(axes,n)));}
+                    else if(!IsEditable(x)||axes==old||axes>n||axes<=0)x.MaxAxes=Inv(n);
                 }
                 var copy=DraftData.CopyAxisOf(d.InitialLayout);if(copy.HasValue&&copy.Value>=n)d.InitialLayout=DraftData.FlatLayout;
             });
@@ -364,7 +438,7 @@ namespace Showcase.Unity.Settings
                 if(n!=viewDimensions)rotationAxis=LogicalAxis.W;
                 viewDimensions=n;viewLayout=layout;EnsureCpuBudget(n,copy.HasValue);trialSlice=NewPivotSlice(n,copy);
                 // During a match only the trial view waiting in the background changes.
-                if(session==null||opened){slice=trialSlice;previewRenderer.SetDisplayState(slice.DisplayState);if(planeTab==3&&n<4)SelectPlane(0);if(opened)UpdateCamera();}
+                if(session==null||opened){slice=trialSlice;previewRenderer.SetDisplayState(slice.DisplayState);if(planeTab==4&&n<4)SelectPlane(0);if(opened)UpdateCamera();}
                 UpdateHelpText();Record("TrialViewReset","N="+n+";layout="+layout);
             }
             UpdateHeader();UpdateWindowTitle();

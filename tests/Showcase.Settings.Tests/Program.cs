@@ -113,6 +113,33 @@ Test("H11-H22-distance-and-board-edge-independent-sets", () =>
         Assert(expected.SetEquals(result.G) && expected.SetEquals(result.P)); Assert(result.TheoreticalCount == (kind == "h11/1" ? 8 : 24) * max);
     }
 });
+Test("HKK-k-axis-slider-counts-C(N,k)-times-2^k-directions-and-5D-3-and-4-axes-tie-at-80", () =>
+{
+    // A k-axis slider changes exactly k coordinates by the same amount; "hkk/1" reads k from MaxAxes, so h11/h22 data is untouched.
+    Assert(PieceDefinition.SlideDirections(5, 3) == 80 && PieceDefinition.SlideDirections(5, 4) == 80 && PieceDefinition.SlideDirections(8, 5) == 1792 && PieceDefinition.SlideDirections(8, 6) == 1792 && PieceDefinition.SlideDirections(11, 7) == 42240 && PieceDefinition.SlideDirections(11, 8) == 42240);
+    Assert(PieceDefinition.SlideDirections(4, 1) == 8 && PieceDefinition.SlideDirections(4, 2) == 24 && PieceDefinition.SlideDirections(5, 6) == 0 && PieceDefinition.SlideDirections(5, 0) == 0);
+    foreach (int k in new[] { 1, 2, 3, 4, 5 })
+    {
+        var data = new DraftData { Name = "hkk fixture", SourceId = "hkk/0.1", Dimensions = "5", Min = "-4", Max = "4" };
+        data.Definitions.Add(new RawPieceDefinition { Id = "m", Name = "k軸走り", Kind = "hkk/1", AxesMask = "31", MaxAxes = k.ToString(), MaxDistance = "4" });
+        var preset = Compile(new SettingsDraft(data)); var d = preset.Find("m")!;
+        Assert(d.Kind == PreviewMovementKind.Hkk && d.IsEditable && d.IsSlider && d.SlideAxes == k);
+        var session = new PreviewSession(new BoundsN(-4, 4, 5), new[] { new TrialPiece("subject", "m", Side.A, new QN(0, 0, 0, 0, 0)) });
+        var result = PreviewQuery.Execute(preset, session, "subject");
+        int directions = PieceDefinition.SlideDirections(5, k);
+        Assert(result.TheoreticalCount == directions * 4 && result.G.Count == directions * 4, "k=" + k + " " + result.G.Count);
+        Assert(result.G.All(q => { var c = Enumerable.Range(0, 5).Select(i => Math.Abs(q[i])).Where(v => v != 0).ToArray(); return c.Length == k && c.Distinct().Count() == 1; }), "every target changes exactly k coordinates by one amount");
+    }
+    // k=1 and k=2 under "hkk/1" move exactly like h11/1 and h22/1.
+    foreach (var pair in new[] { (1, "h11/1"), (2, "h22/1") })
+    {
+        var a = Compile(Fixture(pair.Item1, "hkk/1", 3)); var b = Compile(Fixture(4, pair.Item2, 3));
+        Assert(PreviewQuery.Execute(a, Position(), "subject").G.ToHashSet().SetEquals(PreviewQuery.Execute(b, Position(), "subject").G));
+    }
+    // k above N is rejected like any other 同時軸数 out of range.
+    var bad = new DraftData { Name = "bad", SourceId = "hkk/0.1", Dimensions = "4" }; bad.Definitions.Add(new RawPieceDefinition { Id = "m", Name = "m", Kind = "hkk/1", AxesMask = "15", MaxAxes = "5", MaxDistance = "4" });
+    Assert(!new SettingsDraft(bad).TryCompile(out _, out _));
+});
 Test("both-occlusion-versions-H11-H22-middle-endpoint-and-corner", () =>
 {
     foreach (string mode in new[] { "lattice-line/1", "supercover-closed/1" }) foreach (string kind in new[] { "h11/1", "h22/1" })

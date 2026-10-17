@@ -28,7 +28,7 @@ namespace Showcase.Unity.Settings
         Canvas canvas; CanvasGroup inputGate; RectTransform root,menu,settings,matchHud,detailHost,pieceHost,previewRect,planeRect,resultPanel;
         Text headerStatus,headerDimensions,hudDimensions,counts,statusText,clockNear,clockFar,matchStatus,resultText; ScrollRect detailScroll;
         RawImage previewImage; RenderTexture previewTexture;
-        readonly List<Cfg2MiniView> minis=new List<Cfg2MiniView>(); Cfg2PlaneView planeView;
+        readonly List<Cfg2MiniView> minis=new List<Cfg2MiniView>(); Cfg2PlaneView planeView; Cfg2ProjectionView projectionView; RectTransform projectionRect;
         readonly List<RectTransform> helperPanels=new List<RectTransform>();
         readonly Dictionary<string,Button> actions=new Dictionary<string,Button>();
         readonly Dictionary<string,InputField> inputs=new Dictionary<string,InputField>();

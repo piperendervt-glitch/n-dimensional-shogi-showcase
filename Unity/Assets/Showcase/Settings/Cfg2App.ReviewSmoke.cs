@@ -154,8 +154,8 @@ namespace Showcase.Unity.Settings
             else Record("SmokeSkipped","L2 final glide: the CPU move presentation is off in this machine's preferences");
 
             // (d) A 3D board: Options, a match and the way back.
-            SmokeAction("menu-3");yield return null;SmokeAction("category-1");yield return null;SmokeAction("dimensions-3");yield return null;RenderGeometry();SelectPlane(3);
-            SmokeCheck(ReviewViewOn(3)&&!actions["plane-3"].gameObject.activeSelf&&planeTab==0,"3D Options: board, view and header in 3D, no XW plane (H2)");
+            SmokeAction("menu-3");yield return null;SmokeAction("category-1");yield return null;SmokeAction("dimensions-3");yield return null;RenderGeometry();SelectPlane(4);
+            SmokeCheck(ReviewViewOn(3)&&!actions["plane-4"].gameObject.activeSelf&&planeTab==0,"3D Options: board, view and header in 3D, no XW plane (H2)");
             PickRotationAxis(LogicalAxis.W);
             SmokeCheck(rotationAxis==LogicalAxis.W&&notice.Contains("軸はありません"),"a 3D board refuses a W rotation axis with a notice (H2)");
             SmokeAction("category-5");yield return null;
