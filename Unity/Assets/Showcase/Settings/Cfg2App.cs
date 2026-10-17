@@ -211,7 +211,7 @@ namespace Showcase.Unity.Settings
             // every piece, candidate, selected cell and hit uses one real section.
             visuals.RefreshBoard(mainMenu?ps:Array.Empty<CfgVisualPiece>());
             visuals.RefreshBoardCandidates(Array.Empty<QN>(),null,false);
-            foreach(var panel in helperPanels)panel.gameObject.SetActive(showHelpers&&!(panel==settingsGizmo&&opened&&planeTab==1));
+            foreach(var panel in helperPanels)panel.gameObject.SetActive(showHelpers&&!(panel==settingsGizmo&&opened&&(planeTab==1||planeTab==7)));
             RefreshAuxiliaryViews();
             geometryDirty=false;UpdateCounts();
         }

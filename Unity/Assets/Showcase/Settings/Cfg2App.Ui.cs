@@ -141,6 +141,8 @@ namespace Showcase.Unity.Settings
             if(n==planeMiniDimensions&&k==planeMiniAxes&&planeMiniScroll!=null)return;planeMiniDimensions=n;planeMiniAxes=k;
             CfgUi.Clear(planeMiniHost);planeMinis.Clear();subspaceMinis.Clear();subspaceNote=null;
             planeMiniScroll=CfgUi.Scroll(planeMiniHost,"Plane diagrams",0,0,planeMiniHost.rect.width,planeMiniHost.rect.height,out var content,584);
+            // 165 subspaces in 11D are a long column: one wheel notch moves about one row.
+            planeMiniScroll.scrollSensitivity=k>=3?150:60;
             if(k>=3)
             {
                 int total=Cfg2SubspaceView.SubspaceCount(n,k);
@@ -151,7 +153,7 @@ namespace Showcase.Unity.Settings
                     var chosen=axes;
                     var open=r.gameObject.AddComponent<Button>();CfgUi.NoNavigation(open);open.targetGraphic=r.GetComponent<Image>();open.onClick.AddListener(()=>{if(ownership.Owner!=InputOwner.None)return;Record("UI","subspace-"+diagram.Name);PlayMenuConfirm();ShowSubspace(chosen);});
                 }
-                subspaceNote=CfgUi.Label(content,k+"軸を同時に動かす駒なので、2軸の平面ではなく "+k+"軸の部分空間（"+total+"個"+(total>MaxSubspaceMinis?"、先頭 "+MaxSubspaceMinis+"個を表示":"")+"）に候補を描いています。押すと大きく表示します。",0,0,100,40,11,Muted);
+                subspaceNote=CfgUi.Label(content,k+"軸を同時に動かす駒なので、2軸の平面ではなく "+k+"軸の部分空間に候補を描いています（全 "+total+" 個"+(total>MaxSubspaceMinis?"のうち先頭 "+MaxSubspaceMinis+" 個を表示":"")+"）。図を押すと中央に大きく表示し、「断面ビュー」で元の表示に戻ります。",0,0,100,40,11,Muted);
                 LayoutPlaneMinis();return;
             }
             foreach(var (h,v) in Cfg2PlaneView.Planes(n))
@@ -170,10 +172,12 @@ namespace Showcase.Unity.Settings
             int columns=Mathf.Max(1,Mathf.FloorToInt((w-14+6)/180f));
             if(subspaceMinis.Count>0)
             {
-                int rows=(subspaceMinis.Count+columns-1)/columns;float noteHeight=subspaceNote==null?0:80;
+                int rows=(subspaceMinis.Count+columns-1)/columns;
+                // The note wraps at about 15 characters per 180 px of width; keep room for every line plus a margin.
+                float noteWidth=w-22;float noteHeight=subspaceNote==null?0:Mathf.Ceil(subspaceNote.text.Length/Mathf.Max(1,Mathf.Floor(noteWidth/12f)))*16+24;
                 Place(planeMiniScroll.content,0,0,w-14,Mathf.Max(h,rows*180-6+noteHeight));
                 for(int i=0;i<subspaceMinis.Count;i++)Place((RectTransform)subspaceMinis[i].transform,(i%columns)*180,(i/columns)*180,174,174);
-                if(subspaceNote!=null)Place(subspaceNote.rectTransform,4,rows*180,w-22,76);
+                if(subspaceNote!=null)Place(subspaceNote.rectTransform,4,rows*180,noteWidth,noteHeight);
                 return;
             }
             int planeRows=(planeMinis.Count+columns-1)/columns;
@@ -203,7 +207,8 @@ namespace Showcase.Unity.Settings
         void ShowSectionAids(bool on)
         {
             trialTools.gameObject.SetActive(on);displayToggles.gameObject.SetActive(on);counts.gameObject.SetActive(on);planeMiniHost.gameObject.SetActive(on);
-            settingsGizmo.gameObject.SetActive(on&&showHelpers);projectionControls.gameObject.SetActive(!on);
+            // The gizmo would sit on the large subspace figure's own axes, so that view hides it too.
+            settingsGizmo.gameObject.SetActive(on&&showHelpers&&planeTab!=7);projectionControls.gameObject.SetActive(!on);
         }
         void Toggle(Transform parent,string text,bool value,float x,float y,float w,Action<bool> action)
         {CfgUi.Toggle(parent,text,value,x,y,w,v=>{action(v);geometryDirty=true;});}
@@ -240,7 +245,9 @@ namespace Showcase.Unity.Settings
             var selected=preview.Find(selectedPiece)?.Position??planeReferenceCell;
             // The XW tab needs a fourth axis: in 3D it is gone. The diagrams are rebuilt for the planes of the current N.
             planeView.Dimensions=n;if(actions.TryGetValue("plane-4",out var xw))xw.gameObject.SetActive(n>3);
-            EnsurePlaneMinis(n,preset?.Find(selectedDefinition)?.SlideAxes??0);
+            int slideAxes=preset?.Find(selectedDefinition)?.SlideAxes??0;EnsurePlaneMinis(n,slideAxes);
+            // The large subspace figure belongs to one k: another piece or axis count closes it back to the section view.
+            if(planeTab==7&&(slideAxes<3||subspaceView.AxisCount!=slideAxes||subspaceView.Dimensions!=n)){SelectPlane(0);return;}
             if(planeMiniHost.gameObject.activeInHierarchy)
             {
                 foreach(var diagram in planeMinis)diagram.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);

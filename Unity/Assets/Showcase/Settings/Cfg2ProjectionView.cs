@@ -343,7 +343,7 @@ namespace Showcase.Unity.Settings
             listTitle.rectTransform.anchoredPosition=new Vector2(12,-y);listTitle.rectTransform.sizeDelta=new Vector2(cw-24,18);y+=22;
             // Small dials in a grid, at least one row and as many more as fit above the zoom row (30) and the buttons (30).
             const float buttons=30;
-            int columns=Math.Max(1,Mathf.FloorToInt((cw-24)/DialCell));int rowsAvailable=Math.Max(1,Mathf.FloorToInt((ch-y-20-30-buttons-20)/DialRow));
+            int columns=Math.Max(1,Mathf.FloorToInt((cw-24)/DialCell));int rowsAvailable=Math.Max(1,Mathf.FloorToInt((ch-y-20-48-buttons-20)/DialRow));
             listCapacity=Mathf.Clamp(columns*rowsAvailable,0,MaxListed);int shownCount=Math.Min(listedPlanes.Count,listCapacity);int rows=(shownCount+columns-1)/columns;
             listHost.anchoredPosition=new Vector2(12,-y);listHost.sizeDelta=new Vector2(cw-24,Math.Max(10,rows*DialRow));
             float cellX=(cw-24-columns*DialCell)*.5f;
@@ -355,9 +355,9 @@ namespace Showcase.Unity.Settings
                 listValues[i].rectTransform.anchoredPosition=new Vector2(x,-(row*DialRow+DialSize+2));listValues[i].rectTransform.sizeDelta=new Vector2(DialCell,18);
             }
             y+=rows*DialRow;listMore.rectTransform.anchoredPosition=new Vector2(12,-y);if(listMore.text!="")y+=20;y+=8;
-            // Zoom on one row: title left, value right, the slider between them.
-            zoomTitle.rectTransform.anchoredPosition=new Vector2(12,-y);zoomTitle.rectTransform.sizeDelta=new Vector2(70,18);zoomLabel.rectTransform.anchoredPosition=new Vector2(cw-12-44,-y);zoomLabel.rectTransform.sizeDelta=new Vector2(44,18);
-            float zw=cw-24-70-48;var zs=(RectTransform)zoomSlider.transform;zs.anchoredPosition=new Vector2(12+70,-(y-3));zs.sizeDelta=new Vector2(zw,24);ResizeSlider(zoomSlider,zw);y+=30;
+            // Zoom: title and value on one line, the full-width slider under them.
+            zoomTitle.rectTransform.anchoredPosition=new Vector2(12,-y);zoomTitle.rectTransform.sizeDelta=new Vector2(120,18);zoomLabel.rectTransform.anchoredPosition=new Vector2(cw-12-60,-y);zoomLabel.rectTransform.sizeDelta=new Vector2(60,18);y+=20;
+            var zs=(RectTransform)zoomSlider.transform;zs.anchoredPosition=new Vector2(12,-y);zs.sizeDelta=new Vector2(cw-24,24);ResizeSlider(zoomSlider,cw-24);y+=28;
             float by=Math.Max(y+8,ch-12-buttons);float hw=(cw-24-6)/2;
             ((RectTransform)resetButton.transform).anchoredPosition=new Vector2(12,-by);((RectTransform)resetButton.transform).sizeDelta=new Vector2(hw,30);
             ((RectTransform)clearButton.transform).anchoredPosition=new Vector2(12+hw+6,-by);((RectTransform)clearButton.transform).sizeDelta=new Vector2(hw,30);
