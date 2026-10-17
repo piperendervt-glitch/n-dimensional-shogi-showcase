@@ -79,7 +79,7 @@ namespace Showcase.Unity.Settings
                 GameObject.Find("CFG1 exact cell sections").layer=30;GameObject.Find("CFG2 exact cell faces").layer=30;
                 previewRenderer.SetDisplayState(slice.DisplayState);
                 draft=SettingsDraft.CreateMatchDemo();options=new MatchOptionsRaw();preview=PreviewSession.CreateExperiment();
-                LoadStartup();trialSlice=slice;ValidateSettings();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
+                LoadStartup();trialSlice=slice;ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
                 trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;settingsDirty=(!File.Exists(validPath)||migratedView)&&startupLoadError=="";
                 Application.wantsToQuit+=PrepareShutdown;
                 Record("Started","CFG2; font="+fontName+"; "+Screen.width+"x"+Screen.height+"; reportedDpi="+Screen.dpi+"; data="+runtimeRoot);

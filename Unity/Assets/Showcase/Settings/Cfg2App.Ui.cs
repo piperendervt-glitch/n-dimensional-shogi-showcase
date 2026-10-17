@@ -197,7 +197,8 @@ namespace Showcase.Unity.Settings
                 CfgUi.Label(c,"演出中と待ち時間の間は、CPUの\n持ち時間を消費しません。",8,718,330,52,16,Muted);
                 CfgUi.Label(c,"強さの段階設定はありません。",8,782,330,40,17,Muted);
             }
-            else BuildDisplay(c);
+            // The help text ends well inside its label, so the sound section fits above the fold.
+            else{BuildDisplay(c);BuildSound(c,560);}
             detailScroll.verticalNormalizedPosition=detailPositions.TryGetValue(detailContext,out var value)?value:1;
         }
         void Field(RectTransform c,string id,string label,string value,float y,Action<string> edited)

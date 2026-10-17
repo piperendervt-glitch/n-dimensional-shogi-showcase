@@ -96,7 +96,7 @@ namespace Showcase.Unity.Settings
                 if(selected!=null&&selected.Side==session.State.Turn&&result?.P.Contains(q)==true)
                 {
                     bool moved=session.TryMove(new Move(selected.Id,selected.Position,q),stateRevision,generation,out var reason);Record("HumanCommit",moved+";"+reason+";"+session.State.Hash);
-                    if(moved){selectedPiece="";QueueQuery();SaveMatchRecord();RefreshMatch();}return;
+                    if(moved){PlayPieceSound();selectedPiece="";QueueQuery();SaveMatchRecord();RefreshMatch();}return;
                 }
                 if(target!=null&&target.Side==session.State.Turn){selectedPiece=target.Id;QueueQuery();Record("MatchSelected",selectedPiece+";"+q);}
                 return;
