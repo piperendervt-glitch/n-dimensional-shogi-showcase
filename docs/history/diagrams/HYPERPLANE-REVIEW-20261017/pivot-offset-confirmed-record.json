@@ -1,0 +1,37 @@
+{
+  "scope": "Concept diagram only; no game code changes.",
+  "userClarification": "Initial pivot is piece-plane center P at Y=h",
+  "O": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "P": [
+    0,
+    "h",
+    0,
+    0
+  ],
+  "pieces": "(x,h,z,0), fixed",
+  "centerC": "shared display-frame center and rotation pivot; initially P, origin command goes to O",
+  "presetOffsets": [
+    {
+      "XYZ": 0,
+      "XYW": 0,
+      "XZW": 0.65,
+      "YZW": 0
+    },
+    {
+      "XYZ": 0,
+      "XYW": 0,
+      "XZW": 0,
+      "YZW": 0
+    }
+  ],
+  "samples": "illustrative positions only",
+  "h": "unspecified; .65 used only for drawing",
+  "operation": "Move view frame and pivot together; preserve orientation on origin translation. Axis preset selection preserves C.",
+  "YW90": "H: Y=C_y; at C=P all sample centers remain in exact slice, at C=O no sample centers remain if h is nonzero",
+  "XW90": "H: X=0 for both centers; Y offset does not distinguish this rotation."
+}

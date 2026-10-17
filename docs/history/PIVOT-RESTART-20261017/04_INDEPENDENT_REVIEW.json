@@ -1,0 +1,26 @@
+{
+  "requestId": "PIVOT-RESTART-20261017-083955-JST",
+  "scope": "Independent read-only review; implementation is ongoing. Findings are not closed by this record.",
+  "reviewer": "/root/pivot_review",
+  "productExecutionByReviewer": false,
+  "reviewedAreas": ["geometry/render/input/smoke", "build/source/distribution/Player identity"],
+  "findings": [
+    {"id":"IR01","issue":"Normal empty XYW fixture must not fail a positive visible-piece assertion; independently verify expected emptiness and stale mesh removal.","status":"FORWARDED"},
+    {"id":"IR02","issue":"Cancel an owned gesture before switching screen/session and restore the captured original animator, not a mutable current slice.","status":"FORWARDED"},
+    {"id":"IR03","issue":"A click on an already selected piece is weak evidence. Verify a real selection change, selected-cell frame vertices and known-triangle hit agreement.","status":"FORWARDED"},
+    {"id":"IR04","issue":"Settings origin/center controls must be reachable without replacing approved 2D mini views or adding permanent controls.","status":"TECHNICAL_DECISION_D01_ACCEPTED_IMPLEMENTATION_PENDING"},
+    {"id":"IR05","issue":"Build and launch source checks must detect added paths as well as modified or missing files.","status":"FORWARDED"},
+    {"id":"IR06","issue":"Timeout, identity failure or exceptional interruption must stop and wait for the exact child process launched, recording its exit. Successful interactive launches are separate.","status":"FORWARDED"},
+    {"id":"IR07","issue":"Validate the successful Unity process command output/run/request/design arguments against the current build identity.","status":"FORWARDED"},
+    {"id":"IR08","issue":"Validate phase names and resolved launch path containment within the run.","status":"FORWARDED"},
+    {"id":"IR09","issue":"Use atomic Player identity output or bounded read retry to prevent existence-versus-write races.","status":"FORWARDED"},
+    {"id":"IR10","issue":"Only exclude the distribution manifest at the build root, not same-named files in arbitrary subdirectories.","status":"FORWARDED"},
+    {"id":"IR11","issue":"Update board-space help from misleading all-Y=0 wording to the displayed embedding plane Y=h and initial center P; document reachable center controls.","status":"FORWARDED_BY_PARENT"}
+  ],
+  "positiveStaticObservations": [
+    "No explicit fallback to an old executable was found in the new path.",
+    "Identity links request, source aggregate, run, scene, app, build token, Unity build GUID, Player PID and actual executable.",
+    "No clear static contradiction found in fixed E, A transport, actual section removal, common pick mapping, camera-linked axes or 2D plane extraction. This is not a runtime PASS."
+  ],
+  "closureEvidence": "Pending final changed-source review and current-run tests; record final disposition separately without erasing the original findings."
+}

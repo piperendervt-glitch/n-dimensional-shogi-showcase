@@ -1,0 +1,113 @@
+{
+  "scope": "Future implementation evidence. No item is marked product PASS by design review.",
+  "items": [
+    {
+      "id": "PV01",
+      "criterion": "初期C=P、E不変。既知Q4から世界Y=hと画面位置を独立計算して比較",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV02",
+      "criterion": "XYZのままP→Oで駒の高さhを保持。C、A、有限窓の変化を同時記録",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV03",
+      "criterion": "ZY固定のXW90°で、点の切断条件はX=0。XYZ基準の検査では参照位置(0,h,z,0)。実木駒は形状交差を別に検証",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV04",
+      "criterion": "XZ固定のYW90°で、C=PならY=h、C=OならY=0。h=3の初期駒は後者で非交差。近傍投影で残さない",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV05",
+      "criterion": "一般姿勢の接線移動で共通領域の実体位置を保持。特にXW90°後のW移動で固定XYZアンカーへの誤写像を検出",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV06",
+      "criterion": "全基準・45°・合成任意角・移動後で、PieceIdの描画とhitが単一。選択枠と既知メッシュ点のスクリーン誤差を測る",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV07",
+      "criterion": "4D回転・移動・カメラ操作の前後で論理局面hashと全4DのG/Pが不変",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV08",
+      "criterion": "カメラのみ変更すると主ギズモと全小窓の軸が同時更新。固定Quaternionが残らない",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV09",
+      "criterion": "4D姿勢変更で小窓の交差を独立計算と比較。一致3D・交差2D・退化と法線軸を正しく表示",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV10",
+      "criterion": "異なる小窓から同じ世界軸δで同じC/Aを得る。退化軸、境界越え、フォーカス喪失、取消、古いhit拒否を試験",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV11",
+      "criterion": "左clickとdrag、Ctrl drag、Shift pan、中pan、wheel、Home系を実Playerで操作。模擬イベントとOS入力を区別",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV12",
+      "criterion": "設定右列はXY/XZ/XW/YZ。共通G/Pと選択セル固定座標から算出。クリックで別の局面を勝手に生成しない",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV13",
+      "criterion": "任意角＋移動C＋A＋カメラ＋hを保存し、別プロセスで再読込。未知版・破損・書込失敗時は旧版と編集中状態を保全",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV14",
+      "criterion": "新表示方式の旧保存取扱いを明示。既存保存・証拠・原本・46ファイルの内容hashを保全",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV15",
+      "criterion": "承認3画像との比較を1920×1080、1536×1024、1280×720で実行可能な範囲で取得。不要ボタンと注記がなく、日本語・小窓・時計が読める",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV16",
+      "criterion": "実在するCore/Geometry/Settings/Interaction/Match回帰を前後実行し、期待値変更は採用仕様との差だけ説明。失敗を削除してPASSにしない",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "PV17",
+      "criterion": "新規Windows出力へビルド・起動・操作・保存再起動。ログ、実行物hash、状態dump、実画面を同じrunに保存",
+      "status": "NOT_RUN",
+      "evidence": []
+    }
+  ],
+  "humanReview": [
+    "Appearance compared with approved menu/play/settings images",
+    "Mouse/keyboard usability and comprehension of O/P/C",
+    "Japanese readability and controls at actual DPI"
+  ],
+  "legacyIds": "Preserve CFG0 AUTO/RE/UI4/SW2 and C1 IDs; do not promote unrelated items."
+}

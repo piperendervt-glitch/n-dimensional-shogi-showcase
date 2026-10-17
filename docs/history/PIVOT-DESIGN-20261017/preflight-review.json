@@ -1,0 +1,591 @@
+{
+  "schema": "pivot-design-readonly-preflight/1",
+  "observedAt": "2026-10-17T03:43:49.6299064+09:00",
+  "scope": "Read-only source/preflight; only these two new report files written. No application tests, Unity imports, builds, or source edits.",
+  "contract": {
+    "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md",
+    "sha256": "7019DD40866420C02264C387249AE7F6D4F7A4AFDA629E661A54A77CF811E408",
+    "readStatus": "FULL_CONTENT_READ",
+    "precedence": "Latest user clarification and authorization supersede historical draft approval state."
+  },
+  "cfg0Documents": [
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\00_RETURN_SUMMARY_JA.md",
+      "sha256": "5303146D402BF5896BD99DE36D3E6564CA787CA6AD5DC9F0BE161E7CE5A93FF6",
+      "readStatus": "FULL_CONTENT_READ"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\01_LOCAL_REPOSITORY_AUDIT_JA.md",
+      "sha256": "E30B7EE7A7AA49EDAE9ACCE2002985911C3B0D240EC94A6B401784B1C4F03DCF",
+      "readStatus": "FULL_CONTENT_READ"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\02_CAPABILITY_AND_GAP_MATRIX_JA.md",
+      "sha256": "32F3C66E196265BD8C80A7D8C92129DB273E2F20B55A1EC3ECCF78067074FF67",
+      "readStatus": "FULL_CONTENT_READ"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\03_IMPLEMENTATION_PLAN_AND_DECISIONS_JA.md",
+      "sha256": "EE2E8FE0A2A13282424A051B6217EFB1565A4D70CA4E56B1BB466F6313C95ADD",
+      "readStatus": "FULL_CONTENT_READ"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\04_ACCEPTANCE_TRACEABILITY_JA.md",
+      "sha256": "CC84AD1C93136DE487B3E691629536114BB0D186BE6DDF3E0124058619F392A8",
+      "readStatus": "FULL_CONTENT_READ"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\05_CODEX_IMPLEMENTATION_REQUEST_DRAFT_JA.md",
+      "sha256": "6585DF1C76BEAD56959C212E03F5D1DB844FAF4D348329FDE7A0FAFF7BF0C80B",
+      "readStatus": "FULL_CONTENT_READ"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\06_READONLY_EVIDENCE.json",
+      "sha256": "29AD3C8A89512FF33F8DE0036E4A73871BD8E9C8AB26E980A18A3F1E1188240A",
+      "readStatus": "FULL_CONTENT_READ"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\07_FINAL_READONLY_CHECK.json",
+      "sha256": "2D1B60BAE409FB5A1F8CE2453B3511F623E1479F0C8E3247159BA9CE5F82A23A",
+      "readStatus": "FULL_CONTENT_READ"
+    }
+  ],
+  "git": {
+    "topLevel": "C:/dev/n-dimensional-shogi-showcase",
+    "head": "14d56f80d2e9758f550de5bb11e152960cb9fc6e",
+    "branch": "claude/project-thread-5gmozz",
+    "origin": "https://github.com/piperendervt-glitch/n-dimensional-shogi-showcase.git",
+    "optionalLocks": "0",
+    "commandScopedSafeDirectory": "C:/dev/n-dimensional-shogi-showcase",
+    "configurationWritten": false,
+    "status": [
+      "# branch.oid 14d56f80d2e9758f550de5bb11e152960cb9fc6e",
+      "# branch.head claude/project-thread-5gmozz",
+      "# branch.upstream origin/claude/project-thread-5gmozz",
+      "# branch.ab +0 -0",
+      "1 .M N... 100644 100644 100644 9c1cb38c551327791e41865af1ddc1e8ff0fb01b 9c1cb38c551327791e41865af1ddc1e8ff0fb01b Unity/Assets/Showcase/Runtime/SectionView.cs",
+      "1 .M N... 100644 100644 100644 ac84628aae6a89a2f52b785f39855b89aa07bbc4 ac84628aae6a89a2f52b785f39855b89aa07bbc4 Unity/ProjectSettings/ProjectSettings.asset",
+      "? Unity/Assets/Editor/Cfg1Build.cs",
+      "? Unity/Assets/Editor/Cfg1Build.cs.meta",
+      "? Unity/Assets/Editor/Cfg2Build.cs",
+      "? Unity/Assets/Editor/Cfg2Build.cs.meta",
+      "? Unity/Assets/Resources/cfg1-run.json",
+      "? Unity/Assets/Resources/cfg1-run.json.meta",
+      "? Unity/Assets/Resources/cfg2-run.json",
+      "? Unity/Assets/Resources/cfg2-run.json.meta",
+      "? Unity/Assets/Scenes/Cfg1.unity",
+      "? Unity/Assets/Scenes/Cfg1.unity.meta",
+      "? Unity/Assets/Scenes/Cfg2.unity",
+      "? Unity/Assets/Scenes/Cfg2.unity.meta",
+      "? Unity/Assets/Showcase/Settings.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg1App.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg1App.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg1Smoke.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg1Smoke.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg2App.Input.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg2App.Input.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg2App.Match.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg2App.Match.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg2App.Ui.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg2App.Ui.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg2App.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg2App.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg2MiniView.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg2MiniView.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg2PlaneView.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg2PlaneView.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg2Smoke.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg2Smoke.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg2Ui.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg2Ui.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Cfg2Visuals.cs",
+      "? Unity/Assets/Showcase/Settings/Cfg2Visuals.cs.meta",
+      "? Unity/Assets/Showcase/Settings/CfgMiniView.cs",
+      "? Unity/Assets/Showcase/Settings/CfgMiniView.cs.meta",
+      "? Unity/Assets/Showcase/Settings/CfgPreviewRenderer.cs",
+      "? Unity/Assets/Showcase/Settings/CfgPreviewRenderer.cs.meta",
+      "? Unity/Assets/Showcase/Settings/CfgUi.cs",
+      "? Unity/Assets/Showcase/Settings/CfgUi.cs.meta",
+      "? Unity/Assets/Showcase/Settings/Resources.meta",
+      "? Unity/Assets/Showcase/Settings/Resources/CfgCellLines.shader",
+      "? Unity/Assets/Showcase/Settings/Resources/CfgCellLines.shader.meta",
+      "? Unity/Assets/Showcase/Settings/Showcase.Settings.asmdef",
+      "? Unity/Assets/Showcase/Settings/Showcase.Settings.asmdef.meta",
+      "? docs/CFG1_IMPLEMENTATION.md",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-AmbientOcclusion.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-Bloom.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-ContactShadows.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-DappledShadows.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-DepthOfField.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-IndirectLighting.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-Reflections.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-SunShadows.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-ToneMapping.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-only-AmbientOcclusion.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-only-ContactShadows.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-restored.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-HighBias.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-NoCasters.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-NoEnvironmentCasters.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-NoSectionCasters.png",
+      "? evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-transition-on.png",
+      "? evidence/runtime/perf-lighting-after/player.log",
+      "? evidence/runtime/perf-lighting-after/process-memory.jsonl",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-AmbientOcclusion.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-Bloom.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-ContactShadows.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-DappledShadows.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-DepthOfField.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-IndirectLighting.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-Reflections.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-SunShadows.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-ToneMapping.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-only-AmbientOcclusion.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-only-ContactShadows.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-restored.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-HighBias.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-NoCasters.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-NoEnvironmentCasters.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-NoSectionCasters.png",
+      "? evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-transition-on.png",
+      "? evidence/runtime/perf-lighting-before/player.log",
+      "? evidence/runtime/perf-lighting-before/process-memory.jsonl",
+      "? evidence/runtime/perf-visual-compare/lighting-off-Reflections-before-after.png",
+      "? evidence/runtime/perf-visual-compare/lighting-off-Reflections-diff-x8.png",
+      "? evidence/runtime/perf-visual-compare/lighting-off-SunShadows-before-after.png",
+      "? evidence/runtime/perf-visual-compare/lighting-off-SunShadows-diff-x8.png",
+      "? evidence/runtime/perf-visual-compare/lighting-only-AmbientOcclusion-before-after.png",
+      "? evidence/runtime/perf-visual-compare/lighting-only-AmbientOcclusion-diff-x8.png",
+      "? evidence/runtime/perf-visual-compare/lighting-transition-on-before-after.png",
+      "? evidence/runtime/perf-visual-compare/lighting-transition-on-diff-x8.png",
+      "? src/Showcase.Core/Runtime/Match.meta",
+      "? src/Showcase.Core/Runtime/Match/MatchModel.cs",
+      "? src/Showcase.Core/Runtime/Match/MatchModel.cs.meta",
+      "? src/Showcase.Core/Runtime/Match/MatchSession.cs",
+      "? src/Showcase.Core/Runtime/Match/MatchSession.cs.meta",
+      "? src/Showcase.Core/Runtime/Match/MatchStore.cs",
+      "? src/Showcase.Core/Runtime/Match/MatchStore.cs.meta",
+      "? src/Showcase.Core/Runtime/Settings.meta",
+      "? src/Showcase.Core/Runtime/Settings/PreviewSession.cs",
+      "? src/Showcase.Core/Runtime/Settings/PreviewSession.cs.meta",
+      "? src/Showcase.Core/Runtime/Settings/SettingsModel.cs",
+      "? src/Showcase.Core/Runtime/Settings/SettingsModel.cs.meta",
+      "? src/Showcase.Core/Runtime/Settings/SettingsStore.cs",
+      "? src/Showcase.Core/Runtime/Settings/SettingsStore.cs.meta",
+      "? src/Showcase.Geometry/Runtime/Interaction.meta",
+      "? src/Showcase.Geometry/Runtime/Interaction/FiniteSliceWindow.cs",
+      "? src/Showcase.Geometry/Runtime/Interaction/FiniteSliceWindow.cs.meta",
+      "? src/Showcase.Geometry/Runtime/Interaction/InteractionInput.cs",
+      "? src/Showcase.Geometry/Runtime/Interaction/InteractionInput.cs.meta",
+      "? src/Showcase.Geometry/Runtime/Interaction/SliceInteraction.cs",
+      "? src/Showcase.Geometry/Runtime/Interaction/SliceInteraction.cs.meta",
+      "? tests/Showcase.Interaction.Tests/Program.cs",
+      "? tests/Showcase.Interaction.Tests/Showcase.Interaction.Tests.csproj",
+      "? tests/Showcase.Match.Tests/Program.cs",
+      "? tests/Showcase.Match.Tests/Showcase.Match.Tests.csproj",
+      "? tests/Showcase.Settings.Tests/Program.cs",
+      "? tests/Showcase.Settings.Tests/Showcase.Settings.Tests.csproj"
+    ],
+    "trackedChanged": 2,
+    "staged": [],
+    "untrackedCount": 126,
+    "remoteFetched": false
+  },
+  "preservation": {
+    "sourceLedger": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\06_READONLY_EVIDENCE.json",
+    "expectedCount": 46,
+    "checkedCount": 46,
+    "matchedCount": 46,
+    "records": [
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-AmbientOcclusion.png",
+        "expectedSha256": "9368BCC109A3C435F49CF6A6EA7CC782A6890FF9AF2368CD76DBB5E24454E6B8",
+        "actualSha256": "9368BCC109A3C435F49CF6A6EA7CC782A6890FF9AF2368CD76DBB5E24454E6B8",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-Bloom.png",
+        "expectedSha256": "74CCDD74AA40D4335791BA06A5D6C719DEAE2BCCE8F09E124253E5CE22A27D16",
+        "actualSha256": "74CCDD74AA40D4335791BA06A5D6C719DEAE2BCCE8F09E124253E5CE22A27D16",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-ContactShadows.png",
+        "expectedSha256": "2E98C3C367460CA37307B4A017771DC019BD5399556081BEF250058573720298",
+        "actualSha256": "2E98C3C367460CA37307B4A017771DC019BD5399556081BEF250058573720298",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-DappledShadows.png",
+        "expectedSha256": "5828FDCE9F6F80C7D3CEDB3011249B74E3DA4610E5A9D9E351D5D85A381CDCC6",
+        "actualSha256": "5828FDCE9F6F80C7D3CEDB3011249B74E3DA4610E5A9D9E351D5D85A381CDCC6",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-DepthOfField.png",
+        "expectedSha256": "1A8DD1838CCFB88F8103DC7AC4578293611E5EF2376E624D4C6CCA1A5DBABCE9",
+        "actualSha256": "1A8DD1838CCFB88F8103DC7AC4578293611E5EF2376E624D4C6CCA1A5DBABCE9",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-IndirectLighting.png",
+        "expectedSha256": "E03D90447FAF19A4E00B05256C2C44BE5C944403C45935C706BC2393A3E673E1",
+        "actualSha256": "E03D90447FAF19A4E00B05256C2C44BE5C944403C45935C706BC2393A3E673E1",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-Reflections.png",
+        "expectedSha256": "504D4D8DED78D014BCA0046DD7E27D3906FA578D71912245103C215E0AF69030",
+        "actualSha256": "504D4D8DED78D014BCA0046DD7E27D3906FA578D71912245103C215E0AF69030",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-SunShadows.png",
+        "expectedSha256": "75EECEEAE2B2DCEE05A817B59699050B6E4EB44214A3640748519D4743229E08",
+        "actualSha256": "75EECEEAE2B2DCEE05A817B59699050B6E4EB44214A3640748519D4743229E08",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-ToneMapping.png",
+        "expectedSha256": "E21A0AE25593BA9395DB5BC979444A471364166FC31D28745991B60EB100AFB2",
+        "actualSha256": "E21A0AE25593BA9395DB5BC979444A471364166FC31D28745991B60EB100AFB2",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-only-AmbientOcclusion.png",
+        "expectedSha256": "5A545ED3953C0CCF49EC89C598E90932313CB672C0414E2CA990EBAB6D1C36A7",
+        "actualSha256": "5A545ED3953C0CCF49EC89C598E90932313CB672C0414E2CA990EBAB6D1C36A7",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-only-ContactShadows.png",
+        "expectedSha256": "30B9C20CC399BC384EDD22B84589D7C9A9E6C4A2BB3E661B192F50439EF477E1",
+        "actualSha256": "30B9C20CC399BC384EDD22B84589D7C9A9E6C4A2BB3E661B192F50439EF477E1",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-restored.png",
+        "expectedSha256": "09B544EBB219681D8610536F5A1BA6367C25E244464887C6FE6FE488B083BA58",
+        "actualSha256": "09B544EBB219681D8610536F5A1BA6367C25E244464887C6FE6FE488B083BA58",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-HighBias.png",
+        "expectedSha256": "ADA9562DDF0CCF38BE22BEAD13C8AD70EA9B98149CE09A6EB7004AD70E3C4F45",
+        "actualSha256": "ADA9562DDF0CCF38BE22BEAD13C8AD70EA9B98149CE09A6EB7004AD70E3C4F45",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-NoCasters.png",
+        "expectedSha256": "75EECEEAE2B2DCEE05A817B59699050B6E4EB44214A3640748519D4743229E08",
+        "actualSha256": "75EECEEAE2B2DCEE05A817B59699050B6E4EB44214A3640748519D4743229E08",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-NoEnvironmentCasters.png",
+        "expectedSha256": "DB650D3ADF5318C5F4EB10315C49643B3D1C8315066CF00BCE6B2935BDFA5A6E",
+        "actualSha256": "DB650D3ADF5318C5F4EB10315C49643B3D1C8315066CF00BCE6B2935BDFA5A6E",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-NoSectionCasters.png",
+        "expectedSha256": "0F45851AA600FE18DE8541EC7E62DBC11A5914DF0908F98E1739B01D9C9961A8",
+        "actualSha256": "0F45851AA600FE18DE8541EC7E62DBC11A5914DF0908F98E1739B01D9C9961A8",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-transition-on.png",
+        "expectedSha256": "B733ECA97134D70D610368029DF3741668653F4AA36E84A2FFEABA82ABA343C8",
+        "actualSha256": "B733ECA97134D70D610368029DF3741668653F4AA36E84A2FFEABA82ABA343C8",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/player.log",
+        "expectedSha256": "8A7DA90DE0935D4AFE3CED6A69E76231FFD4FE175307802156092D55E077F9E1",
+        "actualSha256": "8A7DA90DE0935D4AFE3CED6A69E76231FFD4FE175307802156092D55E077F9E1",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-after/process-memory.jsonl",
+        "expectedSha256": "B47A64B39E7476C4FF3A8F1E779AAEBE76B83112A9A8D84C64F092EB5FDD8145",
+        "actualSha256": "B47A64B39E7476C4FF3A8F1E779AAEBE76B83112A9A8D84C64F092EB5FDD8145",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-AmbientOcclusion.png",
+        "expectedSha256": "94C7627E142C8540C9AEE09E0118E90ADCDDB1B8AE0304E5AC67E710905A65A2",
+        "actualSha256": "94C7627E142C8540C9AEE09E0118E90ADCDDB1B8AE0304E5AC67E710905A65A2",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-Bloom.png",
+        "expectedSha256": "1F7CD1586908AF5D76A939E8839B1F824ABBF4019BB07796ABC257911A6EB53D",
+        "actualSha256": "1F7CD1586908AF5D76A939E8839B1F824ABBF4019BB07796ABC257911A6EB53D",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-ContactShadows.png",
+        "expectedSha256": "CD5D4CC8F31D739C66875ECB32FD69D891469C69461F63A929136201EC5F3CB5",
+        "actualSha256": "CD5D4CC8F31D739C66875ECB32FD69D891469C69461F63A929136201EC5F3CB5",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-DappledShadows.png",
+        "expectedSha256": "9FD5FC7BECC0F006CB632D1ABBA4DDEC677FBCC274413451D11417CF1E77DA53",
+        "actualSha256": "9FD5FC7BECC0F006CB632D1ABBA4DDEC677FBCC274413451D11417CF1E77DA53",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-DepthOfField.png",
+        "expectedSha256": "7099D7BA7AF8192D16F19CC07F279E2FFD0FFBCA209AF8462B1680E25A64F8EB",
+        "actualSha256": "7099D7BA7AF8192D16F19CC07F279E2FFD0FFBCA209AF8462B1680E25A64F8EB",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-IndirectLighting.png",
+        "expectedSha256": "9E5FDC6A59195AFA5196C78F5C3C0B9AC53AC28BFD9E55F783B9186BF9FB6DD5",
+        "actualSha256": "9E5FDC6A59195AFA5196C78F5C3C0B9AC53AC28BFD9E55F783B9186BF9FB6DD5",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-Reflections.png",
+        "expectedSha256": "71418E1E233B9B54BEA909C0464DD84CD8A5E17D6102B6142AADEC5DBE2E8CB6",
+        "actualSha256": "71418E1E233B9B54BEA909C0464DD84CD8A5E17D6102B6142AADEC5DBE2E8CB6",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-SunShadows.png",
+        "expectedSha256": "E0632BB946D814071E635A509DAAFC8F999BAB864E895043E2DB067AE383654C",
+        "actualSha256": "E0632BB946D814071E635A509DAAFC8F999BAB864E895043E2DB067AE383654C",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-ToneMapping.png",
+        "expectedSha256": "E3693EF4189F6294A8580D1A2715709EEB63DB72A65B39FEFAA0DA5B1A2B2983",
+        "actualSha256": "E3693EF4189F6294A8580D1A2715709EEB63DB72A65B39FEFAA0DA5B1A2B2983",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-only-AmbientOcclusion.png",
+        "expectedSha256": "5A545ED3953C0CCF49EC89C598E90932313CB672C0414E2CA990EBAB6D1C36A7",
+        "actualSha256": "5A545ED3953C0CCF49EC89C598E90932313CB672C0414E2CA990EBAB6D1C36A7",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-only-ContactShadows.png",
+        "expectedSha256": "30B9C20CC399BC384EDD22B84589D7C9A9E6C4A2BB3E661B192F50439EF477E1",
+        "actualSha256": "30B9C20CC399BC384EDD22B84589D7C9A9E6C4A2BB3E661B192F50439EF477E1",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-restored.png",
+        "expectedSha256": "AF4DD28CACE8021D3AF7F62F0297071F20360508DADD4D76B390FA2B6896A3B1",
+        "actualSha256": "AF4DD28CACE8021D3AF7F62F0297071F20360508DADD4D76B390FA2B6896A3B1",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-HighBias.png",
+        "expectedSha256": "1874EEE4C78514461BAD9F0D09D10B95E462D7585D1E5AED9987F2AF27038932",
+        "actualSha256": "1874EEE4C78514461BAD9F0D09D10B95E462D7585D1E5AED9987F2AF27038932",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-NoCasters.png",
+        "expectedSha256": "E0632BB946D814071E635A509DAAFC8F999BAB864E895043E2DB067AE383654C",
+        "actualSha256": "E0632BB946D814071E635A509DAAFC8F999BAB864E895043E2DB067AE383654C",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-NoEnvironmentCasters.png",
+        "expectedSha256": "DC6FB447F83E99D9D905C306DCA6DBBF2682ED8922DF56B25D422DE894C61509",
+        "actualSha256": "DC6FB447F83E99D9D905C306DCA6DBBF2682ED8922DF56B25D422DE894C61509",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-NoSectionCasters.png",
+        "expectedSha256": "EFF784E5270539CFF8C3128F15BFADA5CCB8B164B4A99F67BF8C1967BA2B0EDE",
+        "actualSha256": "EFF784E5270539CFF8C3128F15BFADA5CCB8B164B4A99F67BF8C1967BA2B0EDE",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-transition-on.png",
+        "expectedSha256": "87AACB4DC0F5E7875AB08B779E763E0F9E56B9E53C75164EE4DA410494253C49",
+        "actualSha256": "87AACB4DC0F5E7875AB08B779E763E0F9E56B9E53C75164EE4DA410494253C49",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/player.log",
+        "expectedSha256": "44AE78A3D59DFC174F5A7A3C572FA5B77A00A72AFE668CE948CBAA80391920E6",
+        "actualSha256": "44AE78A3D59DFC174F5A7A3C572FA5B77A00A72AFE668CE948CBAA80391920E6",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-lighting-before/process-memory.jsonl",
+        "expectedSha256": "F48BFEA008088D3B6367526ECDBF5FA501DA9CF6A4B747298BC59C9795F0063F",
+        "actualSha256": "F48BFEA008088D3B6367526ECDBF5FA501DA9CF6A4B747298BC59C9795F0063F",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-visual-compare/lighting-off-Reflections-before-after.png",
+        "expectedSha256": "2BCE6FAA073BB7934CA5FBB6FD91E11702D06E90DF93FCE0CC042B2856B2E2FE",
+        "actualSha256": "2BCE6FAA073BB7934CA5FBB6FD91E11702D06E90DF93FCE0CC042B2856B2E2FE",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-visual-compare/lighting-off-Reflections-diff-x8.png",
+        "expectedSha256": "B2DA10FC5268DA64B6E5E61F80C97C6D4D430F61D4E0259696403B256088790F",
+        "actualSha256": "B2DA10FC5268DA64B6E5E61F80C97C6D4D430F61D4E0259696403B256088790F",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-visual-compare/lighting-off-SunShadows-before-after.png",
+        "expectedSha256": "8880C6849AD1B79DF6634526E86C33626F8BB82F3D827D724E9A9A5F8230DF42",
+        "actualSha256": "8880C6849AD1B79DF6634526E86C33626F8BB82F3D827D724E9A9A5F8230DF42",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-visual-compare/lighting-off-SunShadows-diff-x8.png",
+        "expectedSha256": "94B0957FDF07EAAD004A837BFC64B932A5708C6544B7947CF193A7441E67A282",
+        "actualSha256": "94B0957FDF07EAAD004A837BFC64B932A5708C6544B7947CF193A7441E67A282",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-visual-compare/lighting-only-AmbientOcclusion-before-after.png",
+        "expectedSha256": "EB27127AF0852E36776A821546916A0A72F6F85CEAC67ABA6E0F332849BFE1F6",
+        "actualSha256": "EB27127AF0852E36776A821546916A0A72F6F85CEAC67ABA6E0F332849BFE1F6",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-visual-compare/lighting-only-AmbientOcclusion-diff-x8.png",
+        "expectedSha256": "BA066B09AEE8BA319E67E36883944BA5285B1A48941BAA79ECD144182737C41D",
+        "actualSha256": "BA066B09AEE8BA319E67E36883944BA5285B1A48941BAA79ECD144182737C41D",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-visual-compare/lighting-transition-on-before-after.png",
+        "expectedSha256": "0FB66CCAD734C70CD006575F841DE25F1E39C3C82A9023F3A436F599006260B1",
+        "actualSha256": "0FB66CCAD734C70CD006575F841DE25F1E39C3C82A9023F3A436F599006260B1",
+        "present": true,
+        "matches": true
+      },
+      {
+        "path": "evidence/runtime/perf-visual-compare/lighting-transition-on-diff-x8.png",
+        "expectedSha256": "DFF5FA1957CBD7AD50D3D5231681F209C0E03870221B737A9F5363549865D0DE",
+        "actualSha256": "DFF5FA1957CBD7AD50D3D5231681F209C0E03870221B737A9F5363549865D0DE",
+        "present": true,
+        "matches": true
+      }
+    ],
+    "scope": "Exact original 46 named paths and SHA-256 only; not a claim that all current source matches CFG0."
+  },
+  "existingChanges": {
+    "status": "EXPLAINED_PREEXISTING_CFG1_EXTENSION",
+    "trackedFiles": [
+      {
+        "path": "Unity/Assets/Showcase/Runtime/SectionView.cs",
+        "meaning": "Shared SliceFrame overloads and finite window clipping added while legacy angle path retained",
+        "sha256": "4F2DB0E7B1A471ECBDE88CF2679B6057CC9693DEDCCCA4FBE32EDA95D4314AE7"
+      },
+      {
+        "path": "Unity/ProjectSettings/ProjectSettings.asset",
+        "meaning": "Japanese product name and default 1536x1024 window",
+        "sha256": "BE157F4D85DBE72A67788C35929E6DBA2C6460DDF02A5C23035ACE68CDC4C2BA"
+      }
+    ],
+    "basis": "Full Git diff read and docs/CFG1_IMPLEMENTATION.md read. Existing CFG1/CFG2 untracked code is protected, not counted as this task output or a new scope grant."
+  },
+  "processes": {
+    "method": "Get-Process names/PIDs snapshot; earlier CIM query failed in sandbox then approved retry returned exit 0 with no matching process",
+    "matches": [],
+    "unityLockfileExists": false,
+    "limitations": "Point-in-time observation. Does not prove absence of another editor, agent, or future writes. Recheck before starting Unity or implementation."
+  },
+  "instructions": {
+    "ancestorPathsChecked": [
+      "C:/AGENTS.md",
+      "C:/dev/AGENTS.md",
+      "C:/dev/n-dimensional-shogi-showcase/AGENTS.md"
+    ],
+    "found": [],
+    "repositorySearch": "rg --files --hidden -g AGENTS.md excluding .git and Unity/Library: no match"
+  },
+  "environment": {
+    "editor": "C:/Program Files/Unity/Hub/Editor/6000.3.11f1/Editor/Unity.exe",
+    "editorPresent": true,
+    "sdk": "C:/Program Files/dotnet/sdk/9.0.312",
+    "sdkPresent": true,
+    "execution": "NOT_RUN",
+    "dependencies": "No download/update attempted; full dependency cache availability not rechecked in this limited handoff preflight"
+  },
+  "existingCommands": {
+    "testTemplate": "dotnet run --no-restore --project <tests/*/*.csproj> -c Release -- <new dedicated output>",
+    "testProjects": [
+      "tests/Showcase.Core.Tests/Showcase.Core.Tests.csproj",
+      "tests/Showcase.Geometry.Tests/Showcase.Geometry.Tests.csproj",
+      "tests/Showcase.Settings.Tests/Showcase.Settings.Tests.csproj",
+      "tests/Showcase.Interaction.Tests/Showcase.Interaction.Tests.csproj",
+      "tests/Showcase.Match.Tests/Showcase.Match.Tests.csproj"
+    ],
+    "tests": "NOT_RUN",
+    "cfg1Build": "Unity.exe -batchmode -quit -projectPath <repo/Unity> -executeMethod Cfg1Build.BuildWindows --cfg1-output <new exe> --cfg1-run-root <new existing run dir> -logFile <new log>",
+    "cfg2Build": "Cfg2Build.BuildWindows exists with --cfg2-output / --cfg2-run-root; preserve existing code; not authorization to broaden CFG2 rules",
+    "legacyBuildWarning": "tools/build-windows.ps1 uses shared artifacts/logs and legacy build destination; do not reuse unchanged for new dedicated evidence",
+    "cfg1Smoke": "--cfg1-smoke --cfg1-smoke-phase initial|reload --cfg1-run-root <dedicated run>; images directory required. In-process UI event simulation is not physical OS input",
+    "readStatus": "Entry scripts and documented commands read; no test/build command executed"
+  },
+  "decisions": {
+    "latestConfirmedModel": "Coordinates (X,Y,Z,W); G=O=(0,0,0,0); fixed piece placement plane Y=h,W=0; initial common slice/view/rotation center C=P=(0,h,0,0); origin return C=O; axis presets preserve C",
+    "historicalPlanSection4": "Read in full. Old approval gates remain historical; old mathematical choices are implementation choices, not product rule approval.",
+    "releaseStatus": "PREFLIGHT_READONLY_COMPLETE; no product acceptance result",
+    "blockingFindings": [],
+    "continuationConditions": [
+      "Preserve all current tracked and untracked source and evidence",
+      "Receiving implementation agent rechecks current state and process ownership immediately before mutation",
+      "Use latest reviewed design for UI/center behavior; keep CFG2/rule boundaries as instructed"
+    ]
+  }
+}

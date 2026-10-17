@@ -1,0 +1,4095 @@
+{
+  "requestId": "PIVOT-RESTART-20261017-083955-JST",
+  "kind": "Read-only-source acceptance linkage index, not test results",
+  "status": "MAPPING_ONLY_NOT_PRODUCT_PASS",
+  "warning": "An association covers only the applicable part of the original condition. Never infer full original-ID acceptance from a PV result.",
+  "sources": [
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\00_RETURN_SUMMARY_JA.md",
+      "sha256": "5303146d402bf5896bd99de36d3e6564ca787ca6ad5dc9f0be161e7ce5a93ff6"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\01_LOCAL_REPOSITORY_AUDIT_JA.md",
+      "sha256": "e30b7ee7a7aa49edae9acce2002985911c3b0d240ec94a6b401784b1c4f03dcf"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\02_CAPABILITY_AND_GAP_MATRIX_JA.md",
+      "sha256": "32f3c66e196265bd8c80a7d8c92129db273e2f20b55a1ec3eccf78067074ff67"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\03_IMPLEMENTATION_PLAN_AND_DECISIONS_JA.md",
+      "sha256": "ee2e8fe0a2a13282424a051b6217efb1565a4d70ca4e56b1bb466f6313c95add"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\04_ACCEPTANCE_TRACEABILITY_JA.md",
+      "sha256": "cc84ad1c93136de487b3e691629536114bb0d186be6ddf3e0124058619f392a8"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\05_CODEX_IMPLEMENTATION_REQUEST_DRAFT_JA.md",
+      "sha256": "6585df1c76bead56959c212e03f5d1db844faf4d348329fde7a0faff7bf0c80b"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\06_READONLY_EVIDENCE.json",
+      "sha256": "29ad3c8a89512ff33f8de0036e4a73871bd8e9c8ab26e980a18a3f1e1188240a"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\07_FINAL_READONLY_CHECK.json",
+      "sha256": "2d1b60bae409fb5a1f8ce2453b3511f623e1479f0c8e3247159ba9ce5f82a23a"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\08_ACCEPTANCE_ID_LEDGER.json",
+      "sha256": "9e2ec7a596861d95899b391bd977d44c953b4b2ad38f1ec8233a69bc96ec2ba9"
+    },
+    {
+      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md",
+      "sha256": "7019dd40866420c02264c387249ae7f6d4f7a4afda629e661a54a77cf811e408"
+    },
+    {
+      "path": "C:\\dev\\n-dimensional-shogi-showcase\\artifacts\\PIVOT-DESIGN-20261017\\00_DESIGN_JA.md",
+      "sha256": "86450e676537b81e6c15d19b8aa654026f6158590830b6d1e52c7d343116c4a8"
+    },
+    {
+      "path": "C:\\dev\\n-dimensional-shogi-showcase\\artifacts\\PIVOT-DESIGN-20261017\\03_IMPLEMENTATION_ACCEPTANCE.json",
+      "sha256": "76ae03081853c638a50519ce18cfe14093c2c566389103745b222c04ea2123fc"
+    },
+    {
+      "path": "C:\\dev\\n-dimensional-shogi-showcase\\artifacts\\PIVOT-RESTART-20261017-083955-JST\\00_RESTART_REQUEST_JA.md",
+      "sha256": "47ceb3a8710eccfe37329c9cd1478f60ca6fa2bb562a731c540e05f27e2a1a4b"
+    }
+  ],
+  "historicalLedgerStatus": "DRAFT_NOT_AUTHORIZED",
+  "historicalExecutionStatus": "NOT_RUN",
+  "legacyRows": [
+    {
+      "original": {
+        "Id": "SW2-01",
+        "SourceKey": "SW2",
+        "Line": 18,
+        "OriginalRow": "| SW2-01 | 名称 | 画面見出しが「設定（オプション）」で、新規UI・ヘルプに旧名称を使わない。文書タイトルの「詳細設計」は画面名称と区別する。 | UI文字列・人間確認 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-02",
+        "SourceKey": "SW2",
+        "Line": 19,
+        "OriginalRow": "| SW2-02 | 開始メニュー | 指定5項目と順序を保ち、オプションから直接開く。開く／戻る／適用だけで本対局・CPUが始まらない。 | イベント・状態検査 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-03",
+        "SourceKey": "SW2",
+        "Line": 20,
+        "OriginalRow": "| SW2-03 | 主要領域 | R0〜R7の役割が分離され、画像の左カテゴリ・駒一覧・中央プレビュー・右詳細・下端操作が追える。 | UI状態・実画面 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-04",
+        "SourceKey": "SW2",
+        "Line": 21,
+        "OriginalRow": "| SW2-04 | 7カテゴリ | 7カテゴリが選択でき、選択先と設定対象が一致する。未対応は未対応と表示し、無反応な完成済みボタンにしない。 | 画面遷移 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-05",
+        "SourceKey": "SW2",
+        "Line": 22,
+        "OriginalRow": "| SW2-05 | 初回と再訪 | 初回の駒カテゴリと代表駒はプリセット依存で選ぶ。再訪では有効な選択・各スクロールを保持する。画像の王80を無断固定しない。 | 複数プリセット・再訪 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-06",
+        "SourceKey": "SW2",
+        "Line": 23,
+        "OriginalRow": "| SW2-06 | 4D統合ビュー | 主ギズモ1つとXYZ／XYW／XZW／YZWが存在し、同じ4D状態を共有する。2Dの方眼を名前だけ変えた代替でない。 | モデル・描画照合 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-07",
+        "SourceKey": "SW2",
+        "Line": 24,
+        "OriginalRow": "| SW2-07 | 2D確認の分離 | 平面確認を実装する場合は4D統合と区別し、6組の扱い、固定する残り座標を確認できる。未実装の組を対応済みに見せない。 | 平面選択・座標照合 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "後段2D確認",
+        "DispositionProposal": "後回し",
+        "PlannedValidation": "6平面/固定する残り座標/F1のXY候補集合。未提供を明示",
+        "AdoptionGate": "G-01/04で2D採用時",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV12"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-08",
+        "SourceKey": "SW2",
+        "Line": 25,
+        "OriginalRow": "| SW2-08 | 対局画面への復帰 | 開始後は大きい設定パネルが閉じる。対局用の外観・1＋4構成を保ち、設定の入力所有を持ち越さない。 | 開始から対局まで | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存成功後入力/3方式/旧局保全/対局UI復帰",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-09",
+        "SourceKey": "SW2",
+        "Line": 31,
+        "OriginalRow": "| SW2-09 | 一覧と前後移動 | 行クリック、前の駒、次の駒が同じID順で選択する。選択でカメラ・既存障害物を勝手に動かさない。 | ID・入力状態 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-10",
+        "SourceKey": "SW2",
+        "Line": 32,
+        "OriginalRow": "| SW2-10 | 標準保護 | 標準内の編集でカスタム下書きに分岐し、標準原本を保持する。名前で互換認定しない。 | 保存実体・ID比較 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-11",
+        "SourceKey": "SW2",
+        "Line": 33,
+        "OriginalRow": "| SW2-11 | 移動パターン | 軸方向のみ／全近傍／カスタムの意味が重複せず、F1の座標集合と一致する。 | 独立座標fixture | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A→CFG-1B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "一歩/H11/H22の採用定義・能力・F1/F2/F3/F6・入力/履歴/画面不変。固定跳び/完全L/N拡張は未対応",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-12",
+        "SourceKey": "SW2",
+        "Line": 34,
+        "OriginalRow": "| SW2-12 | 距離と方式 | 一歩・走り・固定跳びで距離の意味が表示される。距離2を未定義の二連続移動に変換しない。 | 定義・境界fixture | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A→CFG-1B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "一歩/H11/H22の採用定義・能力・F1/F2/F3/F6・入力/履歴/画面不変。固定跳び/完全L/N拡張は未対応",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-13",
+        "SourceKey": "SW2",
+        "Line": 35,
+        "OriginalRow": "| SW2-13 | 使用軸 | Wを禁止した移動はF2と一致するがN、盤サイズ、他駒の4D座標は変化しない。非前方軸の非対称化を明示する。 | ルールと盤の不変量 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A→CFG-1B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "一歩/H11/H22の採用定義・能力・F1/F2/F3/F6・入力/履歴/画面不変。固定跳び/完全L/N拡張は未対応",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-14",
+        "SourceKey": "SW2",
+        "Line": 36,
+        "OriginalRow": "| SW2-14 | 王手ルールの所在 | 駒別のチェック操作で一部駒だけ王手回避を無効化できない。プレビュー段階切替でも全体ルールは不変。 | RuleHash・全体設定 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A→CFG-1B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "一歩/H11/H22の採用定義・能力・F1/F2/F3/F6・入力/履歴/画面不変。固定跳び/完全L/N拡張は未対応",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-15",
+        "SourceKey": "SW2",
+        "Line": 37,
+        "OriginalRow": "| SW2-15 | 占有と捕獲 | F3の敵駒捕獲条件だけを変更でき、味方のいるセルへ複数駒を重ねる隠れた新ルールを作らない。 | 候補集合・局面検査 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A→CFG-1B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "一歩/H11/H22の採用定義・能力・F1/F2/F3/F6・入力/履歴/画面不変。固定跳び/完全L/N拡張は未対応",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-16",
+        "SourceKey": "SW2",
+        "Line": 38,
+        "OriginalRow": "| SW2-16 | 参照保護 | 成り先・捕獲戻り先・配置中の駒を削除すると参照不正を示す。勝手に削除・ID再利用しない。 | 参照破壊fixture | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-17",
+        "SourceKey": "SW2",
+        "Line": 39,
+        "OriginalRow": "| SW2-17 | デフォルト復帰 | 駒／カテゴリ／全体の範囲が区別され、参照元の版が固定。Draftだけを変更しUndo可能。 | 差分・履歴比較 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-18",
+        "SourceKey": "SW2",
+        "Line": 45,
+        "OriginalRow": "| SW2-18 | 候補数の区別 | F1で80／32／8、固定Wの断面内26／18／6を区別する。理論値・表示値・合法手数を同じ見出しで出さない。 | 独立列挙・表示 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-19",
+        "SourceKey": "SW2",
+        "Line": 46,
+        "OriginalRow": "| SW2-19 | 2D図の値 | F1の全近傍でXY固定断面の候補は8。2D図の8を4D全体の8と誤表示しない。 | 座標fixture | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "後段2D確認",
+        "DispositionProposal": "後回し",
+        "PlannedValidation": "6平面/固定する残り座標/F1のXY候補集合。未提供を明示",
+        "AdoptionGate": "G-01/04で2D採用時",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV12"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-20",
+        "SourceKey": "SW2",
+        "Line": 47,
+        "OriginalRow": "| SW2-20 | 王なしの試し盤 | 王や必要履歴の不足時は合法手を未評価とする。0件、詰み、安全という結果へ埋めない。 | 欠損局面 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-21",
+        "SourceKey": "SW2",
+        "Line": 48,
+        "OriginalRow": "| SW2-21 | 試し盤の独立性 | 配置・消去・クリア・試し指しが本番初期配置、AppliedSetup、進行中局を変えない。 | 状態・ハッシュ比較 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-22",
+        "SourceKey": "SW2",
+        "Line": 49,
+        "OriginalRow": "| SW2-22 | 断面外の攻撃 | F4の見えない飛からの攻撃を含める。表示OFFや断面移動でも同じ論理攻撃集合を得る。 | 全次元fixture | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV07"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-23",
+        "SourceKey": "SW2",
+        "Line": 50,
+        "OriginalRow": "| SW2-23 | 実セルとゴースト | 断面外の表示に元の4DセルIDが付く。投影上の同じ位置を別セルの着手先に誤変換しない。 | 重なり・ヒット試験 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV06"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-24",
+        "SourceKey": "SW2",
+        "Line": 51,
+        "OriginalRow": "| SW2-24 | 切断方式の表示 | 厳密切断、投影、模式図を区別する。任意角度を固定の立方格子回転で代用して厳密と表示しない。 | 幾何照合・実画面 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV03",
+        "PV04",
+        "PV09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-25",
+        "SourceKey": "SW2",
+        "Line": 52,
+        "OriginalRow": "| SW2-25 | Nと能力 | N>=5で4ビューを全方向対応と表示しない。ルール・候補計算・3D表示・対局の対応が別判定。 | 能力表・未対応例 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A→CFG-1B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "一歩/H11/H22の採用定義・能力・F1/F2/F3/F6・入力/履歴/画面不変。固定跳び/完全L/N拡張は未対応",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-26",
+        "SourceKey": "SW2",
+        "Line": 53,
+        "OriginalRow": "| SW2-26 | 同じエンジン | 共通ルールと局面でプレビュー／CLI／人間／CPUの照会結果を照合する。表示側独自の簡易ルールへ切替えない。 | 集合比較 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B→CFG-2",
+        "DispositionProposal": "段階分割",
+        "PlannedValidation": "Preview/CLI集合照合の後、人間/CPUとの全次元同一集合。部分合格を全体にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV07"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-27",
+        "SourceKey": "SW2",
+        "Line": 54,
+        "OriginalRow": "| SW2-27 | 一部結果 | 候補列挙を打ち切ると一部計算と表示し、未表示数を0件と見なさない。予算切れでCPU勝敗を決めない。 | 計算中断注入 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B→CFG-2",
+        "DispositionProposal": "段階分割",
+        "PlannedValidation": "候補途中/打切り表示、CPU予算打切りを勝敗にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-28",
+        "SourceKey": "SW2",
+        "Line": 60,
+        "OriginalRow": "| SW2-28 | 保存だけ | F5で設定を保存してもAppliedSetupと本対局は不変。未保存印だけが消え、未適用は残る。 | 状態遷移 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-29",
+        "SourceKey": "SW2",
+        "Line": 61,
+        "OriginalRow": "| SW2-29 | 適用だけ | F5で適用は次局用と前回適用記録を更新するが、名前付きプリセットを無断上書きせず、対局も始めない。 | 状態・保存実体 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A状態機械→CFG-2-PVP実適用",
+        "DispositionProposal": "部分後回し",
+        "PlannedValidation": "F5適用行。実行可能モードがない間は適用不可で旧Applied/Draft保持",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-30",
+        "SourceKey": "SW2",
+        "Line": 62,
+        "OriginalRow": "| SW2-30 | 別名保存 | 新IDを持つ保存記録となり、元の標準／カスタム／開始済み局を変更しない。 | ID・版比較 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-31",
+        "SourceKey": "SW2",
+        "Line": 63,
+        "OriginalRow": "| SW2-31 | 適用失敗 | 永続化失敗、構造不正、意味未定義では適用成功にしない。旧適用状態と下書きを保全し、再試行できる。 | 障害注入 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-32",
+        "SourceKey": "SW2",
+        "Line": 64,
+        "OriginalRow": "| SW2-32 | 閉じる判断 | 未保存と未適用を独立に扱い、保存済み未適用でも違いを示す。破棄は既に保存したプリセットを削除しない。 | 4状態の遷移表 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-33",
+        "SourceKey": "SW2",
+        "Line": 65,
+        "OriginalRow": "| SW2-33 | 不正な下書き | 生入力を下書き形式で往復保持し、プレイ可能プリセットと区別する。再読込で黙って丸めず、適用不可を保つ。 | 不正数値・未知参照 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-34",
+        "SourceKey": "SW2",
+        "Line": 66,
+        "OriginalRow": "| SW2-34 | 読込の安全 | 未知schema・コード・DLL参照・自動外部取得・不正値を受け入れて実行しない。画像をルールに不要に埋め込まない。 | 不正ファイル群 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-35",
+        "SourceKey": "SW2",
+        "Line": 67,
+        "OriginalRow": "| SW2-35 | 開始時と過去局 | 実際の対戦方式で再検証してから全体を固定し記録成功後に入力開始。後日の編集が保存棋譜を変えない。 | 3モード・再起動・過去局 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存成功後入力/3方式/旧局保全/対局UI復帰",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-36",
+        "SourceKey": "SW2",
+        "Line": 73,
+        "OriginalRow": "| SW2-36 | 入力所有 | フォーム、文字入力、一覧、配置ツール、ギズモ、背景の所有者が重複せず、1操作で複数動作が発火しない。 | 入力イベント追跡 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "名称/5項目/領域/カテゴリ/ID・版保護、F5保存/別名/失敗/閉じる状態行列、入力所有。成り実行は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV10"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-37",
+        "SourceKey": "SW2",
+        "Line": 74,
+        "OriginalRow": "| SW2-37 | ドラッグ確定 | 軸ドラッグ開始後に別リングや画面外へ移っても対象は変わらない。フォーカス喪失で意図しない確定がない。 | 入力シナリオ | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV10"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-38",
+        "SourceKey": "SW2",
+        "Line": 75,
+        "OriginalRow": "| SW2-38 | 3Dと4D | カメラパン／回転で4Dルール座標を変えず、ミニビュー同じ軸の同じ移動指令は同じ4D変位になる。 | 不変量・ビュー間比較 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV05",
+        "PV07",
+        "PV08"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-39",
+        "SourceKey": "SW2",
+        "Line": 76,
+        "OriginalRow": "| SW2-39 | 基準ビュー復帰 | W/Z/Y/X対応とアニメーションが一致し、位置・試し配置の全リセットを兼ねない。自由角度を偽って基準一致としない。 | 状態・中間描画 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-40",
+        "SourceKey": "SW2",
+        "Line": 77,
+        "OriginalRow": "| SW2-40 | 古い結果 | F6の遅延D1結果をD2の結果として採用しない。無効な生入力中の最後の有効結果は旧結果と明示する。 | 遅延・順序逆転注入 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A→CFG-1B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "一歩/H11/H22の採用定義・能力・F1/F2/F3/F6・入力/履歴/画面不変。固定跳び/完全L/N拡張は未対応",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-41",
+        "SourceKey": "SW2",
+        "Line": 78,
+        "OriginalRow": "| SW2-41 | Undoとキャンセル | 文書編集・試し盤・文字入力の履歴所有を区別する。Escapeで下書きや適用状態を無断破棄しない。 | 履歴・画面遷移 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A→CFG-1B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "一歩/H11/H22の採用定義・能力・F1/F2/F3/F6・入力/履歴/画面不変。固定跳び/完全L/N拡張は未対応",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-42",
+        "SourceKey": "SW2",
+        "Line": 79,
+        "OriginalRow": "| SW2-42 | 画面の安定 | 計算、警告、項目表示切替、CPU設定の変更で自動スクロール・カメラ移動を起こさず、全Nマス配列を生成しない。 | UI状態・設計／実装点検 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A→CFG-1B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "一歩/H11/H22の採用定義・能力・F1/F2/F3/F6・入力/履歴/画面不変。固定跳び/完全L/N拡張は未対応",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-43",
+        "SourceKey": "SW2",
+        "Line": 85,
+        "OriginalRow": "| SW2-43 | 画像との外観整合 | 暗いパネル、青い選択、木製駒、中央優先の4領域が承認画像から大きく逸脱せず、文字・軸が読める。 | Windows実画面 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A/B→必要部分CFG-2",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "Windows実画面・S3/S4・解像度/DPI・エラー理解。適用/開始の完成部分はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-44",
+        "SourceKey": "SW2",
+        "Line": 86,
+        "OriginalRow": "| SW2-44 | 変更結果の理解 | 駒を選んで方向・距離・遮蔽を変更し、変化した候補と設定箇所を追える。カメラの勝手な移動で見失わない。 | 操作S1 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "F1〜F4該当fixture、実切断/元セルID/独立試し盤、1＋4中間同期、world軸/カメラ分離、S1",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-45",
+        "SourceKey": "SW2",
+        "Line": 87,
+        "OriginalRow": "| SW2-45 | 2Dと3Dの識別 | XYなどの2D平面とXYZ等の3D超平面、4D全体の候補を取り違えにくい。色を見分けなくても軸名が読める。 | 操作S2 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1B/2D採用後",
+        "DispositionProposal": "部分後回し",
+        "PlannedValidation": "3D超平面/全4D識別。S2の2D部分は未実装なら未完",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV12",
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-46",
+        "SourceKey": "SW2",
+        "Line": 88,
+        "OriginalRow": "| SW2-46 | 保存と適用の理解 | 保存済み／適用済み、デフォルト復帰範囲、現在の次局ルールを把握できる。大きな説明パネルを常設しなくて済む。 | 操作S3 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A/B→必要部分CFG-2",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "Windows実画面・S3/S4・解像度/DPI・エラー理解。適用/開始の完成部分はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-47",
+        "SourceKey": "SW2",
+        "Line": 89,
+        "OriginalRow": "| SW2-47 | 解像度と操作感 | 候補解像度・OS倍率でフォーム、フッタ、4ビューが操作できる。狭い画面の代替配置で入力を誤らない。 | 実機・リサイズ | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A/B→必要部分CFG-2",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "Windows実画面・S3/S4・解像度/DPI・エラー理解。適用/開始の完成部分はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "SW2-48",
+        "SourceKey": "SW2",
+        "Line": 90,
+        "OriginalRow": "| SW2-48 | エラーと開始の理解 | 未定義、未対応、未評価、部分計算、ゲーム性注意を区別し、適用できない理由を確認して戻れる。 | 操作S4 | NOT_RUN |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_ACCEPTANCE_v0_2_JA.md",
+        "StageProposal": "CFG-1A/B→必要部分CFG-2",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "Windows実画面・S3/S4・解像度/DPI・エラー理解。適用/開始の完成部分はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-A01",
+        "SourceKey": "RE",
+        "Line": 17,
+        "OriginalRow": "| RE-A01 | 開始メニュー | 表示名と順序が、PVP・PVC・CVC・オプション・ゲーム終了の指定5項目に一致する。 | UI状態＋実画面 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "5項目/設定入口/CPU未開始/終了取消/入力隔離。名称は設定ウィンドウ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-A02",
+        "SourceKey": "RE",
+        "Line": 18,
+        "OriginalRow": "| RE-A02 | オプションの遷移 | オプションを1回選ぶと対局設計ウインドウが開き、音量設定だけの画面や多段入口に留まらない。 | UI操作 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "名称改訂提案",
+        "PlannedValidation": "5項目/設定入口/CPU未開始/終了取消/入力隔離。名称は設定ウィンドウ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-A03",
+        "SourceKey": "RE",
+        "Line": 19,
+        "OriginalRow": "| RE-A03 | 開始前の停止 | いずれの対戦準備でも、明示的な開始前には着手・本対局CPU思考・対局開始ログを作らない。 | 状態／イベント検査 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "5項目/設定入口/CPU未開始/終了取消/入力隔離。名称は設定ウィンドウ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-A04",
+        "SourceKey": "RE",
+        "Line": 20,
+        "OriginalRow": "| RE-A04 | 終了 | ゲーム終了で必要な保存確認と処理取消を行い、未完局を投了や引き分けへ変換しない。 | 状態＋保存検査 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "5項目/設定入口/CPU未開始/終了取消/入力隔離。名称は設定ウィンドウ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-A05",
+        "SourceKey": "RE",
+        "Line": 21,
+        "OriginalRow": "| RE-A05 | 入力の隔離 | フォーム・試し盤の入力が背景対局へ伝わらず、キー入力と断面操作が重複発火しない。 | 入力試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "5項目/設定入口/CPU未開始/終了取消/入力隔離。名称は設定ウィンドウ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-A06",
+        "SourceKey": "RE",
+        "Line": 22,
+        "OriginalRow": "| RE-A06 | 開始後の画面 | 開始メニューと設計ウインドウが閉じ、対局用の主ギズモ＋4ビュー構成へ移る。 | UI状態＋実画面 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "対局UI復帰/方式変更しても同設定を保持",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-A07",
+        "SourceKey": "RE",
+        "Line": 23,
+        "OriginalRow": "| RE-A07 | モード変更 | PVP／PVC／CVCを選び直しても、意図せず駒定義、遮蔽、初期配置が別プリセットへ戻らない。 | 設定比較 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "対局UI復帰/方式変更しても同設定を保持",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-B01",
+        "SourceKey": "RE",
+        "Line": 29,
+        "OriginalRow": "| RE-B01 | ヘルダー範囲 | N=4でa>b、a=0、b=5を拒否し、入力を黙って丸めない。 | pure C#検証試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "定義ID/移動/ヘルダー/前方対称/距離/参照。初回H11/H22外は未対応、実成り後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-B02",
+        "SourceKey": "RE",
+        "Line": 30,
+        "OriginalRow": "| RE-B02 | ヘルダー候補 | Δ=(3,3,1,0)はH(2,3)に含みH(2,2)に含まない。ゼロ変位はいずれも含まない。 | 独立した述語fixture |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B部分→CFG-3全体",
+        "DispositionProposal": "部分後回し",
+        "PlannedValidation": "初回はH(2,2)によるΔ=(3,3,1,0)除外・ゼロ変位拒否のみ。H(2,3)包含と一般Hの完全列挙はCFG-3採用後。部分を全体PASSにしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-B03",
+        "SourceKey": "RE",
+        "Line": 31,
+        "OriginalRow": "| RE-B03 | 王の軸数 | 境界の影響がないN=4の試し盤で、k=4の幾何的セル候補80、k=2で32となる。 | 独立列挙と一致 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "定義ID/移動/ヘルダー/前方対称/距離/参照。初回H11/H22外は未対応、実成り後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-B04",
+        "SourceKey": "RE",
+        "Line": 32,
+        "OriginalRow": "| RE-B04 | 桂馬比較 | 境界の影響がないN=4でA=6、B=8、N=6でA=10、B=32。候補の座標集合も確認する。 | 座標fixtureと一致 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-3",
+        "DispositionProposal": "後回し",
+        "PlannedValidation": "桂馬A/B・複合・N6は採用後に独立集合",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-B05",
+        "SourceKey": "RE",
+        "Line": 33,
+        "OriginalRow": "| RE-B05 | 前後と表示 | 先後のsを変えると前方成分の符号が反転する。カメラや4D断面を動かしてもf・sは変わらない。 | 状態不変量 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "定義ID/移動/ヘルダー/前方対称/距離/参照。初回H11/H22外は未対応、実成り後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV07"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-B06",
+        "SourceKey": "RE",
+        "Line": 34,
+        "OriginalRow": "| RE-B06 | 非前方軸の対称 | 対称設定では非前方軸の置換・符号反転に対し候補が同じ変換で対応する。 | 性質試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "定義ID/移動/ヘルダー/前方対称/距離/参照。初回H11/H22外は未対応、実成り後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-B07",
+        "SourceKey": "RE",
+        "Line": 35,
+        "OriginalRow": "| RE-B07 | 複合成分 | 同じ移動先が複数成分に現れても重複しない。別成分の条件を混ぜて偽の移動を許さない。 | 反例fixture |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-3",
+        "DispositionProposal": "後回し",
+        "PlannedValidation": "桂馬A/B・複合・N6は採用後に独立集合",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-B08",
+        "SourceKey": "RE",
+        "Line": 36,
+        "OriginalRow": "| RE-B08 | 距離の意味 | 固定跳躍の1回と最大軸変位、走りの距離mを混同しない。盤端までの設定は有限盤外へ列挙しない。 | 境界fixture |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "定義ID/移動/ヘルダー/前方対称/距離/参照。初回H11/H22外は未対応、実成り後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-B09",
+        "SourceKey": "RE",
+        "Line": 37,
+        "OriginalRow": "| RE-B09 | 成駒の参照 | 同名別IDを区別し、無効な成り先・捕獲戻り先を拒否する。対応しない循環を勝手に解決しない。 | 参照検証 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A参照保護→CFG-2/3",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "定義ID/移動/ヘルダー/前方対称/距離/参照。初回H11/H22外は未対応、実成り後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-C01",
+        "SourceKey": "RE",
+        "Line": 43,
+        "OriginalRow": "| RE-C01 | 3段階表示 | 移動候補、遮蔽・占有込み、合法手を区別する。候補のみの計算を合法手と表示しない。 | 表示値＋計算段階 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "段階分割して継承提案",
+        "PlannedValidation": "G/P/L未評価/試し盤独立/全次元不可視/後着/打切り。全controller集合一致はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-C02",
+        "SourceKey": "RE",
+        "Line": 44,
+        "OriginalRow": "| RE-C02 | 王・履歴の不足 | 王や必要履歴がない試し盤では合法手を未評価とし、ゼロ件や詰みと誤表示しない。 | 欠損fixture |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "段階分割して継承提案",
+        "PlannedValidation": "G/P/L未評価/試し盤独立/全次元不可視/後着/打切り。全controller集合一致はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-C03",
+        "SourceKey": "RE",
+        "Line": 45,
+        "OriginalRow": "| RE-C03 | 版付き再計算 | D1の計算中にD2へ編集した場合、後着D1の結果をD2のプレビューとして表示しない。 | 遅延注入 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "段階分割して継承提案",
+        "PlannedValidation": "G/P/L未評価/試し盤独立/全次元不可視/後着/打切り。全controller集合一致はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-C04",
+        "SourceKey": "RE",
+        "Line": 46,
+        "OriginalRow": "| RE-C04 | 断面外 | 断面外の遮蔽駒・攻撃駒を動かすと、共通エンジンの結果と一致して候補・合法手が変化する。 | 全次元fixture |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "段階分割して継承提案",
+        "PlannedValidation": "G/P/L未評価/試し盤独立/全次元不可視/後着/打切り。全controller集合一致はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-C05",
+        "SourceKey": "RE",
+        "Line": 47,
+        "OriginalRow": "| RE-C05 | 未完了 | 表示・計算予算で停止した件数に部分表示を付け、全合法手数や0件の断定に使わない。 | 予算打切り注入 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "段階分割して継承提案",
+        "PlannedValidation": "G/P/L未評価/試し盤独立/全次元不可視/後着/打切り。全controller集合一致はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-C06",
+        "SourceKey": "RE",
+        "Line": 48,
+        "OriginalRow": "| RE-C06 | 共通エンジン | 同じルール・局面・履歴の試し盤、CLI、人間対局、CPU入力が同一の合法手集合を参照する。 | 集合比較 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B→CFG-2",
+        "DispositionProposal": "段階分割して継承提案",
+        "PlannedValidation": "G/P/L未評価/試し盤独立/全次元不可視/後着/打切り。全controller集合一致はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-C07",
+        "SourceKey": "RE",
+        "Line": 49,
+        "OriginalRow": "| RE-C07 | 配置の保全 | Nや盤サイズの変更で不整合な駒を無断削除・短縮・丸めしない。元データを復元できる。 | 変更／Undo |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "段階分割して継承提案",
+        "PlannedValidation": "G/P/L未評価/試し盤独立/全次元不可視/後着/打切り。全controller集合一致はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-C08",
+        "SourceKey": "RE",
+        "Line": 50,
+        "OriginalRow": "| RE-C08 | 試験配置の分離 | 試し盤の障害物・手番・移動が、明示的な採用なしに本対局の初期配置へ入らない。 | 状態分離検査 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "段階分割して継承提案",
+        "PlannedValidation": "G/P/L未評価/試し盤独立/全次元不可視/後着/打切り。全controller集合一致はCFG-2",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-D01",
+        "SourceKey": "RE",
+        "Line": 56,
+        "OriginalRow": "| RE-D01 | 標準の保護 | N=2標準の変更はカスタム複製とし、原本を保持する。移動だけを戻しても未一致の成り・反復を標準扱いしない。 | 識別と回帰試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A保護→CFG-3 N2",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "標準原本保護/名前だけ認定禁止。現行N2拒否、標準回帰は後段",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-D02",
+        "SourceKey": "RE",
+        "Line": 57,
+        "OriginalRow": "| RE-D02 | 遮蔽の適用 | 未定義／未対応の移動形状×遮蔽方式は開始できず、別方式へフォールバックしない。 | 対応表試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B→CFG-2/3",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "移動×遮蔽/終局依存。成り打ちの実行は採用後",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-D03",
+        "SourceKey": "RE",
+        "Line": 58,
+        "OriginalRow": "| RE-D03 | 終局依存 | 詰み方式と王捕獲方式、王数、王欠損、終局優先順の不整合を検出する。 | 不正組合せfixture |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B→CFG-2/3",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "移動×遮蔽/終局依存。成り打ちの実行は採用後",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-D04",
+        "SourceKey": "RE",
+        "Line": 59,
+        "OriginalRow": "| RE-D04 | 持駒・筋・成り | 持駒方式と打ち、成り領域、筋キーが宣言したルール座標で判定される。表示軸に依存しない。 | 境界／座標fixture |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B→CFG-2/3",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "移動×遮蔽/終局依存。成り打ちの実行は採用後",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-D05",
+        "SourceKey": "RE",
+        "Line": 60,
+        "OriginalRow": "| RE-D05 | 読込みの安全 | 未知schema・未知機能・不正数値・参照不備・上限超データを検出。任意コード・外部取得を実行しない。 | 不正ファイル試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "安全読込/状態と意味ID版往復/能力表",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13",
+        "PV14"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-D06",
+        "SourceKey": "RE",
+        "Line": 61,
+        "OriginalRow": "| RE-D06 | 適用と下書き | キャンセルは適用済み設定を変えない。未完成下書きの保存とプレイ可能設定を区別する。 | 状態遷移試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "安全読込/状態と意味ID版往復/能力表",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-D07",
+        "SourceKey": "RE",
+        "Line": 62,
+        "OriginalRow": "| RE-D07 | 対応次元 | N>4で4ビューだけを全方向表示と称さない。ルール対応、3Dプレビュー、実対局の対応を別判定する。 | 能力情報とUI |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "安全読込/状態と意味ID版往復/能力表",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-D08",
+        "SourceKey": "RE",
+        "Line": 63,
+        "OriginalRow": "| RE-D08 | 往復 | 書出し→読込みでルール意味・初期配置・各ID／版が一致する。画像や不要な実行データを混入しない。 | 正規化ハッシュと内容 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "範囲限定して継承提案",
+        "PlannedValidation": "安全読込/状態と意味ID版往復/能力表",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-E01",
+        "SourceKey": "RE",
+        "Line": 69,
+        "OriginalRow": "| RE-E01 | 開始固定 | 開始で全設定を一貫したスナップショットへ固定し、その後に初手とCPUを許可する。連打で複数局を作らない。 | イベント順序／連打 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存失敗/旧局独立/Hash分離/3担当/CPU後着・取消/CVC1ply/打切り非勝敗",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-E02",
+        "SourceKey": "RE",
+        "Line": 70,
+        "OriginalRow": "| RE-E02 | 保存失敗 | 開始記録の保存に失敗したらCPU・着手を開始せず、失敗理由と再試行／中止を示す。 | 障害注入 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存失敗/旧局独立/Hash分離/3担当/CPU後着・取消/CVC1ply/打切り非勝敗",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-E03",
+        "SourceKey": "RE",
+        "Line": 71,
+        "OriginalRow": "| RE-E03 | 過去局の不変 | 次局用プリセットの後日変更が、保存済み対局のRuleSnapshotと再生手を変えない。 | 2局＋保存往復 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存失敗/旧局独立/Hash分離/3担当/CPU後着・取消/CVC1ply/打切り非勝敗",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-E04",
+        "SourceKey": "RE",
+        "Line": 72,
+        "OriginalRow": "| RE-E04 | ハッシュの分離 | カメラ・表示速度ではRuleHash不変、駒・遮蔽の意味変更では変化。CPU設定は対局条件側へ記録。 | 正規化比較 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A Hash→CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存失敗/旧局独立/Hash分離/3担当/CPU後着・取消/CVC1ply/打切り非勝敗",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-E05",
+        "SourceKey": "RE",
+        "Line": 73,
+        "OriginalRow": "| RE-E05 | PVP／PVC／CVC | 共通の局面とルールで担当だけを差し替え、対応モードで1局を進行できる。未知ルールCPUを黙って使わない。 | 担当組合せ試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存失敗/旧局独立/Hash分離/3担当/CPU後着・取消/CVC1ply/打切り非勝敗",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-E06",
+        "SourceKey": "RE",
+        "Line": 74,
+        "OriginalRow": "| RE-E06 | CPUの古い応答 | 対局ID・局面版・RuleHash・探索要求が異なる応答を拒否する。停止中に勝手に着手を確定しない。 | 遅延／取消試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存失敗/旧局独立/Hash分離/3担当/CPU後着・取消/CVC1ply/打切り非勝敗",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-E07",
+        "SourceKey": "RE",
+        "Line": 75,
+        "OriginalRow": "| RE-E07 | CVCの停止・1手 | 一時停止から1手進めるとちょうど1 plyで再停止し、自動で次局へ移らない。 | 手数と状態確認 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存失敗/旧局独立/Hash分離/3担当/CPU後着・取消/CVC1ply/打切り非勝敗",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-E08",
+        "SourceKey": "RE",
+        "Line": 76,
+        "OriginalRow": "| RE-E08 | 打切りと勝敗 | CPUの時間切れ・候補未完了・実行予算終了を、合法手0・詰み・引き分けへ読み替えない。 | 障害／予算試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "開始固定/保存失敗/旧局独立/Hash分離/3担当/CPU後着・取消/CVC1ply/打切り非勝敗",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-H01",
+        "SourceKey": "RE",
+        "Line": 82,
+        "OriginalRow": "| RE-H01 | 理解 | 飛角のヘルダー条件、王の軸数、桂馬A/Bを、説明を読まなくても変更結果と合わせて追えるか。 | 人間による試用 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "実装済み範囲で編集/候補/未対応/保存/モードを人間操作。未対応機能を合格にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-H02",
+        "SourceKey": "RE",
+        "Line": 83,
+        "OriginalRow": "| RE-H02 | 誤操作 | 数値編集、駒選択、軸ドラッグ、リング回転、初期配置編集を取り違えにくいか。 | 人間による試用 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "実装済み範囲で編集/候補/未対応/保存/モードを人間操作。未対応機能を合格にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-H03",
+        "SourceKey": "RE",
+        "Line": 84,
+        "OriginalRow": "| RE-H03 | 見通し | 設計画面の文字が読め、試し盤が十分見え、対局中には大きい設定パネルが残らないか。 | Windows実画面 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "実装済み範囲で編集/候補/未対応/保存/モードを人間操作。未対応機能を合格にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-H04",
+        "SourceKey": "RE",
+        "Line": 85,
+        "OriginalRow": "| RE-H04 | 位置の安定 | 分類・駒・設定の変更で、不必要なスクロールやカメラ移動が発生しないか。 | 操作記録 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "実装済み範囲で編集/候補/未対応/保存/モードを人間操作。未対応機能を合格にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-H05",
+        "SourceKey": "RE",
+        "Line": 86,
+        "OriginalRow": "| RE-H05 | 不正理由 | 未対応、未評価、高負荷、単なるゲーム性の注意を区別でき、どこを直すか分かるか。 | エラー例の試用 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "実装済み範囲で編集/候補/未対応/保存/モードを人間操作。未対応機能を合格にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "RE-H06",
+        "SourceKey": "RE",
+        "Line": 87,
+        "OriginalRow": "| RE-H06 | 対局・観戦 | ローカル2人、CPU相手、CPU同士の観戦の流れと、開始前のルール確認が分かりやすいか。 | 3モード試用 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_RULE_EDITOR_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "実装済み範囲で編集/候補/未対応/保存/モードを人間操作。未対応機能を合格にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-01",
+        "SourceKey": "UI4",
+        "Line": 107,
+        "OriginalRow": "| UI4-01 | 主ギズモ1つと、重複のない4つのビューが表示される | 実画面・UI状態確認 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "主1＋4実在",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-02",
+        "SourceKey": "UI4",
+        "Line": 108,
+        "OriginalRow": "| UI4-02 | W／Z／Y／Xクリックの到達断面がXYZ／XYW／XZW／YZWに対応する | 断面状態の自動試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "W/Z/Y/Xと基準B/n照合",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV03",
+        "PV09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-03",
+        "SourceKey": "UI4",
+        "Line": 109,
+        "OriginalRow": "| UI4-03 | アニメーションの中間状態で、実際の断面と全プレビューが一致する | 数値試験＋実画面 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "中間断面と4ビュー同期",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-04",
+        "SourceKey": "UI4",
+        "Line": 110,
+        "OriginalRow": "| UI4-04 | 同じ軸への同一の平行移動指定は、操作したビューによらず同じ結果になる | 自動試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "同軸同δの世界4D移動一致",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV05",
+        "PV10"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-05",
+        "SourceKey": "UI4",
+        "Line": 111,
+        "OriginalRow": "| UI4-05 | ドラッグ中に別の操作種別へ切り替わらない | 入力試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "drag所有固定/フォーカス取消",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV10",
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-06",
+        "SourceKey": "UI4",
+        "Line": 112,
+        "OriginalRow": "| UI4-06 | 通常3Dカメラ操作と4D断面操作が、それぞれ他方の状態を不意に変えない | 状態不変量の試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "カメラと断面の非干渉",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV08",
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-07",
+        "SourceKey": "UI4",
+        "Line": 113,
+        "OriginalRow": "| UI4-07 | 任意角度を4つの基準断面のいずれかと誤表示しない | 自動試験＋実画面 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "途中/自由角度を基準一致と偽表示しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-08",
+        "SourceKey": "UI4",
+        "Line": 114,
+        "OriginalRow": "| UI4-08 | ギズモの画面端位置と空中の回転中心が分離され、回転で中心が不意に飛ばない | 幾何試験＋人間確認 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "空中pivot/finite窓/画面ギズモ分離",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV01",
+        "PV02"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-09",
+        "SourceKey": "UI4",
+        "Line": 115,
+        "OriginalRow": "| UI4-09 | 軸・リング・現在状態・移行先を、色だけに頼らず区別できる | 人間による操作確認 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "色以外の識別を人間確認",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV08",
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "UI4-10",
+        "SourceKey": "UI4",
+        "Line": 116,
+        "OriginalRow": "| UI4-10 | 5つの表示が盤面操作を過度に妨げず、選択・ホバーでカメラが勝手に移動しない | 人間確認＋入力試験 |",
+        "SourcePath": "sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "G-04期待を具体化して継承提案",
+        "PlannedValidation": "非妨害/非自動カメラを実入力と人間確認",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11",
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-B01",
+        "SourceKey": "OLD",
+        "Line": 142,
+        "OriginalRow": "| AUTO-B01 | 対象remote、作業場所、branch/SHA/dirty状態を取得 | 指定Showcaseと一致。別のn-dimensional-shogiを代用しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-0→後段再照合",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "repo/remote/HEAD再識別。今回静的証拠あり、アプリ試験NOT_RUN",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV14",
+        "PV17"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-B02",
+        "SourceKey": "OLD",
+        "Line": 143,
+        "OriginalRow": "| AUTO-B02 | 名称変更差分を点検 | ユーザー表示は「四次元将棋」。repo、namespace、旧タグ、保存IDの一括置換なし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "製品表示・pure C#・スパース境界",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV17"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-B03",
+        "SourceKey": "OLD",
+        "Line": 144,
+        "OriginalRow": "| AUTO-B03 | pure C#層とデータ構造を点検 | Unity参照をルール・参照幾何へ持ち込まず、スパース状態を維持。全マス配列・セル別GameObjectなし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "製品表示・pure C#・スパース境界",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-B04",
+        "SourceKey": "OLD",
+        "Line": 145,
+        "OriginalRow": "| AUTO-B04 | 現行基準で存在する試験・旧再生を回帰 | 実在する試験を実行し結果を記録。過去の別repo件数で代用しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "全承認工程",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "Core/Geometry/旧Showcase再生Legacy回帰",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV14",
+        "PV16"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I01",
+        "SourceKey": "OLD",
+        "Line": 151,
+        "OriginalRow": "| AUTO-I01 | 新規起動、保存復帰 | 大きいメニュー・解析・タイムラインなし。未開始／中断／手番状態を区別 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/2",
+        "DispositionProposal": "改訂提案",
+        "PlannedValidation": "起動5項目、対局中大パネルなし、未開始/中断/手番区別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I02",
+        "SourceKey": "OLD",
+        "Line": 152,
+        "OriginalRow": "| AUTO-I02 | ギズモの透明な空白部分をクリック | 背景全体の遮断板がなく、実ハンドルでなければ盤の正しい対象へ届く |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I03",
+        "SourceKey": "OLD",
+        "Line": 153,
+        "OriginalRow": "| AUTO-I03 | ハンドルと背後の駒が重なる位置を押下 | ギズモだけが入力を所有。背後の選択／着手は起きない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I04",
+        "SourceKey": "OLD",
+        "Line": 154,
+        "OriginalRow": "| AUTO-I04 | 3DリングとW枠の交差付近をホバー・押下 | 押下前に強調した同じ一意なハンドルが所有する |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I05",
+        "SourceKey": "OLD",
+        "Line": 155,
+        "OriginalRow": "| AUTO-I05 | ドラッグ中に盤、UI、別ハンドルへ横断 | 所有者が移らず、解放時のクリックが合成されない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV10",
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I06",
+        "SourceKey": "OLD",
+        "Line": 156,
+        "OriginalRow": "| AUTO-I06 | 駒上の左ドラッグを4DIP超、または別対象で解放 | 着手しない。元座標・手番・履歴不変 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "具体割当/閾値採用待ち",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I07",
+        "SourceKey": "OLD",
+        "Line": 157,
+        "OriginalRow": "| AUTO-I07 | pointer down後、Esc／フォーカス喪失 | 表示ドラッグは開始前へ戻り、押下・capture解除。復帰後に残留移動なし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV10",
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I08",
+        "SourceKey": "OLD",
+        "Line": 158,
+        "OriginalRow": "| AUTO-I08 | ドラッグ中のリサイズ／DPI変更 | ドラッグ中断後に再レイアウト。ギズモが別隅へ飛びながら操作継続しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV10",
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I09",
+        "SourceKey": "OLD",
+        "Line": 159,
+        "OriginalRow": "| AUTO-I09 | Enter押しっぱなし、Tabリピート、ダブル入力 | Enterはfresh keydownかつarm済みだけ一回確定。二重commitしない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I10",
+        "SourceKey": "OLD",
+        "Line": 160,
+        "OriginalRow": "| AUTO-I10 | メニュー中のキー、IME編集、UI上ホイール | UIへ渡し、盤の候補選択・カメラズーム・着手に漏れない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I11",
+        "SourceKey": "OLD",
+        "Line": 161,
+        "OriginalRow": "| AUTO-I11 | 右、中、Alt＋右、途中のAlt変化 | 開始時のorbit／panを維持。中ボタンなしでもパン可能 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/2",
+        "DispositionProposal": "具体割当/閾値採用待ち",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I12",
+        "SourceKey": "OLD",
+        "Line": 162,
+        "OriginalRow": "| AUTO-I12 | 通常Home、Alt＋Home、Ctrl＋Home、Backspace | カメラだけ／断面だけ／全表示／フォーカス履歴を区別。対局は戻らない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/2",
+        "DispositionProposal": "具体割当/閾値採用待ち",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I13",
+        "SourceKey": "OLD",
+        "Line": 163,
+        "OriginalRow": "| AUTO-I13 | 画面端へポインターを置く、補助表示を切替 | エッジスクロール、自動orbit、自動追従、勝手なズームなし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-I14",
+        "SourceKey": "OLD",
+        "Line": 164,
+        "OriginalRow": "| AUTO-I14 | カメラ方向とXYZ軸がほぼ平行 | 拘束パンが有限・連続で、縮退方向の除算による暴走なし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→2",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "入力所有/IME/commit重複/stale/hit/自動移動禁止/平行縮退。旧数値とキーを無断継承しない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV10",
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G01",
+        "SourceKey": "OLD",
+        "Line": 170,
+        "OriginalRow": "| AUTO-G01 | F0と任意有効Fで直交・detを検査 | BᵀB=I、Bᵀn=0、\\|\\|n\\|\\|=1、det F>0。採用した誤差範囲内 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "具体化して継承提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G02",
+        "SourceKey": "OLD",
+        "Line": 171,
+        "OriginalRow": "| AUTO-G02 | 同じ局所平面でθ、−θを順に適用 | Fとhが元へ戻る。角度スナップ／取消も区別 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "具体化して継承提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G03",
+        "SourceKey": "OLD",
+        "Line": 172,
+        "OriginalRow": "| AUTO-G03 | XW→YWとYW→XWを比較 | 非可換なケースで異なるF。独立角度加算で一致させない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "具体化して継承提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G04",
+        "SourceKey": "OLD",
+        "Line": 173,
+        "OriginalRow": "| AUTO-G04 | F0からXW+90度、h=0 | 断面u=0、表示Xがルールwに対応 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "改訂提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV03"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G05",
+        "SourceKey": "OLD",
+        "Line": 174,
+        "OriginalRow": "| AUTO-G05 | h≠0でW面回転 | c=P+hnを更新し、Pまわりに回る。Gscreenや旧cをpivotにしない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "改訂提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV01",
+        "PV04"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G06",
+        "SourceKey": "OLD",
+        "Line": 175,
+        "OriginalRow": "| AUTO-G06 | 複数の4D回転後、XYZリング・パン・ズーム | F/h、交差集合、局面ハッシュ、合法手、CPU入力が不変 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "具体化して継承提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV07"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G07",
+        "SourceKey": "OLD",
+        "Line": 176,
+        "OriginalRow": "| AUTO-G07 | W単独ドラッグ、傾けたFでも実行 | Fは不変でhだけ変化。固定wやUnity −Y移動と誤認した処理なし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "改訂提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV02",
+        "PV05"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G08",
+        "SourceKey": "OLD",
+        "Line": 177,
+        "OriginalRow": "| AUTO-G08 | 1万回の小回転、保存・読込、逆系列 | 採用許容範囲内。最終Fと規約で復元し、独立角だけで再構成しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "具体化して継承提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G09",
+        "SourceKey": "OLD",
+        "Line": 178,
+        "OriginalRow": "| AUTO-G09 | NaN、特異・非直交F、det負の保存 | 明示エラー。Emptyや正常な0枚表示として処理しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "具体化して継承提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV09",
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-G10",
+        "SourceKey": "OLD",
+        "Line": 179,
+        "OriginalRow": "| AUTO-G10 | 単位・adapter・法線・表裏の既知例 | 描画と逆写像で軸、左右系、符号、巻き順が一致 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "具体化して継承提案",
+        "PlannedValidation": "独立座標/正規直交/基準姿勢/符号/空中pivot/world軸移動/論理不変のfixture。旧盤中心等は最新G04へ",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV01"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R01",
+        "SourceKey": "OLD",
+        "Line": 185,
+        "OriginalRow": "| AUTO-R01 | FX-01を生成 | 20枚、重複なし、盤内、玉2枚、初期反復1回、双方王手なし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R02",
+        "SourceKey": "OLD",
+        "Line": 186,
+        "OriginalRow": "| AUTO-R02 | 各駒の内点・端・角から移動集合を独立検査 | 王80、金34等の内部上限、境界、σの符号が定義に一致 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R03",
+        "SourceKey": "OLD",
+        "Line": 187,
+        "OriginalRow": "| AUTO-R03 | H(1,1)、H(2,2)、N=2への幾何的制限 | 軸／等距離2軸に一致。これだけでN=2完全互換PASSとしない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "fixture分離で継承提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R04",
+        "SourceKey": "OLD",
+        "Line": 188,
+        "OriginalRow": "| AUTO-R04 | u/v/wの6置換×8符号反転、先後変換 | 変換後の局面と着手集合が可換に対応。初期配置の見た目対称性と混同しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "fixture分離で継承提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R05",
+        "SourceKey": "OLD",
+        "Line": 189,
+        "OriginalRow": "| AUTO-R05 | 飛・角の中間点、味方終点、敵終点、盤外 | 正しい遮蔽・捕獲・拒否。端点を中間点として二重処理しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "fixture分離で継承提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R06",
+        "SourceKey": "OLD",
+        "Line": 190,
+        "OriginalRow": "| AUTO-R06 | FX-03、角の一歩、線分反転、角接触 | 2遮蔽方式の期待差を検出。閉セル境界規約を維持 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B",
+        "DispositionProposal": "fixture分離で継承提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R07",
+        "SourceKey": "OLD",
+        "Line": 191,
+        "OriginalRow": "| AUTO-R07 | 王・金・歩に走り駒遮蔽設定を切替 | 一歩駒へ誤ってSupercoverを適用しない。歩の純W移動は拒否 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R08",
+        "SourceKey": "OLD",
+        "Line": 192,
+        "OriginalRow": "| AUTO-R08 | FX-02/02B、表示回転、遮蔽駒の移動 | 断面外の王手、合駒、自玉を晒す手の禁止が全局面で正しい |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B→CFG-2",
+        "DispositionProposal": "fixture分離で継承提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R09",
+        "SourceKey": "OLD",
+        "Line": 193,
+        "OriginalRow": "| AUTO-R09 | 捕獲、ピン、敵玉のマス、王同士の隣接 | 攻撃と合法手を区別。敵玉捕獲は禁止、王手放置・隣接侵入を拒否 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R10",
+        "SourceKey": "OLD",
+        "Line": 194,
+        "OriginalRow": "| AUTO-R10 | 歩の最終段到達と捕獲同時成り | と金への変更が一つの着手。手番・履歴・shape版が一回だけ更新 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R11",
+        "SourceKey": "OLD",
+        "Line": 195,
+        "OriginalRow": "| AUTO-R11 | FX-04とFX-05 | 詰み負けと非王手の合法手なし引き分けを区別 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R12",
+        "SourceKey": "OLD",
+        "Line": 196,
+        "OriginalRow": "| AUTO-R12 | FX-06、途中保存・断面変更、同種IDの交換 | 反復4回を正しく判定。表示／PieceIdを反復キーへ含めない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R13",
+        "SourceKey": "OLD",
+        "Line": 197,
+        "OriginalRow": "| AUTO-R13 | FX-07、王手解除後を開始点にした周期 | 連続王手側が負け。4回目の王手の有無だけでは判定しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R14",
+        "SourceKey": "OLD",
+        "Line": 198,
+        "OriginalRow": "| AUTO-R14 | 相互連続王手の判定用履歴、空／不足履歴 | 提案の特殊規約と入力不正を区別。合成履歴unit検査を実戦再現と呼ばない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R15",
+        "SourceKey": "OLD",
+        "Line": 199,
+        "OriginalRow": "| AUTO-R15 | 合法手生成を中断、例外、予算切れ | 完了0件と未完了を区別し、未完了から詰み・引分けを生成しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B→CFG-2",
+        "DispositionProposal": "fixture分離で継承提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-R16",
+        "SourceKey": "OLD",
+        "Line": 200,
+        "OriginalRow": "| AUTO-R16 | 構造不正、投了、中断、再開始、実行手数打切り | エラー／投了／未決／新セッション／TRUNCATEDを区別 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/3",
+        "DispositionProposal": "採用ルールへ期待改訂提案",
+        "PlannedValidation": "定義/二遮蔽/全次元攻撃/未完了区別。R-A/王80/成り/反復回数等を製品既定にしない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-F01",
+        "SourceKey": "OLD",
+        "Line": 208,
+        "OriginalRow": "| AUTO-F01 | 全自駒をQで循環、見える駒集合を変更 | すべての自駒IDへ到達し、選択だけで視点・断面が動かない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/2",
+        "DispositionProposal": "補助経路採用待ち",
+        "PlannedValidation": "不可視到達要求は維持。Q/Tab/F/Backspaceは採用後に検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-F02",
+        "SourceKey": "OLD",
+        "Line": 209,
+        "OriginalRow": "| AUTO-F02 | 自駒の全合法手をTabで前後循環 | 可視／不可視を含む全集合と一致。欠落・重複・視点による順序変更なし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/2",
+        "DispositionProposal": "補助経路採用待ち",
+        "PlannedValidation": "不可視到達要求は維持。Q/Tab/F/Backspaceは採用後に検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-F03",
+        "SourceKey": "OLD",
+        "Line": 210,
+        "OriginalRow": "| AUTO-F03 | Fで駒または空セルの内点を通す | h=n·(s−P)。対象の3D体積断面を確認し、接触だけで完了しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/2",
+        "DispositionProposal": "補助経路採用待ち",
+        "PlannedValidation": "不可視到達要求は維持。Q/Tab/F/Backspaceは採用後に検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-F04",
+        "SourceKey": "OLD",
+        "Line": 211,
+        "OriginalRow": "| AUTO-F04 | 不可視移動先をTab→F→Enterで着手 | 元の全4D座標に着手。wの0埋め、3D丸めがない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/2",
+        "DispositionProposal": "補助経路採用待ち",
+        "PlannedValidation": "不可視到達要求は維持。Q/Tab/F/Backspaceは採用後に検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-F05",
+        "SourceKey": "OLD",
+        "Line": 212,
+        "OriginalRow": "| AUTO-F05 | Tab直後のEnter、F遷移中のEnter | 未確認／未armの候補は確定しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/2",
+        "DispositionProposal": "補助経路採用待ち",
+        "PlannedValidation": "不可視到達要求は維持。Q/Tab/F/Backspaceは採用後に検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-F06",
+        "SourceKey": "OLD",
+        "Line": 213,
+        "OriginalRow": "| AUTO-F06 | F後にBackspace、選択駒が断面外へ出る | 表示一式が復帰し、元PieceId選択を保持。局面を戻さない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/2",
+        "DispositionProposal": "補助経路採用待ち",
+        "PlannedValidation": "不可視到達要求は維持。Q/Tab/F/Backspaceは採用後に検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-F07",
+        "SourceKey": "OLD",
+        "Line": 214,
+        "OriginalRow": "| AUTO-F07 | 描画片の並び替え、複数fragment、同じ画面位置 | 元IDが安定し、配列順や投影の一致から誤った4D IDを選ばない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "元4D ID/各revision一致/描画準備・補間中hit拒否",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV06"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-F08",
+        "SourceKey": "OLD",
+        "Line": 215,
+        "OriginalRow": "| AUTO-F08 | 旧局面・旧Slice・旧Camera・旧Anchorのhitを送信 | 現在のstampと一致しない要求は拒否。新局面へ読み替えない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "元4D ID/各revision一致/描画準備・補間中hit拒否",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV06",
+        "PV10"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-F09",
+        "SourceKey": "OLD",
+        "Line": 216,
+        "OriginalRow": "| AUTO-F09 | 押下中に表示準備が変わる、移動アニメーション中 | stale／補間表示からの着手を止める。ready後に新規操作で確定 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "元4D ID/各revision一致/描画準備・補間中hit拒否",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV06",
+        "PV10"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-C01",
+        "SourceKey": "OLD",
+        "Line": 222,
+        "OriginalRow": "| AUTO-C01 | FX-01の異なる合法初手を各々別セッションで入力 | 固定脚本外でもCPUが同じ凍結ルールで合法に応答 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2",
+        "DispositionProposal": "新汎用対局に継承提案",
+        "PlannedValidation": "全次元CPU/脚本外合法手/Session-Revision-Request/取消/二重配送/完了状態。旧B3Dと別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-C02",
+        "SourceKey": "OLD",
+        "Line": 223,
+        "OriginalRow": "| AUTO-C02 | 同じ局面を多数の視点・断面でCPUへ渡す | CPU入力と固定ノード予算下の結果が同一 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2",
+        "DispositionProposal": "新汎用対局に継承提案",
+        "PlannedValidation": "全次元CPU/脚本外合法手/Session-Revision-Request/取消/二重配送/完了状態。旧B3Dと別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-C03",
+        "SourceKey": "OLD",
+        "Line": 224,
+        "OriginalRow": "| AUTO-C03 | FX-02、王手回避がW方向に必要な局面 | 可視駒だけで評価せず、全4Dの合法手を返す |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2",
+        "DispositionProposal": "新汎用対局に継承提案",
+        "PlannedValidation": "全次元CPU/脚本外合法手/Session-Revision-Request/取消/二重配送/完了状態。旧B3Dと別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-C04",
+        "SourceKey": "OLD",
+        "Line": 225,
+        "OriginalRow": "| AUTO-C04 | 深さ2途中で予算切れ、深さ1途中で予算切れ | 最後の完了iteration、または検証済み合法fallback。未完了を完了済み評価としない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2",
+        "DispositionProposal": "新汎用対局に継承提案",
+        "PlannedValidation": "全次元CPU/脚本外合法手/Session-Revision-Request/取消/二重配送/完了状態。旧B3Dと別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-C05",
+        "SourceKey": "OLD",
+        "Line": 226,
+        "OriginalRow": "| AUTO-C05 | 合法手未検出の段階で中断、完全生成で0件 | 待機／中断と詰み・非王手0件を区別 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2",
+        "DispositionProposal": "新汎用対局に継承提案",
+        "PlannedValidation": "全次元CPU/脚本外合法手/Session-Revision-Request/取消/二重配送/完了状態。旧B3Dと別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-C06",
+        "SourceKey": "OLD",
+        "Line": 227,
+        "OriginalRow": "| AUTO-C06 | 思考中に新局、ロード、投了、再開始 | 旧Session/Epoch/Revision/Requestの応答を棄却 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2",
+        "DispositionProposal": "新汎用対局に継承提案",
+        "PlannedValidation": "全次元CPU/脚本外合法手/Session-Revision-Request/取消/二重配送/完了状態。旧B3Dと別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-C07",
+        "SourceKey": "OLD",
+        "Line": 228,
+        "OriginalRow": "| AUTO-C07 | 同じ局面hashへ戻った後に古い応答を配送 | hashが同じでも古い世代の結果は適用しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2",
+        "DispositionProposal": "新汎用対局に継承提案",
+        "PlannedValidation": "全次元CPU/脚本外合法手/Session-Revision-Request/取消/二重配送/完了状態。旧B3Dと別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-C08",
+        "SourceKey": "OLD",
+        "Line": 229,
+        "OriginalRow": "| AUTO-C08 | CPU完了時にドラッグ／メニュー／フォーカス喪失 | 一結果だけを待機。入力途中の二重commit・局面差替えなし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2",
+        "DispositionProposal": "新汎用対局に継承提案",
+        "PlannedValidation": "全次元CPU/脚本外合法手/Session-Revision-Request/取消/二重配送/完了状態。旧B3Dと別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-C09",
+        "SourceKey": "OLD",
+        "Line": 230,
+        "OriginalRow": "| AUTO-C09 | 例外、watchdog、二重配送、キャンセル遅延 | 安全な停止・再試行。無制限ワーカー増加、パス、非合法手、時間切れ負けなし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2",
+        "DispositionProposal": "新汎用対局に継承提案",
+        "PlannedValidation": "全次元CPU/脚本外合法手/Session-Revision-Request/取消/二重配送/完了状態。旧B3Dと別",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-S01",
+        "SourceKey": "OLD",
+        "Line": 238,
+        "OriginalRow": "| AUTO-S01 | 通常手、捕獲、成り、CPU手、終局の保存往復 | 全4D局面・ルール・手番・結果・必要履歴が一致 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2〜P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "設定実体/履歴/再開/再探索なし再生/破損・保存失敗/旧保存/更新者分離",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-S02",
+        "SourceKey": "OLD",
+        "Line": 239,
+        "OriginalRow": "| AUTO-S02 | CPU思考中／移動描画中に保存して再起動 | 確定局面から復帰し、未確定探索や補間座標を正本にしない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2〜P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "設定実体/履歴/再開/再探索なし再生/破損・保存失敗/旧保存/更新者分離",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-S03",
+        "SourceKey": "OLD",
+        "Line": 240,
+        "OriginalRow": "| AUTO-S03 | 反復3回直後を保存し、4回目へ進める | 反復・連続王手の判定が保存なしの場合と一致 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2〜P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "設定実体/履歴/再開/再探索なし再生/破損・保存失敗/旧保存/更新者分離",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-S04",
+        "SourceKey": "OLD",
+        "Line": 241,
+        "OriginalRow": "| AUTO-S04 | 棋譜再生でCPUを起動しない | 保存した手と正しいルールで局面が再現。時間予算で結果が変わらない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2〜P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "設定実体/履歴/再開/再探索なし再生/破損・保存失敗/旧保存/更新者分離",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-S05",
+        "SourceKey": "OLD",
+        "Line": 242,
+        "OriginalRow": "| AUTO-S05 | 表示設定だけ破損、棋譜破損、未知ルール版 | 表示fallbackと対局再開不可を区別。未知版へ暗黙変換しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2〜P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "設定実体/履歴/再開/再探索なし再生/破損・保存失敗/旧保存/更新者分離",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-S06",
+        "SourceKey": "OLD",
+        "Line": 243,
+        "OriginalRow": "| AUTO-S06 | 一時保存失敗、ディスク不足、途中終了 | 最後の有効保存を保持。エラーを示し保存成功としない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2〜P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "設定実体/履歴/再開/再探索なし再生/破損・保存失敗/旧保存/更新者分離",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-S07",
+        "SourceKey": "OLD",
+        "Line": 244,
+        "OriginalRow": "| AUTO-S07 | 名称変更前の保存コピーを読み、再保存 | 元ファイルを破壊せず必要な互換／移行を確認。保存先は現行実装に即す |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A→2/P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "設定実体/履歴/再開/再探索なし再生/破損・保存失敗/旧保存/更新者分離",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV14"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-S08",
+        "SourceKey": "OLD",
+        "Line": 245,
+        "OriginalRow": "| AUTO-S08 | LegacyPlaybackとPlayableを切替 | シナリオとCPUの二重更新なし。旧記録を新ルールで改変しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A→2/P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "設定実体/履歴/再開/再探索なし再生/破損・保存失敗/旧保存/更新者分離",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV14"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-S09",
+        "SourceKey": "OLD",
+        "Line": 246,
+        "OriginalRow": "| AUTO-S09 | 開始前の遮蔽選択、開始後の変更要求 | 初手で固定し記録。開始後は新セッションとしてのみ変更 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2〜P3",
+        "DispositionProposal": "改訂提案",
+        "PlannedValidation": "初手固定→準備開始で固定、開始記録保存成功後に入力",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-P01",
+        "SourceKey": "OLD",
+        "Line": 252,
+        "OriginalRow": "| AUTO-P01 | 同じ局面で断面変更し、複数パスを比較 | Color/Depth/Normal/Shadow/Reflection/PickのSection版が一致 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "実断面→カラー/深度/影/反射等の一致。未使用パスは根拠付き対象外、実画面で検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV06"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-P02",
+        "SourceKey": "OLD",
+        "Line": 253,
+        "OriginalRow": "| AUTO-P02 | 駒をH0の外へ合法移動しH0へ復帰 | 不交差の実体・影・当たり判定が残らない。補助履歴は別レイヤー |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "実断面→カラー/深度/影/反射等の一致。未使用パスは根拠付き対象外、実画面で検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV06"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-P03",
+        "SourceKey": "OLD",
+        "Line": 254,
+        "OriginalRow": "| AUTO-P03 | メインカメラ外だが影／反射に必要な実断面 | 色パスの見えなさを全パスからの除去条件にしない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "実断面→カラー/深度/影/反射等の一致。未使用パスは根拠付き対象外、実画面で検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-P04",
+        "SourceKey": "OLD",
+        "Line": 255,
+        "OriginalRow": "| AUTO-P04 | FX-08のEmpty、押し出し端面、低次元接触、不正 | 正しいSectionStatus。数値不確定と空集合を混同しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "実断面→カラー/深度/影/反射等の一致。未使用パスは根拠付き対象外、実画面で検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-P05",
+        "SourceKey": "OLD",
+        "Line": 256,
+        "OriginalRow": "| AUTO-P05 | 連続回転で頂点順・トポロジーを変える | 由来情報を維持。前フレーム同じ頂点番号を同一点と仮定しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "実断面→カラー/深度/影/反射等の一致。未使用パスは根拠付き対象外、実画面で検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-P06",
+        "SourceKey": "OLD",
+        "Line": 257,
+        "OriginalRow": "| AUTO-P06 | 材質座標と文字を追跡 | 固定4D材質に対応。カメラ向きに合わせた文字の再貼付なし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1B/P1→P3",
+        "DispositionProposal": "継承提案",
+        "PlannedValidation": "実断面→カラー/深度/影/反射等の一致。未使用パスは根拠付き対象外、実画面で検査",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "AUTO-P07",
+        "SourceKey": "OLD",
+        "Line": 258,
+        "OriginalRow": "| AUTO-P07 | F観察アンカーと卓上復帰を実行 | 4D形状・局面は不変。観察領域の干渉なしを検査し、暗黙の形状縮小をしない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/P3",
+        "DispositionProposal": "観察アンカー採用待ち",
+        "PlannedValidation": "F観察アンカーは空中pivotと別の採用項目",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "WIN-01",
+        "SourceKey": "OLD",
+        "Line": 268,
+        "OriginalRow": "| WIN-01 | Windows Playerを起動 | 「四次元将棋」、メニュー非表示、正常な盤・ギズモ。起動Sceneと同梱物を記録 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B→2/P3",
+        "DispositionProposal": "改訂提案",
+        "PlannedValidation": "Windows起動5項目、開始後設定パネル非表示",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15",
+        "PV17"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "WIN-02",
+        "SourceKey": "OLD",
+        "Line": 269,
+        "OriginalRow": "| WIN-02 | 人間の任意合法手→CPU応答→次の人間手 | クリックの実経路で一巡。固定キー列の自動再生だけで代用しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P3",
+        "DispositionProposal": "採用条件で継承提案",
+        "PlannedValidation": "実操作/任意合法手/CPU/復帰/DPI/性能/保存再開/旧実行物。未承認数値で合否を決めない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "WIN-03",
+        "SourceKey": "OLD",
+        "Line": 270,
+        "OriginalRow": "| WIN-03 | W移動、4D合成回転、通常3D操作、復帰 | 各変数の分離、正しい4D座標と表示、誤着手なし |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B→2/P3",
+        "DispositionProposal": "採用条件で継承提案",
+        "PlannedValidation": "実操作/任意合法手/CPU/復帰/DPI/性能/保存再開/旧実行物。未承認数値で合否を決めない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11",
+        "PV17"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "WIN-04",
+        "SourceKey": "OLD",
+        "Line": 271,
+        "OriginalRow": "| WIN-04 | 100/150/200%の表示倍率、リサイズ、ウィンドウ移動 | ピック位置と実ハンドルが一致。環境にないDPI項目はNOT_RUN/BLOCKED |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P3",
+        "DispositionProposal": "採用条件で継承提案",
+        "PlannedValidation": "実操作/任意合法手/CPU/復帰/DPI/性能/保存再開/旧実行物。未承認数値で合否を決めない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15",
+        "PV17"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "WIN-05",
+        "SourceKey": "OLD",
+        "Line": 272,
+        "OriginalRow": "| WIN-05 | 一般マウス、中ボタンなし代替、キー操作 | パン・ズーム・取消・候補確認へ到達。タッチパッドは別途実施状態を記録 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P3",
+        "DispositionProposal": "採用条件で継承提案",
+        "PlannedValidation": "実操作/任意合法手/CPU/復帰/DPI/性能/保存再開/旧実行物。未承認数値で合否を決めない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV11",
+        "PV17"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "WIN-06",
+        "SourceKey": "OLD",
+        "Line": 273,
+        "OriginalRow": "| WIN-06 | 通常、連続4D、CPU並行、復帰、共面の各負荷区間 | 下記の性能指標と動画。平均fpsだけで判定しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P3",
+        "DispositionProposal": "採用条件で継承提案",
+        "PlannedValidation": "実操作/任意合法手/CPU/復帰/DPI/性能/保存再開/旧実行物。未承認数値で合否を決めない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "WIN-07",
+        "SourceKey": "OLD",
+        "Line": 274,
+        "OriginalRow": "| WIN-07 | 保存再開、終了、旧再生の実行物確認 | Editor限定の成功と区別し、元保存を保持 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P3",
+        "DispositionProposal": "採用条件で継承提案",
+        "PlannedValidation": "実操作/任意合法手/CPU/復帰/DPI/性能/保存再開/旧実行物。未承認数値で合否を決めない",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV13",
+        "PV17"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "HUM-01",
+        "SourceKey": "OLD",
+        "Line": 290,
+        "OriginalRow": "| HUM-01 | 起動して盤を見る。Escを開閉し通常画面へ戻る | 承認画像の広場・木・自然光・人物なしを維持。旧タイトルなし。初期画面が情報パネルへ戻っていない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B→P3",
+        "DispositionProposal": "改訂提案",
+        "PlannedValidation": "起動と対局を区別。最新1＋4/空中pivot/不可視到達/自由対局/保存/材質影反射/卓干渉を人間確認",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "HUM-02",
+        "SourceKey": "OLD",
+        "Line": 291,
+        "OriginalRow": "| HUM-02 | XYZリング、XW/YW/ZW、W位置を初期・合成後に操作 | 触る前に3D/4D/位置を区別できるか。右上を触って盤が右上中心に回らないか |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B→P3",
+        "DispositionProposal": "改訂提案",
+        "PlannedValidation": "起動と対局を区別。最新1＋4/空中pivot/不可視到達/自由対局/保存/材質影反射/卓干渉を人間確認",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "HUM-03",
+        "SourceKey": "OLD",
+        "Line": 292,
+        "OriginalRow": "| HUM-03 | 見えない自駒と移動先をQ/Tab/Fで探して指す | 自分の選択でのみ視点が移るか。元の観察へ戻れるか。候補循環が許容できるか |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/P3",
+        "DispositionProposal": "補助操作採用待ち",
+        "PlannedValidation": "起動と対局を区別。最新1＋4/空中pivot/不可視到達/自由対局/保存/材質影反射/卓干渉を人間確認",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "HUM-04",
+        "SourceKey": "OLD",
+        "Line": 293,
+        "OriginalRow": "| HUM-04 | 説明用脚本と異なる複数の合法手を自由に指す | CPUが応答し、人間が実際に対戦していると理解できるか。W方向も公平に扱うか |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2/P3",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "起動と対局を区別。最新1＋4/空中pivot/不可視到達/自由対局/保存/材質影反射/卓干渉を人間確認",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "HUM-05",
+        "SourceKey": "OLD",
+        "Line": 294,
+        "OriginalRow": "| HUM-05 | 一局を進め、保存・再開・終局または投了を行う | 誤操作で投了・新局にならないか。自然詰み／反復／投了／中断を区別して記録 |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-2/P2/P3",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "起動と対局を区別。最新1＋4/空中pivot/不可視到達/自由対局/保存/材質影反射/卓干渉を人間確認",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "HUM-06",
+        "SourceKey": "OLD",
+        "Line": 295,
+        "OriginalRow": "| HUM-06 | 静止・近接・連続4D回転・復帰を観察 | 木目・漢字・輪郭・接地・影・反射・残像・カクつき。静止画だけで採用しない |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "CFG-1A/B→P3",
+        "DispositionProposal": "人間確認を継承提案",
+        "PlannedValidation": "起動と対局を区別。最新1＋4/空中pivot/不可視到達/自由対局/保存/材質影反射/卓干渉を人間確認",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "Id": "HUM-07",
+        "SourceKey": "OLD",
+        "Line": 296,
+        "OriginalRow": "| HUM-07 | 卓の下側に対応する候補と任意回転をFで確認する | 持ち上げた観察表示が理解できるか。卓内部の見失いが解消するか。卓上復帰を不自然に感じないか |",
+        "SourcePath": "sources/FOUR_DIMENSIONAL_SHOGI_ACCEPTANCE_v0_1_JA.md",
+        "StageProposal": "G-04採用後P1/P3",
+        "DispositionProposal": "補助操作採用待ち",
+        "PlannedValidation": "起動と対局を区別。最新1＋4/空中pivot/不可視到達/自由対局/保存/材質影反射/卓干渉を人間確認",
+        "AdoptionGate": "G-01〜04/06（該当範囲）。対局はG-05追加",
+        "ExecutionStatus": "NOT_RUN",
+        "EvidenceThisRun": "静的照合のみ。実行証跡なし"
+      },
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    }
+  ],
+  "contractRows": [
+    {
+      "id": "C1-01",
+      "originalRow": "| C1-01 | 対象・基準状態・46ファイルを含む保全 | 開始／終了台帳、内容ハッシュ、差分の所有者 |",
+      "relatedPV": [
+        "PV14"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-02",
+      "originalRow": "| C1-02 | 5項目メニューから設定へ入れる。新画面で自動対局しない | 起動状態・入力経路・実画面 |",
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-03",
+      "originalRow": "| C1-03 | R0〜R7・7カテゴリ・駒一覧と日本語UIが読める | 実画面、未対応説明、文字欠損の確認 |",
+      "relatedPV": [
+        "PV15"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-04",
+      "originalRow": "| C1-04 | 一歩型の設定が実際のG/Pへ反映される | 独立座標fixture、軸数・前後・捕獲の集合比較 |",
+      "relatedPV": [
+        "PV12"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-05",
+      "originalRow": "| C1-05 | H(1,1)・H(2,2)の距離と二遮蔽を区別する | 障害物・盤端・接触境界のfixtureと方式版 |",
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-06",
+      "originalRow": "| C1-06 | 一般H・成り打ち・L等の未対応を隠さない | 無効入力・未対応・王なしケース、適用不可 |",
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-07",
+      "originalRow": "| C1-07 | 試し盤・初期配置・Legacy・保存状態が独立 | 操作前後の状態比較、Undo、削除・クリア |",
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-08",
+      "originalRow": "| C1-08 | 理論／全4D／表示内、G/P/L、未評価／一部計算が区別される | 80/32/8等のfixtureと実表示、数値の出典 |",
+      "relatedPV": [
+        "PV12"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-09",
+      "originalRow": "| C1-09 | 断面外の駒もG/P・対応する攻撃照会へ参加 | 断面ON/OFF／移動前後の論理結果比較。未実装攻撃は未評価 |",
+      "relatedPV": [
+        "PV07",
+        "PV12"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-10",
+      "originalRow": "| C1-10 | 主1＋4が同じ状態を共有し、基準軸クリックが正しい | 基底・符号・終点、中間断面、実アニメーション |",
+      "relatedPV": [
+        "PV01",
+        "PV03",
+        "PV04",
+        "PV06",
+        "PV08",
+        "PV09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-11",
+      "originalRow": "| C1-11 | 平行移動・カメラ・空中中心が分離される | 接線／法線、複数小窓同軸指令、中心・駒座標の不変量 |",
+      "relatedPV": [
+        "PV01",
+        "PV02",
+        "PV04",
+        "PV05",
+        "PV07",
+        "PV08",
+        "PV10"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-12",
+      "originalRow": "| C1-12 | 古い計算結果とpickを採用しない | 順序逆転・ビュー変更・フォーカス喪失の注入 |",
+      "relatedPV": [
+        "PV06",
+        "PV10"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-13",
+      "originalRow": "| C1-13 | 保存・別名保存・読込・下書き保全が動く | 再起動往復、未知schema、不正値、保存失敗の注入 |",
+      "relatedPV": [
+        "PV13",
+        "PV14"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-14",
+      "originalRow": "| C1-14 | 未接続の実適用成功を阻止する | 実UI・サービス境界。mockのみの成功を製品成功としない |",
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-15",
+      "originalRow": "| C1-15 | Legacyの固定シナリオ・記録・二遮蔽を意図せず変えない | 実在回帰の前後比較、差分と未実施の開示 |",
+      "relatedPV": [
+        "PV16"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-16",
+      "originalRow": "| C1-16 | 既存環境でWindows実行物を作り、今回範囲を起動・確認する | ビルドlog・exit code・実行物hash・起動log・画面 |",
+      "relatedPV": [
+        "PV17"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-17",
+      "originalRow": "| C1-17 | 自動スクロール・入力貫通・同時発火がない | フォーム／盤／ギズモの入力追跡、スクロール保持 |",
+      "relatedPV": [
+        "PV10",
+        "PV11"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "id": "C1-18",
+      "originalRow": "| C1-18 | 全マス状態配列を増設せず、負荷時も未完了を正しく示す | 構造点検、取消試験、実測条件・時間・メモリ |",
+      "relatedPV": [],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    }
+  ],
+  "pivotRows": [
+    {
+      "original": {
+        "id": "PV01",
+        "criterion": "初期C=P、E不変。既知Q4から世界Y=hと画面位置を独立計算して比較",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-10",
+        "C1-11",
+        "UI4-08",
+        "AUTO-G05",
+        "AUTO-G10"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV02",
+        "criterion": "XYZのままP→Oで駒の高さhを保持。C、A、有限窓の変化を同時記録",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-11",
+        "UI4-08",
+        "AUTO-G07"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV03",
+        "criterion": "ZY固定のXW90°で、点の切断条件はX=0。XYZ基準の検査では参照位置(0,h,z,0)。実木駒は形状交差を別に検証",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-10",
+        "UI4-02",
+        "AUTO-G04",
+        "SW2-24"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV04",
+        "criterion": "XZ固定のYW90°で、C=PならY=h、C=OならY=0。h=3の初期駒は後者で非交差。近傍投影で残さない",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-10",
+        "C1-11",
+        "AUTO-G05",
+        "SW2-24"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV05",
+        "criterion": "一般姿勢の接線移動で共通領域の実体位置を保持。特にXW90°後のW移動で固定XYZアンカーへの誤写像を検出",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-11",
+        "UI4-04",
+        "SW2-38",
+        "AUTO-G07"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV06",
+        "criterion": "全基準・45°・合成任意角・移動後で、PieceIdの描画とhitが単一。選択枠と既知メッシュ点のスクリーン誤差を測る",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-10",
+        "C1-12",
+        "AUTO-F07",
+        "AUTO-F08",
+        "AUTO-F09",
+        "AUTO-P01",
+        "AUTO-P02",
+        "SW2-23"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV07",
+        "criterion": "4D回転・移動・カメラ操作の前後で論理局面hashと全4DのG/Pが不変",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-09",
+        "C1-11",
+        "RE-B05",
+        "SW2-22",
+        "SW2-26",
+        "SW2-38",
+        "AUTO-G06"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV08",
+        "criterion": "カメラのみ変更すると主ギズモと全小窓の軸が同時更新。固定Quaternionが残らない",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-10",
+        "C1-11",
+        "UI4-06",
+        "UI4-09",
+        "SW2-38"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV09",
+        "criterion": "4D姿勢変更で小窓の交差を独立計算と比較。一致3D・交差2D・退化と法線軸を正しく表示",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-10",
+        "UI4-01",
+        "UI4-02",
+        "UI4-03",
+        "UI4-07",
+        "SW2-06",
+        "SW2-24",
+        "AUTO-G01",
+        "AUTO-G09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV10",
+        "criterion": "異なる小窓から同じ世界軸δで同じC/Aを得る。退化軸、境界越え、フォーカス喪失、取消、古いhit拒否を試験",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-11",
+        "C1-12",
+        "C1-17",
+        "UI4-04",
+        "UI4-05",
+        "SW2-36",
+        "SW2-37",
+        "AUTO-I05",
+        "AUTO-I07",
+        "AUTO-I08",
+        "AUTO-I14",
+        "AUTO-F08",
+        "AUTO-F09"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV11",
+        "criterion": "左clickとdrag、Ctrl drag、Shift pan、中pan、wheel、Home系を実Playerで操作。模擬イベントとOS入力を区別",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-17",
+        "UI4-05",
+        "UI4-06",
+        "UI4-10",
+        "WIN-03",
+        "WIN-05",
+        "AUTO-I02",
+        "AUTO-I03",
+        "AUTO-I04",
+        "AUTO-I05",
+        "AUTO-I06",
+        "AUTO-I07",
+        "AUTO-I08",
+        "AUTO-I09",
+        "AUTO-I10",
+        "AUTO-I11",
+        "AUTO-I12",
+        "AUTO-I13",
+        "AUTO-I14"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV12",
+        "criterion": "設定右列はXY/XZ/XW/YZ。共通G/Pと選択セル固定座標から算出。クリックで別の局面を勝手に生成しない",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-04",
+        "C1-08",
+        "C1-09",
+        "SW2-07",
+        "SW2-19",
+        "SW2-45"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV13",
+        "criterion": "任意角＋移動C＋A＋カメラ＋hを保存し、別プロセスで再読込。未知版・破損・書込失敗時は旧版と編集中状態を保全",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-13",
+        "RE-D05",
+        "RE-D08",
+        "AUTO-G08",
+        "AUTO-G09",
+        "AUTO-S05",
+        "AUTO-S06",
+        "WIN-07",
+        "SW2-28",
+        "SW2-29",
+        "SW2-30",
+        "SW2-31",
+        "SW2-32",
+        "SW2-33",
+        "SW2-34"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV14",
+        "criterion": "新表示方式の旧保存取扱いを明示。既存保存・証拠・原本・46ファイルの内容hashを保全",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-01",
+        "C1-13",
+        "AUTO-B01",
+        "AUTO-B04",
+        "AUTO-S07",
+        "AUTO-S08",
+        "RE-D05"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV15",
+        "criterion": "承認3画像との比較を1920×1080、1536×1024、1280×720で実行可能な範囲で取得。不要ボタンと注記がなく、日本語・小窓・時計が読める",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-02",
+        "C1-03",
+        "UI4-09",
+        "UI4-10",
+        "WIN-01",
+        "WIN-04",
+        "HUM-01",
+        "HUM-02",
+        "HUM-06",
+        "SW2-01",
+        "SW2-02",
+        "SW2-03",
+        "SW2-04",
+        "SW2-05",
+        "SW2-43",
+        "SW2-44",
+        "SW2-45",
+        "SW2-46",
+        "SW2-47",
+        "SW2-48",
+        "RE-H01",
+        "RE-H02",
+        "RE-H03",
+        "RE-H04",
+        "RE-H05"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV16",
+        "criterion": "実在するCore/Geometry/Settings/Interaction/Match回帰を前後実行し、期待値変更は採用仕様との差だけ説明。失敗を削除してPASSにしない",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-15",
+        "AUTO-B04"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    },
+    {
+      "original": {
+        "id": "PV17",
+        "criterion": "新規Windows出力へビルド・起動・操作・保存再起動。ログ、実行物hash、状態dump、実画面を同じrunに保存",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      "relatedOriginalIds": [
+        "C1-16",
+        "AUTO-B01",
+        "AUTO-B02",
+        "WIN-01",
+        "WIN-03",
+        "WIN-04",
+        "WIN-05",
+        "WIN-07"
+      ],
+      "currentProductResult": "NOT_EVALUATED_IN_THIS_INDEX"
+    }
+  ],
+  "latestScopeOverrides": [
+    "Initial C=P with fixed E and transported A",
+    "Settings XY/XZ/XW/YZ diagrams are now required",
+    "Mouse free-angle 4D rotation is now required",
+    "Old no-menu, pivot and key-binding conditions retain their original rows and require explicit latest-scope comparison",
+    "Existing match connections are preserved; no new generic CPU, full legality or product-rule adoption"
+  ],
+  "humanReview": [
+    "Appearance compared with approved menu/play/settings images",
+    "Mouse/keyboard usability and comprehension of O/P/C",
+    "Japanese readability and controls at actual DPI"
+  ]
+}

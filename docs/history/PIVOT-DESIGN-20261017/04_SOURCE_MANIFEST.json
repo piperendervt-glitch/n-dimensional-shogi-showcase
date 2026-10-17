@@ -1,0 +1,170 @@
+{
+  "createdJst": "2026-10-17 03:34:14",
+  "scope": "Design/handoff references and product source read during design; not a full implementation baseline.",
+  "inputs": [
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA/CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md",
+      "bytes": 33453,
+      "sha256": "7019dd40866420c02264c387249ae7f6d4f7a4afda629e661a54a77cf811e408"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/output/CFG0-20261016-194144-JST/00_RETURN_SUMMARY_JA.md",
+      "bytes": 7235,
+      "sha256": "5303146d402bf5896bd99de36d3e6564ca787ca6ad5dc9f0be161e7ce5a93ff6"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/output/CFG0-20261016-194144-JST/01_LOCAL_REPOSITORY_AUDIT_JA.md",
+      "bytes": 8902,
+      "sha256": "e30b7ee7a7aa49edae9acce2002985911c3b0d240ec94a6b401784b1c4f03dcf"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/output/CFG0-20261016-194144-JST/02_CAPABILITY_AND_GAP_MATRIX_JA.md",
+      "bytes": 9004,
+      "sha256": "32f3c66e196265bd8c80a7d8c92129db273e2f20b55a1ec3eccf78067074ff67"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/output/CFG0-20261016-194144-JST/03_IMPLEMENTATION_PLAN_AND_DECISIONS_JA.md",
+      "bytes": 15501,
+      "sha256": "ee2e8fe0a2a13282424a051b6217efb1565a4d70ca4e56b1bb466f6313c95add"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/output/CFG0-20261016-194144-JST/04_ACCEPTANCE_TRACEABILITY_JA.md",
+      "bytes": 9612,
+      "sha256": "cc84ad1c93136de487b3e691629536114bb0d186be6ddf3e0124058619f392a8"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/output/CFG0-20261016-194144-JST/05_CODEX_IMPLEMENTATION_REQUEST_DRAFT_JA.md",
+      "bytes": 10240,
+      "sha256": "6585df1c76bead56959c212e03f5d1db844faf4d348329fde7a0faff7bf0c80b"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/output/CFG0-20261016-194144-JST/06_READONLY_EVIDENCE.json",
+      "bytes": 41968,
+      "sha256": "29ad3c8a89512ff33f8de0036e4a73871bd8e9c8ab26e980a18a3f1e1188240a"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/output/CFG0-20261016-194144-JST/07_FINAL_READONLY_CHECK.json",
+      "bytes": 10196,
+      "sha256": "2d1b60bae409fb5a1f8ce2453b3511f623e1479f0c8e3247159ba9ce5f82a23a"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/output/CFG0-20261016-194144-JST/08_ACCEPTANCE_ID_LEDGER.json",
+      "bytes": 152436,
+      "sha256": "9e2ec7a596861d95899b391bd977d44c953b4b2ad38f1ec8233a69bc96ec2ba9"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_14.png",
+      "bytes": 1969666,
+      "sha256": "00d16aa2c3d94277611b42e7be8483719a250c5f50f76df03f54b2d7c0b90ae4"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_02.png",
+      "bytes": 2542536,
+      "sha256": "061c7747b680047673fa944517fe00e93d7d3061c0679113c3e780ac67efca7c"
+    },
+    {
+      "path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_23.png",
+      "bytes": 2109198,
+      "sha256": "b71376544164d0533aa247fe239b50ae5e799e442080a9a0fd925355ac1fd5ff"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/artifacts/HYPERPLANE-REVIEW-20261017/pivot-offset-confirmed.png",
+      "bytes": 248211,
+      "sha256": "0b0a132dd100e20fb16ee2a46a89823628873708cfff09a05bba473a667d19bc"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/artifacts/HYPERPLANE-REVIEW-20261017/piece-slice-XYZ.png",
+      "bytes": 258436,
+      "sha256": "48ae11f2c724fada398146b528e38b4a8fa2c12d50fa0b28b83f53f04aea4b01"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/src/Showcase.Geometry/Runtime/Interaction/SliceInteraction.cs",
+      "bytes": 5866,
+      "sha256": "c579173fa72cab1d28d2decef8316c689889cdd716815ac0775b40974019b11e"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/src/Showcase.Geometry/Runtime/Interaction/InteractionInput.cs",
+      "bytes": 4934,
+      "sha256": "69eb88f4f093ac6b445c5d0af2b1cf7c1dc72971b9c1b2c11e3cdb7726d88e97"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/src/Showcase.Geometry/Runtime/Interaction/FiniteSliceWindow.cs",
+      "bytes": 3861,
+      "sha256": "cba74a5679d2e2dd1cf94ecf6594e4850787ca9292e149c97acd6c4d0dbb29dc"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/src/Showcase.Geometry/Runtime/ShapeFactory.cs",
+      "bytes": 3840,
+      "sha256": "9fa23152a55edf706d1a5f9b44f2253abdd091ed88ae7385029f3f1e2160a664"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/src/Showcase.Core/Runtime/Settings/SettingsStore.cs",
+      "bytes": 15333,
+      "sha256": "576e7f3681b5d8fd4a3640ab360bc5cc508b3da3beef2728eb1a61a99ca33603"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Settings/CfgPreviewRenderer.cs",
+      "bytes": 16943,
+      "sha256": "f5ab7514f68fb37da68389ac642960381d45dbc19eb0f4d1d0bd0f68bb3dbd9f"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Settings/Cfg2App.cs",
+      "bytes": 15176,
+      "sha256": "01d7416fc4eb4aa282507fdb598ddeb81d52981800e4af893bda45660572c3df"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Settings/Cfg2App.Input.cs",
+      "bytes": 7908,
+      "sha256": "fe981585d026456c582077cf926ffbdc98ee11b8193c3f838e8f2bc5f97a0c82"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Settings/Cfg2App.Ui.cs",
+      "bytes": 20388,
+      "sha256": "052327207639e6a300bb2399b167d154cbf6f238fe405a6517f03dbc319fdfaf"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Settings/Cfg2App.Match.cs",
+      "bytes": 10481,
+      "sha256": "bb1322cb98cd695cbffd7467b868392d2889eb217a27ad9c29bd38ff884087ea"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Settings/Cfg2Visuals.cs",
+      "bytes": 13104,
+      "sha256": "3587665b8eebde7fd39e110d9830bdbff493bcbbc5ee719801103e8e57553c37"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Settings/Cfg2MiniView.cs",
+      "bytes": 6019,
+      "sha256": "28afbf06853b2537fddabbe9bb3eecc1cdecb2dcb89cdcaa0ce9c9db8c7b5ba6"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Settings/Cfg2PlaneView.cs",
+      "bytes": 8620,
+      "sha256": "d8cd551cfcb96a998bac21a42070686895b89aa7d83e11b284b4302f266cb828"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Settings/Cfg2Smoke.cs",
+      "bytes": 45150,
+      "sha256": "5d31cce69e53f85eefba9b9938a8c0c3a62c9909687ecaea808c1e7a372cf722"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/Unity/Assets/Showcase/Runtime/SectionView.cs",
+      "bytes": 7770,
+      "sha256": "4f2db0e7b1a471ecbde88cf2679b6057cc9693dedccca4fbe32eda95d4314ae7"
+    }
+  ],
+  "design": [
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/artifacts/PIVOT-DESIGN-20261017/00_DESIGN_JA.md",
+      "bytes": 27184,
+      "sha256": "86450e676537b81e6c15d19b8aa654026f6158590830b6d1e52c7d343116c4a8"
+    },
+    {
+      "path": "C:/dev/n-dimensional-shogi-showcase/artifacts/PIVOT-DESIGN-20261017/01_CODEX_IMPLEMENTATION_REQUEST_JA.md",
+      "bytes": 7382,
+      "sha256": "ed216c60c66a069a8023b334da1facd912fa6c8167bb24092b97572d772dce29"
+    }
+  ]
+}

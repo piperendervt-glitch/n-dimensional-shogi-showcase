@@ -50,10 +50,17 @@ namespace Showcase.Unity.Settings
         {
             try
             {
-                var resource=Resources.Load<TextAsset>("cfg2-run");
-                runRoot=Arg("--cfg2-run-root",resource==null?"":JsonUtility.FromJson<RunConfig>(resource.text).runRoot);
+                // A plain double-click start (no launcher identity arguments) saves under persistentDataPath.
+                // Starts with --pivot-request-id keep the strict launcher/build identity check used by tests.
+                bool standalone=Arg("--pivot-request-id","")=="";
+                if(standalone){runRoot=Application.persistentDataPath;Directory.CreateDirectory(runRoot);}
+                else
+                {
+                    var resource=Resources.Load<TextAsset>("cfg2-run");
+                    runRoot=Arg("--cfg2-run-root",resource==null?"":JsonUtility.FromJson<RunConfig>(resource.text).runRoot);
+                }
                 if(string.IsNullOrWhiteSpace(runRoot)||!Directory.Exists(runRoot))throw new InvalidOperationException("CFG2の保存先が見つかりません。");
-                VerifyPivotIdentity();
+                if(!standalone)VerifyPivotIdentity();
                 runtimeRoot=Path.Combine(runRoot,"runtime-data",Arg("--cfg2-data","user"));
                 if(!Path.GetFullPath(runtimeRoot).StartsWith(Path.GetFullPath(Path.Combine(runRoot,"runtime-data"))+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new ArgumentException("Invalid runtime data path");
                 Directory.CreateDirectory(runtimeRoot); recordRoot=Path.Combine(runRoot,"match-records");Directory.CreateDirectory(recordRoot);

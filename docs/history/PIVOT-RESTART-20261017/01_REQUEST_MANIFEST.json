@@ -1,0 +1,47 @@
+{
+  "requestId": "PIVOT-RESTART-20261017-083955-JST",
+  "createdUtc": "2026-10-16T23:42:33.669839+00:00",
+  "userAuthorization": "正しい依頼文を作り直してから再実行してください",
+  "scope": "Latest PIVOT design implementation restart; not the old Showcase goal.",
+  "executionMode": "Fresh collaboration agent, fork_turns=none, supervised by current chat. Old chat stays paused.",
+  "oldThreadId": "01a13efe-63e1-7f71-a70f-c8e7dd156605",
+  "oldThreadObservation": {
+    "status": "idle",
+    "turnStatus": "completed",
+    "finalMessageReported": "goal paused, application ended, new build not performed",
+    "completedAtUnix": 1792193824
+  },
+  "files": [
+    {
+      "path": "C:\\dev\\n-dimensional-shogi-showcase\\artifacts\\PIVOT-RESTART-20261017-083955-JST\\00_RESTART_REQUEST_JA.md",
+      "sha256": "47ceb3a8710eccfe37329c9cd1478f60ca6fa2bb562a731c540e05f27e2a1a4b"
+    },
+    {
+      "path": "C:\\dev\\n-dimensional-shogi-showcase\\artifacts\\PIVOT-DESIGN-20261017\\00_DESIGN_JA.md",
+      "sha256": "86450e676537b81e6c15d19b8aa654026f6158590830b6d1e52c7d343116c4a8"
+    },
+    {
+      "path": "C:\\dev\\n-dimensional-shogi-showcase\\artifacts\\PIVOT-DESIGN-20261017\\03_IMPLEMENTATION_ACCEPTANCE.json",
+      "sha256": "76ae03081853c638a50519ce18cfe14093c2c566389103745b222c04ea2123fc"
+    }
+  ],
+  "requestReview": {
+    "reviewer": "exe_audit",
+    "result": "No required corrections. Optional narrowing of fresh Legacy regression incorporated.",
+    "productAcceptance": "NOT_RUN"
+  },
+  "implementationStatus": "HANDED_OFF_TO_EXISTING_CODEX_CHAT_AND_ACKNOWLEDGED",
+  "currentExecutionMode": "Existing Codex chat per latest human request; original executionMode below/above is dispatch history only.",
+  "currentExecutorThreadId": "01a13efe-63e1-7f71-a70f-c8e7dd156605",
+  "currentHandoffReceipt": "08_CODEX_HANDOFF_RECEIPT.json",
+  "productFilesEditedByCoordinator": false,
+  "implementationAgent": "/root/pivot_implementation",
+  "reviewAgent": "/root/pivot_review",
+  "dispatchRecordedUtc": "2026-10-16T23:43:39.605626+00:00",
+  "acknowledgment": {
+    "requestRoot": "artifacts/PIVOT-RESTART-20261017-083955-JST/implementation",
+    "stage": "Reading originals and preserving baseline",
+    "oldExecutableLaunched": false,
+    "productCompletion": "NOT_RUN"
+  }
+}

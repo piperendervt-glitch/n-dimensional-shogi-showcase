@@ -1,0 +1,35 @@
+{
+  "requestId": "PIVOT-RESTART-20261017-083955-JST",
+  "recordedUtc": "2026-10-17T00:18:11Z",
+  "userAuthorization": "いちいち許可を求められるので、時間がかかってしまい、とても現実的なやり方とは思えません。Codexに実装を依頼してください。",
+  "destination": {
+    "threadId": "01a13efe-63e1-7f71-a70f-c8e7dd156605",
+    "hostId": "local",
+    "title": "実装依頼を確認する"
+  },
+  "dispatchStatus": "SENT_AND_ACKNOWLEDGED",
+  "turnId": "01a14739-0158-7a33-8692-2baa5e93b345",
+  "observedStatus": "inProgress",
+  "acknowledgment": "新しい実装依頼を受領しました。旧ShowcaseのGoalは停止したまま、PIVOTの引継ぎ書と保存済み変更を確認し、実装・試験・新しいWindowsビルドを進めます。",
+  "executorRouteOverride": "07_CODEX_HANDOFF_REQUEST_JA.md overrides only executor routing in 00_RESTART_REQUEST_JA.md section 1; old Showcase goal remains paused.",
+  "handoffFiles": [
+    {
+      "path": "07_CODEX_HANDOFF_REQUEST_JA.md",
+      "sha256": "0cc9e6214ae27eee30054411085d44dea08ce6430a114bdb2ffad8635451ff48"
+    },
+    {
+      "path": "implementation/HANDOFF_JA.md",
+      "sha256": "94dbe86833c3dadea3f93b6c44a0d7319f4b29be47dabd64a2882da2ec51ad7e"
+    }
+  ],
+  "outgoingExecutor": {
+    "name": "/root/pivot_implementation",
+    "status": "EDITING_AND_EXECUTION_STOPPED",
+    "usableBuild": null,
+    "nextPlannedBuild": "build-005",
+    "protectedFilesMatched": 46,
+    "unbuiltUnityFiles": 3
+  },
+  "productStatus": "INCOMPLETE_HANDOFF_NOT_PRODUCT_ACCEPTANCE",
+  "securityConstraints": "Existing execution authorization retained; actual platform restrictions not bypassed."
+}

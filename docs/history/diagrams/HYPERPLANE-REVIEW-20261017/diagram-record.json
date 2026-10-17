@@ -1,0 +1,184 @@
+{
+  "scope": "Mathematical recognition drawings only. No product source edit or adopted UI behavior.",
+  "assumption": {
+    "O": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "P": [
+      0,
+      "h",
+      0,
+      0
+    ],
+    "h": "positive, unspecified",
+    "initialHyperplane": "W=0"
+  },
+  "rotation": {
+    "interpretation": "Fix affine ZY plane through P; rotate its orthogonal XW plane +90 degrees.",
+    "positive": "X -> +W, W -> -X",
+    "fixedPlane": "X=0 and W=0; contains O and P",
+    "result": "X=0",
+    "withinZYWouldBeDifferent": true
+  },
+  "references": [
+    {
+      "name": "XYZ",
+      "hidden": "W",
+      "slots": [
+        "X",
+        "Y",
+        "Z"
+      ]
+    },
+    {
+      "name": "XYW",
+      "hidden": "Z",
+      "slots": [
+        "X",
+        "Y",
+        "W"
+      ]
+    },
+    {
+      "name": "XZW",
+      "hidden": "Y",
+      "slots": [
+        "X",
+        "W",
+        "Z"
+      ]
+    },
+    {
+      "name": "YZW",
+      "hidden": "X",
+      "slots": [
+        "W",
+        "Y",
+        "Z"
+      ]
+    }
+  ],
+  "referenceCenter": "O",
+  "blue": "Intersection of H with each reference 3-space, clipped by a schematic box; not a general projection of H.",
+  "camera": {
+    "position": [
+      -6,
+      5,
+      -8
+    ],
+    "right": [
+      0.8,
+      0,
+      -0.6000000000000001
+    ],
+    "up": [
+      0.2683281572999748,
+      0.894427190999916,
+      0.35777087639996635
+    ]
+  },
+  "hDrawOnly": 0.63,
+  "box": "[-1,1]^3 used only for the drawing; no numeric scale or ratio to h is adopted.",
+  "results": [
+    {
+      "state": "initial",
+      "reference": "XYZ",
+      "referenceEquation": "W=0",
+      "restrictedNormal": [
+        0,
+        0,
+        0
+      ],
+      "dimension": 3,
+      "commonAxes": "XYZ"
+    },
+    {
+      "state": "initial",
+      "reference": "XYW",
+      "referenceEquation": "Z=0",
+      "restrictedNormal": [
+        0,
+        0,
+        1
+      ],
+      "dimension": 2,
+      "commonAxes": "XY"
+    },
+    {
+      "state": "initial",
+      "reference": "XZW",
+      "referenceEquation": "Y=0",
+      "restrictedNormal": [
+        0,
+        1,
+        0
+      ],
+      "dimension": 2,
+      "commonAxes": "XZ"
+    },
+    {
+      "state": "initial",
+      "reference": "YZW",
+      "referenceEquation": "X=0",
+      "restrictedNormal": [
+        1,
+        0,
+        0
+      ],
+      "dimension": 2,
+      "commonAxes": "YZ"
+    },
+    {
+      "state": "rotated",
+      "reference": "XYZ",
+      "referenceEquation": "W=0",
+      "restrictedNormal": [
+        -1,
+        0,
+        0
+      ],
+      "dimension": 2,
+      "commonAxes": "YZ"
+    },
+    {
+      "state": "rotated",
+      "reference": "XYW",
+      "referenceEquation": "Z=0",
+      "restrictedNormal": [
+        -1,
+        0,
+        0
+      ],
+      "dimension": 2,
+      "commonAxes": "YW"
+    },
+    {
+      "state": "rotated",
+      "reference": "XZW",
+      "referenceEquation": "Y=0",
+      "restrictedNormal": [
+        -1,
+        0,
+        0
+      ],
+      "dimension": 2,
+      "commonAxes": "ZW"
+    },
+    {
+      "state": "rotated",
+      "reference": "YZW",
+      "referenceEquation": "X=0",
+      "restrictedNormal": [
+        0,
+        0,
+        0
+      ],
+      "dimension": 3,
+      "commonAxes": "YZW"
+    }
+  ],
+  "checks": "Eight intersection spaces, fixed P at varied h, and transformed normal verified."
+}

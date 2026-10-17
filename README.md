@@ -1,5 +1,30 @@
 # N-dimensional Shogi — Showcase
 
+## 遊び方（四次元将棋）
+
+1. `Build.cmd` をダブルクリックしてビルドします（Unity 6000.3.11f1 が必要、数分かかります）。
+2. `Play.cmd`、または `release\NDShogiPivot\NDShogiPivot.exe` をダブルクリックして起動します。
+
+他のPCへ渡すときは `release\NDShogiPivot-Windows.zip` を展開して `NDShogiPivot.exe` を実行します。設定・対局の保存先は `%USERPROFILE%\AppData\LocalLow\piperendervt-glitch\四次元将棋` です。ビルド済みEXEは約600MBあるためリポジトリには含めません（配布は GitHub Releases への zip 添付を想定）。
+
+試験用の厳密な起動（`--pivot-request-id` などの識別用引数を付けた起動）では、従来どおりビルドとソースの照合を行います。
+
+## フォルダ構成
+
+| 場所 | 内容 |
+|---|---|
+| `Build.cmd` / `Play.cmd` | ビルド／起動用（ダブルクリック） |
+| `Unity/` | Unityプロジェクト（四次元将棋の `Cfg2` シーン、旧Showcaseデモ） |
+| `src/` | Unity非依存のルール・幾何ライブラリ（Core / Geometry） |
+| `tests/` | 純C#・Pythonの試験 |
+| `tools/` | ビルド・計測スクリプト（`build-game.ps1` が四次元将棋、`build-windows.ps1` が旧Showcase） |
+| `scenarios/`, `assets/` | 棋譜・シナリオ、素材の原本と出典 |
+| `docs/` | 設計・性能・承認の文書。`docs/history/` は各作業回の依頼・設計・報告の記録 |
+| `evidence/` | 計測・検証の記録 |
+| `release/` | ビルド出力（git管理外） |
+
+## 旧Showcaseデモ
+
 屋外の木製盤で、2Dの対局に見える導入から3Dの高さ方向への逃走と追撃を3組繰り返し、4Dへ移る27手のWindowsデモです。4DではAの1手ごとに初期の3D表示（H0）へ戻り、Bが銀・金・飛車・歩を使って応手します。Bの観測に4Dの情報は入りません。最後はAが王を捕獲します。
 
 既定は1080p・30FPSを目標とする画質設定です。木材はCC0のPBRスキャン、駒名は高解像度の完成語画像を使用し、木漏れ日・接地影・動的反射を加えています。次元回転はゆっくり進み、ShowcaseRasterでは画面全体の時間停止風エフェクトを伴います。目標FPSの達成状況は実測結果を参照してください。描画負荷の原因分析と最適化（2026-10-15）は [docs/RENDER_OPTIMIZATION_JA.md](docs/RENDER_OPTIMIZATION_JA.md) を参照してください。

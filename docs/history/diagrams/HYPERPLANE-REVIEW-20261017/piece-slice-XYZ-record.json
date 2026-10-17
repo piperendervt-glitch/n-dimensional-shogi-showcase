@@ -1,0 +1,10 @@
+{
+  "scope": "Explanation diagram only; no game source edits.",
+  "pieces": "q=(x,h,z,0), fixed",
+  "sliceBefore": "W=0",
+  "sliceAfter": "X=0",
+  "survivors": "q=(0,h,z,0)",
+  "h": "symbolic; .62 is drawing placement only",
+  "samples": "illustrative, not shogi initial layout",
+  "display": "XYZ world reference with fixed O and P; no recentering"
+}

@@ -1,0 +1,75 @@
+{
+  "scope": "Recognition diagrams only, not product design adoption or implementation.",
+  "assumption": "Y-only offset hypothesis used earlier in explanation, not a confirmed user specification.",
+  "coordinateOrder": [
+    "X",
+    "Y",
+    "Z",
+    "W"
+  ],
+  "O": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "P": [
+    0,
+    "h",
+    0,
+    0
+  ],
+  "h": "positive, value not specified",
+  "projections": {
+    "XYW": {
+      "O": [
+        0,
+        0,
+        0
+      ],
+      "P": [
+        0,
+        "h",
+        0
+      ]
+    },
+    "XZW": {
+      "O": [
+        0,
+        0,
+        0
+      ],
+      "P": [
+        0,
+        0,
+        0
+      ],
+      "omittedY": {
+        "O": 0,
+        "P": "h"
+      },
+      "projectionOverlapOnly": true
+    },
+    "YZW": {
+      "O": [
+        0,
+        0,
+        0
+      ],
+      "P": [
+        "h",
+        0,
+        0
+      ]
+    }
+  },
+  "WLines": "O+t eW and P+t eW; coincide only after XZW projection.",
+  "history": "Old computational model used P=c=0 with separate rendering anchors and did not encode this h. Previous diagonal delta line was an unspecified schematic, not evidence of W displacement.",
+  "files": [
+    "origin-xyw.png",
+    "origin-xzw.png",
+    "origin-yzw.png",
+    "origin-three-views.png"
+  ],
+  "productSourceChanges": false
+}

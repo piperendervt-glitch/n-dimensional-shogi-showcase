@@ -1,0 +1,21 @@
+{
+  "Status": "Recognition review only",
+  "ApprovedAppearanceReferences": [
+    {
+      "Path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_14.png",
+      "Sha256": "00D16AA2C3D94277611B42E7BE8483719A250C5F50F76DF03F54B2D7C0B90AE4"
+    },
+    {
+      "Path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_02.png",
+      "Sha256": "061C7747B680047673FA944517FE00E93D7D3061C0679113C3E780AC67EFCA7C"
+    },
+    {
+      "Path": "D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_23.png",
+      "Sha256": "B71376544164D0533AA247FE239B50AE5E799E442080A9A0FD925355AC1FD5FF"
+    }
+  ],
+  "UserRequirement": "Right XYZW gizmo and hyperplane axes are functional 3DCG-style manipulation UI. They must reflect 3D camera rotation and 4D hyperplane orientation, not be fixed decoration.",
+  "NotApproved": "Numerical origin offsets, product geometry, a new implementation request",
+  "CurrentTask": "Illustrate the assumptions previously used by the assistant in XYW, XZW, YZW",
+  "NoProductSourceEdits": true
+}

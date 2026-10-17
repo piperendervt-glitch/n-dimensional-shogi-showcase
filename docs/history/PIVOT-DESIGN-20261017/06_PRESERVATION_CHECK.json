@@ -1,0 +1,292 @@
+{
+  "Scope": "Read-only design handoff check; executor must recheck before implementation",
+  "Head": null,
+  "Branch": null,
+  "Status": [],
+  "Original46": [
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-AmbientOcclusion.png",
+      "Expected": "9368BCC109A3C435F49CF6A6EA7CC782A6890FF9AF2368CD76DBB5E24454E6B8",
+      "Actual": "9368BCC109A3C435F49CF6A6EA7CC782A6890FF9AF2368CD76DBB5E24454E6B8",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-Bloom.png",
+      "Expected": "74CCDD74AA40D4335791BA06A5D6C719DEAE2BCCE8F09E124253E5CE22A27D16",
+      "Actual": "74CCDD74AA40D4335791BA06A5D6C719DEAE2BCCE8F09E124253E5CE22A27D16",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-ContactShadows.png",
+      "Expected": "2E98C3C367460CA37307B4A017771DC019BD5399556081BEF250058573720298",
+      "Actual": "2E98C3C367460CA37307B4A017771DC019BD5399556081BEF250058573720298",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-DappledShadows.png",
+      "Expected": "5828FDCE9F6F80C7D3CEDB3011249B74E3DA4610E5A9D9E351D5D85A381CDCC6",
+      "Actual": "5828FDCE9F6F80C7D3CEDB3011249B74E3DA4610E5A9D9E351D5D85A381CDCC6",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-DepthOfField.png",
+      "Expected": "1A8DD1838CCFB88F8103DC7AC4578293611E5EF2376E624D4C6CCA1A5DBABCE9",
+      "Actual": "1A8DD1838CCFB88F8103DC7AC4578293611E5EF2376E624D4C6CCA1A5DBABCE9",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-IndirectLighting.png",
+      "Expected": "E03D90447FAF19A4E00B05256C2C44BE5C944403C45935C706BC2393A3E673E1",
+      "Actual": "E03D90447FAF19A4E00B05256C2C44BE5C944403C45935C706BC2393A3E673E1",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-Reflections.png",
+      "Expected": "504D4D8DED78D014BCA0046DD7E27D3906FA578D71912245103C215E0AF69030",
+      "Actual": "504D4D8DED78D014BCA0046DD7E27D3906FA578D71912245103C215E0AF69030",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-SunShadows.png",
+      "Expected": "75EECEEAE2B2DCEE05A817B59699050B6E4EB44214A3640748519D4743229E08",
+      "Actual": "75EECEEAE2B2DCEE05A817B59699050B6E4EB44214A3640748519D4743229E08",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-off-ToneMapping.png",
+      "Expected": "E21A0AE25593BA9395DB5BC979444A471364166FC31D28745991B60EB100AFB2",
+      "Actual": "E21A0AE25593BA9395DB5BC979444A471364166FC31D28745991B60EB100AFB2",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-only-AmbientOcclusion.png",
+      "Expected": "5A545ED3953C0CCF49EC89C598E90932313CB672C0414E2CA990EBAB6D1C36A7",
+      "Actual": "5A545ED3953C0CCF49EC89C598E90932313CB672C0414E2CA990EBAB6D1C36A7",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-only-ContactShadows.png",
+      "Expected": "30B9C20CC399BC384EDD22B84589D7C9A9E6C4A2BB3E661B192F50439EF477E1",
+      "Actual": "30B9C20CC399BC384EDD22B84589D7C9A9E6C4A2BB3E661B192F50439EF477E1",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-restored.png",
+      "Expected": "09B544EBB219681D8610536F5A1BA6367C25E244464887C6FE6FE488B083BA58",
+      "Actual": "09B544EBB219681D8610536F5A1BA6367C25E244464887C6FE6FE488B083BA58",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-HighBias.png",
+      "Expected": "ADA9562DDF0CCF38BE22BEAD13C8AD70EA9B98149CE09A6EB7004AD70E3C4F45",
+      "Actual": "ADA9562DDF0CCF38BE22BEAD13C8AD70EA9B98149CE09A6EB7004AD70E3C4F45",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-NoCasters.png",
+      "Expected": "75EECEEAE2B2DCEE05A817B59699050B6E4EB44214A3640748519D4743229E08",
+      "Actual": "75EECEEAE2B2DCEE05A817B59699050B6E4EB44214A3640748519D4743229E08",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-NoEnvironmentCasters.png",
+      "Expected": "DB650D3ADF5318C5F4EB10315C49643B3D1C8315066CF00BCE6B2935BDFA5A6E",
+      "Actual": "DB650D3ADF5318C5F4EB10315C49643B3D1C8315066CF00BCE6B2935BDFA5A6E",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-shadow-isolation-NoSectionCasters.png",
+      "Expected": "0F45851AA600FE18DE8541EC7E62DBC11A5914DF0908F98E1739B01D9C9961A8",
+      "Actual": "0F45851AA600FE18DE8541EC7E62DBC11A5914DF0908F98E1739B01D9C9961A8",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/20261015-142730-189-ShowcaseRaster-1/lighting-transition-on.png",
+      "Expected": "B733ECA97134D70D610368029DF3741668653F4AA36E84A2FFEABA82ABA343C8",
+      "Actual": "B733ECA97134D70D610368029DF3741668653F4AA36E84A2FFEABA82ABA343C8",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/player.log",
+      "Expected": "8A7DA90DE0935D4AFE3CED6A69E76231FFD4FE175307802156092D55E077F9E1",
+      "Actual": "8A7DA90DE0935D4AFE3CED6A69E76231FFD4FE175307802156092D55E077F9E1",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-after/process-memory.jsonl",
+      "Expected": "B47A64B39E7476C4FF3A8F1E779AAEBE76B83112A9A8D84C64F092EB5FDD8145",
+      "Actual": "B47A64B39E7476C4FF3A8F1E779AAEBE76B83112A9A8D84C64F092EB5FDD8145",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-AmbientOcclusion.png",
+      "Expected": "94C7627E142C8540C9AEE09E0118E90ADCDDB1B8AE0304E5AC67E710905A65A2",
+      "Actual": "94C7627E142C8540C9AEE09E0118E90ADCDDB1B8AE0304E5AC67E710905A65A2",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-Bloom.png",
+      "Expected": "1F7CD1586908AF5D76A939E8839B1F824ABBF4019BB07796ABC257911A6EB53D",
+      "Actual": "1F7CD1586908AF5D76A939E8839B1F824ABBF4019BB07796ABC257911A6EB53D",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-ContactShadows.png",
+      "Expected": "CD5D4CC8F31D739C66875ECB32FD69D891469C69461F63A929136201EC5F3CB5",
+      "Actual": "CD5D4CC8F31D739C66875ECB32FD69D891469C69461F63A929136201EC5F3CB5",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-DappledShadows.png",
+      "Expected": "9FD5FC7BECC0F006CB632D1ABBA4DDEC677FBCC274413451D11417CF1E77DA53",
+      "Actual": "9FD5FC7BECC0F006CB632D1ABBA4DDEC677FBCC274413451D11417CF1E77DA53",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-DepthOfField.png",
+      "Expected": "7099D7BA7AF8192D16F19CC07F279E2FFD0FFBCA209AF8462B1680E25A64F8EB",
+      "Actual": "7099D7BA7AF8192D16F19CC07F279E2FFD0FFBCA209AF8462B1680E25A64F8EB",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-IndirectLighting.png",
+      "Expected": "9E5FDC6A59195AFA5196C78F5C3C0B9AC53AC28BFD9E55F783B9186BF9FB6DD5",
+      "Actual": "9E5FDC6A59195AFA5196C78F5C3C0B9AC53AC28BFD9E55F783B9186BF9FB6DD5",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-Reflections.png",
+      "Expected": "71418E1E233B9B54BEA909C0464DD84CD8A5E17D6102B6142AADEC5DBE2E8CB6",
+      "Actual": "71418E1E233B9B54BEA909C0464DD84CD8A5E17D6102B6142AADEC5DBE2E8CB6",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-SunShadows.png",
+      "Expected": "E0632BB946D814071E635A509DAAFC8F999BAB864E895043E2DB067AE383654C",
+      "Actual": "E0632BB946D814071E635A509DAAFC8F999BAB864E895043E2DB067AE383654C",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-off-ToneMapping.png",
+      "Expected": "E3693EF4189F6294A8580D1A2715709EEB63DB72A65B39FEFAA0DA5B1A2B2983",
+      "Actual": "E3693EF4189F6294A8580D1A2715709EEB63DB72A65B39FEFAA0DA5B1A2B2983",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-only-AmbientOcclusion.png",
+      "Expected": "5A545ED3953C0CCF49EC89C598E90932313CB672C0414E2CA990EBAB6D1C36A7",
+      "Actual": "5A545ED3953C0CCF49EC89C598E90932313CB672C0414E2CA990EBAB6D1C36A7",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-only-ContactShadows.png",
+      "Expected": "30B9C20CC399BC384EDD22B84589D7C9A9E6C4A2BB3E661B192F50439EF477E1",
+      "Actual": "30B9C20CC399BC384EDD22B84589D7C9A9E6C4A2BB3E661B192F50439EF477E1",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-restored.png",
+      "Expected": "AF4DD28CACE8021D3AF7F62F0297071F20360508DADD4D76B390FA2B6896A3B1",
+      "Actual": "AF4DD28CACE8021D3AF7F62F0297071F20360508DADD4D76B390FA2B6896A3B1",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-HighBias.png",
+      "Expected": "1874EEE4C78514461BAD9F0D09D10B95E462D7585D1E5AED9987F2AF27038932",
+      "Actual": "1874EEE4C78514461BAD9F0D09D10B95E462D7585D1E5AED9987F2AF27038932",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-NoCasters.png",
+      "Expected": "E0632BB946D814071E635A509DAAFC8F999BAB864E895043E2DB067AE383654C",
+      "Actual": "E0632BB946D814071E635A509DAAFC8F999BAB864E895043E2DB067AE383654C",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-NoEnvironmentCasters.png",
+      "Expected": "DC6FB447F83E99D9D905C306DCA6DBBF2682ED8922DF56B25D422DE894C61509",
+      "Actual": "DC6FB447F83E99D9D905C306DCA6DBBF2682ED8922DF56B25D422DE894C61509",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-shadow-isolation-NoSectionCasters.png",
+      "Expected": "EFF784E5270539CFF8C3128F15BFADA5CCB8B164B4A99F67BF8C1967BA2B0EDE",
+      "Actual": "EFF784E5270539CFF8C3128F15BFADA5CCB8B164B4A99F67BF8C1967BA2B0EDE",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/20261015-141320-030-ShowcaseRaster-1/lighting-transition-on.png",
+      "Expected": "87AACB4DC0F5E7875AB08B779E763E0F9E56B9E53C75164EE4DA410494253C49",
+      "Actual": "87AACB4DC0F5E7875AB08B779E763E0F9E56B9E53C75164EE4DA410494253C49",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/player.log",
+      "Expected": "44AE78A3D59DFC174F5A7A3C572FA5B77A00A72AFE668CE948CBAA80391920E6",
+      "Actual": "44AE78A3D59DFC174F5A7A3C572FA5B77A00A72AFE668CE948CBAA80391920E6",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-lighting-before/process-memory.jsonl",
+      "Expected": "F48BFEA008088D3B6367526ECDBF5FA501DA9CF6A4B747298BC59C9795F0063F",
+      "Actual": "F48BFEA008088D3B6367526ECDBF5FA501DA9CF6A4B747298BC59C9795F0063F",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-visual-compare/lighting-off-Reflections-before-after.png",
+      "Expected": "2BCE6FAA073BB7934CA5FBB6FD91E11702D06E90DF93FCE0CC042B2856B2E2FE",
+      "Actual": "2BCE6FAA073BB7934CA5FBB6FD91E11702D06E90DF93FCE0CC042B2856B2E2FE",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-visual-compare/lighting-off-Reflections-diff-x8.png",
+      "Expected": "B2DA10FC5268DA64B6E5E61F80C97C6D4D430F61D4E0259696403B256088790F",
+      "Actual": "B2DA10FC5268DA64B6E5E61F80C97C6D4D430F61D4E0259696403B256088790F",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-visual-compare/lighting-off-SunShadows-before-after.png",
+      "Expected": "8880C6849AD1B79DF6634526E86C33626F8BB82F3D827D724E9A9A5F8230DF42",
+      "Actual": "8880C6849AD1B79DF6634526E86C33626F8BB82F3D827D724E9A9A5F8230DF42",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-visual-compare/lighting-off-SunShadows-diff-x8.png",
+      "Expected": "94B0957FDF07EAAD004A837BFC64B932A5708C6544B7947CF193A7441E67A282",
+      "Actual": "94B0957FDF07EAAD004A837BFC64B932A5708C6544B7947CF193A7441E67A282",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-visual-compare/lighting-only-AmbientOcclusion-before-after.png",
+      "Expected": "EB27127AF0852E36776A821546916A0A72F6F85CEAC67ABA6E0F332849BFE1F6",
+      "Actual": "EB27127AF0852E36776A821546916A0A72F6F85CEAC67ABA6E0F332849BFE1F6",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-visual-compare/lighting-only-AmbientOcclusion-diff-x8.png",
+      "Expected": "BA066B09AEE8BA319E67E36883944BA5285B1A48941BAA79ECD144182737C41D",
+      "Actual": "BA066B09AEE8BA319E67E36883944BA5285B1A48941BAA79ECD144182737C41D",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-visual-compare/lighting-transition-on-before-after.png",
+      "Expected": "0FB66CCAD734C70CD006575F841DE25F1E39C3C82A9023F3A436F599006260B1",
+      "Actual": "0FB66CCAD734C70CD006575F841DE25F1E39C3C82A9023F3A436F599006260B1",
+      "Matches": true
+    },
+    {
+      "Path": "evidence/runtime/perf-visual-compare/lighting-transition-on-diff-x8.png",
+      "Expected": "DFF5FA1957CBD7AD50D3D5231681F209C0E03870221B737A9F5363549865D0DE",
+      "Actual": "DFF5FA1957CBD7AD50D3D5231681F209C0E03870221B737A9F5363549865D0DE",
+      "Matches": true
+    }
+  ],
+  "Matching": 46,
+  "RelevantProcesses": [],
+  "ProcessCommandLines": "NOT_VERIFIED: CIM access denied; Get-Process names/PIDs returned instead",
+  "GitWrites": false,
+  "ProductSourceEditsByDesignTask": false,
+  "GitReadStatus": "NOT_VERIFIED: git refused HEAD/branch/status because .git ownership differs from the current user. No safe.directory or ownership settings were changed.",
+  "StatusEntriesMeaning": "Empty Status array is not evidence of a clean tree.",
+  "HeadFile": "ref: refs/heads/claude/project-thread-5gmozz\n"
+}

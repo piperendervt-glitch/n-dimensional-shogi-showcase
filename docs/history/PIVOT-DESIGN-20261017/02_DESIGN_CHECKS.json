@@ -1,0 +1,41 @@
+{
+  "scope": "Independent design equations only. No product code, Unity tests, Windows build, OS input or appearance acceptance.",
+  "coordinateOrder": "X,Y,Z,W",
+  "checks": [
+    {
+      "id": "initial-height-and-origin-reset",
+      "status": "PASS_DESIGN_ALGEBRA_ONLY",
+      "detail": "XYZ: C=P -> O with anchor update preserves sample world height h=3 cells."
+    },
+    {
+      "id": "XW90-remaining-line",
+      "status": "PASS_DESIGN_ALGEBRA_ONLY",
+      "detail": "XW90: point section X=0; line through P, y=h."
+    },
+    {
+      "id": "YW90-pivot-difference",
+      "status": "PASS_DESIGN_ALGEBRA_ONLY",
+      "detail": "YW90: Y=h at C=P, Y=0 at C=O."
+    },
+    {
+      "id": "tangent-W-shift-after-XW90",
+      "status": "PASS_DESIGN_ALGEBRA_ONLY",
+      "detail": "Dynamic anchor cancels chart translation in rotated tangent W direction."
+    },
+    {
+      "id": "finite-window-clearance",
+      "status": "PASS_DESIGN_ALGEBRA_ONLY",
+      "detail": "Initial piece upper bound h+0.19 is inside the origin-centered XYZ window."
+    },
+    {
+      "id": "drag-event-partition",
+      "status": "PASS_DESIGN_ALGEBRA_ONLY",
+      "detail": "Every update evaluates cumulative displacement from F0, not incremental noncommuting rotations."
+    },
+    {
+      "id": "orthonormal-composition",
+      "status": "PASS_DESIGN_ALGEBRA_ONLY",
+      "detail": "Independent 4D rotation matrices remain orthonormal."
+    }
+  ]
+}
