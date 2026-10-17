@@ -44,7 +44,8 @@ namespace NDShogi.Showcase.Core.Settings
             Draft.TryCompile(out var compiled, out var validation);
             var errors = validation.Errors.ToList();
             if (preview.Pieces.Any(p => !data.Definitions.Any(d => d.Id == p.DefinitionId))) errors.Add("試し盤に未知の駒定義参照があります。原文を保持し、G/Pは未評価です。");
-            if (compiled != null && (compiled.Bounds.Min != preview.Bounds.Min || compiled.Bounds.Max != preview.Bounds.Max)) errors.Add("下書きと試し盤の盤域が一致しません。自動変換していません。");
+            if (compiled != null && compiled.Bounds.Dimensions != SettingsStore.Dimensions) errors.Add(SettingsStore.FourDimensionalOnly(compiled.Bounds.Dimensions));
+            else if (compiled != null && !compiled.Bounds.SameDomain(preview.Bounds)) errors.Add("下書きと試し盤の盤域が一致しません。自動変換していません。");
             Validation = new ValidationReport(errors, validation.Warnings);
         }
     }
@@ -56,6 +57,10 @@ namespace NDShogi.Showcase.Core.Settings
         private static readonly XNamespace T = "urn:ndshogi:cfg1:preview/1";
         private static readonly XNamespace V = "urn:ndshogi:cfg1:view/1";
         private const int MaxBytes = 1024 * 1024;
+        /// <summary>CFG1 files are 4D only: the trial board is read back on a 4D board and the view is center4/basis16.
+        /// A preset of another N, or a trial board of another N, is refused rather than silently read as 4D.</summary>
+        public const int Dimensions = 4;
+        internal static string FourDimensionalOnly(int n) => "CFG1の保存形式は4次元（N=4）専用です。N=" + n + "の設定・試し盤は保存・読込できません（N≠4はCFG2で扱います）。";
         public static void SavePreset(string path, SettingsDraft draft, PreviewSession preview, ViewSnapshot view, bool saveAs = false, Action<SaveStage>? fault = null)
         {
             if (!draft.TryCompile(out _, out var report)) throw new InvalidOperationException("編集・試し盤用プリセットを保存できません。不正入力は下書き保存してください。 " + string.Join(" / ", report.Errors));
@@ -71,8 +76,10 @@ namespace NDShogi.Showcase.Core.Settings
             var snapshot = preview.Snapshot();
             // Copy and revalidate mutable arrays at the persistence boundary.
             var viewCopy = new ViewSnapshot(view.Center, view.Basis, view.Camera);
+            if (preview.Bounds.Dimensions != Dimensions) throw new InvalidOperationException(FourDimensionalOnly(preview.Bounds.Dimensions));
             if (kind == SavedSettingsKind.PreviewPreset && snapshot.Pieces.Any(p => !data.Definitions.Any(d => d.Id == p.DefinitionId))) throw new InvalidOperationException("試し盤に未知の駒定義参照があります。保存前に明示的に修正してください。");
-            if (kind == SavedSettingsKind.PreviewPreset && (!RuleValidator.Compile(data, out var preset, out _) || preset!.Bounds.Min != preview.Bounds.Min || preset.Bounds.Max != preview.Bounds.Max)) throw new InvalidOperationException("設定と試し盤の盤域が一致しません。");
+            if (kind == SavedSettingsKind.PreviewPreset && (!RuleValidator.Compile(data, out var preset, out _) || !preset!.Bounds.SameDomain(preview.Bounds)))
+                throw new InvalidOperationException(preset != null && preset.Bounds.Dimensions != Dimensions ? FourDimensionalOnly(preset.Bounds.Dimensions) : "設定と試し盤の盤域が一致しません。");
             string kindId = kind == SavedSettingsKind.PreviewPreset ? "preview-preset" : "draft";
             if (File.Exists(full))
             {
@@ -140,7 +147,7 @@ namespace NDShogi.Showcase.Core.Settings
                 Attributes(d, "id", "name", "kind", "axes", "maxAxes", "distance", "forward", "sideways", "backward", "empty", "capture");
                 data.Definitions.Add(new RawPieceDefinition { Id = Attr(d, "id"), Name = Attr(d, "name"), Kind = Attr(d, "kind"), AxesMask = Attr(d, "axes"), MaxAxes = Attr(d, "maxAxes"), MaxDistance = Attr(d, "distance"), Forward = Bool(Attr(d, "forward")), Sideways = Bool(Attr(d, "sideways")), Backward = Bool(Attr(d, "backward")), AllowEmpty = Bool(Attr(d, "empty")), AllowCapture = Bool(Attr(d, "capture")) });
             }
-            var t = children[1]; Attributes(t, "min", "max"); var bounds = new BoundsN(Int(Attr(t, "min")), Int(Attr(t, "max")));
+            var t = children[1]; Attributes(t, "min", "max"); var bounds = new BoundsN(Int(Attr(t, "min")), Int(Attr(t, "max")), Dimensions);
             var pieces = t.Elements().Select(p =>
             {
                 if (p.Name != T + "piece" || p.HasElements) throw new InvalidDataException("未知の試し駒要素です。");
@@ -154,7 +161,8 @@ namespace NDShogi.Showcase.Core.Settings
             var v = children[2]; if (v.HasElements) throw new InvalidDataException("未知の表示設定要素です。"); Attributes(v, "center", "basis", "camera");
             var view = new ViewSnapshot(Vector(Attr(v, "center"), 4), Vector(Attr(v, "basis"), 16), Vector(Attr(v, "camera"), 6));
             var kind = kindText == "draft" ? SavedSettingsKind.Draft : SavedSettingsKind.PreviewPreset;
-            if (kind == SavedSettingsKind.PreviewPreset && (!RuleValidator.Compile(data, out var preset, out _) || preset!.Bounds.Min != bounds.Min || preset.Bounds.Max != bounds.Max)) throw new InvalidDataException("検証済み編集プリセットの内容が不正です。下書きへ黙って変換しません。");
+            if (kind == SavedSettingsKind.PreviewPreset && (!RuleValidator.Compile(data, out var preset, out _) || !preset!.Bounds.SameDomain(bounds)))
+                throw new InvalidDataException(preset != null && preset.Bounds.Dimensions != Dimensions ? FourDimensionalOnly(preset.Bounds.Dimensions) : "検証済み編集プリセットの内容が不正です。下書きへ黙って変換しません。");
             return new LoadedSettings(kind, data, preview, view);
         }
     }

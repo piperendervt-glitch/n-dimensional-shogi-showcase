@@ -19,6 +19,7 @@ var results = new List<object>(); int passed = 0, failed = 0;
 var duration = Stopwatch.StartNew();
 void Assert(bool condition, string message = "assertion failed") { if (!condition) throw new Exception(message); }
 void Reject(Action action) { bool rejected = false; try { action(); } catch { rejected = true; } Assert(rejected, "fault not rejected"); }
+string Fault(Action action) { try { action(); } catch (Exception e) { return e.Message; } throw new Exception("fault not rejected"); }
 void Test(string name, Action body) { var watch = Stopwatch.StartNew(); try { body(); passed++; results.Add(new { name, status = "PASS", milliseconds = watch.Elapsed.TotalMilliseconds }); Console.WriteLine("PASS " + name); } catch (Exception e) { failed++; results.Add(new { name, status = "FAIL", error = e.ToString() }); Console.WriteLine("FAIL " + name + " " + e.Message); } }
 SettingsDraft Fixture(int k = 4, string kind = "step/1", int distance = 1)
 {
@@ -259,6 +260,103 @@ Test("bounded-load-query-measurement-256-sparse-pieces", () =>
     var session = new PreviewSession(new BoundsN(0, 4), pieces); var preset = Compile(draft); long before = GC.GetAllocatedBytesForCurrentThread(); var watch = Stopwatch.StartNew(); var result = PreviewQuery.Execute(preset, session, "subject"); watch.Stop();
     Assert(result.Status == QueryStatus.Complete && result.TheoreticalCount == 192 && session.Pieces.Count == 256);
     File.WriteAllText(Path.Combine(evidence, "performance.json"), JsonSerializer.Serialize(new { fixture = "N4 0..4 H22 max8 256 sparse pieces", milliseconds = watch.Elapsed.TotalMilliseconds, allocatedBytes = GC.GetAllocatedBytesForCurrentThread() - before, processWorkingSetBytes = Environment.WorkingSet, candidateCount = result.G.Count, noProductThresholdAdopted = true }, new JsonSerializerOptions { WriteIndented = true }));
+});
+
+Test("M4-preview-queries-report-a-trial-board-of-another-N-as-invalid", () =>
+{
+    // Min..Max alone matched, so a 3D board was walked on 4D axes (Attackers threw IndexOutOfRange with forward axis 3).
+    var draft = Fixture(); draft.Edit(d => d.ForwardAxis = "3"); var preset = Compile(draft);
+    foreach (int n in new[] { 3, 5 })
+    {
+        var cell = new int[n]; cell[0] = 2; cell[1] = 2;
+        var session = new PreviewSession(new BoundsN(0, 4, n), new[] { new TrialPiece("subject", "rook", Side.A, new QN(cell)), new TrialPiece("enemy", "m", Side.B, QN.Zero(n)) });
+        var result = PreviewQuery.Execute(preset, session, "subject");
+        Assert(result.Status == QueryStatus.Invalid && result.Reason.Contains("N=" + n) && result.Reason.Contains("N=4") && result.G.Count == 0, result.Reason);
+        Assert(PreviewQuery.Attackers(preset, session, new QN(2, 0, 0), Side.A).Status == QueryStatus.Invalid && PreviewQuery.AttackCells(preset, session, "subject").Status == QueryStatus.Invalid);
+    }
+    var same = new PreviewSession(new BoundsN(0, 4), new[] { new TrialPiece("subject", "rook", Side.A, new QN(2, 2, 0, 0)) });
+    Assert(PreviewQuery.Execute(preset, same, "subject").Status == QueryStatus.Complete && PreviewQuery.AttackCells(preset, same, "subject").Cells.Count == 16, "same N still answers");
+    Assert(PreviewQuery.Attackers(preset, same, new QN(2, 0, 0, 0), Side.A).Attackers.Single().Id == "subject");
+});
+Test("M1-cached-delta-lists-match-an-independent-enumeration-for-every-key-part", () =>
+{
+    // Targets straight from the definition's text, over every cell of the 0..4 board, without the query's delta lists.
+    bool Moves(RawPieceDefinition raw, int forward, Side side, int[] d)
+    {
+        int mask = int.Parse(raw.AxesMask), maxAxes = int.Parse(raw.MaxAxes), distance = int.Parse(raw.MaxDistance);
+        var moved = Enumerable.Range(0, d.Length).Where(i => d[i] != 0).ToArray();
+        if (moved.Length == 0 || moved.Any(i => (mask >> i & 1) == 0)) return false;
+        int f = Math.Sign(d[forward]) * (side == Side.A ? 1 : -1);
+        if (f > 0 ? !raw.Forward : f < 0 ? !raw.Backward : !raw.Sideways) return false;
+        var size = moved.Select(i => Math.Abs(d[i])).ToArray();
+        return raw.Kind == "step/1" ? size.All(x => x == 1) && size.Length <= maxAxes : raw.Kind == "h11/1" ? size.Length == 1 && size[0] <= distance : size.Length == 2 && size[0] == size[1] && size[0] <= distance;
+    }
+    IEnumerable<int[]> Box(int n, int low, int high)
+    {
+        var x = Enumerable.Repeat(low, n).ToArray();
+        while (true) { yield return (int[])x.Clone(); int i = n - 1; while (i >= 0 && x[i] == high) x[i--] = low; if (i < 0) yield break; x[i]++; }
+    }
+    (HashSet<QN> cells, int theoretical) Expected((RawPieceDefinition raw, int n, int forward, Side side, int[] from) c)
+    {
+        var cells = new HashSet<QN>(Box(c.n, 0, 4).Where(x => Moves(c.raw, c.forward, c.side, x.Select((v, i) => v - c.from[i]).ToArray())).Select(x => new QN(x)));
+        return (cells, Box(c.n, -1, 1).Count(u => Moves(c.raw, c.forward, c.side, u)) * (c.raw.Kind == "step/1" ? 1 : int.Parse(c.raw.MaxDistance)));
+    }
+    var cases = new List<(RawPieceDefinition raw, int n, int forward, Side side, int[] from)>();
+    (PreviewPreset, PreviewSession) Build((RawPieceDefinition raw, int n, int forward, Side side, int[] from) c)
+    {
+        var data = new DraftData { Name = "delta-cache", SourceId = "delta-cache/1", Dimensions = c.n.ToString(), Min = "0", Max = "4", ForwardAxis = c.forward.ToString() }; data.Definitions.Add(c.raw.Clone());
+        return (Compile(new SettingsDraft(data)), new PreviewSession(new BoundsN(0, 4, c.n), new[] { new TrialPiece("subject", "m", c.side, new QN(c.from)) }));
+    }
+    // Pairs that differ in exactly one input of the cache key, each queried right after the other.
+    RawPieceDefinition Raw(string kind = "step/1", string mask = "15", string axes = "4", string distance = "1", bool f = true, bool s = true, bool b = true) => new RawPieceDefinition { Id = "m", Name = "m", Kind = kind, AxesMask = mask, MaxAxes = axes, MaxDistance = distance, Forward = f, Sideways = s, Backward = b };
+    int[] middle = { 2, 2, 2, 2 }, middle5 = { 2, 2, 2, 2, 2 };
+    var pairs = new[]
+    {
+        (Raw(), Raw("h11/1"), 0, 0, Side.A, Side.A, 4, 4), (Raw(), Raw(mask: "7"), 0, 0, Side.A, Side.A, 4, 4), (Raw(), Raw(axes: "2"), 0, 0, Side.A, Side.A, 4, 4),
+        (Raw("h22/1"), Raw("h22/1", distance: "2"), 0, 0, Side.A, Side.A, 4, 4), (Raw(), Raw(f: false), 0, 0, Side.A, Side.A, 4, 4), (Raw(), Raw(s: false), 0, 0, Side.A, Side.A, 4, 4),
+        (Raw(), Raw(b: false), 0, 0, Side.A, Side.A, 4, 4), (Raw(f: false), Raw(f: false), 0, 0, Side.A, Side.B, 4, 4), (Raw(f: false), Raw(f: false), 0, 1, Side.A, Side.A, 4, 4),
+        (Raw(), Raw(), 0, 0, Side.A, Side.A, 4, 5)
+    };
+    foreach (var (a, b, forwardA, forwardB, sideA, sideB, nA, nB) in pairs)
+    {
+        var first = (a, nA, forwardA, sideA, nA == 4 ? middle : middle5); var second = (b, nB, forwardB, sideB, nB == 4 ? middle : middle5);
+        Assert(!Expected(first).cells.SetEquals(Expected(second).cells), "each pair must differ"); cases.Add(first); cases.Add(second);
+    }
+    var random = new Random(20261017); string[] kinds = { "step/1", "h11/1", "h22/1" }; int attempts = 0;
+    while (cases.Count < 260 && attempts++ < 10000)
+    {
+        int n = random.Next(3, 6); string kind = kinds[random.Next(3)];
+        var raw = Raw(kind, random.Next(1, 1 << n).ToString(), random.Next(1, n + 1).ToString(), kind == "step/1" ? "1" : new[] { "1", "2", "3", "8" }[random.Next(4)], random.Next(4) != 0, random.Next(4) != 0, random.Next(4) != 0);
+        var data = new DraftData { Dimensions = n.ToString(), Min = "0", Max = "4" }; data.Definitions.Add(raw);
+        if (!new SettingsDraft(data).TryCompile(out _, out _)) continue;
+        cases.Add((raw, n, random.Next(n), random.Next(2) == 0 ? Side.A : Side.B, Enumerable.Range(0, n).Select(_ => random.Next(5)).ToArray()));
+    }
+    Assert(cases.Count == 260, "random definitions compile");
+    var built = cases.Select(Build).ToArray(); var cold = new QueryResult[built.Length];
+    System.Threading.Tasks.Parallel.For(0, built.Length, i => cold[i] = PreviewQuery.Execute(built[i].Item1, built[i].Item2, "subject"));
+    for (int i = 0; i < built.Length; i++)
+    {
+        var c = cases[i]; var (cells, theoretical) = Expected(c); var warm = PreviewQuery.Execute(built[i].Item1, built[i].Item2, "subject");
+        foreach (var result in new[] { cold[i], warm })
+            Assert(result.Status == QueryStatus.Complete && result.G.Count == cells.Count && cells.SetEquals(result.G) && result.P.SequenceEqual(result.G) && result.TheoreticalCount == theoretical, "case " + i + " " + c.raw.Kind + " N=" + c.n);
+        Assert(cold[i].G.SequenceEqual(warm.G), "cached list keeps its order");
+        var attack = PreviewQuery.AttackCells(built[i].Item1, built[i].Item2, "subject"); Assert(attack.Status == QueryStatus.Complete && attack.Cells.SequenceEqual(warm.G));
+    }
+});
+Test("CFG1-files-are-four-dimensional-only-and-say-so", () =>
+{
+    // CFG1 reads every trial board back on a 4D board with a 4D view, so another N is refused by name instead of read as 4D.
+    var five = Fixture(); five.Edit(d => { d.Dimensions = "5"; foreach (var x in d.Definitions) x.AxesMask = "31"; }); Compile(five);
+    var board5 = new PreviewSession(new BoundsN(0, 4, 5), new[] { new TrialPiece("subject", "m", Side.A, new QN(2, 2, 2, 2, 1)) });
+    string preset5 = Path.Combine(dataRoot, "cfg1-n5-preset.xml");
+    foreach (var board in new[] { board5, Position() }) { string message = Fault(() => SettingsStore.SavePreset(preset5, five, board, ViewSnapshot.Default)); Assert(message.Contains("4次元") && message.Contains("N=5") && !File.Exists(preset5), message); }
+    string message5 = Fault(() => SettingsStore.SaveDraft(Path.Combine(dataRoot, "cfg1-n5-board.xml"), Fixture(), board5, ViewSnapshot.Default)); Assert(message5.Contains("4次元") && message5.Contains("N=5"), message5);
+    string draft5 = Path.Combine(dataRoot, "cfg1-n5-draft.xml"); SettingsStore.SaveDraft(draft5, five, Position(), ViewSnapshot.Default);
+    var loaded = SettingsStore.Load(draft5); Assert(loaded.Kind == SavedSettingsKind.Draft && loaded.Draft.Current.Dimensions == "5" && loaded.Validation.Errors.Any(e => e.Contains("4次元")), string.Join(" / ", loaded.Validation.Errors));
+    string four = Path.Combine(dataRoot, "cfg1-n4-preset.xml"); SettingsStore.SavePreset(four, Fixture(), Position(), ViewSnapshot.Default); Assert(SettingsStore.Load(four).Validation.IsValid);
+    string edited = Path.Combine(dataRoot, "cfg1-n4-edited-to-n5.xml"); File.WriteAllText(edited, File.ReadAllText(four).Replace("dimensions=\"4\"", "dimensions=\"5\""));
+    string loadMessage = Fault(() => SettingsStore.Load(edited)); Assert(loadMessage.Contains("4次元") && loadMessage.Contains("N=5"), loadMessage);
+    Assert(SettingsStore.Dimensions == 4);
 });
 
 PivotStorageTests.Run(dataRoot, evidence, Test, Assert, Reject);

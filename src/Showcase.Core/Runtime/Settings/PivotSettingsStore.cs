@@ -26,9 +26,10 @@ namespace NDShogi.Showcase.Core.Settings
             Draft = logical.Draft; Options = logical.Options; Config = logical.Config; IsValidSettings = logical.IsValidSettings;
             Preview = preview; View = view; MigrationNotice = migrationNotice;
             LogicalHash = PivotSettingsStore.LogicalContentHash(Draft, Options);
+            PivotSettingsStore.RequireDimensions(Draft.Current, preview, view);
             var errors = logical.Validation.Errors.ToList();
             if (preview.Pieces.Any(p => !Draft.Current.Definitions.Any(d => d.Id == p.DefinitionId))) errors.Add("試し盤に未知の駒定義参照があります。原文を保持し、G/Pは未評価です。");
-            if (Draft.TryCompile(out var preset, out _) && (preset!.Bounds.Min != preview.Bounds.Min || preset.Bounds.Max != preview.Bounds.Max)) errors.Add("設定と試し盤の盤域が一致しません。");
+            if (Draft.TryCompile(out var preset, out _) && !preset!.Bounds.SameDomain(preview.Bounds)) errors.Add("設定と試し盤の盤域が一致しません。");
             if (!string.IsNullOrEmpty(view.SelectedPieceId) && preview.Find(view.SelectedPieceId) == null) throw new InvalidDataException("保存表示の選択駒が対応する試し盤にありません。");
             if (!preview.Bounds.Contains(view.SelectedCell) || !preview.Bounds.Contains(view.PlaneReferenceCell)) throw new InvalidDataException("表示の基準セルが対応する試し盤の範囲外です。");
             Validation = new ValidationReport(errors, logical.Validation.Warnings);
@@ -69,8 +70,24 @@ namespace NDShogi.Showcase.Core.Settings
                 new XAttribute("planeReference", view.PlaneReferenceCell), new XAttribute("logicalHash", logicalHash), new XAttribute("previewHash", previewHash));
             return new XDocument(new XElement(N + "bundle", new XAttribute("schema", "1"), new XAttribute("logicalHash", logicalHash), LogicalDocument(draft, options, valid).Root!, trial, display));
         }
+        /// <summary>The draft's N, which its trial board and view must share; null while the raw text is not a valid N. Such a raw draft
+        /// keeps the board's own N (its view's): reading it as 4 only turned it into a vector-length or hash mismatch further on.</summary>
+        internal static int? DraftDimensions(DraftData data)
+            => int.TryParse(data.Dimensions, NumberStyles.Integer, CultureInfo.InvariantCulture, out int n) && n >= BoundsN.MinDimensions && n <= BoundsN.MaxDimensions ? n : (int?)null;
+        internal static void RequireDimensions(DraftData data, PreviewSession preview, PivotViewSnapshot view)
+        {
+            int? n = DraftDimensions(data);
+            if (n == null)
+            {
+                if (preview.Bounds.Dimensions != view.Dimensions) throw new InvalidDataException("試し盤の次元数N=" + preview.Bounds.Dimensions + "が表示のN=" + view.Dimensions + "と一致しません（設定のN「" + data.Dimensions + "」は未確定）。");
+                return;
+            }
+            if (preview.Bounds.Dimensions != n) throw new InvalidDataException("試し盤の次元数N=" + preview.Bounds.Dimensions + "が設定のN=" + n + "と一致しません。試し盤を設定のNで作り直してください。");
+            if (view.Dimensions != n) throw new InvalidDataException("表示の次元数N=" + view.Dimensions + "が設定のN=" + n + "と一致しません。表示を設定のNで作り直してください。");
+        }
         private static void Save(string path, SettingsDraft draft, MatchOptionsRaw options, PreviewSession preview, PivotViewSnapshot view, bool valid, Action<SaveStage>? fault)
         {
+            RequireDimensions(draft.Current, preview, view);
             string before = draft.ContentHash, logicalBefore = LogicalContentHash(draft, options);
             var document = Document(new SettingsDraft(draft.Current), options.Clone(), new PreviewSession(preview.Bounds, preview.Snapshot().Pieces), view, valid);
             Parse(document); // Entire coherent snapshot must validate before any old file is touched.
@@ -92,11 +109,13 @@ namespace NDShogi.Showcase.Core.Settings
         {
             // Explicit migration only. Reading known formats never rewrites or moves them.
             var logical = MatchSettingsStore.Load(matchPath);
-            var preview = PreviewSession.CreateExperiment();
+            int n = DraftDimensions(logical.Draft.Current) ?? initialView.Dimensions;
+            var preview = PreviewSession.CreateExperiment(n);
             if (trialPath != null)
             {
                 var legacy = SettingsStore.Load(trialPath);
                 if (legacy.Draft.ContentHash != logical.Draft.ContentHash) throw new InvalidDataException("旧設定と旧試し盤の論理設定hashが一致しません。異なる保存を混合していません。");
+                if (legacy.Preview.Bounds.Dimensions != n) throw new InvalidDataException("旧試し盤は4次元専用のため、N=" + n + "の設定と組み合わせられません。試し盤なしで移行してください。");
                 preview = legacy.Preview;
             }
             return new LoadedPivotSettings(logical, preview, initialView, "表示設定を新方式の初期状態にした。旧保存ファイルは変更していません。");
@@ -125,19 +144,24 @@ namespace NDShogi.Showcase.Core.Settings
             string logicalHash = LogicalContentHash(logical.Draft, logical.Options);
             if (A(root, "logicalHash") != logicalHash) throw new InvalidDataException("論理設定hashが一致しません。");
             var trial = children[1]; Exact(trial, "min", "max", "hash");
-            if (trial.Elements().Count() > 256) throw new InvalidDataException("試し駒数の上限256を超えています。");
+            if (trial.Elements().Count() > PreviewSnapshot.MaxPieces) throw new InvalidDataException("試し駒数の上限" + PreviewSnapshot.MaxPieces + "を超えています。");
+            // N before the hashes: a trial board or view of another N is reported as such, not as a hash mismatch.
+            var v = children[2]; int viewN = A(v, "center").Split(',').Length, dimensions = DraftDimensions(logical.Draft.Current) ?? viewN;
+            if (viewN != dimensions) throw new InvalidDataException("表示の次元数N=" + viewN + "が設定のN=" + dimensions + "と一致しません。");
+            if (viewN < BoundsN.MinDimensions || viewN > BoundsN.MaxDimensions) throw new InvalidDataException("表示の次元数N=" + viewN + "が不正です。");
             var pieces = trial.Elements().Select(p =>
             {
                 if (p.Name != T + "piece" || p.HasElements) throw new InvalidDataException("未知の試し駒要素です。");
                 Exact(p, "id", "definition", "side", "cell"); string side = A(p, "side");
                 if (side != "A" && side != "B") throw new InvalidDataException("未知の陣営です。");
-                return new TrialPiece(A(p, "id"), A(p, "definition"), side == "A" ? Side.A : Side.B, Cell(A(p, "cell")));
+                var cell = Cell(A(p, "cell"));
+                if (cell.Dimensions > dimensions) throw new InvalidDataException("試し駒のセル（" + cell.Dimensions + "成分）がN=" + dimensions + "の盤にありません。");
+                return new TrialPiece(A(p, "id"), A(p, "definition"), side == "A" ? Side.A : Side.B, cell);
             }).ToArray();
-            int dimensions = int.TryParse(logical.Draft.Current.Dimensions, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsedN) && parsedN >= BoundsN.MinDimensions && parsedN <= BoundsN.MaxDimensions ? parsedN : 4;
             var preview = new PreviewSession(new BoundsN(Integer(A(trial, "min")), Integer(A(trial, "max")), dimensions), pieces);
             string previewHash = PreviewBinding(preview);
             if (A(trial, "hash") != previewHash) throw new InvalidDataException("試し盤hashが一致しません。");
-            var v = children[2]; if (v.HasElements) throw new InvalidDataException("未知の表示子要素です。");
+            if (v.HasElements) throw new InvalidDataException("未知の表示子要素です。");
             Exact(v, "schema", "embedding", "height", "center", "basis", "anchor", "halfWindow", "cellScale", "camera", "selectedPiece", "selectedCell", "planeReference", "logicalHash", "previewHash");
             if (A(v, "schema") != "1") throw new InvalidDataException("未知の表示schema版です。");
             if (A(v, "logicalHash") != logicalHash || A(v, "previewHash") != previewHash) throw new InvalidDataException("表示と論理設定・試し盤の対応hashが一致しません。");

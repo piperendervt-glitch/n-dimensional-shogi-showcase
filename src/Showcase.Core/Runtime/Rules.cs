@@ -64,7 +64,21 @@ namespace NDShogi.Showcase.Core
         public int Manhattan(QN x) { int n = Math.Max(Dimensions, x.Dimensions), d = 0; for (int i = 0; i < n; i++) d += Math.Abs(Axis(i) - x.Axis(i)); return d; }
         // Invariant on purpose: cells feed hashes, move keys (CPU tie-break) and saved files, so a locale whose
         // minus sign is U+2212 must not change them. For N=4 the text is identical to the former Q4 ("f,u,v,w").
-        public override string ToString() => c == null ? "" : string.Join(",", c.Select(x => x.ToString(CultureInfo.InvariantCulture)));
+        // Written digit by digit, exactly the invariant form ('-' sign, no grouping): this text keys and orders every legal move
+        // (about a million at N=11), and per-coordinate strings made it the main cost of a query.
+        public override string ToString()
+        {
+            if (c == null) return "";
+            Span<char> text = stackalloc char[c.Length * 12]; int n = 0;
+            for (int i = 0; i < c.Length; i++)
+            {
+                if (i > 0) text[n++] = ',';
+                long v = c[i]; if (v < 0) { text[n++] = '-'; v = -v; }
+                int start = n; do { text[n++] = (char)('0' + (int)(v % 10)); v /= 10; } while (v != 0);
+                text.Slice(start, n - start).Reverse();
+            }
+            return new string(text.Slice(0, n));
+        }
         /// <summary>Parses "a,b,c,..." (invariant integers); <paramref name="dimensions"/> 0 accepts any supported count.</summary>
         public static bool TryParse(string? text, int dimensions, out QN cell)
         {
@@ -213,7 +227,7 @@ namespace NDShogi.Showcase.Core
         }
         public static bool CellBlocks(IReadOnlyList<int> from,IReadOnlyList<int> to,IReadOnlyList<int> cell,OcclusionKind kind)
         {
-            if(from.SequenceEqual(cell)||to.SequenceEqual(cell))return false;
+            if(Same(from,cell)||Same(to,cell))return false;
             if(kind==OcclusionKind.LatticeLine)
             {
                 int g=0;for(int i=0;i<from.Count;i++)g=Gcd(g,Math.Abs(to[i]-from[i]));
@@ -233,6 +247,8 @@ namespace NDShogi.Showcase.Core
             return low.CompareTo(high)<=0&&high.N>0&&low.CompareTo(new Fraction(1,1))<0;
         }
         private static int Gcd(int a,int b){while(b!=0){int t=a%b;a=b;b=t;}return a;}
+        // SequenceEqual without its enumerators: this runs once per piece for every slider target.
+        private static bool Same(IReadOnlyList<int> a,IReadOnlyList<int> b){if(a.Count!=b.Count)return false;for(int i=0;i<a.Count;i++)if(a[i]!=b[i])return false;return true;}
     }
     public sealed class RuleCore
     {
@@ -264,7 +280,8 @@ namespace NDShogi.Showcase.Core
         public bool IsLegal(GameState state,Move move)
         {
             if(state.Rules.Occlusion!=Rules.Occlusion||state.Outcome!=GameOutcome.Ongoing)return false;
-            var p=state.Find(move.PieceId);if(p==null||p.Side!=state.Turn||p.Position!=move.From||!move.To.InBounds)return false;
+            // This core is 4D only: a target on a fifth or later axis is off its board (Apply could not store it).
+            var p=state.Find(move.PieceId);if(p==null||p.Side!=state.Turn||p.Position!=move.From||!move.To.InBounds||move.To.Rank>4)return false;
             if(p.Side==Side.B&&move.To.W!=0)return false;
             if(state.At(move.To)?.Side==p.Side)return false;
             return Movement.Allows(p.Kind,p.Side,(move.To-p.Position).ToArray())&&PathClear(state,p,move.To);
@@ -280,6 +297,7 @@ namespace NDShogi.Showcase.Core
         }
         public IReadOnlyList<Piece> Attackers(GameState state,QN target,Side by)
         {
+            if(target.Rank>4)return Array.Empty<Piece>();
             return state.Pieces.Where(p=>p.Side==by&&(by!=Side.B||target.W==0)&&Movement.Allows(p.Kind,p.Side,(target-p.Position).ToArray())&&PathClear(state,p,target)).ToArray();
         }
         public GameState Apply(GameState state,Move move)

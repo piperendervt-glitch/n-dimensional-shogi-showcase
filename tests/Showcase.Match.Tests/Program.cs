@@ -342,8 +342,31 @@ Test("ND-05-layer-copy-layout-copies-the-flat-layout-along-one-axis-and-any-king
     string file = Path.Combine(data, "layout-settings.xml"); MatchSettingsStore.SaveValid(file, draft, new MatchOptionsRaw());
     Assert(File.ReadAllText(file).Contains("initialLayout=\"copy/2\"") && MatchSettingsStore.Load(file).Draft.Current.InitialLayout == "copy/2" && Compile(MatchSettingsStore.Load(file).Draft).RuleHash == config.RuleHash, "layout round trip");
     string flatFile = Path.Combine(data, "flat-settings.xml"); MatchSettingsStore.SaveValid(flatFile, DemoN(5), new MatchOptionsRaw()); Assert(!File.ReadAllText(flatFile).Contains("initialLayout"), "flat files carry no layout attribute");
-    foreach (var bad in new[] { "copy/0", "copy/1", "copy/5", "copy/x", "stack", "" }) { var b = DemoN(5); b.Edit(d => d.InitialLayout = bad); Assert(!MatchConfig.TryCreate(b, new MatchOptionsRaw(), out _, out var report) && report.Errors.Any(e => e.Contains("初期配置")), "rejected layout " + bad); }
+    // Only the canonical "copy/2": the other spellings would name the same match under other rule hashes.
+    foreach (var bad in new[] { "copy/0", "copy/1", "copy/5", "copy/x", "stack", "", "copy/02", "copy/+2", "copy/ 2", "copy/2 ", "copy/2/" }) { var b = DemoN(5); b.Edit(d => d.InitialLayout = bad); Assert(!MatchConfig.TryCreate(b, new MatchOptionsRaw(), out _, out var report) && report.Errors.Any(e => e.Contains("初期配置")), "rejected layout " + bad); }
+    Assert(DraftData.CopyAxisOf("copy/2") == 2 && DraftData.CopyAxisOf("copy/10") == 10 && DraftData.CopyAxisOf("copy/02") == null && DraftData.CopyAxisOf("copy/+2") == null);
+    // With an invalid N the layout message cannot name N−1 as a number (it used to say "2〜2"), and a well-formed layout is not blamed.
+    var badN = DemoN(5); badN.Edit(d => { d.Dimensions = "x"; d.InitialLayout = "copy/x"; }); Assert(!MatchConfig.TryCreate(badN, new MatchOptionsRaw(), out _, out var nReport));
+    Assert(nReport.Errors.Any(e => e.Contains("初期配置") && e.Contains("2〜N−1")) && !nReport.Errors.Any(e => e.Contains("2〜2")), string.Join(" / ", nReport.Errors));
+    badN.Edit(d => d.InitialLayout = "copy/4"); MatchConfig.TryCreate(badN, new MatchOptionsRaw(), out _, out nReport); Assert(!nReport.Errors.Any(e => e.Contains("初期配置")) && nReport.Errors.Any(e => e.Contains("N（次元数）")));
     var four = SettingsDraft.CreateMatchDemo(); four.Edit(d => d.InitialLayout = DraftData.CopyLayout(3)); Assert(Compile(four).Preset.LayoutCopyAxis == 3 && MatchRules.InitialPieces(Compile(four).Preset).All(p => p.Position.Dimensions == 4), "4D copy along W");
+    // 4D copy along W, recorded from main 27122a4.
+    var copied = MatchSession.Create(Compile(four), MatchMode.PvP, new ManualClock()); var copiedLegal = copied.QueryLegal();
+    Assert(copied.Config.RuleHash == "08821d6ceb9f61c6a95361d5b3e4738be705d9cb373713b9d05d2d343dbc916f" && copied.State.Hash == "6849a9c7ce2c242250b93faef4e999e76db2967af51eac3d2559ba5ae6325e3d" && copied.ToPreview().Hash == "50fdabefc449309644c6a35def6c4434f18909b86d9875b79452a36200f898fc", "4D copy hashes");
+    Assert(copiedLegal.Moves.Count == 1403 && StableHash.Of(string.Join("\n", copiedLegal.Moves.Select(m => m.Key))) == "5c9b275eb530cac3d4c6e8cc68d7d5957b3222daefa4caf3ece7d8bb5e78e68e", "4D copy move order");
+});
+Test("L15-cpu-seed-and-budget-text-is-culture-invariant", () =>
+{
+    var saved = CultureInfo.CurrentCulture;
+    try
+    {
+        CultureInfo.CurrentCulture = new CultureInfo("sv-SE");
+        var s = Fixture(new[] { P("AK", Side.A, PieceKind.King, 0), P("BK", Side.B, PieceKind.King, 1) }, MatchMode.CvC, config: Compile(options: new MatchOptionsRaw { CpuSeed = "-71" }));
+        Assert(ApplyCpu(s, out var why), why); var details = s.Events.Select(e => e.Detail).ToArray();
+        Assert(details.Contains("capture-stable-seeded/1;seed=-71;budget=65536") && details.Contains("Cpu;capture-stable-seeded/1;seed=-71"), string.Join(" | ", details));
+        Assert(!MatchRecordStore.Serialize(s).Contains('−'), "no locale minus sign in the record");
+    }
+    finally { CultureInfo.CurrentCulture = saved; }
 });
 SettingsDraft DemoN(int n)
 {
@@ -369,6 +392,18 @@ Test("ND-01-four-dimensional-hashes-text-and-legal-moves-are-unchanged", () =>
     Assert(new QN(1, -2, 3, -4).ToString() == "1,-2,3,-4" && new QN() == new QN(0, 0, 0, 0) && new QN(1, 0, 0, 0) == new QN(1, 0, 0, 0, 0) && new QN(1, 0, 0, 0).GetHashCode() == new QN(1, 0, 0, 0, 0).GetHashCode());
     Assert(new QN(0, 0, 0, 1) != new QN(0, 0, 0, 0, 1) && new QN(0, 0, 0, 1).Rank == 4 && new QN(0, 0, 0, 0, 1).Rank == 5);
     Assert(QN.TryParse("1,2,3,4", 4, out var parsed) && parsed == new QN(1, 2, 3, 4) && !QN.TryParse("1,2,3", 4, out _) && !QN.TryParse("1,2,3,4,5,6,7,8,9,10,11,12", 0, out _) && !QN.TryParse("1,2,３,4", 4, out _));
+    // Recorded from main 27122a4, before the cached query deltas, the shared match snapshot, the keyed move order and the
+    // single-scan CPU choice: the complete move order, the preview hash, two CPU plies and their record are unchanged.
+    Assert(StableHash.Of(string.Join("\n", legal.Moves.Select(m => m.Key))) == "d4b8e171aa2bb3c51af58912be86ec67c2b5d8bc6c20ba4f06fbfb9bb32688b3", "legal move order");
+    Assert(s.ToPreview().Hash == "5683119fc4d9d48af31ea57e1590cbab58bf26c6f82b1ff4a4e0cc01cb8e30d4", "match preview hash");
+    var cvc = MatchSession.Create(config, MatchMode.CvC, new ManualClock());
+    foreach (var (key, hash) in new[] { ("A-Bishop:-3,3,0,0>-3,3,-1,-1", "6d61e05dbb7f93ee17883321b63c7d3fd08c29d950dcee6fd5c6d730a7588975"), ("B-King-0:4,0,0,0>4,-1,1,-1", "281655887a80c925ce85a6b8b6270e9091d470b40af199420866a2215227702c") })
+    {
+        var cpu = MatchCpu.Compute(cvc.BeginCpuRequest()); Assert(cpu.Move?.Key == key && cpu.CandidateCount == 217, "CPU choice " + cpu.Move);
+        Assert(cvc.TryApplyCpu(cpu, out var why), why); cvc.CompletePresentation(); Assert(cvc.State.Hash == hash, "state after " + key);
+    }
+    Assert(StableRecord(cvc) == "937cf3ca17ff8e6ea36cfa7f5ad08619dde570026c6d875e8ccad386d3dca3fc", "record text with CPU requests and moves");
+    Assert(StableHash.Of(string.Join("\n", cvc.QueryLegal().Moves.Select(m => m.Key))) == "25773663d26897ae953d21b3cd23e8af61cc03310da31f5de802b9d6d5333b83", "move order after two plies");
 });
 
 Test("ND-02-five-dimensional-match-compiles-starts-moves-along-the-fifth-axis-and-saves", () =>
@@ -393,6 +428,9 @@ Test("ND-03-lower-dimensional-cells-are-accepted-and-normalized-to-the-board", (
     var config = Compile(DemoN(5)); var s = Fixture(Kings(), config: config);
     Assert(s.State.Pieces.All(p => p.Position.Dimensions == 5) && s.State.At(new QN(-4, -4, -4, -4)) != null && s.State.At(new QN(-4, -4, -4, -4, 0))!.Id == "AK");
     Assert(s.TryMove(new Move("AK", new QN(-4, -4, -4, -4), new QN(-3, -4, -4, -4)), out var why), why); Assert(s.State.Find("AK")!.Position == new QN(-3, -4, -4, -4, 0));
+    // The caller's 4-component cells are recorded with the board's five.
+    var recorded = s.Events.Last(e => e.Kind == "move").Move!.Value; Assert(recorded.From.Dimensions == 5 && recorded.To.Dimensions == 5, "recorded move carries N coordinates");
+    string journal = MatchRecordStore.Serialize(s); Assert(journal.Contains("from=\"-4,-4,-4,-4,0\"") && journal.Contains("to=\"-3,-4,-4,-4,0\""), "saved move text has N components");
     Reject(() => Fixture(Kings().Concat(new[] { new Piece("far", Side.A, PieceKind.Pawn, new QN(0, 0, 0, 0, 0, 1)) }), config: config));
     var three = Compile(DemoN(3)); Reject(() => Fixture(Kings(), config: three)); Assert(Fixture(new[] { P("AK", Side.A, PieceKind.King, -4, -4, -4), P("BK", Side.B, PieceKind.King, 4, 4, 4) }, config: three).State.Pieces.All(p => p.Position.Dimensions == 3));
 });

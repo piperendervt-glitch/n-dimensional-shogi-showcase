@@ -16,6 +16,17 @@ static class PivotStorageTests
     static PivotViewSnapshot View(double[]? center = null, double[]? basis = null, double[]? anchor = null, double[]? camera = null)
         => new PivotViewSnapshot(3, center ?? new double[] { 0, 0, 3, 0 }, basis ?? Identity, anchor ?? new double[] { 0, 1.01, 0 }, 4.5, .05,
             camera ?? new double[] { 32, 29, .82, 0, 0, 0 }, "subject", new QN(0, 0, 0, 0), new QN(0, 0, 0, 0));
+    static PivotViewSnapshot ViewN(int n, string selected = "", double[]? basis = null)
+    {
+        var identity = new double[n * n]; for (int i = 0; i < n; i++) identity[i * n + i] = 1; var center = new double[n]; center[2] = 3;
+        return new PivotViewSnapshot(3, center, basis ?? identity, new double[] { 0, 1.01, 0 }, 4.5, .05, new double[] { 32, 29, .82, 0, 0, 0 }, selected, default, default);
+    }
+    static SettingsDraft MatchDraft(int n)
+    {
+        var draft = SettingsDraft.CreateMatchDemo();
+        if (n != 4) draft.Edit(d => { d.Dimensions = n.ToString(); foreach (var x in d.Definitions) { x.AxesMask = BoundsN.FullAxesMask(n).ToString(); if (x.MaxAxes == "4") x.MaxAxes = n.ToString(); } });
+        return draft;
+    }
     static object State(LoadedPivotSettings loaded) => new
     {
         loaded.LogicalHash, loaded.PreviewHash, draftHash = loaded.Draft.ContentHash, ruleHash = loaded.Config?.RuleHash, settingsHash = loaded.Config?.SettingsHash,
@@ -44,6 +55,7 @@ static class PivotStorageTests
     public static void Run(string dataRoot, string evidence, Action<string, Action> test, Action<bool, string> assert, Action<Action> reject)
     {
         void Check(bool value, string detail = "pivot assertion failed") => assert(value, detail);
+        string Fault(Action action) { try { action(); } catch (Exception e) { return e.Message; } assert(false, "fault not rejected"); return ""; }
         string PathFor(string name) => Path.Combine(dataRoot, "pivot-" + name + ".xml");
         void Save(string path, PivotViewSnapshot? view = null) => PivotSettingsStore.SaveValid(path, SettingsDraft.CreateMatchDemo(), new MatchOptionsRaw(), PreviewSession.CreateExperiment(), view ?? View());
         test("pivot-bundle-coherent-logical-preview-view-and-defensive-arrays", () =>
@@ -333,6 +345,84 @@ static class PivotStorageTests
                 var loaded = PivotSettingsStore.Load(path); Check(loaded.View.SelectedCell == default && loaded.View.Dimensions == n, "unselected view round trip in " + n + "D");
                 if (n == 4) Check(File.ReadAllText(path).Contains("selectedCell=\"0,0,0,0\""), "4D unselected cell keeps the original four-zero form");
             }
+        });
+
+        test("H3-copy-layout-match-position-saves-and-reloads-through-the-bundle", () =>
+        {
+            Check(PreviewSnapshot.MaxPieces == 1024, "one piece limit for the trial board, the match and the bundle");
+            foreach (var (n, axis) in new[] { (5, 2), (4, 3) })
+            {
+                var draft = MatchDraft(n); draft.Edit(d => d.InitialLayout = DraftData.CopyLayout(axis));
+                Check(MatchConfig.TryCreate(draft, new MatchOptionsRaw(), out var config, out var report), string.Join(" / ", report.Errors));
+                var session = MatchSession.Create(config!, MatchMode.PvP, new StopwatchClock()); var position = session.ToPreview();
+                var matchDraft = new SettingsDraft(session.Config.Preset.ToDraftData()); var options = session.Config.ToRaw(); string path = PathFor("copy-layout-" + n);
+                // The save the match screen makes; the 256-piece bundle limit used to refuse it.
+                PivotSettingsStore.SaveValid(path, matchDraft, options, position, ViewN(n, "A-King-0"));
+                var loaded = PivotSettingsStore.Load(path);
+                Check(position.Pieces.Count == 360 && loaded.IsValidSettings && loaded.Preview.Pieces.Count == 360 && loaded.PreviewHash == position.Hash && loaded.Preview.Hash == session.ToPreview().Hash, "360-piece position reloads in " + n + "D");
+                Check(loaded.LogicalHash == PivotSettingsStore.LogicalContentHash(matchDraft, options) && loaded.Config!.RuleHash == session.Config.RuleHash && loaded.View.SelectedPieceId == "A-King-0" && loaded.View.Dimensions == n);
+                Check(PreviewQuery.Execute(loaded.Config!.Preset, loaded.Preview, "A-King-0").Status == QueryStatus.Complete);
+                if (n == 5)
+                {
+                    var doc = XDocument.Load(path); var trial = doc.Root!.Element(T + "preview")!; var first = trial.Elements().First();
+                    for (int i = 0; i < PreviewSnapshot.MaxPieces + 1 - 360; i++) { var copy = new XElement(first); copy.SetAttributeValue("id", "extra-" + i); trial.Add(copy); }
+                    string over = PathFor("over-limit"); File.WriteAllText(over, doc.ToString()); string message = Fault(() => PivotSettingsStore.Load(over)); Check(message.Contains("1024"), message);
+                }
+            }
+            var many = Enumerable.Range(0, PreviewSnapshot.MaxPieces + 1).Select(i => new TrialPiece("p" + i, "pawn-step", Side.A, new QN(i % 9 - 4, i / 9 % 9 - 4, i / 81 % 9 - 4, i / 729 - 4))).ToArray();
+            Check(new PreviewSnapshot(many.Take(PreviewSnapshot.MaxPieces)).Pieces.Count == 1024); reject(() => new PreviewSnapshot(many));
+        });
+        test("M4-trial-board-and-view-of-another-N-are-refused-by-name-not-by-hash", () =>
+        {
+            string path = PathFor("n-mismatch");
+            string message = Fault(() => PivotSettingsStore.SaveValid(path, MatchDraft(4), new MatchOptionsRaw(), PreviewSession.CreateExperiment(5), View()));
+            Check(message.Contains("試し盤の次元数N=5") && message.Contains("設定のN=4") && !message.Contains("hash") && !File.Exists(path), message);
+            message = Fault(() => PivotSettingsStore.SaveDraft(path, MatchDraft(4), new MatchOptionsRaw(), PreviewSession.CreateExperiment(), ViewN(5)));
+            Check(message.Contains("表示の次元数N=5") && !File.Exists(path), message);
+            // A 5D bundle whose rules were edited to N=4 with the logical hash recomputed: the leftover 5D view, then the 5D trial board, are named.
+            string five = PathFor("n5-edited"); PivotSettingsStore.SaveValid(five, MatchDraft(5), new MatchOptionsRaw(), PreviewSession.CreateExperiment(5), ViewN(5));
+            var saved = PivotSettingsStore.Load(five); var four = new SettingsDraft(saved.Draft.Current); four.Edit(d => { d.Dimensions = "4"; foreach (var x in d.Definitions) { if (x.AxesMask == "31") x.AxesMask = "15"; if (x.MaxAxes == "5") x.MaxAxes = "4"; } });
+            string logical = PivotSettingsStore.LogicalContentHash(four, saved.Options);
+            XDocument Edited(bool view4)
+            {
+                var doc = XDocument.Load(five); var rules = doc.Root!.Elements().First().Elements().First(); rules.SetAttributeValue("dimensions", "4");
+                foreach (var d in rules.Elements()) { if ((string?)d.Attribute("axes") == "31") d.SetAttributeValue("axes", "15"); if ((string?)d.Attribute("maxAxes") == "5") d.SetAttributeValue("maxAxes", "4"); }
+                doc.Root.SetAttributeValue("logicalHash", logical); var v = doc.Root.Element(V + "view")!; v.SetAttributeValue("logicalHash", logical);
+                if (view4) { v.SetAttributeValue("center", "0,0,3,0"); v.SetAttributeValue("basis", string.Join(",", Identity)); v.SetAttributeValue("selectedCell", "0,0,0,0"); v.SetAttributeValue("planeReference", "0,0,0,0"); }
+                return doc;
+            }
+            foreach (var (view4, expected) in new[] { (false, "表示の次元数N=5が設定のN=4"), (true, "試し駒のセル（5成分）がN=4") })
+            {
+                string edited = PathFor("n5-edited-" + view4); File.WriteAllText(edited, Edited(view4).ToString()); message = Fault(() => PivotSettingsStore.Load(edited));
+                Check(message.Contains(expected) && !message.Contains("hash"), message);
+            }
+            // A raw draft whose N is not a number yet keeps its board's N (it used to be read as 4, so a 5D board failed on vector length).
+            foreach (int n in new[] { 4, 5 })
+            {
+                var raw = MatchDraft(n); raw.Edit(d => d.Dimensions = "x"); string rawPath = PathFor("raw-n-x-" + n);
+                PivotSettingsStore.SaveDraft(rawPath, raw, new MatchOptionsRaw(), PreviewSession.CreateExperiment(n), ViewN(n)); var loaded = PivotSettingsStore.Load(rawPath);
+                Check(!loaded.IsValidSettings && loaded.Draft.Current.Dimensions == "x" && loaded.Preview.Bounds.Dimensions == n && loaded.View.Dimensions == n && loaded.Draft.ContentHash == raw.ContentHash, "raw N preserved in " + n + "D");
+                message = Fault(() => PivotSettingsStore.SaveDraft(rawPath, raw, new MatchOptionsRaw(), PreviewSession.CreateExperiment(n), ViewN(n == 4 ? 5 : 4)));
+                Check(message.Contains("試し盤の次元数N=" + n) && message.Contains("「x」"), message);
+            }
+        });
+        test("M4-legacy-import-builds-the-trial-board-at-the-settings-N", () =>
+        {
+            string match = PathFor("legacy-n5-match"), trial = PathFor("legacy-n5-trial"); var draft = MatchDraft(5); MatchSettingsStore.SaveValid(match, draft, new MatchOptionsRaw());
+            var imported = PivotSettingsStore.ImportLegacy(match, null, ViewN(5));
+            Check(imported.Preview.Bounds.Dimensions == 5 && imported.Preview.Pieces.Single().Position.Dimensions == 5 && imported.IsValidSettings && imported.Config!.Dimensions == 5);
+            string target = PathFor("legacy-n5-migrated"); PivotSettingsStore.SaveValid(target, imported.Draft, imported.Options, imported.Preview, imported.View); Check(PivotSettingsStore.Load(target).Preview.Bounds.Dimensions == 5);
+            string message = Fault(() => PivotSettingsStore.ImportLegacy(match, null, View())); Check(message.Contains("表示の次元数N=4が設定のN=5"), message);
+            SettingsStore.SaveDraft(trial, draft, PreviewSession.CreateExperiment(), ViewSnapshot.Default);
+            message = Fault(() => PivotSettingsStore.ImportLegacy(match, trial, ViewN(5))); Check(message.Contains("旧試し盤は4次元専用"), message);
+        });
+        test("L16-high-N-orthonormal-basis-is-accepted-by-orientation-sign", () =>
+        {
+            // Each row 1−4.9e-7 long is orthonormal within 1e-6, but det ≈ 1−4.4e-6 fell under the former fixed 1−4e-6 floor.
+            var scaled = new double[81]; for (int i = 0; i < 9; i++) scaled[i * 9 + i] = 1 - 4.9e-7;
+            Check(ViewN(9, basis: scaled).Dimensions == 9);
+            var reflected = new double[81]; for (int i = 0; i < 9; i++) reflected[i * 9 + i] = i == 8 ? -1 : 1; reject(() => ViewN(9, basis: reflected));
+            var swapped = new double[81]; for (int i = 0; i < 9; i++) swapped[i * 9 + (i < 2 ? 1 - i : i)] = 1; reject(() => ViewN(9, basis: swapped));
         });
     }
 }

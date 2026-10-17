@@ -98,9 +98,16 @@ namespace NDShogi.Showcase.Core.Match
                 var result = MatchRules.QueryLegal(request.Config, request.State, cancellation, request.Config.CpuBudget);
                 if (result.Status != MatchQueryStatus.Complete) return new CpuResult(request.Stamp, result.Status, null, result.Moves.Count, result.EvaluatedCandidates, result.Reason);
                 if (cancellation.IsCancellationRequested) return new CpuResult(request.Stamp, MatchQueryStatus.Cancelled, null, result.Moves.Count, result.EvaluatedCandidates, "CPU取消");
-                var moves = result.Moves.OrderByDescending(m => request.State.At(m.To) is Piece victim ? Value(victim.Kind) : 0)
-                    .ThenBy(m => StableHash.Tie(m.Key, request.Config.CpuSeed)).ThenBy(m => m.Key, StringComparer.Ordinal).ToArray();
-                return new CpuResult(request.Stamp, MatchQueryStatus.Complete, moves.Length == 0 ? (Move?)null : moves[0], moves.Length, result.EvaluatedCandidates, "共通全4D候補・捕獲評価・seed付き安定同点処理");
+                // The first move of the order (capture value desc, seeded tie asc, key asc). Keys are unique, so a single
+                // scan finds the same move a full sort would put first, without sorting (or re-keying) every candidate.
+                Move? best = null; int bestValue = 0, bestTie = 0; string bestKey = "";
+                for (int i = 0; i < result.Moves.Count; i++)
+                {
+                    var m = result.Moves[i]; string key = result.Keys[i];
+                    int value = request.State.At(m.To) is Piece victim ? Value(victim.Kind) : 0, tie = StableHash.Tie(key, request.Config.CpuSeed);
+                    if (best == null || value > bestValue || value == bestValue && (tie < bestTie || tie == bestTie && string.CompareOrdinal(key, bestKey) < 0)) { best = m; bestValue = value; bestTie = tie; bestKey = key; }
+                }
+                return new CpuResult(request.Stamp, MatchQueryStatus.Complete, best, result.Moves.Count, result.EvaluatedCandidates, "共通の全次元候補・捕獲評価・seed付き安定同点処理");
             }
             catch (Exception e) { return new CpuResult(request.Stamp, MatchQueryStatus.Faulted, null, 0, 0, e.Message); }
         }
@@ -198,6 +205,8 @@ namespace NDShogi.Showcase.Core.Match
             // before a king capture could otherwise overtake an expired clock.
             Tick();
             if (Phase != MatchPhase.Active || IsFinished) { reason = "着手確定前に時計または入力状態が変わりました。"; return false; }
+            // Recorded with the board's N coordinates, whatever N the caller's cells declared (the saved text is always N components).
+            move = new Move(mover.Id, mover.Position, Config.Preset.Bounds.Normalize(move.To));
             string before = State.Hash; var victim = State.At(move.To); var capture = victim == null ? null : new CapturedPiece(mover.Side, victim, State.Ply + 1);
             var pieces = State.Pieces.Where(p => p.Id != mover.Id && p.Id != victim?.Id).Concat(new[] { mover.At(move.To) });
             var captured = capture == null ? State.Captured : State.Captured.Concat(new[] { capture });
@@ -260,7 +269,7 @@ namespace NDShogi.Showcase.Core.Match
         {
             Tick(); if (!CanCpuAct || pending.HasValue) throw new InvalidOperationException("CPU要求を開始できない状態です。");
             InvalidateCpu(); var stamp = new CpuStamp(Snapshot.MatchId, Revision, State.Turn, Config.RuleHash, Generation); pending = stamp;
-            events.Add(new MatchEvent("cpu-request", this, State.Hash, detail: MatchConfig.CpuId + ";seed=" + Config.CpuSeed + ";budget=" + Config.CpuBudget));
+            events.Add(new MatchEvent("cpu-request", this, State.Hash, detail: MatchConfig.CpuId + ";seed=" + Config.CpuSeed.ToString(CultureInfo.InvariantCulture) + ";budget=" + Config.CpuBudget.ToString(CultureInfo.InvariantCulture)));
             return new CpuRequest(stamp, Config, State);
         }
         public bool TryApplyCpu(CpuResult result, out string reason)
@@ -282,7 +291,7 @@ namespace NDShogi.Showcase.Core.Match
                 if (check.Status == MatchQueryStatus.Complete && check.Moves.Count == 0) { End(MatchOutcome.NoMovesDraw, null, "全件完了した着手候補0件"); reason = "手なし引分"; return true; }
                 reason = "CPU結果に手がありません。引分にはしません。"; SuspendProcessing(reason); return false;
             }
-            if (!CommitMove(result.Move.Value, "Cpu;" + MatchConfig.CpuId + ";seed=" + Config.CpuSeed, out reason)) { SuspendProcessing("CPU不正結果：" + reason); return false; }
+            if (!CommitMove(result.Move.Value, "Cpu;" + MatchConfig.CpuId + ";seed=" + Config.CpuSeed.ToString(CultureInfo.InvariantCulture), out reason)) { SuspendProcessing("CPU不正結果：" + reason); return false; }
             return true;
         }
     }

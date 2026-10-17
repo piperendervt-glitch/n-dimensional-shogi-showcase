@@ -15,7 +15,8 @@ namespace NDShogi.Showcase.Core
         public bool Equals(Position3 p)=>F==p.F&&U==p.U&&V==p.V;
         public override bool Equals(object? o)=>o is Position3 p&&Equals(p);
         public override int GetHashCode()=>((F*397)^U)*397^V;
-        public override string ToString()=>F+","+U+","+V;
+        // Invariant like QN: the text feeds the observation hash, CPU fingerprints and move-key order.
+        public override string ToString()=>F.ToString(CultureInfo.InvariantCulture)+","+U.ToString(CultureInfo.InvariantCulture)+","+V.ToString(CultureInfo.InvariantCulture);
     }
     public sealed class ObservedPiece3
     {

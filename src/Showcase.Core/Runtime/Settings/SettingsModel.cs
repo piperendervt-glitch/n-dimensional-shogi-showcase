@@ -21,7 +21,12 @@ namespace NDShogi.Showcase.Core.Settings
             if (dimensions < MinDimensions || dimensions > MaxDimensions) throw new ArgumentException("N must be " + MinDimensions + ".." + MaxDimensions + ".");
             Min = min; Max = max; Dimensions = dimensions;
         }
-        public bool Contains(QN q) => q.Rank <= Dimensions && Enumerable.Range(0, Dimensions).All(i => q.Axis(i) >= Min && q.Axis(i) <= Max);
+        public bool Contains(QN q)
+        {
+            if (q.Rank > Dimensions) return false;
+            for (int i = 0; i < Dimensions; i++) { int x = q.Axis(i); if (x < Min || x > Max) return false; }
+            return true;
+        }
         /// <summary>The same cell carrying exactly this board's N coordinates (the form that is hashed and saved).</summary>
         public QN Normalize(QN q) => q.Dimensions == Dimensions ? q : QN.Padded(q.ToArray(), Dimensions);
         public QN Origin => QN.Zero(Dimensions);
@@ -65,7 +70,8 @@ namespace NDShogi.Showcase.Core.Settings
         public static int? CopyAxisOf(string? layout)
         {
             var parts = (layout ?? "").Split('/');
-            return parts.Length == 2 && parts[0] == "copy" && int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int axis) && axis >= 2 ? axis : (int?)null;
+            // Only the canonical text: "copy/02" or "copy/+2" would be the same match under another rule hash.
+            return parts.Length == 2 && parts[0] == "copy" && int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int axis) && axis >= 2 && parts[1] == axis.ToString(CultureInfo.InvariantCulture) ? axis : (int?)null;
         }
         public List<RawPieceDefinition> Definitions = new List<RawPieceDefinition>();
         public DraftData Clone()
@@ -254,7 +260,9 @@ namespace NDShogi.Showcase.Core.Settings
             }
             bool ValidText(string value, int maximum) => value != null && value.Length > 0 && value.Length <= maximum && !value.Any(char.IsControl);
             if (!ValidText(data.Id, 128) || !ValidText(data.Name, 256) || !ValidText(data.SourceId, 256)) errors.Add("設定ID・名称・出所IDが不正です。");
+            int errorsBeforeN = errors.Count;
             int dimensions = Number(data.Dimensions, "N（次元数）", BoundsN.MinDimensions, BoundsN.MaxDimensions);
+            bool validN = errors.Count == errorsBeforeN;
             int fullMask = BoundsN.FullAxesMask(dimensions);
             int min = Number(data.Min, "盤最小値", -4, 4), max = Number(data.Max, "盤最大値", -4, 4);
             if (min > max) errors.Add("盤最小値が最大値を超えています。");
@@ -264,8 +272,9 @@ namespace NDShogi.Showcase.Core.Settings
             if (data.InitialLayout != DraftData.FlatLayout)
             {
                 int? axis = DraftData.CopyAxisOf(data.InitialLayout);
-                if (axis.HasValue && axis.Value < dimensions) copyAxis = axis;
-                else errors.Add("初期配置：flat または copy/<軸番号 2〜" + (dimensions - 1) + "> を指定してください。入力は保持されています。");
+                // With an invalid N (already reported) the upper axis is unknown: only the form is checked, and the text names N−1, not "2〜2".
+                if (axis.HasValue && (axis.Value < dimensions || !validN)) copyAxis = axis;
+                else errors.Add("初期配置：flat または copy/<軸番号 2〜" + (validN ? (dimensions - 1).ToString(CultureInfo.InvariantCulture) : "N−1") + "> を指定してください。入力は保持されています。");
             }
             OcclusionKind occlusion = OcclusionKind.LatticeLine;
             if (data.Occlusion == "lattice-line/1") occlusion = OcclusionKind.LatticeLine;

@@ -44,7 +44,8 @@ namespace NDShogi.Showcase.Core.Settings
                 double dot = 0; for (int i = 0; i < n; i++) dot += this.basis[a * n + i] * this.basis[b * n + i];
                 if (Math.Abs(dot - (a == b ? 1 : 0)) > 1e-6) throw new ArgumentException("N次元基底は1e-6以内の正規直交基底が必要です。");
             }
-            if (Determinant(this.basis, n) < 1 - 4e-6) throw new ArgumentException("N次元基底は正の向きが必要です。反転姿勢は読み込みません。");
+            // Orthonormality is checked above, so |det| is close to 1 and only its sign matters; a fixed 1−4e-6 floor rejected valid bases at high N.
+            if (Determinant(this.basis, n) <= 0) throw new ArgumentException("N次元基底は正の向きが必要です。反転姿勢は読み込みません。");
             if (selectedPieceId == null || selectedPieceId.Length > 128 || selectedPieceId.Any(char.IsControl)) throw new ArgumentException("選択駒IDが不正です。");
             if (!selectedCell.InBounds || !planeReferenceCell.InBounds || selectedCell.Rank > n || planeReferenceCell.Rank > n) throw new ArgumentException("表示の基準セルが論理盤域外です。");
             // Unity Y is up; lowering A by s*h keeps C, B and every piece where they were in 4D.

@@ -103,12 +103,14 @@ namespace NDShogi.Showcase.Core.Match
         public string Hash { get; }
         private readonly Dictionary<QN, Piece> occupied;
         private readonly Dictionary<string, Piece> byId;
+        private PreviewSnapshot? preview;
         internal MatchState(IEnumerable<Piece> pieces, Side turn, int ply, long revision, MatchConfig config, IEnumerable<CapturedPiece>? captured = null, MatchOutcome outcome = MatchOutcome.Ongoing, Side? winner = null)
         {
             var bounds = config.Preset.Bounds;
-            var list = pieces.Select(p => bounds.Contains(p.Position) ? p.At(bounds.Normalize(p.Position)) : p).OrderBy(p => p.Id, StringComparer.Ordinal).ToArray();
-            // 1024 leaves room for a layer-copied layout (40 pieces x 9 layers = 360) and its captures/edits.
-            if (list.Length > 1024 || !Enum.IsDefined(typeof(Side), turn) || list.Any(p => string.IsNullOrWhiteSpace(p.Id) || p.Id.Length > 128 || p.Id.Any(char.IsControl) || !Enum.IsDefined(typeof(PieceKind), p.Kind) || !Enum.IsDefined(typeof(Side), p.Side) || !config.Preset.Bounds.Contains(p.Position))) throw new ArgumentException("Invalid match piece/side/bounds.");
+            // Pieces already carrying N coordinates (every piece after the first state) are kept, not copied.
+            var list = pieces.Select(p => p.Position.Dimensions == bounds.Dimensions || !bounds.Contains(p.Position) ? p : p.At(bounds.Normalize(p.Position))).OrderBy(p => p.Id, StringComparer.Ordinal).ToArray();
+            // The trial-board limit, so that every match position can be queried and saved through PreviewSnapshot.
+            if (list.Length > PreviewSnapshot.MaxPieces || !Enum.IsDefined(typeof(Side), turn) || list.Any(p => string.IsNullOrWhiteSpace(p.Id) || p.Id.Length > 128 || p.Id.Any(char.IsControl) || !Enum.IsDefined(typeof(PieceKind), p.Kind) || !Enum.IsDefined(typeof(Side), p.Side) || !bounds.Contains(p.Position))) throw new ArgumentException("Invalid match piece/side/bounds.");
             occupied = list.ToDictionary(p => p.Position); byId = list.ToDictionary(p => p.Id, StringComparer.Ordinal);
             Pieces = Array.AsReadOnly(list); Captured = Array.AsReadOnly((captured ?? Array.Empty<CapturedPiece>()).ToArray());
             Turn = turn; Ply = ply; Revision = revision; Outcome = outcome; Winner = winner;
@@ -117,7 +119,18 @@ namespace NDShogi.Showcase.Core.Match
         public Piece? Find(string id) => byId.TryGetValue(id, out var p) ? p : null;
         public Piece? At(QN cell) => occupied.TryGetValue(cell, out var p) ? p : null;
         public IReadOnlyList<CapturedPiece> CapturedBy(Side side) => Array.AsReadOnly(Captured.Where(c => c.Captor == side && c.Victim.Kind != PieceKind.King).ToArray());
-        public PreviewSession ToPreview(MatchConfig config) => new PreviewSession(config.Preset.Bounds, Pieces.Select(p => new TrialPiece(p.Id, MatchConfig.DefinitionId(p.Kind), p.Side, p.Position)));
+        // The position's snapshot (sorted, checked and hashed once) is shared by every preview of this state; each call
+        // still returns its own session, which callers may edit without touching the match.
+        public PreviewSession ToPreview(MatchConfig config)
+        {
+            var built = preview;
+            if (built == null)
+            {
+                built = new PreviewSnapshot(Pieces.Select(p => new TrialPiece(p.Id, MatchConfig.DefinitionId(p.Kind), p.Side, p.Position)));
+                built = Interlocked.CompareExchange(ref preview, built, null) ?? built;
+            }
+            return new PreviewSession(config.Preset.Bounds, built);
+        }
     }
     public sealed class LegalMoveResult
     {
@@ -125,7 +138,15 @@ namespace NDShogi.Showcase.Core.Match
         public IReadOnlyList<Move> Moves { get; }
         public int EvaluatedCandidates { get; }
         public string Reason { get; }
-        internal LegalMoveResult(MatchQueryStatus status, IEnumerable<Move> moves, int evaluated, string reason = "") { Status = status; Moves = Array.AsReadOnly(moves.OrderBy(m => m.Key, StringComparer.Ordinal).ToArray()); EvaluatedCandidates = evaluated; Reason = reason; }
+        /// <summary><see cref="Move.Key"/> of each of <see cref="Moves"/>, in the same order (the CPU orders by them too).</summary>
+        internal IReadOnlyList<string> Keys { get; }
+        // Ordered by key. Keys are unique (one piece, one origin, distinct targets), so the unstable keyed sort gives the stable order.
+        internal LegalMoveResult(MatchQueryStatus status, List<Move> moves, List<string>? keys, int evaluated, string reason)
+        {
+            var m = moves.ToArray(); var k = keys != null && keys.Count == m.Length ? keys.ToArray() : m.Select(x => x.Key).ToArray();
+            Array.Sort(k, m, StringComparer.Ordinal);
+            Status = status; Moves = Array.AsReadOnly(m); Keys = Array.AsReadOnly(k); EvaluatedCandidates = evaluated; Reason = reason;
+        }
     }
     public static class MatchRules
     {
@@ -169,22 +190,25 @@ namespace NDShogi.Showcase.Core.Match
         }
         public static LegalMoveResult QueryLegal(MatchConfig config, MatchState state, CancellationToken cancellation = default, int budget = int.MaxValue)
         {
-            var moves = new List<Move>(); int evaluated = 0;
+            var moves = new List<Move>(); var keys = new List<string>(); int evaluated = 0;
             if (budget < 0) throw new ArgumentOutOfRangeException(nameof(budget));
-            if (state.Outcome != MatchOutcome.Ongoing) return new LegalMoveResult(MatchQueryStatus.Invalid, moves, 0, "対局は終了しています。");
+            if (state.Outcome != MatchOutcome.Ongoing) return new LegalMoveResult(MatchQueryStatus.Invalid, moves, keys, 0, "対局は終了しています。");
             try
             {
+                // One preview (one snapshot, hash and occupancy) serves every piece's query.
                 var preview = state.ToPreview(config);
                 foreach (var p in state.Pieces.Where(x => x.Side == state.Turn))
                 {
-                    if (cancellation.IsCancellationRequested) return new LegalMoveResult(MatchQueryStatus.Cancelled, moves, evaluated);
+                    if (cancellation.IsCancellationRequested) return new LegalMoveResult(MatchQueryStatus.Cancelled, moves, keys, evaluated, "");
                     var q = PreviewQuery.Execute(config.Preset, preview, p.Id, cancellation, Math.Max(0, budget - evaluated)); evaluated += q.EvaluatedCandidates;
-                    moves.AddRange(q.P.Select(to => new Move(p.Id, p.Position, to)));
-                    if (q.Status != QueryStatus.Complete) return new LegalMoveResult(ToMatchStatus(q.Status), moves, evaluated, q.Reason);
+                    // Move.Key is "id:from>to"; the "id:from>" part is shared by all of this piece's moves.
+                    string prefix = p.Id + ":" + p.Position + ">";
+                    foreach (var to in q.P) { moves.Add(new Move(p.Id, p.Position, to)); keys.Add(prefix + to); }
+                    if (q.Status != QueryStatus.Complete) return new LegalMoveResult(ToMatchStatus(q.Status), moves, keys, evaluated, q.Reason);
                 }
-                return new LegalMoveResult(MatchQueryStatus.Complete, moves, evaluated, "王捕獲デモの着手可能手。自玉安全を制約する完全Lではありません。");
+                return new LegalMoveResult(MatchQueryStatus.Complete, moves, keys, evaluated, "王捕獲デモの着手可能手。自玉安全を制約する完全Lではありません。");
             }
-            catch (Exception e) { return new LegalMoveResult(MatchQueryStatus.Faulted, moves, evaluated, e.Message); }
+            catch (Exception e) { return new LegalMoveResult(MatchQueryStatus.Faulted, moves, null, evaluated, e.Message); }
         }
     }
 }
