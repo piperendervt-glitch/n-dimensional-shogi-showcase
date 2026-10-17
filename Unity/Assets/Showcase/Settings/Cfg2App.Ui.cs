@@ -26,7 +26,7 @@ namespace Showcase.Unity.Settings
         }
         Button Button(Transform parent,string id,string title,float x,float y,float w,float h,Action action,bool accent=false)
         {
-            var b=Cfg2Ui.Button(parent,title,x,y,w,h,()=>{if(ownership.Owner!=InputOwner.None){Record("UiRejectedDuringGesture",id);return;}Record("UI",id);try{action();}catch(Exception e){Notice(e.Message);Debug.LogException(e);}},accent);
+            var b=Cfg2Ui.Button(parent,title,x,y,w,h,()=>{if(ownership.Owner!=InputOwner.None){Record("UiRejectedDuringGesture",id);return;}Record("UI",id);PlayMenuConfirm();try{action();}catch(Exception e){Notice(e.Message);Debug.LogException(e);}},accent);
             b.GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
             b.GetComponent<Image>().color=accent?CfgUi.Blue:Dark;actions[id]=b;return b;
         }
@@ -44,7 +44,25 @@ namespace Showcase.Unity.Settings
                 int mode=i;var b=Button(menu,"menu-"+i,labels[i],86,290+i*110,550,98,()=>{if(mode<3)StartMatch((MatchMode)mode);else if(mode==3)OpenSettings();else Quit();},i==0);
                 var t=b.GetComponentInChildren<Text>();t.fontSize=27;t.alignment=TextAnchor.MiddleLeft;t.rectTransform.anchoredPosition=new Vector2(130,-3);t.rectTransform.sizeDelta=new Vector2(405,92);
                 CfgUi.Label(b.transform,symbols[i],16,27,105,42,18,Gold).alignment=TextAnchor.MiddleCenter;
+                // Pointing at an entry moves the same cursor the arrow keys move.
+                var hover=b.gameObject.AddComponent<EventTrigger>();var enter=new EventTrigger.Entry{eventID=EventTriggerType.PointerEnter};
+                enter.callback.AddListener(_=>SetMenuIndex(mode,true));hover.triggers.Add(enter);
             }
+        }
+        // Main menu cursor: ↑↓ (or W/S) move it, Enter/Space presses the entry. The highlighted entry is the one Enter starts.
+        int menuIndex;const int MenuEntries=5;
+        void SetMenuIndex(int index,bool sound)
+        {
+            index=(index%MenuEntries+MenuEntries)%MenuEntries;bool moved=index!=menuIndex;menuIndex=index;
+            for(int i=0;i<MenuEntries;i++)actions["menu-"+i].GetComponent<Image>().color=i==menuIndex?CfgUi.Blue:Dark;
+            if(moved&&sound)PlayMenuSelect();
+        }
+        void UpdateMenuKeys(bool typing)
+        {
+            if(typing||opened||session!=null||!menu.gameObject.activeInHierarchy||ownership.Owner!=InputOwner.None)return;
+            if(Input.GetKeyDown(KeyCode.DownArrow)||Input.GetKeyDown(KeyCode.S))SetMenuIndex(menuIndex+1,true);
+            else if(Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W))SetMenuIndex(menuIndex-1,true);
+            else if(Input.GetKeyDown(KeyCode.Return)||Input.GetKeyDown(KeyCode.KeypadEnter)||Input.GetKeyDown(KeyCode.Space))actions["menu-"+menuIndex].onClick.Invoke();
         }
         void CreateSettings()
         {
@@ -197,7 +215,8 @@ namespace Showcase.Unity.Settings
                 CfgUi.Label(c,"演出中と待ち時間の間は、CPUの\n持ち時間を消費しません。",8,718,330,52,16,Muted);
                 CfgUi.Label(c,"強さの段階設定はありません。",8,782,330,40,17,Muted);
             }
-            else BuildDisplay(c);
+            // The help text ends well inside its label, so the sound section fits above the fold.
+            else{BuildDisplay(c);BuildSound(c,560);}
             detailScroll.verticalNormalizedPosition=detailPositions.TryGetValue(detailContext,out var value)?value:1;
         }
         void Field(RectTransform c,string id,string label,string value,float y,Action<string> edited)
@@ -249,6 +268,8 @@ namespace Showcase.Unity.Settings
         {
             CancelActiveInput();
             opened=false;settings.gameObject.SetActive(false);matchHud.gameObject.SetActive(false);menu.gameObject.SetActive(true);
+            // A button selected on another screen must not also receive the Enter that the menu cursor handles.
+            EventSystem.current?.SetSelectedGameObject(null);
             backgroundCamera.enabled=false;
             rig.Camera.targetTexture=null;rig.Camera.transform.position=new Vector3(.58f,1.38f,-.8f);rig.Camera.transform.LookAt(new Vector3(-.14f,1.02f,0));cameraRevision++;
             geometryDirty=true;result=null;attackCells=Array.Empty<Q4>();visuals.RefreshCaptured(Array.Empty<Cfg2CapturedPiece>());Record("Menu");

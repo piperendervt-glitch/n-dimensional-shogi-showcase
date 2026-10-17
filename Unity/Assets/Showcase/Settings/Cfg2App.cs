@@ -79,7 +79,7 @@ namespace Showcase.Unity.Settings
                 GameObject.Find("CFG1 exact cell sections").layer=30;GameObject.Find("CFG2 exact cell faces").layer=30;
                 previewRenderer.SetDisplayState(slice.DisplayState);
                 draft=SettingsDraft.CreateMatchDemo();options=new MatchOptionsRaw();preview=PreviewSession.CreateExperiment();
-                LoadStartup();trialSlice=slice;ValidateSettings();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
+                LoadStartup();trialSlice=slice;ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
                 trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;settingsDirty=(!File.Exists(validPath)||migratedView)&&startupLoadError=="";
                 Application.wantsToQuit+=PrepareShutdown;
                 Record("Started","CFG2; font="+fontName+"; "+Screen.width+"x"+Screen.height+"; reportedDpi="+Screen.dpi+"; data="+runtimeRoot);
@@ -188,6 +188,7 @@ namespace Showcase.Unity.Settings
             // which move C every frame without marking the slice as animating.
             if(stableDirty&&!slice.IsAnimating&&!PresentingMove&&ownership.Owner==InputOwner.None&&Time.unscaledTime>=saveDue+.5f)SaveStableView();
             bool typing=EventSystem.current?.currentSelectedGameObject?.GetComponent<InputField>()!=null;
+            UpdateMenuKeys(typing);
             if(!typing&&ownership.Owner==InputOwner.None&&Input.GetKeyDown(KeyCode.Home)&&IsPivotHomeSurface(Input.mousePosition))
             {
                 bool initial=Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift);

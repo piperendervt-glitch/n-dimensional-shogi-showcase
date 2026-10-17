@@ -96,7 +96,9 @@ namespace Showcase.Unity.Settings
             bool accepted=session.TryApplyCpu(cpu,out var reason);Record("CpuResult",cpu.Status+";accepted="+accepted+";"+reason);
             if(!accepted)return;
             selectedPiece="";QueueQuery();SaveMatchRecord();
-            if(!cpu.Move.HasValue||!CpuShowEnabled)return;
+            if(!cpu.Move.HasValue)return;
+            // Without the glide the piece is already on its new cell; with it, the knock waits for the landing.
+            if(!CpuShowEnabled){PlayPieceSound();return;}
             var move=cpu.Move.Value;var from=CfgPreviewRenderer.V(move.From);var to=CfgPreviewRenderer.V(move.To);
             glide=new PieceGlide{Id=move.PieceId,From=from,To=to,Start=Time.unscaledTime,Seconds=Mathf.Clamp((float)(to-from).Length*GlideSecondsPerCell,GlideMinSeconds,GlideMaxSeconds),
                 Victim=victim==null?null:new CfgVisualPiece{Id=victim.Id,DefinitionId=victim.DefinitionId,Position=victim.Position,Side=victim.Side}};
@@ -177,7 +179,7 @@ namespace Showcase.Unity.Settings
             {
                 CancelCpu();if(lastRecordedMatch!=session.Snapshot.MatchId){lastRecordedMatch=session.Snapshot.MatchId;SaveMatchRecord();Record("MatchEnded",session.State.Outcome+";winner="+session.State.Winner+";"+session.State.Hash);}
             }
-            if(glide!=null){geometryDirty=true;if(GlideProgress>=1)glide=null;}
+            if(glide!=null){geometryDirty=true;if(GlideProgress>=1){glide=null;PlayPieceSound();}}
             // The hand-over waits until the moving piece has arrived.
             if(session.PresentationPaused&&glide==null)
             {
