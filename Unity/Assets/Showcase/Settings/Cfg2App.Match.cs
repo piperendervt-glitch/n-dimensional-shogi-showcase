@@ -25,7 +25,10 @@ namespace Showcase.Unity.Settings
         const double CpuTurnSeconds=1.6;const float CpuSlideSeconds=.8f,CpuHoldSeconds=.5f;
         CpuResult cpuShowResult;int cpuShowStage;double cpuShowLift;VecN cpuShowFromCell,cpuShowToCell;Vec3 cpuShowAnchor;float cpuShowStart;VecN cpuShowFrom,cpuShowTo;ReferenceSection cpuShowView;
         // The space and section the hyperplane panels were built for.
-        int minisDimensions,minisActive;float minisRight;ReferenceSection minisSection;RectTransform matchGizmo,magnifiedSource;Cfg2MiniView magnifier;
+        int minisDimensions,minisActive;float minisRight;ReferenceSection minisSection;RectTransform matchGizmo,magnifiedSource;Cfg2MiniView magnifier;Text guideText;
+        // The right column of hyperplane panels, shared by the panels and the magnifier left of them.
+        const float MinisTop=254,MinisBottom=866,MinisLeftLimit=1290,MinisColumnWidth=300,MagnifierSize=300;
+        static float MinisLeft(float right)=>Mathf.Min(MinisLeftLimit,right-MinisColumnWidth);
         readonly List<RectTransform> minisLabels=new List<RectTransform>();readonly List<Cfg2MiniView> smallMinis=new List<Cfg2MiniView>();
         // In CPU games every hand-over returns the 4D view to the initial state (C=P, no rotation).
         int resetStage;float resetStart,resetSeconds;VecN resetFrom;Vec3 resetAnchor;
@@ -47,29 +50,43 @@ namespace Showcase.Unity.Settings
             var far=Cfg2Ui.Panel(matchHud,"Far clock",28,128,337,105,Dark);clockFar=CfgUi.Label(far,"",17,14,303,80,25);
             var near=Cfg2Ui.Panel(matchHud,"Near clock",28,872,352,117,Dark);clockNear=CfgUi.Label(near,"",17,15,318,86,27,Gold);
             Button(matchHud,"match-menu","☰ メニュー",1360,16,150,40,ReturnFromMatch);
+            // The hyperplane panels are built by StartMatch for the match's own space.
             CreateGizmo(matchHud,1310,70,"match-",200,175);matchGizmo=(RectTransform)gizmos[gizmos.Count-1].transform;
-            RebuildMinis();
             matchStatus=CfgUi.Label(matchHud,"",30,248,330,100,17,Muted);
+            // Notices during play sit under the status in the left column, clear of the board and the right column.
+            hudNotice=CfgUi.Label(matchHud,"",30,352,330,200,15,Gold);
             var guide=Cfg2Ui.Panel(matchHud,"Mouse guide",394,957,796,49,new Color(.02f,.03f,.045f,.78f));
-            var guideText=CfgUi.Label(guide,"ドラッグ：視点回転　ホイール：ズーム　Ctrl＋ドラッグ：高次元回転（4〜9・0・−キーで回す軸）　R：表示リセット",10,7,776,35,15,new Color(.91f,.91f,.88f));guideText.alignment=TextAnchor.MiddleCenter;
+            guideText=CfgUi.Label(guide,GuideText(4),10,7,776,35,15,new Color(.91f,.91f,.88f));guideText.alignment=TextAnchor.MiddleCenter;
             Button(matchHud,"pause","一時停止",1202,877,142,43,TogglePause);
             Button(matchHud,"step","1手進める",1352,877,158,43,StepCpu);
             Button(matchHud,"retry","処理を再試行",1202,928,308,43,()=>{CancelCpu();session?.RetryProcessing();});
             resultPanel=Cfg2Ui.Panel(matchHud,"Game result",515,772,565,212,Dark,true);resultText=CfgUi.Label(resultPanel,"",20,16,525,82,26,Gold);
             Button(resultPanel,"next-match","次の対局",20,127,251,56,()=>StartMatch(lastMode));Button(resultPanel,"result-menu","メニュー",285,127,260,56,ReturnFromMatch);resultPanel.gameObject.SetActive(false);
         }
+        static string GuideText(int dimensions)=>"ドラッグ：視点回転　ホイール：ズーム　"+(dimensions>3?"Ctrl＋ドラッグ：高次元回転（4〜9・0・−キーで回す軸）　":"")+"R：表示リセット";
+        // A match that cannot be created leaves everything as it was; one whose screen cannot be set up is ended like a menu return,
+        // so a failure never leaves a half-started match behind.
         void StartMatch(MatchMode mode,IReadOnlyList<Piece> fixture=null,string fixtureId=null)
         {
             CancelActiveInput();
-            ValidateSettings();if(config==null){Notice("入力を確認してください："+string.Join(" / ",validation.Errors));OpenSettings();return;}
-            if(settingsDirty&&!AutoSave())return;if(!SaveStableView())return;
+            ValidateSettings();if(config==null){Notice("入力を確認してください："+string.Join(" / ",validation.Errors));if(session!=null)ReturnFromMatch();OpenSettings();return;}
+            if(settingsDirty&&!AutoSave())return;
+            // Only unsaved settings hold the next match back; a match display that cannot be saved has been reported and is left behind.
+            if(!SaveStableView()&&(session==null||opened))return;
+            MatchSession next;
+            try{next=fixture==null?MatchSession.Create(config,mode,new StopwatchClock()):MatchSession.CreateFixture(config,mode,new StopwatchClock(),fixture,fixtureId);}
+            catch(Exception e){Debug.LogException(e);Notice("対局を開始できません："+e.Message);return;}
             if(session==null){trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;trialSelectedPiece=selectedPiece;trialSelectedCell=selectedCell;trialPlaneReference=planeReferenceCell;}
             if(session!=null){session.Interrupt("次局開始");SaveMatchRecord();}CancelCpu();ownership.Cancel();
-            session=fixture==null?MatchSession.Create(config,mode,new StopwatchClock()):MatchSession.CreateFixture(config,mode,new StopwatchClock(),fixture,fixtureId);
-            lastMode=mode;opened=false;settings.gameObject.SetActive(false);menu.gameObject.SetActive(false);matchHud.gameObject.SetActive(true);resultPanel.gameObject.SetActive(false);
-            backgroundCamera.enabled=false;
-            rig.Camera.targetTexture=null;slice=NewPivotSlice();previewRenderer.SetDisplayState(slice.DisplayState);RebuildMinis();hudDimensions.text=session.Config.Dimensions+"次元";UpdateWindowTitle();selectedPiece="";selectedCell=default;shownPly=-1;presentationStart=-1;cameraSide=Side.A;manualCamera=false;
-            yaw=27;pitch=31;distance=1.04f;pan=Vector3.zero;SetMatchCamera(Side.A,false);QueueQuery();RefreshMatch();SaveMatchRecord();
+            session=next;lastMode=mode;rotationAxis=LogicalAxis.W;
+            try
+            {
+                opened=false;settings.gameObject.SetActive(false);menu.gameObject.SetActive(false);matchHud.gameObject.SetActive(true);resultPanel.gameObject.SetActive(false);KeepScreenNotice();
+                backgroundCamera.enabled=false;
+                rig.Camera.targetTexture=null;slice=NewPivotSlice();previewRenderer.SetDisplayState(slice.DisplayState);RebuildMinis();hudDimensions.text=session.Config.Dimensions+"次元";guideText.text=GuideText(session.Config.Dimensions);UpdateWindowTitle();selectedPiece="";selectedCell=default;shownPly=-1;presentationStart=-1;cameraSide=Side.A;manualCamera=false;
+                yaw=27;pitch=31;distance=1.04f;pan=Vector3.zero;SetMatchCamera(Side.A,false);QueueQuery();RefreshMatch();SaveMatchRecord();
+            }
+            catch(Exception e){Debug.LogException(e);Record("MatchStartAbandoned",e.Message);ReturnFromMatch();Notice("対局を開始できません："+e.Message);return;}
             // The launcher's saved view belongs to the first match of this process only.
             string restoredView=playViewApplied?"":Arg("--pivot-play-view","");if(restoredView!=""){playViewApplied=true;RestoreSavedMatchView(restoredView);}
             Record("MatchStarted",mode+";"+session.Snapshot.MatchId+";fixture="+session.Snapshot.FixtureId+";rules="+session.Config.RuleHash+";initial="+session.Snapshot.InitialHash);
@@ -78,40 +95,59 @@ namespace Showcase.Unity.Settings
         // In 4D the four panels are the four reference views, as always. In higher N the column reaches the right edge of the
         // screen: the section the display is heading to on top, then the three sections that swap in the Ctrl-rotation axis
         // (the only ones that stay planes while Ctrl+drag turns the view), then every other swap section small, one row of
-        // three per hidden axis. Hovering a small panel shows it magnified to the left of the column.
-        void RebuildMinis()
+        // three per hidden axis. Hovering a small panel shows it magnified to the left of the column. A 3D board hides no axis:
+        // its column is the current section alone. When only the sections change (same N, same places) the panels are kept
+        // and shown the new sections; rebuild forces new panels.
+        void RebuildMinis(bool rebuild=false)
         {
-            foreach(var mini in minis){helperPanels.Remove((RectTransform)mini.transform);Destroy(mini.gameObject);}minis.Clear();
-            foreach(var label in minisLabels){helperPanels.Remove(label);Destroy(label.gameObject);}minisLabels.Clear();smallMinis.Clear();HideMagnifier();
-            int n=slice.Frame.Dimensions;var current=slice.TargetSection;minisDimensions=n;minisSection=current;
-            const float top=254,bottom=866,gap=6;
-            if(n==4)
+            int n=slice.Frame.Dimensions;var current=slice.TargetSection;float right=MinisRight();
+            var panels=new List<(float x,float y,float w,float h,ReferenceSection view,Color? border,bool small)>();var labels=new List<(float x,float y,float w,string text,Color color)>();
+            var gizmo=new Vector2(1310,-70);
+            if(n==4)for(int i=0;i<4;i++)panels.Add((1310,MinisTop+i*133,200,125,ReferenceSection.Of((ReferenceView)i),null,false));
+            else
             {
-                if(matchGizmo!=null)matchGizmo.anchoredPosition=new Vector2(1310,-70);
-                for(int i=0;i<4;i++)CreateMini(matchHud,1310,top+i*133,200,125,ReferenceSection.Of((ReferenceView)i),null);return;
-            }
-            float right=MinisRight();float left=Mathf.Min(1290,right-300),width=right-left;minisRight=right;
-            if(matchGizmo!=null)matchGizmo.anchoredPosition=new Vector2(left+(width-matchGizmo.sizeDelta.x)*.5f,-70);
-            var hidden=current.Hidden;int active=Array.IndexOf(hidden,RotationCoreAxis);if(active<0)active=0;minisActive=RotationCoreAxis;
-            var neighbours=current.Neighbours;float y=top;
-            CreateMini(matchHud,left,y,width,150,current,null);y+=150+gap;
-            MinisLabel("Ctrl回転軸 "+SliceAxes.AxisName(SliceAxes.AxisOfCore(hidden[active]))+" で行ける断面",left,y,width,Cfg2Projection.AxisColor(hidden[active]));y+=20;
-            float activeWidth=(width-2*gap)/3,activeHeight=Mathf.Min(140,activeWidth);
-            for(int j=0;j<3;j++)CreateMini(matchHud,left+j*(activeWidth+gap),y,activeWidth,activeHeight,neighbours[active*3+j],Cfg2Projection.AxisColor(hidden[active]));
-            y+=activeHeight+gap;
-            int groups=hidden.Length-1;if(groups==0)return;
-            MinisLabel("ほかの軸（4〜9・0・−キーで上に表示）",left,y,width,new Color(.75f,.79f,.85f));y+=19;
-            int perRow=groups<=4?1:2,rows=(groups+perRow-1)/perRow,columns=3*perRow;const float smallGap=5;
-            float cellWidth=(width-(columns-1)*smallGap)/columns,cellHeight=Mathf.Min(activeHeight,(bottom-y-(rows-1)*smallGap)/rows);
-            for(int g=0,slot=0;g<hidden.Length;g++)
-            {
-                if(g==active)continue;int row=slot/perRow,firstColumn=slot%perRow*3;slot++;
-                for(int j=0;j<3;j++)
+                const float gap=6;float left=MinisLeft(right),width=right-left,y=MinisTop;
+                if(matchGizmo!=null)gizmo=new Vector2(left+(width-matchGizmo.sizeDelta.x)*.5f,-70);
+                panels.Add((left,y,width,150,current,null,false));y+=150+gap;
+                var hidden=current.Hidden;int active=Array.IndexOf(hidden,RotationCoreAxis);if(active<0)active=0;
+                if(hidden.Length>0)
                 {
-                    CreateMini(matchHud,left+(firstColumn+j)*(cellWidth+smallGap),y+row*(cellHeight+smallGap),cellWidth,cellHeight,neighbours[g*3+j],Cfg2Projection.AxisColor(hidden[g]));
-                    var small=minis[minis.Count-1];small.DimWhenFlat=true;smallMinis.Add(small);
+                    var neighbours=current.Neighbours;var activeColor=Cfg2Projection.AxisColor(hidden[active]);
+                    labels.Add((left,y,width,"Ctrl回転軸 "+SliceAxes.AxisName(SliceAxes.AxisOfCore(hidden[active]))+" で行ける断面",activeColor));y+=20;
+                    float activeWidth=(width-2*gap)/3,activeHeight=Mathf.Min(140,activeWidth);
+                    for(int j=0;j<3;j++)panels.Add((left+j*(activeWidth+gap),y,activeWidth,activeHeight,neighbours[active*3+j],activeColor,false));
+                    y+=activeHeight+gap;
+                    int groups=hidden.Length-1;
+                    if(groups>0)
+                    {
+                        labels.Add((left,y,width,"ほかの軸（4〜9・0・−キーで上に表示）",new Color(.75f,.79f,.85f)));y+=19;
+                        int perRow=groups<=4?1:2,rows=(groups+perRow-1)/perRow,columns=3*perRow;const float smallGap=5;
+                        float cellWidth=(width-(columns-1)*smallGap)/columns,cellHeight=Mathf.Min(activeHeight,(MinisBottom-y-(rows-1)*smallGap)/rows);
+                        for(int g=0,slot=0;g<hidden.Length;g++)
+                        {
+                            if(g==active)continue;int row=slot/perRow,firstColumn=slot%perRow*3;slot++;
+                            for(int j=0;j<3;j++)panels.Add((left+(firstColumn+j)*(cellWidth+smallGap),y+row*(cellHeight+smallGap),cellWidth,cellHeight,neighbours[g*3+j],Cfg2Projection.AxisColor(hidden[g]),true));
+                        }
+                    }
                 }
             }
+            minisDimensions=n;minisSection=current;minisActive=RotationCoreAxis;minisRight=right;HideMagnifier();
+            if(matchGizmo!=null)matchGizmo.anchoredPosition=gizmo;
+            bool Same(RectTransform r,float x,float y,float w,float h)=>r!=null&&r.anchoredPosition==new Vector2(x,-y)&&r.sizeDelta==new Vector2(w,h);
+            if(!rebuild&&minis.Count==panels.Count&&minisLabels.Count==labels.Count&&minis.Select((m,i)=>Same((RectTransform)m.transform,panels[i].x,panels[i].y,panels[i].w,panels[i].h)).All(x=>x)&&minisLabels.Select((l,i)=>Same(l,labels[i].x,labels[i].y,labels[i].w,19)).All(x=>x))
+            {
+                for(int i=0;i<panels.Count;i++){minis[i].Retarget(panels[i].view);PanelFrame(minis[i].transform,panels[i].border);}
+                for(int i=0;i<labels.Count;i++){var text=minisLabels[i].GetComponentInChildren<Text>();text.text=labels[i].text;text.color=labels[i].color;}
+                Record("MinisRetargeted",current.Name);return;
+            }
+            foreach(var mini in minis){CfgUi.ReleaseSelection(mini.transform);helperPanels.Remove((RectTransform)mini.transform);Destroy(mini.gameObject);}minis.Clear();
+            foreach(var label in minisLabels){helperPanels.Remove(label);Destroy(label.gameObject);}minisLabels.Clear();smallMinis.Clear();
+            foreach(var p in panels)
+            {
+                CreateMini(matchHud,p.x,p.y,p.w,p.h,p.view,p.border);
+                if(p.small){var small=minis[minis.Count-1];small.DimWhenFlat=true;smallMinis.Add(small);}
+            }
+            foreach(var l in labels)MinisLabel(l.text,l.x,l.y,l.w,l.color);
         }
         // The right edge of the screen in stage units: the stage is centred, so a wide window leaves spare room beside it.
         float MinisRight()
@@ -127,7 +163,7 @@ namespace Showcase.Unity.Settings
         }
         void EnsureMinis()
         {
-            if(matchHud==null)return;int n=slice.Frame.Dimensions;
+            if(matchHud==null||!matchHud.gameObject.activeInHierarchy)return;int n=slice.Frame.Dimensions;
             if(minis.Count>0&&minisDimensions==n&&(n==4||minisSection==slice.TargetSection&&minisActive==RotationCoreAxis&&Mathf.Abs(minisRight-MinisRight())<.5f))return;
             RebuildMinis();
         }
@@ -137,7 +173,7 @@ namespace Showcase.Unity.Settings
             if(session==null||!showHelpers||smallMinis.Count==0||ownership.Owner!=InputOwner.None||!matchHud.gameObject.activeInHierarchy){HideMagnifier();return;}
             var hovered=smallMinis.FirstOrDefault(m=>m.IsPointerOver(Input.mousePosition));
             if(hovered==null){HideMagnifier();return;}
-            const float size=300;var source=(RectTransform)hovered.transform;
+            const float size=MagnifierSize;var source=(RectTransform)hovered.transform;
             if(magnifier==null)
             {
                 var r=Cfg2Ui.Panel(matchHud,"Hyperplane magnifier",0,0,size,size,new Color(.03f,.05f,.10f,.82f));
@@ -145,23 +181,27 @@ namespace Showcase.Unity.Settings
                 magnifier=r.gameObject.AddComponent<Cfg2MiniView>();
             }
             var rect=(RectTransform)magnifier.transform;
-            if(!magnifier.gameObject.activeSelf||magnifier.Reference!=hovered.Reference||magnifiedSource!=source)
+            // Built when the hovered panel changes and redrawn only when the view or the camera moves, not every frame.
+            bool changed=!magnifier.gameObject.activeSelf||magnifier.Reference!=hovered.Reference||magnifiedSource!=source;
+            if(changed)
             {
                 magnifiedSource=source;magnifier.gameObject.SetActive(true);rect.SetAsLastSibling();
-                float y=Mathf.Clamp(-source.anchoredPosition.y+source.sizeDelta.y*.5f-size*.5f,254,866-size);
-                rect.anchoredPosition=new Vector2(Mathf.Min(1290,minisRight-300)-14-size,-y);
-                var glass=rect.GetComponentInChildren<Cfg2PanelBorder>();var added=hovered.Reference.Shown.First(axis=>!slice.TargetSection.Shows(axis));
-                var color=Cfg2Projection.AxisColor(added);glass.color=new Color(color.r,color.g,color.b,.85f);glass.Glow=true;
+                float y=Mathf.Clamp(-source.anchoredPosition.y+source.sizeDelta.y*.5f-size*.5f,MinisTop,MinisBottom-size);
+                rect.anchoredPosition=new Vector2(MinisLeft(minisRight)-14-size,-y);
                 magnifier.Initialize(()=>slice,ownership,hovered.Reference,()=>{},v=>{},()=>canvas.scaleFactor);
+                var glass=Cfg2Ui.Frame(rect);var added=hovered.Reference.Shown.First(axis=>!slice.TargetSection.Shows(axis));
+                if(glass!=null){var color=Cfg2Projection.AxisColor(added);glass.color=new Color(color.r,color.g,color.b,.85f);glass.Glow=true;glass.SetVerticesDirty();}
             }
-            magnifier.Refresh(slice.Frame,rig.Camera.transform.rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding);
+            if(changed||magnifier.ViewRevision!=slice.ViewRevision||magnifier.CameraRevision!=cameraRevision)
+                magnifier.Refresh(slice.Frame,rig.Camera.transform.rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding);
         }
         void HideMagnifier(){magnifiedSource=null;if(magnifier!=null&&magnifier.gameObject.activeSelf)magnifier.gameObject.SetActive(false);}
         void ReturnFromMatch()
         {
             CancelActiveInput();
             if(session==null){ShowMenu();return;}CancelCpu();session.Interrupt();SaveMatchRecord();Record("MatchLeft",session.State.Outcome+";"+session.State.Hash);session=null;
-            selectedPiece=preview.Find(trialSelectedPiece)!=null?trialSelectedPiece:preview.Pieces.FirstOrDefault()?.Id??"";selectedCell=trialSelectedCell;planeReferenceCell=trialPlaneReference;slice=trialSlice;yaw=trialYaw;pitch=trialPitch;distance=trialDistance;pan=trialPan;RebuildMinis();ShowMenu();
+            // The match panels wait, hidden, for the next StartMatch to show them that match's space.
+            selectedPiece=preview.Find(trialSelectedPiece)!=null?trialSelectedPiece:preview.Pieces.FirstOrDefault()?.Id??"";selectedCell=trialSelectedCell;planeReferenceCell=trialPlaneReference;slice=trialSlice;yaw=trialYaw;pitch=trialPitch;distance=trialDistance;pan=trialPan;rotationAxis=LogicalAxis.W;ShowMenu();
         }
         void SaveMatchRecord()
         {if(session!=null)try{MatchRecordStore.Save(Path.Combine(recordRoot,session.Snapshot.MatchId+".xml"),session);}catch(Exception e){Notice("棋譜の保存に失敗："+e.Message);}}
@@ -171,8 +211,9 @@ namespace Showcase.Unity.Settings
             presentationStart=-1;RefreshMatch();SaveMatchRecord();Record("CvCPause",session.Phase.ToString());
         }
         void StepCpu(){if(session==null)return;CancelCpu();session.StepCvc();RefreshMatch();Record("CvCStep",session.Generation.ToString());}
-        void CancelCpu()
-        {cpuCancel?.Cancel();cpuCancel?.Dispose();cpuCancel=null;pendingCpu=null;cpuShowResult=null;cpuShowStage=0;resetStage=0;glide=null;if(slice!=null)slice.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;if(session!=null)session.CpuClockHeld=false;}
+        // keepGlide lets the move that ended the game finish its glide and its sound.
+        void CancelCpu(bool keepGlide=false)
+        {cpuCancel?.Cancel();cpuCancel?.Dispose();cpuCancel=null;pendingCpu=null;cpuShowResult=null;cpuShowStage=0;resetStage=0;if(!keepGlide)glide=null;if(slice!=null)slice.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;if(session!=null)session.CpuClockHeld=false;}
         void ApplyCpu(CpuResult cpu)
         {
             TrialPiece victim=cpu.Move.HasValue?session.ToPreview().At(cpu.Move.Value.To):null;
@@ -212,7 +253,7 @@ namespace Showcase.Unity.Settings
             if(ownership.Owner!=InputOwner.None){FinishCpuShow();return;}
             if(cpuShowStage==1)
             {
-                if(slice.IsAnimating||slice.QueuedView.HasValue)return;
+                if(slice.IsAnimating||slice.QueuedSection.HasValue)return;
                 // C slides along the hidden axes of the shown section until the moving piece's cell lies in it.
                 slice.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;cpuShowFrom=slice.Center;cpuShowTo=slice.Center;
                 foreach(int hidden in cpuShowView.Hidden)cpuShowTo=SliceAxes.WithCoordinate(cpuShowTo,hidden,SliceAxes.Coordinate(cpuShowFromCell,hidden));
@@ -250,7 +291,7 @@ namespace Showcase.Unity.Settings
             var initial=NewPivotSlice().DisplayState;
             float t=Mathf.Clamp01((Time.unscaledTime-resetStart)/resetSeconds),s=t*t*(3-2*t);
             slice.Place(resetFrom+(initial.Frame.Center-resetFrom)*s,resetAnchor+(initial.Anchor-resetAnchor)*s);geometryDirty=true;
-            if(t<1||slice.IsAnimating||slice.QueuedView.HasValue)return false;
+            if(t<1||slice.IsAnimating||slice.QueuedSection.HasValue)return false;
             slice.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;slice.Restore(initial);resetStage=0;stableDirty=true;Record("TurnReset","done");return true;
         }
         void CancelTurnReset(){if(resetStage==0)return;resetStage=0;slice.SecondsPerLeg=SliceAnimator.SecondsPerQuarterTurn;}
@@ -262,7 +303,7 @@ namespace Showcase.Unity.Settings
             session.Tick();
             if(session.IsFinished)
             {
-                CancelCpu();if(lastRecordedMatch!=session.Snapshot.MatchId){lastRecordedMatch=session.Snapshot.MatchId;SaveMatchRecord();Record("MatchEnded",session.State.Outcome+";winner="+session.State.Winner+";"+session.State.Hash);}
+                CancelCpu(keepGlide:true);if(lastRecordedMatch!=session.Snapshot.MatchId){lastRecordedMatch=session.Snapshot.MatchId;SaveMatchRecord();Record("MatchEnded",session.State.Outcome+";winner="+session.State.Winner+";"+session.State.Hash);}
             }
             if(glide!=null){geometryDirty=true;if(GlideProgress>=1){glide=null;PlayPieceSound();}}
             // The hand-over waits until the moving piece has arrived.

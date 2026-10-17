@@ -13,6 +13,10 @@ namespace Showcase.Unity.Settings
         public static bool SnapHeld=>Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift)||Input.GetKey(KeyCode.LeftControl)||Input.GetKey(KeyCode.RightControl);
         public static readonly Color Blue=new Color(.12f,.30f,.51f,.88f);
         public static readonly Color Dark=new Color(.035f,.055f,.085f,.84f);
+        static readonly Color FrameColor=new Color(.67f,.59f,.42f,.6f),SelectedFrameColor=new Color(.16f,.58f,1,.95f);
+        // The thin warm frame of a panel, or the glowing blue one of the selected entry.
+        internal static void SelectedFrame(Transform panel,bool selected)
+        {var frame=Frame(panel);if(frame==null)return;frame.color=selected?SelectedFrameColor:FrameColor;frame.Width=selected?1.7f:1;frame.Glow=selected;frame.SetVerticesDirty();}
         static Sprite rounded;
         static Sprite Rounded
         {
@@ -25,8 +29,10 @@ namespace Showcase.Unity.Settings
                 texture.Apply();rounded=Sprite.Create(texture,new Rect(0,0,20,20),new Vector2(.5f,.5f),100,0,SpriteMeshType.FullRect,new Vector4(7,7,7,7));return rounded;
             }
         }
-        internal static void ClearOwned(Transform root)
-        {for(int i=root.childCount-1;i>=0;i--){var child=root.GetChild(i).gameObject;child.SetActive(false);UnityEngine.Object.Destroy(child);}}
+        // keepFrame leaves the panel's own frame (a direct Cfg2PanelBorder child) for its owner to recolour.
+        internal static void ClearOwned(Transform root,bool keepFrame=false)
+        {CfgUi.ReleaseSelection(root);for(int i=root.childCount-1;i>=0;i--){var child=root.GetChild(i).gameObject;if(keepFrame&&child.TryGetComponent<Cfg2PanelBorder>(out _))continue;child.SetActive(false);UnityEngine.Object.Destroy(child);}}
+        internal static Cfg2PanelBorder Frame(Transform panel){foreach(Transform child in panel)if(child.TryGetComponent<Cfg2PanelBorder>(out var border))return border;return null;}
         public static RectTransform Panel(Transform parent,string name,float x,float y,float w,float h,Color? color=null,bool blocksPointer=false)
         {
             var tint=color??Dark;if(tint.a>.4f)tint.a=Mathf.Max(tint.a,.95f);
@@ -35,10 +41,10 @@ namespace Showcase.Unity.Settings
             // Unity's Outline duplicates the entire alpha panel, which tints the
             // whole interior gold. Draw only the geometric perimeter instead.
             panel.GetComponent<Outline>().enabled=false;
-            var edge=CfgUi.Rect(panel,"Thin panel border",0,0,w,h);CfgUi.Fill(edge);var border=edge.gameObject.AddComponent<Cfg2PanelBorder>();border.color=new Color(.67f,.59f,.42f,.6f);border.raycastTarget=false;return panel;
+            var edge=CfgUi.Rect(panel,"Thin panel border",0,0,w,h);CfgUi.Fill(edge);var border=edge.gameObject.AddComponent<Cfg2PanelBorder>();border.color=FrameColor;border.raycastTarget=false;return panel;
         }
-        // Horizontal slider in the CFG2 palette; changed receives the raw value while dragging.
-        public static Slider Slider(Transform parent,float x,float y,float w,float min,float max,float value,Action<float> changed)
+        // Horizontal slider in the CFG2 palette; changed receives the raw value while dragging, released (if given) fires once on pointer up.
+        public static Slider Slider(Transform parent,float x,float y,float w,float min,float max,float value,Action<float> changed,Action released=null)
         {
             var root=CfgUi.Rect(parent,"Slider",x,y,w,24);
             var track=CfgUi.Rect(root,"Track",0,9,w,6);track.gameObject.AddComponent<Image>().color=new Color(.10f,.14f,.20f,.95f);
@@ -46,16 +52,19 @@ namespace Showcase.Unity.Settings
             var fill=CfgUi.Rect(fillArea,"Fill",0,0,0,6);fill.gameObject.AddComponent<Image>().color=new Color(.30f,.62f,1,.95f);
             var handleArea=CfgUi.Rect(root,"Handle area",9,0,w-18,24);
             var handle=CfgUi.Rect(handleArea,"Handle",0,0,18,24);handle.pivot=new Vector2(.5f,1);handle.anchoredPosition=Vector2.zero;var knob=handle.gameObject.AddComponent<Image>();knob.sprite=Rounded;knob.type=Image.Type.Sliced;knob.color=Gold;
-            var slider=root.gameObject.AddComponent<Slider>();slider.fillRect=fill;slider.handleRect=handle;slider.targetGraphic=knob;slider.direction=UnityEngine.UI.Slider.Direction.LeftToRight;
-            slider.minValue=min;slider.maxValue=max;slider.value=value;slider.onValueChanged.AddListener(v=>changed(v));return slider;
+            var slider=root.gameObject.AddComponent<Slider>();CfgUi.NoNavigation(slider);slider.fillRect=fill;slider.handleRect=handle;slider.targetGraphic=knob;slider.direction=UnityEngine.UI.Slider.Direction.LeftToRight;
+            slider.minValue=min;slider.maxValue=max;slider.value=value;slider.onValueChanged.AddListener(v=>changed(v));
+            // Pointer up only: an EventTrigger would also take the wheel from the scroll view around the slider.
+            if(released!=null)root.gameObject.AddComponent<Cfg2PointerUp>().Up=released;
+            return slider;
         }
         public static Text Title(Transform parent,string title,float x,float y,float w,float h,int size=28)
             =>CfgUi.Label(parent,title,x,y,w,h,size,Gold);
         public static Button Button(Transform parent,string title,float x,float y,float w,float h,Action clicked,bool selected=false)
         {
             var panel=Panel(parent,title,x,y,w,h,selected?Blue:new Color(.05f,.07f,.1f,.76f),true);
-            var button=panel.gameObject.AddComponent<Button>();button.targetGraphic=panel.GetComponent<Image>();
-            if(selected){var outline=panel.GetComponentInChildren<Cfg2PanelBorder>();outline.color=new Color(.16f,.58f,1,.95f);outline.Width=1.7f;outline.Glow=true;}
+            var button=panel.gameObject.AddComponent<Button>();CfgUi.NoNavigation(button);button.targetGraphic=panel.GetComponent<Image>();
+            if(selected)SelectedFrame(panel,true);
             var colors=button.colors;colors.highlightedColor=new Color(.76f,.88f,1);colors.pressedColor=new Color(.48f,.7f,1);button.colors=colors;
             var label=CfgUi.Label(panel,title,7,3,w-14,h-6,18);label.alignment=TextAnchor.MiddleLeft;
             button.onClick.AddListener(()=>clicked());return button;
@@ -68,6 +77,8 @@ namespace Showcase.Unity.Settings
             graphic.raycastTarget=false;return graphic;
         }
     }
+    internal sealed class Cfg2PointerUp : MonoBehaviour,UnityEngine.EventSystems.IPointerUpHandler
+    {public Action Up;public void OnPointerUp(UnityEngine.EventSystems.PointerEventData e)=>Up?.Invoke();}
     internal sealed class Cfg2PanelBorder : MaskableGraphic
     {
         public float Width=1;public bool Glow;

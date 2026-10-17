@@ -21,27 +21,41 @@ namespace Showcase.Unity.Settings
         public long CameraRevision {get;private set;}
         public bool IsCoincident=>graphic!=null&&graphic.Relation!=null&&graphic.Relation.IsCoincident;
         public string FixedCoordinates {get;private set;}="";
-        public HyperplaneRelation Relation=>graphic?.Relation;
+        public HyperplaneRelation Relation=>graphic!=null?graphic.Relation:null;
         // Small swap panels in higher N fade while their intersection is only a line or a point, so the planes stand out.
         public bool DimWhenFlat {get;set;}
         public bool IsFlat=>graphic!=null&&graphic.Relation!=null&&!graphic.Relation.IsCoincident&&graphic.Relation.TriangleIndices.Count==0;
         CanvasGroup fade;
         public Vector2 AxisScreenDirection(LogicalAxis axis)=>tips.TryGetValue(axis,out var v)?v:Vector2.zero;
+        // The host panel's own frame survives (ClearOwned keepFrame): its owner colours it for the section shown.
         public void Initialize(Func<SliceAnimator> slice,InputOwnership input,ReferenceSection view,Action geometryChanged,Action<ReferenceSection> onRequested,Func<float> scale)
         {
-            CancelDrag();Cfg2Ui.ClearOwned(transform);handles.Clear();tips.Clear();
+            CancelDrag();Cfg2Ui.ClearOwned(transform,keepFrame:true);handles.Clear();tips.Clear();
             currentSlice=slice;ownership=input;reference=view;requested=onRequested;
             // An axis label click selects the section that axis stands for, relative to the section the display is heading to.
             drag=new Cfg2AxisDragHandle(slice,ownership,scale,geometryChanged,axis=>requested(SliceAxes.SectionForAxis(slice().TargetSection,axis)));
             float width=((RectTransform)transform).rect.width,height=((RectTransform)transform).rect.height;bool compact=width<150;
-            var button=Cfg2Ui.Button(transform,view.Name,0,0,width,26,()=>{if(ownership.Owner==InputOwner.None)requested(view);});
+            var button=Cfg2Ui.Button(transform,view.Name,0,0,width,26,()=>{if(ownership.Owner==InputOwner.None)requested(reference);});
             button.GetComponent<Image>().color=new Color(0,0,0,0);button.GetComponentInChildren<Cfg2PanelBorder>().enabled=false;
             title=button.GetComponentInChildren<Text>();title.fontSize=compact?11:14;title.rectTransform.anchoredPosition=new Vector2(compact?6:11,-3);Cfg2Glow.GlowText(title,new Color(.55f,.65f,1));button.targetGraphic=title;
             var r=CfgUi.Rect(transform,"Finite C-centered intersection",0,26,width,height-26);graphic=r.gameObject.AddComponent<Cfg2RelationGraphic>();graphic.raycastTarget=false;graphic.Reference=view;
-            var basis=view.Frame();
-            foreach(LogicalAxis axis in SliceAxes.Axes(view.Dimensions))
+            BuildHandles();
+        }
+        // Another section in the same panel: the title and the drawing stay, the axis handles follow the section's axes.
+        // The next Refresh draws it.
+        public void Retarget(ReferenceSection view)
+        {
+            if(view==reference||graphic==null)return;
+            CancelDrag();reference=view;graphic.Reference=view;gameObject.name="Hyperplane "+view.Name;
+            foreach(var handle in handles.Values){CfgUi.ReleaseSelection(handle);handle.gameObject.SetActive(false);Destroy(handle.gameObject);}handles.Clear();tips.Clear();
+            BuildHandles();
+        }
+        void BuildHandles()
+        {
+            bool compact=((RectTransform)transform).rect.width<150;var basis=reference.Frame();
+            foreach(LogicalAxis axis in SliceAxes.Axes(reference.Dimensions))
             {
-                if(Cfg2Projection.Tangent(basis,VecN.Unit(SliceAxes.CoreAxis(axis),view.Dimensions)).Length<.1)continue;
+                if(Cfg2Projection.Tangent(basis,VecN.Unit(SliceAxes.CoreAxis(axis),reference.Dimensions)).Length<.1)continue;
                 var handle=Cfg2Ui.Panel(transform,"World axis "+axis,0,0,23,23,new Color(0,0,0,0),true);handle.GetComponentInChildren<Cfg2PanelBorder>().enabled=false;
                 var label=CfgUi.Label(handle,SliceAxes.AxisName(axis),0,0,23,23,compact?12:15,Cfg2Projection.AxisColor(axis));label.alignment=TextAnchor.MiddleCenter;Cfg2Glow.GlowText(label,label.color);
                 var surface=handle.gameObject.AddComponent<CfgPointerSurface>();var captured=axis;

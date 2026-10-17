@@ -47,16 +47,28 @@ namespace Showcase.Unity.Settings
         // A layout copied along Y stacks 9 layers; its display is raised by the 4 layers below the plane (board min −4),
         // so the lowest layer rests on the wood and the ±4.5-cell window shows the whole stack.
         const int LayersBelowPlane=4;
-        Vector3 DisplayAnchor=>SectionView.Anchor+new Vector3(0,CurrentCopyAxis==2?LayersBelowPlane*SectionView.Cell:0,0);
+        static Vector3 AnchorFor(int? copyAxis)=>SectionView.Anchor+new Vector3(0,copyAxis==2?LayersBelowPlane*SectionView.Cell:0,0);
+        Vector3 DisplayAnchor=>AnchorFor(CurrentCopyAxis);
         Vector3 CameraBase=>DisplayAnchor;
-        SliceAnimator NewPivotSlice(){var a=DisplayAnchor;return new SliceAnimator(PivotViewState.CreateInitial(new Vec3(a.x,a.y,a.z),SectionView.Cell,dimensions:CurrentDimensions));}
+        SliceAnimator NewPivotSlice()=>NewPivotSlice(CurrentDimensions,CurrentCopyAxis);
+        static SliceAnimator NewPivotSlice(int dimensions,int? copyAxis){var a=AnchorFor(copyAxis);return new SliceAnimator(PivotViewState.CreateInitial(new Vec3(a.x,a.y,a.z),SectionView.Cell,dimensions:dimensions));}
+        // N and copy axis of the draft, read once per draft revision: Current clones the whole draft.
+        SettingsDraft draftRead;long draftReadRevision;int draftReadDimensions=4;int? draftReadCopyAxis;
+        void ReadDraft()
+        {
+            if(ReferenceEquals(draftRead,draft)&&draftReadRevision==draft.Revision)return;
+            var d=draft.Current;draftRead=draft;draftReadRevision=draft.Revision;
+            draftReadDimensions=int.TryParse(d.Dimensions,NumberStyles.Integer,CultureInfo.InvariantCulture,out var n)&&n>=BoundsN.MinDimensions&&n<=BoundsN.MaxDimensions?n:4;
+            var axis=DraftData.CopyAxisOf(d.InitialLayout);draftReadCopyAxis=axis.HasValue&&axis.Value<draftReadDimensions?axis:null;
+        }
         // Copy axis of the initial layout on screen: the match's while playing, the next match's (the draft's) otherwise.
-        int? DraftCopyAxis{get{var axis=draft==null?null:DraftData.CopyAxisOf(draft.Current.InitialLayout);return axis.HasValue&&axis.Value<DraftDimensions?axis:null;}}
+        int? DraftCopyAxis{get{if(draft==null)return null;ReadDraft();return draftReadCopyAxis;}}
         int? CurrentCopyAxis=>session!=null&&!opened?session.Config.Preset.LayoutCopyAxis:DraftCopyAxis;
         // N of the board on screen: the match's while playing, the next match's (the draft's) otherwise; 4 before the draft exists.
-        int DraftDimensions=>draft!=null&&int.TryParse(draft.Current.Dimensions,NumberStyles.Integer,CultureInfo.InvariantCulture,out var n)&&n>=BoundsN.MinDimensions&&n<=BoundsN.MaxDimensions?n:4;
+        int DraftDimensions{get{if(draft==null)return 4;ReadDraft();return draftReadDimensions;}}
         int CurrentDimensions=>session!=null&&!opened?session.Config.Dimensions:DraftDimensions;
         // Hidden axis Ctrl+drag rotates against: W unless a number key picked another axis of this space (4=W, 5=V ... 9=R, 0=Q, -=P).
+        // It belongs to one space: a new match and a change of N start again from W.
         LogicalAxis rotationAxis=LogicalAxis.W;
         int RotationCoreAxis{get{int core=SliceAxes.CoreAxis(rotationAxis);return core<CurrentDimensions?core:3;}}
         static string AppTitle(int dimensions)=>"N次元将棋（"+dimensions+"次元）";
@@ -107,7 +119,8 @@ namespace Showcase.Unity.Settings
                 GameObject.Find("CFG1 exact cell sections").layer=30;GameObject.Find("CFG2 exact cell faces").layer=30;
                 previewRenderer.SetDisplayState(slice.DisplayState);
                 draft=SettingsDraft.CreateMatchDemo();options=new MatchOptionsRaw();preview=PreviewSession.CreateExperiment();
-                LoadStartup();if(slice.Frame.Dimensions!=DraftDimensions)slice=NewPivotSlice();trialSlice=slice;ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
+                LoadStartup();if(slice.Frame.Dimensions!=DraftDimensions)slice=NewPivotSlice();trialSlice=slice;viewDimensions=DraftDimensions;viewLayout=draft.Current.InitialLayout;SyncViewToDraft();
+                ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
                 trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;settingsDirty=(!File.Exists(validPath)||migratedView)&&startupLoadError=="";
                 Application.wantsToQuit+=PrepareShutdown;
                 Record("Started","CFG2; font="+fontName+"; "+Screen.width+"x"+Screen.height+"; reportedDpi="+Screen.dpi+"; data="+runtimeRoot);
@@ -149,7 +162,16 @@ namespace Showcase.Unity.Settings
         string Arg(string key,string fallback){var a=System.Environment.GetCommandLineArgs();int i=Array.IndexOf(a,key);return i>=0&&i+1<a.Length?a[i+1]:fallback;}
         void Record(string name,string data="")
         {var row=DateTime.UtcNow.ToString("o")+"\t"+name+"\t"+data.Replace('\n',' ');eventTrace.Add(row);Debug.Log("CFG2 "+name+" "+data);}
-        void Notice(string text){notice=text;if(statusText!=null)statusText.text=text;Record("Notice",text);}
+        // Options show the latest notice in their status line; the menu and the match HUD show it for a while,
+        // and a new screen keeps only a notice raised by the action that opened it.
+        Text hudNotice,menuNotice;float noticeTime=-100;int noticeFrame=-1;bool screenNotice;const float NoticeSeconds=10;
+        void Notice(string text)
+        {
+            notice=text;noticeTime=Time.unscaledTime;noticeFrame=Time.frameCount;screenNotice=true;
+            if(statusText!=null)statusText.text=text;if(hudNotice!=null)hudNotice.text=text;if(menuNotice!=null)menuNotice.text=text;Record("Notice",text);
+        }
+        void KeepScreenNotice(){if(noticeFrame!=Time.frameCount)ClearScreenNotice();}
+        void ClearScreenNotice(){screenNotice=false;if(hudNotice!=null)hudNotice.text="";if(menuNotice!=null)menuNotice.text="";}
         void FlushTrace(){if(!string.IsNullOrEmpty(runtimeRoot))File.WriteAllLines(Path.Combine(runtimeRoot,"events-"+System.Diagnostics.Process.GetCurrentProcess().Id+".tsv"),eventTrace);}
         void ValidateSettings()
         {
@@ -213,10 +235,11 @@ namespace Showcase.Unity.Settings
             if(slice.IsAnimating){slice.Advance(Time.unscaledDeltaTime);geometryDirty=true;stableDirty=true;}
             UpdateMatch();if(geometryDirty)RenderGeometry();UpdateMagnifier();
             if(settingsDirty&&Time.unscaledTime>=saveDue)AutoSave();
+            if(screenNotice&&Time.unscaledTime-noticeTime>NoticeSeconds)ClearScreenNotice();
             // The view is saved once it has settled: never during a CPU move show, a turn reset or a piece glide,
             // which move C every frame without marking the slice as animating.
             if(stableDirty&&!slice.IsAnimating&&!PresentingMove&&ownership.Owner==InputOwner.None&&Time.unscaledTime>=saveDue+.5f)SaveStableView();
-            bool typing=EventSystem.current?.currentSelectedGameObject?.GetComponent<InputField>()!=null;
+            bool typing=CfgUi.SelectedInput!=null;
             UpdateMenuKeys(typing);
             if(!typing&&ownership.Owner==InputOwner.None&&Input.GetKeyDown(KeyCode.Home)&&IsPivotHomeSurface(Input.mousePosition))
             {
@@ -230,25 +253,42 @@ namespace Showcase.Unity.Settings
                 for(int axis=4;axis<=BoundsN.MaxDimensions;axis++)
                 {
                     var key=axis<10?KeyCode.Alpha0+axis:axis==10?KeyCode.Alpha0:KeyCode.Minus;
-                    if(!Input.GetKeyDown(key))continue;
-                    var logical=(LogicalAxis)(axis-1);
-                    if(SliceAxes.CoreAxis(logical)>=CurrentDimensions){Notice("この対局は"+CurrentDimensions+"次元です。"+SliceAxes.AxisName(logical)+"軸はありません。");break;}
-                    rotationAxis=logical;geometryDirty=true;Notice("Ctrl＋ドラッグの回転軸："+SliceAxes.AxisName(logical));Record("RotationAxis",logical.ToString());break;
+                    if(Input.GetKeyDown(key)){PickRotationAxis((LogicalAxis)(axis-1));break;}
                 }
-            if(!typing&&Input.GetKeyDown(KeyCode.Escape)){if(ownership.Owner!=InputOwner.None){ownership.Cancel();pointerButton=-1;}else if(opened){if((!settingsDirty||AutoSave())&&SaveStableView())ShowMenu();}else if(session!=null)ReturnFromMatch();}
+            if(!typing&&Input.GetKeyDown(KeyCode.Escape))EscapePressed();
             if(opened&&!typing&&ownership.Owner==InputOwner.None&&(Input.GetKey(KeyCode.LeftControl)||Input.GetKey(KeyCode.RightControl)))
             {
-                if(Input.GetKeyDown(KeyCode.Z)){if(historyOwner=="trial"){preview.Undo();AfterTrial();}else{draft.Undo();AfterEdit();BuildDetails();}}
-                if(Input.GetKeyDown(KeyCode.Y)){if(historyOwner=="trial"){preview.Redo();AfterTrial();}else{draft.Redo();AfterEdit();BuildDetails();}}
+                if(Input.GetKeyDown(KeyCode.Z))HistoryKey(false);
+                if(Input.GetKeyDown(KeyCode.Y))HistoryKey(true);
             }
+        }
+        void PickRotationAxis(LogicalAxis logical)
+        {
+            if(SliceAxes.CoreAxis(logical)>=CurrentDimensions){Notice("この対局は"+CurrentDimensions+"次元です。"+SliceAxes.AxisName(logical)+"軸はありません。");return;}
+            rotationAxis=logical;geometryDirty=true;Notice("Ctrl＋ドラッグの回転軸："+SliceAxes.AxisName(logical));Record("RotationAxis",logical.ToString());UpdateHelpText();
+        }
+        void EscapePressed(){if(ownership.Owner!=InputOwner.None){ownership.Cancel();pointerButton=-1;}else if(opened)LeaveSettings();else if(session!=null)ReturnFromMatch();}
+        // Ctrl+Z/Ctrl+Y. An Undo or Redo of the draft can change N or the initial layout like the buttons do, so the trial board and view follow it.
+        void HistoryKey(bool redo)
+        {
+            if(historyOwner=="trial"){if(redo)preview.Redo();else preview.Undo();AfterTrial();return;}
+            if(!(redo?draft.Redo():draft.Undo()))return;
+            SyncViewToDraft();AfterEdit();BuildDetails();Record(redo?"DraftRedo":"DraftUndo","N="+DraftDimensions+";layout="+draft.Current.InitialLayout);
         }
         bool IsPivotHomeSurface(Vector2 point)=>minis.Any(m=>m.IsPointerOver(point))||gizmos.Any(g=>g.IsPointerOver(point))||
             (opened&&planeTab==0&&RectTransformUtility.RectangleContainsScreenPoint(previewRect,point,null));
         void LateUpdate(){if(inputGate!=null)inputGate.interactable=ownership.Owner==InputOwner.None;}
         void Quit()
         {if(quitting||!PrepareShutdown())return;Application.Quit();}
+        // Unsaved settings keep the window open, except when the rejected original is being kept and nothing can be saved.
+        // A match display is only a convenience: one that cannot be saved is reported and left behind.
         bool PrepareShutdown()
-        {if(quitting)return true;if(settingsDirty&&!AutoSave())return false;if(!SaveStableView())return false;if(session!=null)ReturnFromMatch();quitting=true;Record("Quit");FlushTrace();return true;}
-        void OnDestroy(){Application.wantsToQuit-=PrepareShutdown;CancelCpu();previewRenderer?.Dispose();visuals?.Dispose();if(previewTexture!=null){previewTexture.Release();Destroy(previewTexture);}FlushTrace();}
+        {
+            if(quitting)return true;
+            if((settingsDirty||opened&&stableDirty)&&startupLoadError==""&&!AutoSave())return false;
+            if(session!=null&&!opened&&!SaveStableView())Record("QuitWithoutMatchView",notice);
+            if(session!=null)ReturnFromMatch();quitting=true;FlushVolumes();Record("Quit");FlushTrace();return true;
+        }
+        void OnDestroy(){Application.wantsToQuit-=PrepareShutdown;CancelCpu();FlushVolumes();previewRenderer?.Dispose();visuals?.Dispose();if(previewTexture!=null){previewTexture.Release();Destroy(previewTexture);}FlushTrace();}
     }
 }

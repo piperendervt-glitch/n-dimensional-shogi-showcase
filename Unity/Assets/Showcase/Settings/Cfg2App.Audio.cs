@@ -9,8 +9,19 @@ namespace Showcase.Unity.Settings
         const string BgmVolumeKey="cfg2.bgm-volume",SfxVolumeKey="cfg2.sfx-volume";
         const float DefaultBgmVolume=.5f,DefaultSfxVolume=.7f;
         AudioSource bgmSource,sfxSource,uiSource;AudioClip pieceClip,selectClip,confirmClip;float lastSfxPreview;
-        float BgmVolume{get=>Mathf.Clamp01(PlayerPrefs.GetFloat(BgmVolumeKey,DefaultBgmVolume));set{PlayerPrefs.SetFloat(BgmVolumeKey,Mathf.Clamp01(value));PlayerPrefs.Save();ApplyVolumes();}}
-        float SfxVolume{get=>Mathf.Clamp01(PlayerPrefs.GetFloat(SfxVolumeKey,DefaultSfxVolume));set{PlayerPrefs.SetFloat(SfxVolumeKey,Mathf.Clamp01(value));PlayerPrefs.Save();ApplyVolumes();}}
+        // A slider drag sets the level live; the preference is written once, when the slider is let go (or at quit).
+        float? bgmPending,sfxPending;
+        float BgmVolume{get=>bgmPending??StoredVolume(BgmVolumeKey,DefaultBgmVolume);set{bgmPending=Finite01(value,BgmVolume);ApplyVolumes();}}
+        float SfxVolume{get=>sfxPending??StoredVolume(SfxVolumeKey,DefaultSfxVolume);set{sfxPending=Finite01(value,SfxVolume);ApplyVolumes();}}
+        // A stored NaN or infinity (Clamp01 lets NaN through) reads as the default level.
+        static float Finite01(float value,float fallback)=>float.IsNaN(value)||float.IsInfinity(value)?fallback:Mathf.Clamp01(value);
+        static float StoredVolume(string key,float fallback)=>Finite01(PlayerPrefs.GetFloat(key,fallback),fallback);
+        void FlushVolumes()
+        {
+            if(!bgmPending.HasValue&&!sfxPending.HasValue)return;
+            if(bgmPending.HasValue)PlayerPrefs.SetFloat(BgmVolumeKey,bgmPending.Value);if(sfxPending.HasValue)PlayerPrefs.SetFloat(SfxVolumeKey,sfxPending.Value);
+            bgmPending=sfxPending=null;PlayerPrefs.Save();Record("Pref","volumes bgm="+BgmVolume.ToString("0.00")+";sfx="+SfxVolume.ToString("0.00"));
+        }
         // Slider positions are squared so the lower half of the slider stays usefully quiet.
         static float Gain(float position)=>position*position;
         void CreateAudio()
@@ -44,11 +55,11 @@ namespace Showcase.Unity.Settings
         {
             CfgUi.Label(c,"サウンド",8,y,330,34,21,Gold);
             var bgmLabel=CfgUi.Label(c,"",8,y+42,330,30,18);void ShowBgm(float v)=>bgmLabel.text="BGM の音量："+Mathf.RoundToInt(v*100)+"%";ShowBgm(BgmVolume);
-            Cfg2Ui.Slider(c,8,y+76,330,0,1,BgmVolume,v=>{ShowBgm(v);BgmVolume=v;});
+            Cfg2Ui.Slider(c,8,y+76,330,0,1,BgmVolume,v=>{ShowBgm(v);BgmVolume=v;},FlushVolumes);
             var sfxLabel=CfgUi.Label(c,"",8,y+124,330,30,18);void ShowSfx(float v)=>sfxLabel.text="効果音の音量："+Mathf.RoundToInt(v*100)+"%";ShowSfx(SfxVolume);
             Cfg2Ui.Slider(c,8,y+158,330,0,1,SfxVolume,v=>{ShowSfx(v);SfxVolume=v;
                 // Let the player hear the new level while dragging, without a burst of clicks.
-                if(Time.unscaledTime-lastSfxPreview>.25f){lastSfxPreview=Time.unscaledTime;PlayPieceSound();}});
+                if(Time.unscaledTime-lastSfxPreview>.25f){lastSfxPreview=Time.unscaledTime;PlayPieceSound();}},FlushVolumes);
             CfgUi.Label(c,"効果音は駒音とメニュー音。0% で消音。",8,y+206,330,30,16,Muted);
         }
     }

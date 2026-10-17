@@ -30,6 +30,8 @@ namespace Showcase.Unity.Settings
             b.GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
             b.GetComponent<Image>().color=accent?CfgUi.Blue:Dark;actions[id]=b;return b;
         }
+        // The look Button gives an accent (selected) entry, switched on an existing button.
+        static void MarkSelected(Button b,bool selected){b.GetComponent<Image>().color=selected?CfgUi.Blue:Dark;Cfg2Ui.SelectedFrame(b.transform,selected);}
         void CreateMenu()
         {
             menu=CfgUi.Rect(root,"Main menu",0,0,1536,1024);
@@ -48,6 +50,7 @@ namespace Showcase.Unity.Settings
                 var hover=b.gameObject.AddComponent<EventTrigger>();var enter=new EventTrigger.Entry{eventID=EventTriggerType.PointerEnter};
                 enter.callback.AddListener(_=>SetMenuIndex(mode,true));hover.triggers.Add(enter);
             }
+            menuNotice=CfgUi.Label(menu,"",86,846,640,150,17,Gold);
         }
         // Main menu cursor: ↑↓ (or W/S) move it, Enter/Space presses the entry. The highlighted entry is the one Enter starts.
         int menuIndex;const int MenuEntries=5;
@@ -70,7 +73,7 @@ namespace Showcase.Unity.Settings
             var heading=Cfg2Ui.Panel(settings,"Header",0,0,1536,88,new Color(.02f,.035f,.05f,.69f));
             CfgUi.Label(heading,"N次元将棋",22,9,370,45,34,Gold);CfgUi.Label(heading,"N-DIMENSIONAL SHOGI",24,57,360,23,14,Gold);headerDimensions=CfgUi.Label(heading,"",205,14,160,40,26,Gold);
             CfgUi.Label(heading,"設定（オプション）",560,15,570,48,32);
-            Button(heading,"back","戻る",1423,18,94,43,()=>{if((!settingsDirty||AutoSave())&&SaveStableView())ShowMenu();});
+            Button(heading,"back","戻る",1423,18,94,43,LeaveSettings);
             var nav=Cfg2Ui.Panel(settings,"Categories",6,100,196,694,Dark);
             for(int i=0;i<6;i++){int c=i;Button(nav,"category-"+i,categories[i],5,5+i*113,186,108,()=>SelectCategory(c),i==category);}
             pieceHost=Cfg2Ui.Panel(settings,"Piece list",212,100,186,888,Dark);BuildPieces();
@@ -112,21 +115,28 @@ namespace Showcase.Unity.Settings
             var gizmo=r.gameObject.AddComponent<Cfg2AxisGizmo>();gizmo.Initialize(axis=>{Record("UI",prefix+"axis-"+axis);RequestView(axis.ToString());},()=>slice,ownership,()=>{geometryDirty=true;stableDirty=true;Record("AxisTranslation",slice.Center.ToString());},()=>canvas.scaleFactor);
             foreach(var entry in gizmo.Buttons)actions[prefix+"axis-"+entry.Key]=entry.Value;gizmos.Add(gizmo);
         }
-        // A null border is the plain glass of the 4D panels; a swap panel in higher N carries the colour of the axis it brings in.
         void CreateMini(Transform parent,float x,float y,float w,float h,ReferenceSection view,Color? border)
         {
             var r=Cfg2Ui.Panel(parent,"Hyperplane "+view.Name,x,y,w,h,new Color(.03f,.05f,.10f,.38f),true);
-            var glass=r.GetComponentInChildren<Cfg2PanelBorder>();glass.color=border.HasValue?new Color(border.Value.r,border.Value.g,border.Value.b,.7f):new Color(.80f,.87f,1,.55f);glass.Glow=true;
             helperPanels.Add(r);
             var mini=r.gameObject.AddComponent<Cfg2MiniView>();mini.Initialize(()=>slice,ownership,view,()=>{geometryDirty=true;stableDirty=true;},v=>{slice.Request(v);geometryDirty=true;},()=>canvas.scaleFactor);minis.Add(mini);
+            PanelFrame(r,border);
+        }
+        // A null border is the plain glass of the 4D panels; a swap panel in higher N carries the colour of the axis it brings in.
+        // The panel view keeps this frame when it fills itself (Cfg2MiniView.Initialize), so it is coloured here, after it.
+        static void PanelFrame(Transform panel,Color? border)
+        {
+            var glass=Cfg2Ui.Frame(panel);if(glass==null)return;
+            glass.color=border.HasValue?new Color(border.Value.r,border.Value.g,border.Value.b,.7f):new Color(.80f,.87f,1,.55f);glass.Glow=true;glass.SetVerticesDirty();
         }
         void RefreshAuxiliaryViews()
         {
             if(slice==null||rig?.Camera==null)return;var frame=slice.Frame;var rotation=rig.Camera.transform.rotation;int n=frame.Dimensions;
-            EnsureMinis();
             foreach(var gizmo in gizmos)gizmo.Refresh(frame,rotation,slice.ViewRevision,cameraRevision);
             // Panels are drawn around the start pivot P, so a move of C along any axis shows up as a shifted plane.
-            foreach(var mini in minis)mini.Refresh(frame,rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding);
+            // They belong to the match screen: hidden, they are neither rebuilt nor redrawn.
+            if(matchHud!=null&&matchHud.gameObject.activeInHierarchy)
+            {EnsureMinis();foreach(var mini in minis)mini.Refresh(frame,rotation,cameraRevision,previewRenderer.HalfWindow,slice.DisplayState.Embedding);}
             if(!opened)return;
             var ps=preview.Pieces.Select(p=>new CfgVisualPiece{Id=p.Id,DefinitionId=p.DefinitionId,Position=p.Position,Side=p.Side}).ToArray();
             var selected=preview.Find(selectedPiece)?.Position??planeReferenceCell;
@@ -289,10 +299,11 @@ namespace Showcase.Unity.Settings
         // 138,601 in 9D do not, and 11D needs 1,241,209. A budget is a ceiling, not a cost, so one generous value serves 9D and up.
         // A copied layout has nine times the pieces: 7D already exceeds the default, and 11D needs about 11.2 million.
         static int RequiredCpuBudget(int dimensions,bool copied)=>copied?(dimensions>=11?20000000:dimensions>=7?5000000:0):(dimensions>=9?5000000:0);
+        // Only raises a valid budget that is too small: text that is not a number stays for the player to correct, and nothing below 1 is written.
         void EnsureCpuBudget(int dimensions,bool copied)
         {
             int required=RequiredCpuBudget(dimensions,copied);
-            if(!int.TryParse(options.CpuBudget,NumberStyles.Integer,CultureInfo.InvariantCulture,out int budget)||budget<required)options.CpuBudget=required.ToString(CultureInfo.InvariantCulture);
+            if(required>0&&int.TryParse(options.CpuBudget,NumberStyles.Integer,CultureInfo.InvariantCulture,out int budget)&&budget<required)options.CpuBudget=required.ToString(CultureInfo.InvariantCulture);
         }
         // One row of the initial-layout list: the name on the left, the piece count on the right.
         void LayoutRow(RectTransform c,string layout,string name,int pieces,float y,bool selected)
@@ -301,17 +312,17 @@ namespace Showcase.Unity.Settings
             var text=b.GetComponentInChildren<Text>();text.alignment=TextAnchor.MiddleLeft;text.rectTransform.anchoredPosition+=new Vector2(8,0);text.rectTransform.sizeDelta-=new Vector2(16,0);
             var count=CfgUi.Label(b.transform,pieces.ToString(CultureInfo.InvariantCulture)+"駒",8,0,314,40,14,selected?new Color(.81f,.88f,1):Muted);count.alignment=TextAnchor.MiddleRight;
         }
-        // The next match's initial layout. The display anchor depends on it, so the slice is rebuilt like SetDimensions does.
+        // The next match's initial layout. The display anchor depends on it, so the trial view starts again (SyncViewToDraft).
         void SetLayout(string layout)
         {
             if(layout==draft.Current.InitialLayout)return;
             var axis=DraftData.CopyAxisOf(layout);if(layout!=DraftData.FlatLayout&&!(axis.HasValue&&axis.Value<DraftDimensions))return;
-            draft.Edit(d=>d.InitialLayout=layout);EnsureCpuBudget(DraftDimensions,axis.HasValue);
-            slice=trialSlice=NewPivotSlice();previewRenderer.SetDisplayState(slice.DisplayState);
+            draft.Edit(d=>d.InitialLayout=layout);SyncViewToDraft();
             AfterEdit();BuildDetails();Record("InitialLayout",layout);
         }
         // The next match's N. Masks that meant "every axis" keep meaning that; fixed definitions always use every axis;
         // a per-axis mask or a step count that no longer fits is clipped. Trial pieces outside the new board are dropped.
+        // A copy axis the smaller board no longer has falls back to the flat layout in the same edit, so one Undo restores both.
         void SetDimensions(int n)
         {
             int old=DraftDimensions;if(n==old||n<BoundsN.MinDimensions||n>BoundsN.MaxDimensions)return;
@@ -327,29 +338,65 @@ namespace Showcase.Unity.Settings
                     int.TryParse(x.MaxAxes,NumberStyles.Integer,CultureInfo.InvariantCulture,out int axes);
                     if(!IsEditable(x)||axes==old||axes>n||axes<=0)x.MaxAxes=Inv(n);
                 }
+                var copy=DraftData.CopyAxisOf(d.InitialLayout);if(copy.HasValue&&copy.Value>=n)d.InitialLayout=DraftData.FlatLayout;
             });
-            // A copy axis the smaller board no longer has falls back to the flat layout.
-            var copy=DraftData.CopyAxisOf(draft.Current.InitialLayout);if(copy.HasValue&&copy.Value>=n){draft.Edit(d=>d.InitialLayout=DraftData.FlatLayout);copy=null;}
-            EnsureCpuBudget(n,copy.HasValue);
-            var bounds=new BoundsN(dimensions:n);
-            preview=new PreviewSession(bounds,preview.Pieces.Where(p=>bounds.Contains(p.Position)).Select(p=>p.At(bounds.Normalize(p.Position))));
-            if(preview.Find(selectedPiece)==null)selectedPiece=preview.Pieces.FirstOrDefault()?.Id??"";
-            selectedCell=bounds.Contains(selectedCell)?bounds.Normalize(selectedCell):bounds.Origin;planeReferenceCell=bounds.Contains(planeReferenceCell)?bounds.Normalize(planeReferenceCell):bounds.Origin;
-            slice=trialSlice=NewPivotSlice();previewRenderer.SetDisplayState(slice.DisplayState);if(planeTab==3&&n<4)SelectPlane(0);
-            AfterEdit();BuildPieces();BuildDetails();UpdateHeader();UpdateWindowTitle();Record("Dimensions",Inv(n));
+            SyncViewToDraft();AfterEdit();BuildPieces();BuildDetails();Record("Dimensions",Inv(n));
+        }
+        // N and initial layout the trial board and view were built for.
+        int viewDimensions;string viewLayout;
+        // Brings everything on the options screen that depends on the draft's N or initial layout in line with the draft, however it got
+        // there (N or layout button, Undo, Redo, startup): the trial board's domain and selection, the view and its anchor, the camera,
+        // the rotation axis, the CPU budget and the titles. The next save then always pairs the draft with a board and view of the same N.
+        void SyncViewToDraft()
+        {
+            int n=DraftDimensions;var copy=DraftCopyAxis;string layout=draft.Current.InitialLayout;
+            if(preview.Bounds.Dimensions!=n)
+            {
+                // Trial pieces outside the new board are dropped.
+                var bounds=new BoundsN(preview.Bounds.Min,preview.Bounds.Max,n);
+                preview=new PreviewSession(bounds,preview.Pieces.Where(p=>bounds.Contains(p.Position)).Select(p=>p.At(bounds.Normalize(p.Position))));
+                if(preview.Find(selectedPiece)==null)selectedPiece=preview.Pieces.FirstOrDefault()?.Id??"";
+            }
+            var b=preview.Bounds;
+            selectedCell=b.Contains(selectedCell)?b.Normalize(selectedCell):b.Origin;planeReferenceCell=b.Contains(planeReferenceCell)?b.Normalize(planeReferenceCell):b.Origin;
+            if(n!=viewDimensions||layout!=viewLayout||trialSlice.Frame.Dimensions!=n)
+            {
+                if(n!=viewDimensions)rotationAxis=LogicalAxis.W;
+                viewDimensions=n;viewLayout=layout;EnsureCpuBudget(n,copy.HasValue);trialSlice=NewPivotSlice(n,copy);
+                // During a match only the trial view waiting in the background changes.
+                if(session==null||opened){slice=trialSlice;previewRenderer.SetDisplayState(slice.DisplayState);if(planeTab==3&&n<4)SelectPlane(0);if(opened)UpdateCamera();}
+                UpdateHelpText();Record("TrialViewReset","N="+n+";layout="+layout);
+            }
+            UpdateHeader();UpdateWindowTitle();
+        }
+        // Leaving Options never waits on the disk: a failed save keeps the edit in memory, says so and is retried in the background.
+        void LeaveSettings()
+        {
+            if(ownership.Owner!=InputOwner.None)return;
+            if(startupLoadError==""&&!AutoSave())Record("OptionsLeftUnsaved",notice);
+            ShowMenu();
         }
         void BuildDisplay(RectTransform c,float y=8)
         {
             Toggle(c,"移動候補を表示",showCandidates,8,y,330,v=>showCandidates=v);Toggle(c,"攻撃範囲を表示",showAttacks,8,y+49,330,v=>showAttacks=v);Toggle(c,"座標グリッドを表示",showGrid,8,y+98,330,v=>showGrid=v);
             Toggle(c,"断面補助を表示",showHelpers,8,y+147,330,v=>showHelpers=v);
-            CfgUi.Label(c,"左／右ドラッグ：視点回転\n中／Shift＋左：平行移動\nホイール：拡大・縮小\nCtrl＋左：XW／YW回転\nCtrl＋Shift＋左：ZW／YW回転\n4〜9・0・-：Ctrl回転の隠れ軸\n\n軸名クリック：基準断面へ\n軸ドラッグ：N次元中心移動\nShift／Ctrl＋軸ドラッグ：1マス吸着\nR：初期位置・回転なしへ戻す\nプレビュー・軸・小窓上で\nHome：原点Oへ\nShift＋Home：開始中心Pへ\nEsc：戻る／操作取消",8,y+220,330,440,17);
+            helpText=CfgUi.Label(c,HelpText(),8,y+220,330,440,17);
         }
+        Text helpText;
+        // Ctrl+drag turns X and Y (Z with Shift) against the current rotation axis; a 3D board has nothing to turn against.
+        string HelpText()
+        {
+            string h=SliceAxes.AxisName(SliceAxes.AxisOfCore(RotationCoreAxis));
+            string rotation=CurrentDimensions<=3?"":"Ctrl＋左：X"+h+"／Y"+h+"回転\nCtrl＋Shift＋左：Z"+h+"／Y"+h+"回転\n4〜9・0・-：Ctrl回転の隠れ軸\n";
+            return "左／右ドラッグ：視点回転\n中／Shift＋左：平行移動\nホイール：拡大・縮小\n"+rotation+"\n軸名クリック：基準断面へ\n軸ドラッグ：N次元中心移動\nShift／Ctrl＋軸ドラッグ：1マス吸着\nR：初期位置・回転なしへ戻す\nプレビュー・軸・小窓上で\nHome：原点Oへ\nShift＋Home：開始中心Pへ\nEsc：戻る／操作取消";
+        }
+        void UpdateHelpText(){if(helpText!=null)helpText.text=HelpText();}
         void ShowMenu()
         {
             CancelActiveInput();
-            opened=false;settings.gameObject.SetActive(false);matchHud.gameObject.SetActive(false);menu.gameObject.SetActive(true);
+            opened=false;settings.gameObject.SetActive(false);matchHud.gameObject.SetActive(false);menu.gameObject.SetActive(true);KeepScreenNotice();
             // A button selected on another screen must not also receive the Enter that the menu cursor handles.
-            EventSystem.current?.SetSelectedGameObject(null);
+            CfgUi.ReleaseSelection();
             backgroundCamera.enabled=false;
             rig.Camera.targetTexture=null;rig.Camera.transform.position=new Vector3(.58f,1.38f,-.8f);rig.Camera.transform.LookAt(new Vector3(-.14f,1.02f,0));cameraRevision++;
             geometryDirty=true;result=null;attackCells=Array.Empty<QN>();visuals.RefreshCaptured(Array.Empty<Cfg2CapturedPiece>());UpdateWindowTitle();Record("Menu");
