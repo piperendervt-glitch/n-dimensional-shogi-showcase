@@ -153,7 +153,7 @@ namespace Showcase.Unity.Settings
                     var chosen=axes;
                     var open=r.gameObject.AddComponent<Button>();CfgUi.NoNavigation(open);open.targetGraphic=r.GetComponent<Image>();open.onClick.AddListener(()=>{if(ownership.Owner!=InputOwner.None)return;Record("UI","subspace-"+diagram.Name);PlayMenuConfirm();ShowSubspace(chosen);});
                 }
-                subspaceNote=CfgUi.Label(content,k+"軸を同時に動かす駒なので、2軸の平面ではなく "+k+"軸の部分空間に候補を描いています（全 "+total+" 個"+(total>MaxSubspaceMinis?"のうち先頭 "+MaxSubspaceMinis+" 個を表示":"")+"）。図を押すと中央に大きく表示し、「断面ビュー」で元の表示に戻ります。",0,0,100,40,11,Muted);
+                subspaceNote=CfgUi.Label(content,k+"軸を同時に動かす駒なので、2軸の平面ではなく "+k+"軸の部分空間に候補を描いています（全"+total+"個"+(total>MaxSubspaceMinis?"のうち先頭"+MaxSubspaceMinis+"個を表示":"")+"）。図を押すと中央に大きく表示し、「断面ビュー」で元の表示に戻ります。",0,0,100,40,11,Muted);
                 LayoutPlaneMinis();return;
             }
             foreach(var (h,v) in Cfg2PlaneView.Planes(n))
@@ -247,7 +247,7 @@ namespace Showcase.Unity.Settings
             planeView.Dimensions=n;if(actions.TryGetValue("plane-4",out var xw))xw.gameObject.SetActive(n>3);
             int slideAxes=preset?.Find(selectedDefinition)?.SlideAxes??0;EnsurePlaneMinis(n,slideAxes);
             // The large subspace figure belongs to one k: another piece or axis count closes it back to the section view.
-            if(planeTab==7&&(slideAxes<3||subspaceView.AxisCount!=slideAxes||subspaceView.Dimensions!=n)){SelectPlane(0);return;}
+            if(planeTab==7&&(slideAxes<3||subspaceView.AxisCount!=slideAxes||subspaceView.Dimensions!=n))SelectPlane(0);
             if(planeMiniHost.gameObject.activeInHierarchy)
             {
                 foreach(var diagram in planeMinis)diagram.Refresh(ps,result?.G,result?.P,attackCells,selected,slice.ViewRevision,showCandidates,showAttacks,showGrid);
