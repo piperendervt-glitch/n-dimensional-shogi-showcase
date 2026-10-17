@@ -53,14 +53,15 @@ namespace Showcase.Unity.Settings
             }
             yield return null;
         }
-        IEnumerator SmokeCapture(string name)
+        // layoutMustFit=false still measures every Text, but reports clipping in the log and the layout list instead of failing.
+        IEnumerator SmokeCapture(string name,bool layoutMustFit=true)
         {
             yield return new WaitForEndOfFrame();
             string path=Path.Combine(smokeImageRoot,name+".png");
             ScreenCapture.CaptureScreenshot(path);cfg2Smoke.images.Add(path);yield return null;
-            if(name!="final")SmokeLayoutCheck(name);
+            if(name!="final")SmokeLayoutCheck(name,layoutMustFit);
         }
-        void SmokeLayoutCheck(string capture)
+        void SmokeLayoutCheck(string capture,bool mustFit=true)
         {
             Canvas.ForceUpdateCanvases();var clipped=new List<string>();int checkedCount=0,excludedCount=0;
             foreach(var label in UnityEngine.Object.FindObjectsByType<Text>(FindObjectsSortMode.None))
@@ -75,6 +76,7 @@ namespace Showcase.Unity.Settings
                 if(clip)clipped.Add(string.Join("/",path)+" wanted="+wanted+" available="+available+" text="+label.text.Replace('\n',' '));
             }
             Record("SmokeLayout",capture+"; checked="+checkedCount+"; scrollExcluded="+excludedCount+"; clips="+clipped.Count);
+            if(!mustFit){if(clipped.Count>0)Record("SmokeLayoutClipsReported",capture+"; "+string.Join(" | ",clipped));return;}
             SmokeCheck(clipped.Count==0,"layout "+capture+" has no active non-scroll Text height clipping ("+checkedCount+" measured, "+excludedCount+" scroll-excluded)"+(clipped.Count==0?"":"; "+string.Join(" | ",clipped)),"actual uGUI preferredHeight versus rect height, 3px tolerance");
         }
         IEnumerator Smoke()
@@ -358,6 +360,7 @@ namespace Showcase.Unity.Settings
         IEnumerator SmokeSteps2(string phase)
         {
             if(phase=="pivot"||phase=="pivot-reload"||phase=="pivot-recovery"||phase=="pivot-recovery-reload"){yield return PivotSteps(phase);yield break;}
+            if(phase=="nd"||phase=="nd-reload"){yield return ReviewSteps(phase);yield break;}
             yield return new WaitForSecondsRealtime(2);
             SmokeCheck(config!=null&&menu.gameObject.activeSelf&&!opened,"normal startup restores executable setup and opens menu");
             var names=Enumerable.Range(0,5).Select(i=>actions["menu-"+i].GetComponentInChildren<Text>().text).ToArray();
