@@ -86,7 +86,7 @@ namespace Showcase.Unity.Settings
             graphic.SetVerticesDirty();UpdateLegend(pieces!=null);
             // Every axis the panel holds fixed, with C's coordinate on it: W=0 in 4D, e.g. Z=0  V=0 for an XYW panel in 5D.
             FixedCoordinates=string.Join("  ",reference.Hidden.Select(axis=>SliceAxes.AxisName(SliceAxes.AxisOfCore(axis))+"="+SliceAxes.Coordinate(frame.Center,axis).ToString("0.##",System.Globalization.CultureInfo.InvariantCulture)));
-            title.text=reference.Name+"   "+FixedCoordinates;title.color=IsCoincident?Cfg2Ui.Gold:new Color(.88f,.92f,.98f);
+            title.text=reference.Name+"   "+FixedCoordinates+(IsCoincident&&((RectTransform)transform).rect.width>=150?"   ＝ 盤の断面":"");title.color=IsCoincident?Cfg2Ui.Gold:new Color(.88f,.92f,.98f);
             if(DimWhenFlat&&fade==null)fade=gameObject.AddComponent<CanvasGroup>();
             foreach(var item in handles)
             {var tip=graphic.AxisEnd(item.Key);tips[item.Key]=tip;var center=graphic.Center;item.Value.anchoredPosition=new Vector2(center.x+tip.x-11.5f,-26+center.y+tip.y+11.5f);}

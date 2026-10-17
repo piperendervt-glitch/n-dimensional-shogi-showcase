@@ -213,7 +213,9 @@ namespace Showcase.Unity.Settings
             if(Relation!=null)
             {
                 var v=Relation.Vertices;var indices=Relation.TriangleIndices;bool volume=Relation.IsCoincident;
-                for(int i=0;i+2<indices.Count;i+=3)Cfg2Glow.Triangle(vh,P(v[indices[i]]),P(v[indices[i+1]]),P(v[indices[i+2]]),new Color(Plane.r,Plane.g,Plane.b,volume?.08f:.24f));
+                // The section on the board itself fills the whole box: a stronger glass fill and a cell lattice on its far faces.
+                for(int i=0;i+2<indices.Count;i+=3)Cfg2Glow.Triangle(vh,P(v[indices[i]]),P(v[indices[i+1]]),P(v[indices[i+2]]),new Color(Plane.r,Plane.g,Plane.b,volume?.15f:.24f));
+                if(volume&&v.Count>=4)VolumeGrid(vh,v,Relation.ChartCenter,P);
                 if(!volume&&v.Count>=3)PlaneGrid(vh,v,Relation.ChartCenter,P);
                 var edges=Relation.Edges;for(int i=0;i+1<edges.Count;i+=2)Cfg2Glow.Neon(vh,P(v[edges[i]]),P(v[edges[i+1]]),new Color(Edge.r,Edge.g,Edge.b,volume?.70f:.95f),1.2f,9);
                 if(!volume)foreach(var corner in v)Cfg2Glow.Blob(vh,P(corner),5,new Color(.85f,.90f,1,.55f));
@@ -246,6 +248,28 @@ namespace Showcase.Unity.Settings
             {
                 if(!dot.Selected)continue;var at=P(dot.At);var color=Cfg2PanelDot.Of(dot.Side);
                 Cfg2Glow.Blob(vh,at,radius*5,Cfg2Glow.Alpha(Gold,.45f));Cfg2Glow.Circle(vh,at,radius*2.3f,Gold,1,3,20);Cfg2Glow.Blob(vh,at,radius*2.1f,new Color(1,.97f,.88f,1));Cfg2Glow.Blob(vh,at,radius*1.3f,color);
+            }
+        }
+        // A coincident section is an axis-aligned box in the chart: unit lines through C on the three faces facing away from the camera.
+        void VolumeGrid(VertexHelper vh,IReadOnlyList<Vec3> box,Vec3 anchor,Func<Vec3,Vector2> P)
+        {
+            var min=new double[]{double.MaxValue,double.MaxValue,double.MaxValue};var max=new double[]{double.MinValue,double.MinValue,double.MinValue};
+            foreach(var p in box){var c=new[]{p.X,p.Y,p.Z};for(int a=0;a<3;a++){min[a]=Math.Min(min[a],c[a]);max[a]=Math.Max(max[a],c[a]);}}
+            var origin=new[]{anchor.X,anchor.Y,anchor.Z};var color=new Color(.70f,.80f,1,.20f);
+            Vec3 V(double[] c)=>new Vec3(c[0],c[1],c[2]);
+            for(int face=0;face<3;face++)
+            {
+                // The far side of the box along this axis.
+                var unit=new double[3];unit[face]=1;double side=Cfg2Projection.Depth(V(unit),CameraRotation)>0?max[face]:min[face];
+                for(int across=0;across<3;across++)
+                {
+                    if(across==face)continue;int along=3-face-across;
+                    for(int k=(int)Math.Ceiling(min[across]-origin[across]);k<=(int)Math.Floor(max[across]-origin[across]);k++)
+                    {
+                        var a=new double[3];var b=new double[3];a[face]=b[face]=side;a[across]=b[across]=origin[across]+k;a[along]=min[along];b[along]=max[along];
+                        Cfg2Glow.Line(vh,P(V(a)),P(V(b)),color,1.4f);
+                    }
+                }
             }
         }
         // Unit lattice inside the convex intersection polygon, aligned to its first edge and passing through C.
