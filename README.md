@@ -124,3 +124,13 @@ dotnet run --project tools/Showcase.Console -c Release -- --output evidence/core
 木材は[Poly Haven Wood Table 001](https://polyhaven.com/a/wood_table_001)と[American Walnut Veneer](https://polyhaven.com/a/american_walnut_veneer)、庭の白石は[Sandstone Cracks](https://polyhaven.com/a/sandstone_cracks)の[CC0素材](https://polyhaven.com/license)を加工しています。原本12マップ・加工後40画像の出典とハッシュは [素材provenance](assets/source/polyhaven/provenance.json) に保存しています。配布物には `Notices/PolyHaven/NOTICE.txt` と `provenance.json` を同梱し、フォントファイル・参考画像は同梱しません。
 
 本線への変更、ローカルcommit、push、外部公開は実施範囲に含めていません。ユーザー指定の公開リモートは https://github.com/piperendervt-glitch/n-dimensional-shogi-showcase です。
+
+## ライセンス
+
+このリポジトリのソースコード・文書・自作素材（手続き生成の盤・駒・庭、`tools/synth_audio.py` で合成した効果音・BGMを含む）は [MIT License](LICENSE) で提供します。
+
+次のものはMIT Licenseの対象外で、それぞれ元の条件に従います。
+
+- Poly Havenのテクスチャ（原本と加工後の画像）：[CC0-1.0](https://polyhaven.com/license)。出典は [NOTICE.txt](assets/source/polyhaven/NOTICE.txt) と [provenance.json](assets/source/polyhaven/provenance.json) を参照してください。
+- 駒名テクスチャ（`Unity/Assets/Showcase/Resources/PieceTextures`）：Windows付属の游明朝で描いた文字画像です。本ゲームの一部としての利用に限り、文字画像を単独の素材として再利用することは許諾しません。
+- Unity エンジンと Unity 公式パッケージ：Unity の各ライセンスに従います。
