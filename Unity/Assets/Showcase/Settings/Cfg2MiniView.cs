@@ -42,7 +42,12 @@ namespace Showcase.Unity.Settings
             title=button.GetComponentInChildren<Text>();title.fontSize=compact?11:14;title.rectTransform.anchoredPosition=new Vector2(compact?6:11,-3);Cfg2Glow.GlowText(title,new Color(.55f,.65f,1));button.targetGraphic=title;
             var r=CfgUi.Rect(transform,"Finite C-centered intersection",0,26,width,height-26);graphic=r.gameObject.AddComponent<Cfg2RelationGraphic>();graphic.raycastTarget=false;graphic.Reference=view;
             BuildHandles();
+            // A left click anywhere on the panel (not a drag) turns the board's section to this panel's section, like its title.
+            if(!TryGetComponent<CfgPointerSurface>(out var surface))surface=gameObject.AddComponent<CfgPointerSurface>();
+            surface.Down=e=>{if(e.button==PointerEventData.InputButton.Left)pressAt=e.position;};
+            surface.Up=e=>{if(e.button==PointerEventData.InputButton.Left&&pressAt.HasValue&&(e.position-pressAt.Value).sqrMagnitude<64&&IsPointerOver(e.position)&&ownership.Owner==InputOwner.None)requested(reference);pressAt=null;};
         }
+        Vector2? pressAt;
         // Another section in the same panel: the title and the drawing stay, the axis handles follow the section's axes.
         // The next Refresh draws it.
         public void Retarget(ReferenceSection view)
