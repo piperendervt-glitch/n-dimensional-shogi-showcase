@@ -69,8 +69,8 @@ try {
     Get-ChildItem -Path $stagedGame -Directory -Filter '*_DoNotShip' | Remove-Item -Recurse -Force
     # The zip goes out on its own, so it carries the licence, the third-party notices and a short readme.
     Copy-Item (Join-Path $repoRoot 'LICENSE') (Join-Path $stagedGame 'LICENSE.txt')
-    Copy-Item (Join-Path $PSScriptRoot 'release\README.txt') (Join-Path $stagedGame 'README.txt')
-    Copy-Item (Join-Path $PSScriptRoot 'release\THIRD_PARTY_NOTICES.txt') (Join-Path $stagedGame 'THIRD_PARTY_NOTICES.txt')
+    Copy-Item (Join-Path $PSScriptRoot 'dist\README.txt') (Join-Path $stagedGame 'README.txt')
+    Copy-Item (Join-Path $PSScriptRoot 'dist\THIRD_PARTY_NOTICES.txt') (Join-Path $stagedGame 'THIRD_PARTY_NOTICES.txt')
     $notices = Join-Path $stagedGame 'Notices\PolyHaven'
     New-Item -ItemType Directory -Force -Path $notices | Out-Null
     Copy-Item (Join-Path $repoRoot 'assets\source\polyhaven\NOTICE.txt') $notices

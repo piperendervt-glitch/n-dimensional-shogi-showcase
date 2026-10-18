@@ -1,0 +1,27 @@
+N次元将棋 — Third-party notices / 第三者の素材と条件
+==================================================
+
+1. Poly Haven textures (CC0-1.0)
+   Wood Table 001, American Walnut Veneer, Sandstone Cracks — https://polyhaven.com/
+   CC0-1.0 / public domain. Sources and checksums: Notices/PolyHaven/NOTICE.txt and provenance.json.
+   盤・机・庭の石のテクスチャは Poly Haven の CC0 素材を加工したものです。
+
+2. Piece name images / 駒名の文字画像
+   The piece name images were drawn with Yu Mincho, a font bundled with Windows.
+   They may be used only as part of this game; reusing them on their own as standalone images is not permitted.
+   No font file is redistributed.
+   駒名の画像は Windows 付属の游明朝で描いた文字画像です。このゲームの一部としてのみ使用でき、
+   画像を単独の素材として再利用することはできません。フォントファイルは同梱していません。
+
+3. Unity
+   Built with Unity 6000.3 and the High Definition Render Pipeline. The Unity runtime (UnityPlayer.dll,
+   the files under NDShogi_Data, MonoBleedingEdge and D3D12) is governed by the Unity terms:
+   https://unity.com/legal/terms-of-service
+   Unity Companion License for Unity packages: https://unity.com/legal/licenses/unity-companion-license
+
+4. Mono runtime (MonoBleedingEdge)
+   Mono is distributed under the MIT License (with parts under other open source licenses):
+   https://github.com/mono/mono/blob/main/LICENSE
+
+The rest of this game (code, procedurally generated board, pieces, garden, sound effects and music
+synthesized by tools/synth_audio.py) is under the MIT License in LICENSE.txt.

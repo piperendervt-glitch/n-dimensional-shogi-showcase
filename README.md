@@ -67,7 +67,7 @@ dotnet run --project tests/Showcase.Geometry.Tests -c Release -- evidence/geomet
 | `Unity/` | Unity プロジェクト（N次元将棋の `Cfg2` シーンと、旧 Showcase デモ） |
 | `src/` | Unity に依存しないルール・幾何ライブラリ（Core / Geometry） |
 | `tests/` | 純 C#・Python の試験 |
-| `tools/` | ビルド・計測スクリプト（`build-game.ps1` が N次元将棋、`release/` が配布 zip に入れる説明書き） |
+| `tools/` | ビルド・計測スクリプト（`build-game.ps1` が N次元将棋、`dist/` が配布 zip に入れる説明書き） |
 | `scenarios/`, `assets/` | 棋譜・シナリオ、素材の原本と出典 |
 | `docs/` | 設計・性能の文書。旧 Showcase デモの説明は [docs/SHOWCASE_DEMO_JA.md](docs/SHOWCASE_DEMO_JA.md)、各作業回の記録は `docs/history/` |
 | `evidence/` | 計測・検証の記録 |
