@@ -285,6 +285,18 @@ static class Program
             Check(animator.Request(ReferenceSection.Initial(n)),"A reference section can be requested from a tilt");animator.Advance(10);
             Check(animator.StableSection==ReferenceSection.Initial(n),"Back to the initial section");
         }
+        // The initial section asked while a tilted turn is still running is queued, not dropped as "already on its way" (the tilt's
+        // placeholder target): the display ends on it.
+        foreach(int n in new[]{4,5,8})
+        {
+            var start=ReferenceSection.Initial(n);var from=VecN.Zero(n)+new VecN(0,0,3);var step=VecN.Zero(n);for(int a=0;a<4;a++)step=step.WithAxis(a,a%2==0?1:-1);
+            var held=SliceAxes.OrientationContaining(from,from+step,start,out _);Check(SliceAxes.SectionOf(held)==null,"The step tilts the view ("+n+"D)");
+            var animator=new SliceAnimator(PivotViewState.CreateInitial(new Vec3(0,0,0),.1,dimensions:n));
+            Check(animator.Request(held),"The tilted turn starts");animator.Advance(.05);Check(animator.IsAnimating,"The tilted turn is running");
+            Check(animator.Request(start)&&animator.QueuedSection==start,"The initial section asked mid-tilt is queued ("+n+"D)");
+            for(int i=0;i<200&&(animator.IsAnimating||animator.QueuedSection.HasValue);i++)animator.Advance(.1);
+            Check(animator.StableSection==start&&SliceAxes.SectionOf(animator.Frame)==start,"The display ends on the initial section, not on the tilt ("+n+"D)");
+        }
         // Hyperplane relation in 5D: a one-constraint polygon, a two-constraint segment, and in 6D a three-constraint point.
         var frame5=xyz5.Frame(c5);var polygon=HyperplaneRelation.Build(frame5,xyv,1,11);
         Check(!polygon.IsCoincident&&polygon.Vertices.Count==4&&polygon.ViewRevision==11,"XYZ frame meets the XYV space in a square");

@@ -319,6 +319,10 @@ namespace NDShogi.Showcase.Core.Settings
                     else warnings.Add(raw.Name + "：既存成分は読取専用。初回の共通G/Pには未対応です。");
                 }
                 if (axes != fullMask) warnings.Add(raw.Name + "：軸対称性を崩す実験設定。Nと他駒座標は変わりません。");
+                // A slider changes exactly k coordinates at once (k = 1, 2, or MaxAxes for hkk): fewer axes in use leave it no move.
+                int slide = kind == PreviewMovementKind.H11 ? 1 : kind == PreviewMovementKind.H22 ? 2 : kind == PreviewMovementKind.Hkk ? maxAxes : 0;
+                int used = 0; for (int axis = 0; axis < dimensions; axis++) if ((axes & (1 << axis)) != 0) used++;
+                if (slide > used) warnings.Add(raw.Name + "：使用する軸が" + used + "本で、同時に動かす" + slide + "軸に足りないため動けません。");
                 definitions.Add(new PieceDefinition(raw, kind, axes, maxAxes, distance));
             }
             report = new ValidationReport(errors, warnings);

@@ -355,8 +355,9 @@ namespace Showcase.Unity.Settings
             geometryDirty=true;
         }
         bool PresentingMove=>cpuShowResult!=null||resetStage!=0||glide!=null;
-        // Only a 4D rotation gesture holds the section view; camera gestures (orbit, pan, click) leave the CPU's shown move and the turn reset running.
-        bool SectionHeld=>ownership.Owner==InputOwner.Rotation4D;
+        // A gesture that moves the section itself holds the view: a 4D rotation, or an axis drag that moves C. Camera gestures
+        // (orbit, pan, click) leave the CPU's shown move and the turn reset running.
+        bool SectionHeld=>ownership.Owner==InputOwner.Rotation4D||ownership.Owner==InputOwner.Axis;
         float GlideProgress=>glide==null?1:Mathf.Clamp01((Time.unscaledTime-glide.Start)/glide.Seconds);
         CfgVisualPiece[] WithGlide(CfgVisualPiece[] pieces)
         {

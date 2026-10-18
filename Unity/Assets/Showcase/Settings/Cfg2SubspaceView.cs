@@ -15,6 +15,8 @@ namespace Showcase.Unity.Settings
     // such a piece these take the place of the plane diagrams; the candidates sit on the cube's diagonals.
     internal sealed class Cfg2SubspaceView : MonoBehaviour
     {
+        // uGUI's 65,000-vertex mesh limit, less a margin.
+        const int VertexBudget=64000;
         int[] uiAxes=Array.Empty<int>(),coreAxes=Array.Empty<int>();Cfg2SubspaceGraphic graphic;Text heading,condition;readonly List<Text> axisLabels=new List<Text>();
         InputOwnership ownership;Func<float> uiScale;bool interactive;
         QN center;long revision;HashSet<QN> gs=new HashSet<QN>(),ps=new HashSet<QN>(),attacks=new HashSet<QN>();CfgVisualPiece[] pieces=Array.Empty<CfgVisualPiece>();
@@ -139,9 +141,24 @@ namespace Showcase.Unity.Settings
                 Array.Clear(o,0,k);Array.Clear(q,0,k);o[0]=i-.5;o[1]=-Half;q[0]=i-.5;q[1]=Half;Cfg2Glow.Line(vh,S(o),S(q),c,1.2f);
                 Array.Clear(o,0,k);Array.Clear(q,0,k);o[1]=i-.5;o[0]=-Half;q[1]=i-.5;q[0]=Half;Cfg2Glow.Line(vh,S(o),S(q),c,1.2f);
             }
+            // Cells: a ray from the centre to every candidate, then dots; danger red, candidates blue, geometric faint, pieces as squares.
+            var cells=new List<(QN cell,int kind,float depth,Vector2 at)>();
+            void Add(QN cell,int kind){if(!Contains(cell)||cell==center)return;var off=Offset(cell);var p=Project(off,out float depth);cells.Add((cell,kind,depth,ToScreen(p,origin,scale)));}
+            if(showCandidates)foreach(var cell in gs)if(!ps.Contains(cell))Add(cell,0);
+            if(showCandidates)foreach(var cell in ps)Add(cell,1);
+            if(showAttacks)foreach(var cell in attacks)Add(cell,2);
+            foreach(var piece in pieces)if(piece.Position!=center)Add(piece.Position,piece.Side==Side.A?3:4);
+            cells.Sort((x,y)=>x.depth.CompareTo(y.depth));
+            // A uGUI mesh holds at most 65,000 vertices. A 10- or 11-axis subspace has thousands of candidates and cube edges, so the
+            // cube goes first, then the rays to the candidates, then the halos: the axes and one dot per cell always fit.
+            var axisBacks=new Vector2[k];int axesCost=8;
+            for(int axis=0;axis<k;axis++){Array.Clear(o,0,k);o[axis]=-Half;axisBacks[axis]=S(o);axesCost+=Mathf.CeilToInt((axisBacks[axis]-origin).magnitude/6f)*4+16;}
+            int rays=0,halos=0;foreach(var entry in cells){if(entry.kind==1)rays++;if(entry.kind==1||entry.kind==2)halos++;}
+            int dotsCost=cells.Count*4,cubeCost=k*(1<<Math.Max(0,k-1))*4,room=VertexBudget-vh.currentVertCount-axesCost;
+            bool drawHalos=dotsCost+halos*4<=room,drawRays=drawHalos&&dotsCost+halos*4+rays*4<=room,drawCube=drawRays&&dotsCost+halos*4+rays*4+cubeCost<=room;
             // The k-cube of the board region: an edge between the two corners that differ in one axis takes that axis's colour.
             int corners=1<<k;
-            for(int v=0;v<corners;v++)for(int axis=0;axis<k;axis++)
+            if(drawCube)for(int v=0;v<corners;v++)for(int axis=0;axis<k;axis++)
             {
                 if((v>>axis&1)!=0)continue;int w=v|1<<axis;
                 for(int i=0;i<k;i++){o[i]=(v>>i&1)!=0?Half:-Half;q[i]=(w>>i&1)!=0?Half:-Half;}
@@ -151,27 +168,20 @@ namespace Showcase.Unity.Settings
             // Axes through the selected cell, brighter, with a dot at the positive end.
             for(int axis=0;axis<k;axis++)
             {
-                Array.Clear(o,0,k);Array.Clear(q,0,k);o[axis]=-Half;q[axis]=Half;var color=Cfg2Projection.AxisColor((LogicalAxis)uiAxes[axis]);
-                Cfg2Glow.Dashed(vh,S(o),origin,Cfg2Glow.Alpha(color,.45f),1.2f,3,3);Cfg2Glow.Neon(vh,origin,S(q),color,.9f,4);Cfg2Glow.Blob(vh,S(q),3.5f,color);
+                Array.Clear(q,0,k);q[axis]=Half;var color=Cfg2Projection.AxisColor((LogicalAxis)uiAxes[axis]);
+                Cfg2Glow.Dashed(vh,axisBacks[axis],origin,Cfg2Glow.Alpha(color,.45f),1.2f,3,3);Cfg2Glow.Neon(vh,origin,S(q),color,.9f,4);Cfg2Glow.Blob(vh,S(q),3.5f,color);
             }
-            // Cells: a ray from the centre to every candidate, then dots; danger red, candidates blue, geometric faint, pieces as squares.
-            var cells=new List<(QN cell,int kind,float depth,Vector2 at)>();
-            void Add(QN cell,int kind){if(!Contains(cell)||cell==center)return;var off=Offset(cell);var p=Project(off,out float depth);cells.Add((cell,kind,depth,ToScreen(p,origin,scale)));}
-            if(showCandidates)foreach(var cell in gs)if(!ps.Contains(cell))Add(cell,0);
-            if(showCandidates)foreach(var cell in ps)Add(cell,1);
-            if(showAttacks)foreach(var cell in attacks)Add(cell,2);
-            foreach(var piece in pieces)if(piece.Position!=center)Add(piece.Position,piece.Side==Side.A?3:4);
-            cells.Sort((x,y)=>x.depth.CompareTo(y.depth));
-            float dot=Mathf.Clamp(scale*.33f,2.5f,7);
-            foreach(var entry in cells)if(entry.kind==1)Cfg2Glow.Line(vh,origin,entry.at,new Color(.30f,.62f,1,.22f),Mathf.Max(1,dot*.5f));
-            foreach(var entry in cells)
+            float dot=Mathf.Clamp(scale*.33f,2.5f,7);int drawable=Mathf.Max(0,room/4);
+            if(drawRays)foreach(var entry in cells)if(entry.kind==1)Cfg2Glow.Line(vh,origin,entry.at,new Color(.30f,.62f,1,.22f),Mathf.Max(1,dot*.5f));
+            // When even one dot per cell would not fit, the nearest cells (drawn last) are the ones kept.
+            for(int c=Mathf.Max(0,cells.Count-drawable);c<cells.Count;c++)
             {
-                float fade=Mathf.Clamp(.9f+entry.depth*1.6f,.4f,1);
+                var entry=cells[c];float fade=Mathf.Clamp(.9f+entry.depth*1.6f,.4f,1);
                 switch(entry.kind)
                 {
                     case 0:Cfg2Glow.Blob(vh,entry.at,dot*.9f,new Color(.40f,.58f,.95f,.30f*fade));break;
-                    case 1:Cfg2Glow.Blob(vh,entry.at,dot*2.2f,new Color(.18f,.48f,1,.45f*fade));Cfg2Glow.Blob(vh,entry.at,dot,new Color(.62f,.85f,1,fade));break;
-                    case 2:Cfg2Glow.Blob(vh,entry.at,dot*2.2f,new Color(1,.22f,.18f,.40f*fade));Cfg2Glow.Blob(vh,entry.at,dot,new Color(1,.62f,.58f,fade));break;
+                    case 1:if(drawHalos)Cfg2Glow.Blob(vh,entry.at,dot*2.2f,new Color(.18f,.48f,1,.45f*fade));Cfg2Glow.Blob(vh,entry.at,dot,new Color(.62f,.85f,1,fade));break;
+                    case 2:if(drawHalos)Cfg2Glow.Blob(vh,entry.at,dot*2.2f,new Color(1,.22f,.18f,.40f*fade));Cfg2Glow.Blob(vh,entry.at,dot,new Color(1,.62f,.58f,fade));break;
                     default:{float h=dot*1.1f;Cfg2Glow.Rect(vh,entry.at.x-h,entry.at.y+h,2*h,2*h,entry.kind==3?new Color(.95f,.88f,.70f,.9f):new Color(.45f,.30f,.20f,.9f));break;}
                 }
             }

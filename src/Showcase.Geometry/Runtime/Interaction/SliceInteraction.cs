@@ -308,7 +308,8 @@ namespace Showcase.Geometry.Interaction
         public bool Request(ReferenceSection section)
         {
             section=Fit(section);section.Frame(Center);
-            if(active){if(target==section||pending==section)return false;pending=section;pendingSeconds=secondsPerLeg;return true;}
+            // A turn to a tilted pose carries the initial section only as a placeholder target: that section is queued, not "already on its way".
+            if(active){if(target==section&&!tiltedEnd.HasValue||pending==section)return false;pending=section;pendingSeconds=secondsPerLeg;return true;}
             if(stable==section)return false;Start(section,secondsPerLeg);return true;
         }
         /// <summary>Turns to any orientation of this space (its centre is ignored); a reference pose is requested as its section.

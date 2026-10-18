@@ -481,6 +481,9 @@ namespace Showcase.Unity.Settings
     internal sealed class Cfg2ProjectionGraphic : MaskableGraphic
     {
         public Cfg2ProjectionView View;
+        // A uGUI mesh holds at most 65,000 vertices (VertexHelper throws beyond); this leaves a margin.
+        internal const int VertexBudget=64000;const int MaxDashes=100;
+        static int HiddenAxesOf(int[] d,int n){int hidden=0;for(int i=3;i<n;i++)if(d[i]!=0)hidden++;return hidden;}
         public override Texture mainTexture=>Cfg2Glow.Texture;
         // Ray colour by how many hidden axes (W, V, ...) the direction uses: none (visible in the plain section), one, two, more.
         static readonly Color[] Tier={new Color(.47f,.75f,1),new Color(1,.67f,.35f),new Color(.75f,.47f,1),new Color(.47f,.90f,.63f),new Color(1,.47f,.63f)};
@@ -506,29 +509,44 @@ namespace Showcase.Unity.Settings
                     Cfg2Glow.Line(vh,View.ToScreen(View.Project(a,out _)),View.ToScreen(View.Project(b,out _)),new Color(.5f,.58f,.75f,alpha),onEdge==edges&&edges>0?1.4f:1.1f);
                 }
             }
-            // Rays. Faint ones first and as single segments; lit ones on top with a dot per reached cell.
+            // Rays. Faint ones first and as single segments; lit ones on top with a dot per reached cell. Everything is sorted out
+            // before drawing so the mesh stays under the UI limit: the axes and the lit rays keep their room, faint rays take what is left.
             var dirs=View.Directions;int length=View.RayLength;bool many=dirs.Count>Cfg2ProjectionView.MaxFaintRays;bool choice=View.AnyChoice;
-            var lit=new List<(int[] d,int level,float depth)>();int faint=0;
+            var lit=new List<(int[] d,int level,float depth)>();var faint=new List<(Vector2 end,float depth,Color tier)>();
             var point=new double[n];
             foreach(var d in dirs)
             {
                 if(!View.Shown(d))continue;
                 int level=View.Level(d);
-                if(level==0||(level==1&&choice==false&&many)){if(many)continue;if(faint++>Cfg2ProjectionView.MaxFaintRays)continue;}
-                int hidden=0;for(int i=3;i<n;i++)if(d[i]!=0)hidden++;var tier=Tier[Mathf.Min(hidden,Tier.Length-1)];
+                if((level==0||(level==1&&choice==false&&many))&&many)continue;
                 for(int i=0;i<n;i++)point[i]=d[i]*length;var end=View.Project(point,out float depth);
                 if(level>0&&choice){lit.Add((d,level,depth));continue;}
-                // Faint when a choice exists, plain when nothing is chosen.
-                float fade=Mathf.Clamp(.9f+depth*1.6f,.3f,1);
-                var color=choice?Cfg2Glow.Alpha(tier,.16f):Cfg2Glow.Alpha(tier,.55f*fade);
-                Cfg2Glow.Line(vh,origin,View.ToScreen(end),color,choice?1.4f:1.6f+depth*3f);
+                faint.Add((View.ToScreen(end),depth,Tier[Mathf.Min(HiddenAxesOf(d,n),Tier.Length-1)]));
             }
-            lit.Sort((x,y)=>x.depth.CompareTo(y.depth));
-            bool detailed=lit.Count<=Cfg2ProjectionView.MaxDetailedRays;int drawn=0;
-            foreach(var entry in lit)
+            lit.Sort((x,y)=>x.depth.CompareTo(y.depth));int litCount=Mathf.Min(lit.Count,Cfg2ProjectionView.MaxLitRays);
+            // Axes as thin lines with a dot at the positive end, back to front; the negative half is dashed (solid when a dash pattern
+            // would be very long, as near a hidden-axis camera).
+            var axes=new List<(int axis,Vector3 p,Vector2 back,int dashes)>();int axesCost=8;
+            for(int axis=0;axis<n;axis++)
             {
-                if(drawn++>=Cfg2ProjectionView.MaxLitRays)break;
-                var d=entry.d;int hidden=0;for(int i=3;i<n;i++)if(d[i]!=0)hidden++;var tier=Tier[Mathf.Min(hidden,Tier.Length-1)];
+                if(!View.AxisShown(axis))continue;var v=new double[n];v[axis]=Cfg2ProjectionView.AxisLength;var back=new double[n];back[axis]=-Cfg2ProjectionView.AxisLength*.6;
+                var backEnd=View.ToScreen(View.Project(back,out _));int dashes=Mathf.CeilToInt((backEnd-origin).magnitude/6f);
+                axes.Add((axis,View.Project(v,out _),backEnd,dashes));axesCost+=(dashes<=MaxDashes?dashes*4:4)+16;
+            }
+            int detailedCost=0;for(int i=0;i<litCount;i++)detailedCost+=length*(lit[i].level==2?16:8);
+            bool detailed=lit.Count<=Cfg2ProjectionView.MaxDetailedRays&&vh.currentVertCount+detailedCost+axesCost<=VertexBudget;
+            int litCost=detailed?detailedCost:litCount*4;
+            int faintRoom=Mathf.Max(0,(VertexBudget-vh.currentVertCount-litCost-axesCost)/4);
+            for(int i=0;i<faint.Count&&i<faintRoom;i++)
+            {
+                // Faint when a choice exists, plain when nothing is chosen.
+                var entry=faint[i];float fade=Mathf.Clamp(.9f+entry.depth*1.6f,.3f,1);
+                var color=choice?Cfg2Glow.Alpha(entry.tier,.16f):Cfg2Glow.Alpha(entry.tier,.55f*fade);
+                Cfg2Glow.Line(vh,origin,entry.end,color,choice?1.4f:1.6f+entry.depth*3f);
+            }
+            for(int ray=0;ray<litCount;ray++)
+            {
+                var entry=lit[ray];var d=entry.d;var tier=Tier[Mathf.Min(HiddenAxesOf(d,n),Tier.Length-1)];
                 float fade=Mathf.Clamp(.9f+entry.depth*1.6f,.4f,1);var color=Cfg2Glow.Alpha(tier,fade);
                 if(!detailed){for(int i=0;i<n;i++)point[i]=d[i]*length;var e=View.ToScreen(View.Project(point,out float dz));Cfg2Glow.Line(vh,origin,e,color,(entry.level==2?2.4f:1.6f)+dz*2f);continue;}
                 Vector2 previous=origin;
@@ -541,14 +559,11 @@ namespace Showcase.Unity.Settings
                     previous=p;
                 }
             }
-            // Axes as thin lines with a dot at the positive end, back to front; the negative half is dashed.
-            var axes=new List<(int axis,Vector3 p)>();for(int axis=0;axis<n;axis++){if(!View.AxisShown(axis))continue;var v=new double[n];v[axis]=Cfg2ProjectionView.AxisLength;axes.Add((axis,View.Project(v,out _)));}
             axes.Sort((x,y)=>y.p.z.CompareTo(x.p.z));
             foreach(var entry in axes)
             {
                 var color=View.AxisColor(entry.axis);var end=View.ToScreen(entry.p);
-                var back=new double[n];back[entry.axis]=-Cfg2ProjectionView.AxisLength*.6;
-                Cfg2Glow.Dashed(vh,origin,View.ToScreen(View.Project(back,out _)),Cfg2Glow.Alpha(color,.35f),1.4f,3,3);
+                if(entry.dashes<=MaxDashes)Cfg2Glow.Dashed(vh,origin,entry.back,Cfg2Glow.Alpha(color,.35f),1.4f,3,3);else Cfg2Glow.Line(vh,origin,entry.back,Cfg2Glow.Alpha(color,.2f),1.4f);
                 Cfg2Glow.Neon(vh,origin,end,color,1.0f,5);
                 Cfg2Glow.Blob(vh,end,4.5f,color);
             }

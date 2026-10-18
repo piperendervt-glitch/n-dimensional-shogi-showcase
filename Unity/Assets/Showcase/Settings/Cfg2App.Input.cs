@@ -51,8 +51,10 @@ namespace Showcase.Unity.Settings
             var owner=gesture==Gesture.Pan?InputOwner.CameraPan:gesture==Gesture.Orbit?InputOwner.CameraOrbit:gesture==Gesture.Rotate4D?InputOwner.Rotation4D:InputOwner.Board;
             startYaw=yaw;startPitch=pitch;startDistance=distance;startPan=pan;startCameraPosition=rig.Camera.transform.position;startCameraRotation=rig.Camera.transform.rotation;
             startManualCamera=manualCamera;pointerView=slice.DisplayState;
-            var capturedSlice=slice;
-            if(!ownership.TryBegin(owner,e.pointerId,()=>{capturedSlice.Restore(pointerView);yaw=startYaw;pitch=startPitch;distance=startDistance;pan=startPan;manualCamera=startManualCamera;rig.Camera.transform.SetPositionAndRotation(startCameraPosition,startCameraRotation);cameraRevision++;geometryDirty=true;RefreshAuxiliaryViews();pointerButton=-1;}))return;
+            // Only a 4D turn changes the section, so only its cancel restores it: a camera gesture cancelled during a CPU's shown move
+            // or a turn reset must not rewind (and stop) the turn that is running.
+            var capturedSlice=slice;bool turnsSection=gesture==Gesture.Rotate4D;
+            if(!ownership.TryBegin(owner,e.pointerId,()=>{if(turnsSection)capturedSlice.Restore(pointerView);yaw=startYaw;pitch=startPitch;distance=startDistance;pan=startPan;manualCamera=startManualCamera;rig.Camera.transform.SetPositionAndRotation(startCameraPosition,startCameraRotation);cameraRevision++;geometryDirty=true;RefreshAuxiliaryViews();pointerButton=-1;}))return;
             if(gesture==Gesture.Rotate4D)slice.SetOrientation(slice.Frame);
             pointerButton=(int)e.button;pointerStart=lastPointer=e.position;pointerMoved=false;pointerRevision=slice.ViewRevision;pointerState=session?.Revision??preview.Revision;pointerGeneration=session?.Generation??0;pointerDraft=draft.Revision;pointerCamera=cameraRevision;pointerLayout=layoutRevision;pointerMatch=session?.Snapshot.MatchId;
             Record("PointerDown",e.button+";view="+pointerRevision+";state="+pointerState+";generation="+pointerGeneration);

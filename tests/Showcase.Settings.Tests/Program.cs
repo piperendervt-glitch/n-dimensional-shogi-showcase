@@ -140,6 +140,23 @@ Test("HKK-k-axis-slider-counts-C(N,k)-times-2^k-directions-and-5D-3-and-4-axes-t
     var bad = new DraftData { Name = "bad", SourceId = "hkk/0.1", Dimensions = "4" }; bad.Definitions.Add(new RawPieceDefinition { Id = "m", Name = "m", Kind = "hkk/1", AxesMask = "15", MaxAxes = "5", MaxDistance = "4" });
     Assert(!new SettingsDraft(bad).TryCompile(out _, out _));
 });
+Test("slider-with-fewer-axes-in-use-than-it-moves-at-once-is-warned-and-has-no-move", () =>
+{
+    // A k-axis slider changes exactly k coordinates: a mask of fewer axes leaves it nothing, which the report says (still valid data).
+    foreach (var (kind, k, mask) in new[] { ("hkk/1", 4, "7"), ("hkk/1", 3, "3"), ("h22/1", 2, "1") })
+    {
+        var data = new DraftData { Name = "few axes", SourceId = "hkk/0.1", Dimensions = "5", Min = "-4", Max = "4" };
+        data.Definitions.Add(new RawPieceDefinition { Id = "m", Name = "k軸走り", Kind = kind, AxesMask = mask, MaxAxes = k.ToString(), MaxDistance = "4" });
+        Assert(new SettingsDraft(data).TryCompile(out var preset, out var report), string.Join(";", report.Errors));
+        Assert(report.Warnings.Any(w => w.Contains("足りない")), kind + " k=" + k + " mask=" + mask + " is warned");
+        var session = new PreviewSession(new BoundsN(-4, 4, 5), new[] { new TrialPiece("subject", "m", Side.A, new QN(0, 0, 0, 0, 0)) });
+        Assert(PreviewQuery.Execute(preset!, session, "subject").G.Count == 0, "and has no move");
+    }
+    // Enough axes: no such warning.
+    var ok = new DraftData { Name = "enough", SourceId = "hkk/0.1", Dimensions = "5", Min = "-4", Max = "4" };
+    ok.Definitions.Add(new RawPieceDefinition { Id = "m", Name = "k軸走り", Kind = "hkk/1", AxesMask = "15", MaxAxes = "4", MaxDistance = "4" });
+    Assert(new SettingsDraft(ok).TryCompile(out _, out var okReport) && !okReport.Warnings.Any(w => w.Contains("足りない")));
+});
 Test("both-occlusion-versions-H11-H22-middle-endpoint-and-corner", () =>
 {
     foreach (string mode in new[] { "lattice-line/1", "supercover-closed/1" }) foreach (string kind in new[] { "h11/1", "h22/1" })

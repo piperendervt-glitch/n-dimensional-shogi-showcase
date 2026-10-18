@@ -121,7 +121,10 @@ namespace Showcase.Unity.Settings
         static void Place(RectTransform r,float x,float y,float w,float h){r.anchoredPosition=new Vector2(x,-y);r.sizeDelta=new Vector2(w,h);}
         void LayoutSettings()
         {
-            if(settings==null)return;float spare=SettingsSpare();if(Mathf.Approximately(spare,settingsSpare))return;settingsSpare=spare;
+            if(settings==null)return;float spare=SettingsSpare();if(Mathf.Approximately(spare,settingsSpare))return;
+            // A page of its own is rebuilt for the new width, which would drop a field being typed in: the layout waits for the typing to end.
+            if(settingsSpare>=0&&category!=2&&CfgUi.EditingText)return;
+            settingsSpare=spare;
             Place(settingsHeading,-spare,0,1536+2*spare,88);settingsTitle.rectTransform.anchoredPosition=new Vector2(560+spare,-15);((RectTransform)backButton.transform).anchoredPosition=new Vector2(1423+2*spare,-18);
             Place(navPanel,6-spare,100,196,694);Place(pieceHost,212-spare,100,186,888);LayoutCategory();
             headerStatus.rectTransform.anchoredPosition=new Vector2(16-spare,-807);Place(statusText.rectTransform,410-spare,995,1100+2*spare,25);
@@ -131,8 +134,8 @@ namespace Showcase.Unity.Settings
             Place(projectionRect,10,104,width-30-controls,774);Place(projectionControls,width-10-controls,104,controls,774);projectionView.Layout();
             // Section tabs: the plane diagrams fill the room right of the section in as many 174 px columns as fit.
             Place(planeMiniHost,546,104,width-556,584);LayoutPlaneMinis();
-            // A page of its own spreads its columns over the new width.
-            if(category!=2)BuildDetails();
+            // A page of its own spreads its columns over the new width, at the scroll position it had.
+            if(category!=2){RememberScroll();BuildDetails();}
         }
         // 駒の動き設定 works with the piece list and the movement preview beside it; every other category is a page of its own
         // over the whole width right of the categories.
@@ -231,6 +234,8 @@ namespace Showcase.Unity.Settings
             for(int i=0;i<6;i++)MarkSelected(actions["plane-"+i],i==planeTab);
             ShowSectionAids(true);geometryDirty=true;Record("Plane",planeTab.ToString()+";"+planeView.Name);
         }
+        // The large plane (tabs 2..6) uses a UI axis that an N-board does not have.
+        bool PlaneLacksAxis(int n)=>planeTab>=2&&planeTab<7&&Math.Max(planeView.HorizontalAxis,planeView.VerticalAxis)>=n;
         // Trial tools, counts, gizmo and the plane diagrams belong to the section tabs; the projection tab hides them.
         void ShowSectionAids(bool on)
         {
@@ -277,6 +282,8 @@ namespace Showcase.Unity.Settings
             var selected=preview.Find(selectedPiece)?.Position??planeReferenceCell;
             // The XW tab needs a fourth axis: in 3D it is gone. The diagrams are rebuilt for the planes of the current N.
             planeView.Dimensions=n;if(actions.TryGetValue("plane-4",out var xw))xw.gameObject.SetActive(n>3);
+            // A large plane on an axis the board no longer has (XV after 5D→4D, YW after 4D→3D) goes back to the section view.
+            if(PlaneLacksAxis(n))SelectPlane(0);
             int slideAxes=preset?.Find(selectedDefinition)?.SlideAxes??0;EnsurePlaneMinis(n,slideAxes);
             // The large subspace figure belongs to one k: another piece or axis count closes it back to the section view.
             if(planeTab==7&&(slideAxes<3||subspaceView.AxisCount!=slideAxes||subspaceView.Dimensions!=n))SelectPlane(0);
@@ -435,7 +442,11 @@ namespace Showcase.Unity.Settings
                 // Four toggles per row: X Y Z W, then V U T S, then R Q P for the largest N.
                 var axes=SliceAxes.Axes(n);int rows=(axes.Length+3)/4;
                 for(int i=0;i<axes.Length;i++){var axis=axes[i];int bit=1<<SliceAxes.CoreAxis(axis);Toggle(c,SliceAxes.AxisName(axis),(mask&bit)!=0,8+i%4*83,ay+45+i/4*40,82,v=>Edit(x=>{int.TryParse(x.AxesMask,out int m);x.AxesMask=(v?m|bit:m&~bit).ToString();}));}
-                var legend=CfgUi.Label(c,"青：移動候補   赤：攻撃範囲\n金：選択中の駒\n\n全"+n+"Dで照会し、表示内を描きます。",8,ay+77+rows*40,330,146,18,Muted);
+                float ly=ay+77+rows*40;
+                // A slider moves exactly k of its axes at once: with fewer axes in use it has no move at all, so say so here.
+                int used=0;for(int core=0;core<n;core++)if((mask&1<<core)!=0)used++;int k=SlideAxesOf(d);
+                if(k>used){CfgUi.Label(c,"使う軸が"+used+"本しかないため、"+k+"軸を同時に動かすこの駒は動けません。",8,ly-26,330,44,15,new Color(1,.55f,.45f));ly+=26;}
+                var legend=CfgUi.Label(c,"青：移動候補   赤：攻撃範囲\n金：選択中の駒\n\n全"+n+"Dで照会し、表示内を描きます。",8,ly,330,146,18,Muted);
                 float bottom=legend.rectTransform.anchoredPosition.y*-1+146+20;if(c.sizeDelta.y<bottom)c.sizeDelta=new Vector2(c.sizeDelta.x,bottom);
             }
             else
@@ -454,9 +465,12 @@ namespace Showcase.Unity.Settings
         static bool IsSliderKind(string kind)=>kind=="h11/1"||kind=="h22/1"||kind=="hkk/1";
         // Axes an editable slider moves at once. h11/h22 keep their own kind ids so existing 4D data and hashes are untouched; k>=3 is "hkk/1" with k in MaxAxes.
         static int SlideAxesOf(RawPieceDefinition d)=>d.Kind=="h11/1"?1:d.Kind=="h22/1"?2:d.Kind=="hkk/1"&&int.TryParse(d.MaxAxes,NumberStyles.Integer,CultureInfo.InvariantCulture,out int k)?k:0;
-        static void SetSlideAxes(RawPieceDefinition d,int k)
+        // h11/h22 carry MaxAxes=N like every slider of an N-board (SetDimensions keeps it so), so going back to 1 or 2 axes restores
+        // the same data and rule hash as before the axis count was raised.
+        static void SetSlideAxes(RawPieceDefinition d,int k,int n)
         {
-            if(k==1)d.Kind="h11/1";else if(k==2)d.Kind="h22/1";else{d.Kind="hkk/1";d.MaxAxes=k.ToString(CultureInfo.InvariantCulture);}
+            if(k==1)d.Kind="h11/1";else if(k==2)d.Kind="h22/1";else d.Kind="hkk/1";
+            d.MaxAxes=(k<=2?n:k).ToString(CultureInfo.InvariantCulture);
         }
         // The two axis counts whose direction counts C(N,k)·2^k tie at the maximum (N=2,5,8,11: (N+1)/3 pairs with (2N+2)/3), or null.
         static (int a,int b)? EqualSlidePair(int n)
@@ -508,12 +522,13 @@ namespace Showcase.Unity.Settings
         void SetSlideAxesSelected(int k)
         {
             int n=DraftDimensions;if(k<1||k>n)return;
-            Edit(x=>{if(IsSliderKind(x.Kind))SetSlideAxes(x,k);});Record("SlideAxes",selectedDefinition+"="+k.ToString(CultureInfo.InvariantCulture));
+            Edit(x=>{if(IsSliderKind(x.Kind))SetSlideAxes(x,k,n);});Record("SlideAxes",selectedDefinition+"="+k.ToString(CultureInfo.InvariantCulture));
         }
         // 飛車 takes the smaller axis count of the tie, 角行 the larger: one edit, so one Undo restores both.
         void SetSlidePair(int a,int b)
         {
-            draft.Edit(d=>{foreach(var x in d.Definitions){if(!IsSliderKind(x.Kind))continue;if(x.Id=="rook-h11")SetSlideAxes(x,a);else if(x.Id=="bishop-h22")SetSlideAxes(x,b);}});
+            int n=DraftDimensions;
+            draft.Edit(d=>{foreach(var x in d.Definitions){if(!IsSliderKind(x.Kind))continue;if(x.Id=="rook-h11")SetSlideAxes(x,a,n);else if(x.Id=="bishop-h22")SetSlideAxes(x,b,n);}});
             AfterEdit();BuildDetails();Record("SlidePair",a+"/"+b);
         }
         // Candidates at the initial position grow about threefold per axis: 46,591 in 8D fit the default budget of 65,536,
@@ -558,7 +573,7 @@ namespace Showcase.Unity.Settings
                     x.AxesMask=Inv(every?BoundsN.FullAxesMask(n):mask&BoundsN.FullAxesMask(n));
                     int.TryParse(x.MaxAxes,NumberStyles.Integer,CultureInfo.InvariantCulture,out int axes);
                     // A slider's axis count is a rule choice, not "every axis": it only shrinks when the new board has fewer axes.
-                    if(x.Kind=="hkk/1"){if(axes>n||axes<=0)SetSlideAxes(x,Math.Max(1,Math.Min(axes,n)));}
+                    if(x.Kind=="hkk/1"){if(axes>n||axes<=0)SetSlideAxes(x,Math.Max(1,Math.Min(axes,n)),n);}
                     else if(!IsEditable(x)||axes==old||axes>n||axes<=0)x.MaxAxes=Inv(n);
                 }
                 var copy=DraftData.CopyAxisOf(d.InitialLayout);if(copy.HasValue&&copy.Value>=n)d.InitialLayout=DraftData.FlatLayout;
@@ -587,7 +602,7 @@ namespace Showcase.Unity.Settings
                 if(n!=viewDimensions)rotationAxis=LogicalAxis.W;
                 viewDimensions=n;viewLayout=layout;EnsureCpuBudget(n,copy.HasValue);trialSlice=NewPivotSlice(n,copy);
                 // During a match only the trial view waiting in the background changes.
-                if(session==null||opened){slice=trialSlice;previewRenderer.SetDisplayState(slice.DisplayState);if(planeTab==4&&n<4)SelectPlane(0);if(opened)UpdateCamera();}
+                if(session==null||opened){slice=trialSlice;previewRenderer.SetDisplayState(slice.DisplayState);if(PlaneLacksAxis(n))SelectPlane(0);if(opened)UpdateCamera();}
                 UpdateHelpText();Record("TrialViewReset","N="+n+";layout="+layout);
             }
             UpdateHeader();UpdateWindowTitle();
