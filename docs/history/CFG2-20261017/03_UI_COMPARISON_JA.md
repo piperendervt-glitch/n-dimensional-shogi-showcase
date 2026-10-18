@@ -6,7 +6,7 @@
 
 参照元は依頼パッケージの `references/approved_main_menu.png`、`approved_pvp.png`、`approved_piece_settings.png`。3枚とも実画像を閲覧した。パッケージの所在は次のとおり。
 
-`C:/Users/pipe_render/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/`
+`C:/Users/USER/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/`
 
 参照画像は画面構成と外観の基準として扱い、画像に見える駒数、対局規則、時計値等から新しい製品規則を採用していない。最終画像は既存ローカル素材と実行コードで描画した画面であり、参照画像を背景に貼って操作成功を装うものではない。画素一致率などの定量的な類似度は測定していない。
 

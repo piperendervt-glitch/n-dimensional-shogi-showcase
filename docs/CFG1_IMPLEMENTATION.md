@@ -54,4 +54,4 @@ pure C#試験は既存Core36件、Geometry3,372,857 assertions、新Settings25�
 
 Windows Playerの `--cfg1-smoke --cfg1-smoke-phase initial` は実UIハンドラへ模擬uGUIイベントを送り、編集・実pick・移動・捕獲・入力所有・回転・保存を確認する。同じrunで `--cfg1-smoke-phase reload` を別プロセス起動すると保存復元を確認する。`images` ディレクトリを起動前に作る必要がある。これらはOSの物理マウス／キー／IME入力を証明しない。
 
-今回run：`D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\output\CFG1-20261016-201633-JST`。最終成果物・実行結果・全受入ID・未実施・人間確認手順は同フォルダーの00〜05報告と証拠台帳を参照する。識別はBASE_HEAD＋差分／新規ファイルSHA-256であり、HEAD単体ではない。
+今回run：`D:\Users\USER\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\output\CFG1-20261016-201633-JST`。最終成果物・実行結果・全受入ID・未実施・人間確認手順は同フォルダーの00〜05報告と証拠台帳を参照する。識別はBASE_HEAD＋差分／新規ファイルSHA-256であり、HEAD単体ではない。

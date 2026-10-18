@@ -4,7 +4,7 @@
 
 ## 契約と原本
 
-今回契約 `C:\Users\pipe_render\.codex\.chatgpt-projects\g-p-6ad04e32b33c8191b44c5dfad644d21c\deliverables\CFG2_UI_MATCH_REQUEST_v0_1_JA\CODEX_CFG2_UI_MATCH_IMPLEMENTATION_REQUEST_JA.md` を全文読んだ。SHA-256：`D843C859C9DFED22B5494FF3EAB5897C93B8CA71D2E85516B4F76EE9F3A5A7E1`。
+今回契約 `C:\Users\USER\.codex\.chatgpt-projects\g-p-6ad04e32b33c8191b44c5dfad644d21c\deliverables\CFG2_UI_MATCH_REQUEST_v0_1_JA\CODEX_CFG2_UI_MATCH_IMPLEMENTATION_REQUEST_JA.md` を全文読んだ。SHA-256：`D843C859C9DFED22B5494FF3EAB5897C93B8CA71D2E85516B4F76EE9F3A5A7E1`。
 
 CFG-1原本runの00～05報告を全文読み、final-source-audit／preflight-audit／acceptance-finalの全文JSONをパースした。旧196 IDは重複なく保持され、C1は18件。原本のFinalStatus、Evidence、Proven、ScopeGapを最終評価として読む。古いNote／EvidenceThisRunの中間記述を最終証拠と取り違えない。参照ファイル・hash・全ID索引は [cfg1-reference-index.json](cfg1-reference-index.json)。旧run・旧受入・過去試験・EXEを変更していない。
 

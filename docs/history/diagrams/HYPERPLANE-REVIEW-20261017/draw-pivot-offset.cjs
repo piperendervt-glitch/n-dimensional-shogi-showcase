@@ -1,5 +1,5 @@
 const fs=require('fs'),path=require('path');
-const {chromium}=require('C:/Users/pipe_render/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium}=require('C:/Users/USER/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0),unit=a=>a.map(x=>x/Math.hypot(...a)),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
 const cam=unit([-6,5,-8]),right=unit(cross(cam,[0,1,0])),up=cross(right,cam),h=.65;
 const C={ink:'#193448',sub:'#566d7d',gray:'#d5dce2',blue:'#3886c8',gold:'#ae750f',fill:'#ffd16b',X:'#bc7024',Y:'#bc4e84',Z:'#3278b7',pivot:'#7954b7'};

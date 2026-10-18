@@ -91,11 +91,11 @@ build004の実行は1536×1024、Player報告DPI96、Unity6000.3.11f1、RTX5060T
 3. 既存の `--phase initial` と同じdatasetの `--phase reload` を実行して既存CFG2接続回帰を確認。今回新規Playerのinitialはまだ開始していない。新しい対局ルール／旧Showcase性能試験への拡張は禁止。
 4. 新dataset内だけで `pivot-next-match.xml` の破損fixtureを作り、`pivot-recovery` と `pivot-recovery-reload` を別プロセスで実行。`Cfg2App.PivotIntegrationSmoke.cs` に経路あり。原本hash保全を記録。**Player復旧はNOT_RUN**。
 5. 1920×1080と1280×720の可能な実解像度で3画面を撮影。最新ギズモ調整を親／人間が実画面で確認。実際に描画できた寸法とDPIだけを記録する。
-6. OS入力確認を実施。利用可能skillは `C:\Users\pipe_render\.codex\plugins\cache\openai-bundled\computer-use\26.1013.31256\skills\computer-use\SKILL.md`、`@oai/sky` をnode_replで使用。本文/guidance/api/confirmationsを読む。cua_repl Native disabledだけを理由に実操作不能としない。この担当はskill読了・sky初期化までで、**OS入力操作は一件もしていない**。sky.dragは左dragのみ、修飾キー保持や右／中dragの未対応範囲を模擬と混同しない。
+6. OS入力確認を実施。利用可能skillは `C:\Users\USER\.codex\plugins\cache\openai-bundled\computer-use\26.1013.31256\skills\computer-use\SKILL.md`、`@oai/sky` をnode_replで使用。本文/guidance/api/confirmationsを読む。cua_repl Native disabledだけを理由に実操作不能としない。この担当はskill読了・sky初期化までで、**OS入力操作は一件もしていない**。sky.dragは左dragのみ、修飾キー保持や右／中dragの未対応範囲を模擬と混同しない。
 7. 最終確定build絶対パス/run/data/既存Python実パスを固定した利用者用 `.cmd` を今回runに作る。既定EXEなしのguardを呼ぶ構成。EXE直接ダブルクリックは識別引数がなく終了するため、EXEだけを起動入口として渡さない。現在は確定版がないのでこの入口は未作成。
 8. PV01〜PV17と元C1/AUTO/RE/UI4/SW2等の対応・現実の結果・未実行を整理。特にPV06/11/13/15/17を部分証拠だけで全PASSにしない。最終保全確認、試験用Unity/Player終了確認、残る人間確認をまとめる。
 
-既存Pythonは `C:\Users\pipe_render\AppData\Local\Programs\Python\Python312\python.exe`、Unityは `C:\Program Files\Unity\Hub\Editor\6000.3.11f1\Editor\Unity.exe`。新規取得・更新・Git書込み・公開・課金・外部API・別repo変更は禁止。
+既存Pythonは `C:\Users\USER\AppData\Local\Programs\Python\Python312\python.exe`、Unityは `C:\Program Files\Unity\Hub\Editor\6000.3.11f1\Editor\Unity.exe`。新規取得・更新・Git書込み・公開・課金・外部API・別repo変更は禁止。
 
 ## 実行権限と停止時の事実
 

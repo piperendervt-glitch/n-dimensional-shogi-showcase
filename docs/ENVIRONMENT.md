@@ -2,7 +2,7 @@
 
 - 確認日: 2026-10-15 (Asia/Tokyo)
 - 作業領域: C:\\dev\\n-dimensional-shogi-showcase
-- 指定原資料: D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase
+- 指定原資料: D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase
 - 本線: C:\\dev\\n-dimensional-shogi (読取り確認のみ)
 - 作業領域・その親・原資料フォルダーはreparse pointではない。作業開始時のC側は空。
 - Windows 10.0.26200 x64

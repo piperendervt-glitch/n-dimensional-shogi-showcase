@@ -16,7 +16,7 @@
 
 元契約の実在箇所は、指定当初のHANDOFF直下ではなく次のファイルである。
 
-`D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md`
+`D:\Users\USER\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md`
 
 元契約の保全・権限・試験条件を継承する。旧文書の「実装しない」は過去のレビュー段階の記録として残す。今回のユーザー指示が、今回設計した範囲の実装依頼を許可している。Git書込み、取得・更新、公開、課金、外部API・素材取得、別リポジトリ変更は引き続き禁止。
 
@@ -138,9 +138,9 @@ pickはViewRevisionに加え、カメラ、レイアウト、局面、要求セ�
 
 | 画面 | 承認画像 |
 |---|---|
-| 設定 | `D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_14.png` |
-| プレイ | `D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_02.png` |
-| 初期メニュー | `D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_23.png` |
+| 設定 | `D:/Users/USER/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_14.png` |
+| プレイ | `D:/Users/USER/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_02.png` |
+| 初期メニュー | `D:/Users/USER/Downloads/n-dimensional-shogi-showcase/ChatGPT 画像 2026年10月17日 02_38_23.png` |
 
 メニューは承認済みの構成を維持する。紺黒の半透明パネル、金色の細枠、青い選択発光、木製駒、文字の大小・余白・整列を再現する。既存HDRP、木材・駒・石・葉・照明資産を使用する。日本語フォントは既存の利用条件内で使い、OSフォントを無断で配布物へコピーしない。
 

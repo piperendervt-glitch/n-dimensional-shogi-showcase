@@ -2,17 +2,17 @@ param(
     [string]$UnityEditor = '',
     [switch]$NoZip
 )
-# Builds the 4D shogi game (Cfg2 scene, NDShogiPivot.exe) into release\NDShogiPivot.
+# Builds the N-dimensional shogi game (Cfg2 scene, NDShogi.exe) into release\NDShogi with its notices, and the zip to hand out.
 # The previous release folder and zip are replaced only after Unity reports success,
 # and the swap is rename-based so a running or locked old build is never half deleted.
 $ErrorActionPreference = 'Stop'
 $repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $releaseRoot = Join-Path $repoRoot 'release'
-$gameFolder = Join-Path $releaseRoot 'NDShogiPivot'
-$zipPath = Join-Path $releaseRoot 'NDShogiPivot-Windows.zip'
+$gameFolder = Join-Path $releaseRoot 'NDShogi'
+$zipPath = Join-Path $releaseRoot 'NDShogi-Windows.zip'
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $staging = Join-Path $releaseRoot ('.staging-' + $stamp)
-$stagedGame = Join-Path $staging 'NDShogiPivot'
+$stagedGame = Join-Path $staging 'NDShogi'
 $previous = Join-Path $releaseRoot ('.previous-' + $stamp)
 $logFolder = Join-Path $releaseRoot 'logs'
 $logPath = Join-Path $logFolder ('build-' + $stamp + '.log')
@@ -36,12 +36,12 @@ $keepStaging = $false
 try {
     $unityArguments = @('-batchmode', '-quit', '-projectPath', ('"' + (Join-Path $repoRoot 'Unity') + '"'),
         '-executeMethod', 'Cfg2Build.BuildWindows', '-logFile', ('"' + $logPath + '"'),
-        '--cfg2-output', ('"' + (Join-Path $stagedGame 'NDShogiPivot.exe') + '"'),
+        '--cfg2-output', ('"' + (Join-Path $stagedGame 'NDShogi.exe') + '"'),
         '--cfg2-run-root', ('"' + $releaseRoot + '"'),
         '--pivot-request', ('"' + $request + '"'),
         '--pivot-design', ('"' + $design + '"'),
         '--pivot-request-id', 'PIVOT-RESTART-20261017-083955-JST')
-    Write-Host 'Building NDShogiPivot (Unity batchmode, several minutes) ...'
+    Write-Host 'Building NDShogi (Unity batchmode, several minutes) ...'
     # Start-Process and WaitForExit can report a null ExitCode; Process.Start keeps the handle.
     $startInfo = New-Object Diagnostics.ProcessStartInfo
     $startInfo.FileName = $UnityEditor
@@ -67,9 +67,17 @@ try {
     }
     # Debug symbols are not needed to play.
     Get-ChildItem -Path $stagedGame -Directory -Filter '*_DoNotShip' | Remove-Item -Recurse -Force
+    # The zip goes out on its own, so it carries the licence, the third-party notices and a short readme.
+    Copy-Item (Join-Path $repoRoot 'LICENSE') (Join-Path $stagedGame 'LICENSE.txt')
+    Copy-Item (Join-Path $PSScriptRoot 'release\README.txt') (Join-Path $stagedGame 'README.txt')
+    Copy-Item (Join-Path $PSScriptRoot 'release\THIRD_PARTY_NOTICES.txt') (Join-Path $stagedGame 'THIRD_PARTY_NOTICES.txt')
+    $notices = Join-Path $stagedGame 'Notices\PolyHaven'
+    New-Item -ItemType Directory -Force -Path $notices | Out-Null
+    Copy-Item (Join-Path $repoRoot 'assets\source\polyhaven\NOTICE.txt') $notices
+    Copy-Item (Join-Path $repoRoot 'assets\source\polyhaven\provenance.json') $notices
 
     if (-not $NoZip) {
-        $stagedZip = Join-Path $staging 'NDShogiPivot-Windows.zip'
+        $stagedZip = Join-Path $staging 'NDShogi-Windows.zip'
         Compress-Archive -Path $stagedGame -DestinationPath $stagedZip
     }
     # Rename first: if the old game is running, this fails cleanly and leaves it untouched.
@@ -77,13 +85,13 @@ try {
         try { Rename-Item $gameFolder (Split-Path $previous -Leaf) }
         catch {
             $keepStaging = $true
-            throw ('The previous build is in use. Close NDShogiPivot.exe; the new build is kept in ' + $stagedGame + '. ' + $_.Exception.Message)
+            throw ('The previous build is in use. Close NDShogi.exe; the new build is kept in ' + $stagedGame + '. ' + $_.Exception.Message)
         }
     }
     Move-Item $stagedGame $gameFolder
     if (-not $NoZip) { Move-Item -Force $stagedZip $zipPath }
     if (Test-Path $previous) { Remove-Item -Recurse -Force $previous }
-    Write-Host ('Completed: ' + (Join-Path $gameFolder 'NDShogiPivot.exe') + ' (buildGuid ' + $report.buildGuid + ')')
+    Write-Host ('Completed: ' + (Join-Path $gameFolder 'NDShogi.exe') + ' (buildGuid ' + $report.buildGuid + ')')
 }
 finally {
     if (-not $keepStaging -and (Test-Path $staging)) { Remove-Item -Recurse -Force $staging -ErrorAction SilentlyContinue }

@@ -21,8 +21,8 @@
 
 原本フォルダー:
 
-- Showcase計画一式: `D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase`
-- 06設計書と参考画像: `D:\Users\pipe_render\Downloads\n-dimensional-shogi`
+- Showcase計画一式: `D:\Users\USER\Downloads\n-dimensional-shogi-showcase`
+- 06設計書と参考画像: `D:\Users\USER\Downloads\n-dimensional-shogi`
 
 PLANを今回の設計正本、OPEN_QUESTIONSを仕様判断の台帳、IMPLEMENTATION_REQUESTを実装・受入条件の入口として扱います。START_HERE、HANDOFF、CHAT_KICKOFF、READMEも同一受領パッケージとして記録しました。06設計書と4画像は補助資料です。4画像は導入、3D展開、帰還後の不在、4D攻撃に対応します。
 

@@ -6,9 +6,9 @@
 
 ## 1. 採用した依頼と基準
 
-ユーザーが実行依頼として採用した [CFG2 実装依頼書](C:/Users/pipe_render/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/CODEX_CFG2_UI_MATCH_IMPLEMENTATION_REQUEST_JA.md)を全文読み、§5を今回のデモに限って実装した。契約 SHA-256 は `D843C859C9DFED22B5494FF3EAB5897C93B8CA71D2E85516B4F76EE9F3A5A7E1`。これは製品の正式ルール、人間検収、強い AI、完全合法性の採用ではない。
+ユーザーが実行依頼として採用した [CFG2 実装依頼書](C:/Users/USER/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/CODEX_CFG2_UI_MATCH_IMPLEMENTATION_REQUEST_JA.md)を全文読み、§5を今回のデモに限って実装した。契約 SHA-256 は `D843C859C9DFED22B5494FF3EAB5897C93B8CA71D2E85516B4F76EE9F3A5A7E1`。これは製品の正式ルール、人間検収、強い AI、完全合法性の採用ではない。
 
-CFG1 原本 `D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\output\CFG1-20261016-201633-JST` の 00～05、最終ソース監査、開始監査、受入台帳を照合した。原本パス・hash・旧196 ID・C1 18件は [cfg1-reference-index.json](C:/dev/n-dimensional-shogi-showcase/artifacts/CFG2-20261017-004021-JST/cfg1-reference-index.json) に記録する。過去の PASS は今回の実行結果として転記していない。
+CFG1 原本 `D:\Users\USER\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\output\CFG1-20261016-201633-JST` の 00～05、最終ソース監査、開始監査、受入台帳を照合した。原本パス・hash・旧196 ID・C1 18件は [cfg1-reference-index.json](C:/dev/n-dimensional-shogi-showcase/artifacts/CFG2-20261017-004021-JST/cfg1-reference-index.json) に記録する。過去の PASS は今回の実行結果として転記していない。
 
 今回の依頼により、CFG1 の「CFG2へ進まない」「対局未接続」「7カテゴリ」「保存／別名／適用の常設導線」は該当部分だけ更新した。履歴原本・過去 EXE・証拠を上書きしていない。一般 H、正式成り・打ち・自玉安全・反復、N=2互換の新規完成、N>=5、Quest、通信、強い探索は依然として今回の対象外である。
 

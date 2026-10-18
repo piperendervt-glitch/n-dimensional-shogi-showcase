@@ -70,7 +70,7 @@ namespace Showcase.Unity.Settings
             CfgUi.Label(matchHud,"N次元将棋",25,17,380,50,36,Gold);CfgUi.Label(matchHud,"N-DIMENSIONAL SHOGI",28,70,370,23,14,Gold);hudDimensions=CfgUi.Label(matchHud,"",215,24,160,40,26,Gold);
             var far=Cfg2Ui.Panel(matchHud,"Far clock",28,128,337,105,Dark);clockFar=CfgUi.Label(far,"",17,14,303,80,25);
             var near=Cfg2Ui.Panel(matchHud,"Near clock",28,872,352,117,Dark);clockNear=CfgUi.Label(near,"",17,15,318,86,27,Gold);
-            Button(matchHud,"match-menu","☰ メニュー",1360,16,150,40,ReturnFromMatch);
+            Button(matchHud,"match-menu","☰ メニュー",1360,16,150,40,RequestLeaveMatch);
             // The hyperplane panels are built by StartMatch for the match's own space.
             CreateGizmo(matchHud,1310,70,"match-",200,175);matchGizmo=(RectTransform)gizmos[gizmos.Count-1].transform;
             matchStatus=CfgUi.Label(matchHud,"",30,248,330,100,17,Muted);
@@ -84,6 +84,7 @@ namespace Showcase.Unity.Settings
             Button(matchHud,"retry","処理を再試行",1202,928,308,43,()=>{CancelCpu();session?.RetryProcessing();});
             resultPanel=Cfg2Ui.Panel(matchHud,"Game result",515,772,565,212,Dark,true);resultText=CfgUi.Label(resultPanel,"",20,16,525,82,26,Gold);
             Button(resultPanel,"next-match","次の対局",20,127,251,56,()=>StartMatch(lastMode));Button(resultPanel,"result-menu","メニュー",285,127,260,56,ReturnFromMatch);resultPanel.gameObject.SetActive(false);
+            CreateMatchGuide();
         }
         static string GuideText(int dimensions)=>"ドラッグ：視点回転　ホイール：ズーム　"+(dimensions>3?"Ctrl＋ドラッグ：高次元回転（4〜9・0・−キーで回す軸）　":"")+"R：表示リセット";
         // A match that cannot be created leaves everything as it was; one whose screen cannot be set up is ended like a menu return,
@@ -95,12 +96,12 @@ namespace Showcase.Unity.Settings
             if(settingsDirty&&!AutoSave())return;
             // Only unsaved settings hold the next match back; a match display that cannot be saved has been reported and is left behind.
             if(!SaveStableView()&&(session==null||opened))return;
-            MatchSession next;
-            try{next=fixture==null?MatchSession.Create(config,mode,new StopwatchClock()):MatchSession.CreateFixture(config,mode,new StopwatchClock(),fixture,fixtureId);}
+            MatchSession next;var clock=new Cfg2MatchClock();
+            try{next=fixture==null?MatchSession.Create(config,mode,clock):MatchSession.CreateFixture(config,mode,clock,fixture,fixtureId);}
             catch(Exception e){Debug.LogException(e);Notice("対局を開始できません："+e.Message);return;}
             if(session==null){trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;trialSelectedPiece=selectedPiece;trialSelectedCell=selectedCell;trialPlaneReference=planeReferenceCell;}
             if(session!=null){session.Interrupt("次局開始");SaveMatchRecord();}CancelCpu();ownership.Cancel();
-            session=next;lastMode=mode;rotationAxis=LogicalAxis.W;
+            session=next;matchClock=clock;lastMode=mode;rotationAxis=LogicalAxis.W;ResetCandidateTour();threatPly=-1;
             try
             {
                 opened=false;settings.gameObject.SetActive(false);menu.gameObject.SetActive(false);matchHud.gameObject.SetActive(true);resultPanel.gameObject.SetActive(false);KeepScreenNotice();
@@ -499,6 +500,7 @@ namespace Showcase.Unity.Settings
                 string why=s.Outcome==MatchOutcome.KingCapture?"王捕獲":s.Outcome==MatchOutcome.NoMovesDraw?"着手可能手なし":s.Outcome==MatchOutcome.TimeLoss?"時間切れ":"中断";
                 resultText.text=(s.Winner.HasValue?(s.Winner==Side.A?"先手 A":"後手 B")+" の勝ち":"引分")+"\n"+why;
             }
+            RefreshHint();
         }
         void SetMatchCamera(Side side,bool animate)
         {

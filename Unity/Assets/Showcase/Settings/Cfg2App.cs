@@ -121,12 +121,14 @@ namespace Showcase.Unity.Settings
                 previewRenderer.SetDisplayState(slice.DisplayState);
                 draft=SettingsDraft.CreateMatchDemo();options=new MatchOptionsRaw();preview=PreviewSession.CreateExperiment();
                 LoadStartup();if(slice.Frame.Dimensions!=DraftDimensions)slice=NewPivotSlice();trialSlice=slice;viewDimensions=DraftDimensions;viewLayout=draft.Current.InitialLayout;SyncViewToDraft();
-                ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();ShowMenu();
+                ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();CreateHelp();CreateLeaveQuestion();ShowMenu();
                 trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;settingsDirty=(!File.Exists(validPath)||migratedView)&&startupLoadError=="";
                 Application.wantsToQuit+=PrepareShutdown;
                 Record("Started","CFG2; font="+fontName+"; "+Screen.width+"x"+Screen.height+"; reportedDpi="+Screen.dpi+"; data="+runtimeRoot);
                 WritePlayerIdentity("Menu");
                 if(Arg("--cfg2-smoke","")!="")StartCoroutine(Smoke());
+                // The first plain start opens 遊び方 once; it stays one key (F1) or one menu entry away afterwards.
+                else if(standalone&&PlayerPrefs.GetInt(HelpSeenKey,0)==0)OpenHelp(0);
             }
             catch(Exception e)
             {
@@ -218,11 +220,12 @@ namespace Showcase.Unity.Settings
         void UpdateCounts()
         {
             if(counts==null)return;
-            counts.text=result==null?"駒を選択してください":result.Status!=QueryStatus.Complete?"照会："+result.Status:
-                "全"+CurrentDimensions+"D  G "+result.G.Count+" / P "+result.P.Count+" / 攻撃 "+attackCells.Count+"\n表示内  G "+previewRenderer.VisibleG+" / P "+previewRenderer.VisibleP+" / 攻撃 "+previewRenderer.VisibleAttacks;
+            counts.text=result==null?"駒を選択してください":result.Status!=QueryStatus.Complete?"計算中："+result.Status:
+                "移動できるマス："+CurrentDimensions+"次元全体 "+result.P.Count+"／この断面 "+previewRenderer.VisibleP+"\n攻撃範囲："+CurrentDimensions+"次元全体 "+attackCells.Count+"／この断面 "+previewRenderer.VisibleAttacks;
         }
         void UpdateHeader()
         {
+            RefreshMenuDimensions();
             if(headerStatus==null)return;
             if(headerDimensions!=null)headerDimensions.text=DraftDimensions+"次元";
             headerStatus.text=startupLoadError!=""?"保存読込エラー。\n元ファイルを保持中。":config!=null?"変更は次の対局へ自動反映します":"入力を確認してください。対局開始は保留中です。";
@@ -236,21 +239,24 @@ namespace Showcase.Unity.Settings
             // The canvas scaler sizes the canvas on its own schedule, so the spare width is re-read each frame (a no-op when unchanged).
             if(opened)LayoutSettings();
             if(slice.IsAnimating){slice.Advance(Time.unscaledDeltaTime);geometryDirty=true;stableDirty=true;}
-            UpdateMatch();StepSectionGlide();if(geometryDirty)RenderGeometry();UpdateMagnifier();
+            // The help and the leave question hold the match: its clock, the CPU and the hand-over wait until they close.
+            matchClock?.Hold(OverlayOpen);if(!OverlayOpen)UpdateMatch();UpdateCandidateTour();StepSectionGlide();if(geometryDirty)RenderGeometry();UpdateMagnifier();
             if(settingsDirty&&Time.unscaledTime>=saveDue)AutoSave();
             if(screenNotice&&Time.unscaledTime-noticeTime>NoticeSeconds)ClearScreenNotice();
             // The view is saved once it has settled: never during a CPU move show, a turn reset or a piece glide,
             // which move C every frame without marking the slice as animating.
             if(stableDirty&&!slice.IsAnimating&&!PresentingMove&&ownership.Owner==InputOwner.None&&Time.unscaledTime>=saveDue+.5f)SaveStableView();
             bool typing=CfgUi.SelectedInput!=null;
+            if(!typing&&OverlayKeys()||OverlayOpen)return;
             UpdateMenuKeys(typing);
+            if(!typing&&session!=null&&!opened&&Input.GetKeyDown(KeyCode.Tab))StepCandidateTour();
             if(!typing&&ownership.Owner==InputOwner.None&&Input.GetKeyDown(KeyCode.Home)&&IsPivotHomeSurface(Input.mousePosition))
             {
                 bool initial=Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift);
                 slice.SetCenter(initial?slice.DisplayState.Embedding:default);geometryDirty=true;stableDirty=true;Record("PivotHome",initial?"P":"O");
             }
             if(!typing&&ownership.Owner==InputOwner.None&&cpuShowResult==null&&resetStage==0&&Input.GetKeyDown(KeyCode.R)&&!Input.GetKey(KeyCode.LeftControl)&&!Input.GetKey(KeyCode.RightControl))
-            {slice.Restore(NewPivotSlice().DisplayState);geometryDirty=true;stableDirty=true;Record("PivotReset","C=P;XYZ");}
+            {ResetCandidateTour();slice.Restore(NewPivotSlice().DisplayState);geometryDirty=true;stableDirty=true;Record("PivotReset","C=P;XYZ");}
             // Number keys pick the hidden axis Ctrl+drag rotates against: 4=W, 5=V, 6=U, 7=T, 8=S, 9=R, 0=Q, -=P.
             if(!typing&&ownership.Owner==InputOwner.None&&(opened||session!=null))
                 for(int axis=4;axis<=BoundsN.MaxDimensions;axis++)
@@ -270,7 +276,7 @@ namespace Showcase.Unity.Settings
             if(SliceAxes.CoreAxis(logical)>=CurrentDimensions){Notice("この対局は"+CurrentDimensions+"次元です。"+SliceAxes.AxisName(logical)+"軸はありません。");return;}
             rotationAxis=logical;geometryDirty=true;Notice("Ctrl＋ドラッグの回転軸："+SliceAxes.AxisName(logical));Record("RotationAxis",logical.ToString());UpdateHelpText();
         }
-        void EscapePressed(){if(ownership.Owner!=InputOwner.None){ownership.Cancel();pointerButton=-1;}else if(opened)LeaveSettings();else if(session!=null)ReturnFromMatch();}
+        void EscapePressed(){if(ownership.Owner!=InputOwner.None){ownership.Cancel();pointerButton=-1;}else if(opened)LeaveSettings();else if(session!=null)RequestLeaveMatch();}
         // Ctrl+Z/Ctrl+Y. An Undo or Redo of the draft can change N or the initial layout like the buttons do, so the trial board and view follow it.
         void HistoryKey(bool redo)
         {

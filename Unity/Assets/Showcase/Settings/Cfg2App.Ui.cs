@@ -42,25 +42,29 @@ namespace Showcase.Unity.Settings
             var title=CfgUi.Label(menu,"N 次 元 将 棋",80,94,740,98,66,Gold);var shadow=title.gameObject.AddComponent<Shadow>();shadow.effectColor=new Color(0,0,0,.8f);shadow.effectDistance=new Vector2(2,-2);
             CfgUi.Label(menu,"N - D I M E N S I O N A L  S H O G I",88,195,680,40,22,Gold);
             CfgUi.Line(menu,new Vector2(80,245),new Vector2(700,245),Gold,1);
-            string[] labels={"人間 vs 人間","人間 vs CPU","CPU vs CPU","オプション","終了"};
-            string[] symbols={"PvP","PvC","CvC","設 定","終 了"};
-            for(int i=0;i<5;i++)
+            // The play modes keep ids menu-0..2, オプション menu-3 and 終了 menu-4; 遊び方 sits between them as menu-help.
+            string[] labels={"人間 vs 人間","人間 vs CPU","CPU vs CPU","遊び方","オプション","終了"};
+            string[] symbols={"PvP","PvC","CvC","？","設 定","終 了"};
+            for(int i=0;i<MenuEntries;i++)
             {
-                int mode=i;var b=Button(menu,"menu-"+i,labels[i],86,290+i*110,550,98,()=>{if(mode<3)StartMatch((MatchMode)mode);else if(mode==3)OpenSettings();else Quit();},i==0);
-                var t=b.GetComponentInChildren<Text>();t.fontSize=27;t.alignment=TextAnchor.MiddleLeft;t.rectTransform.anchoredPosition=new Vector2(130,-3);t.rectTransform.sizeDelta=new Vector2(405,92);
-                CfgUi.Label(b.transform,symbols[i],16,27,105,42,18,Gold).alignment=TextAnchor.MiddleCenter;
+                int entry=i;var b=Button(menu,MenuIds[i],labels[i],86,290+i*94,550,84,()=>{if(entry<3)StartMatch((MatchMode)entry);else if(entry==3)OpenHelp(0);else if(entry==4)OpenSettings();else Quit();},i==0);
+                var t=b.GetComponentInChildren<Text>();t.fontSize=27;t.alignment=TextAnchor.MiddleLeft;t.rectTransform.anchoredPosition=new Vector2(130,-3);t.rectTransform.sizeDelta=new Vector2(405,78);
+                CfgUi.Label(b.transform,symbols[i],16,21,105,42,18,Gold).alignment=TextAnchor.MiddleCenter;
                 // Pointing at an entry moves the same cursor the arrow keys move.
                 var hover=b.gameObject.AddComponent<EventTrigger>();var enter=new EventTrigger.Entry{eventID=EventTriggerType.PointerEnter};
-                enter.callback.AddListener(_=>SetMenuIndex(mode,true));hover.triggers.Add(enter);
+                enter.callback.AddListener(_=>SetMenuIndex(entry,true));hover.triggers.Add(enter);
             }
-            menuNotice=CfgUi.Label(menu,"",86,846,640,150,17,Gold);
+            CreateMenuDimensions();
+            menuNotice=CfgUi.Label(menu,"",86,860,640,140,17,Gold);
+            CfgUi.Label(menu,"デモ版 v"+Application.version+"　F1：遊び方",86,996,640,24,14,Muted);
         }
+        static readonly string[] MenuIds={"menu-0","menu-1","menu-2","menu-help","menu-3","menu-4"};
         // Main menu cursor: ↑↓ (or W/S) move it, Enter/Space presses the entry. The highlighted entry is the one Enter starts.
-        int menuIndex;const int MenuEntries=5;
+        int menuIndex;const int MenuEntries=6;
         void SetMenuIndex(int index,bool sound)
         {
             index=(index%MenuEntries+MenuEntries)%MenuEntries;bool moved=index!=menuIndex;menuIndex=index;
-            for(int i=0;i<MenuEntries;i++)MarkSelected(actions["menu-"+i],i==menuIndex);
+            for(int i=0;i<MenuEntries;i++)MarkSelected(actions[MenuIds[i]],i==menuIndex);
             if(moved&&sound)PlayMenuSelect();
         }
         void UpdateMenuKeys(bool typing)
@@ -68,7 +72,7 @@ namespace Showcase.Unity.Settings
             if(typing||opened||session!=null||!menu.gameObject.activeInHierarchy||ownership.Owner!=InputOwner.None)return;
             if(Input.GetKeyDown(KeyCode.DownArrow)||Input.GetKeyDown(KeyCode.S))SetMenuIndex(menuIndex+1,true);
             else if(Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W))SetMenuIndex(menuIndex-1,true);
-            else if(Input.GetKeyDown(KeyCode.Return)||Input.GetKeyDown(KeyCode.KeypadEnter)||Input.GetKeyDown(KeyCode.Space))actions["menu-"+menuIndex].onClick.Invoke();
+            else if(Input.GetKeyDown(KeyCode.Return)||Input.GetKeyDown(KeyCode.KeypadEnter)||Input.GetKeyDown(KeyCode.Space))actions[MenuIds[menuIndex]].onClick.Invoke();
         }
         void CreateSettings()
         {
@@ -104,8 +108,8 @@ namespace Showcase.Unity.Settings
             Button(tools,"tool-place","置く",88,38,75,35,()=>SetTool("配置"));
             Button(tools,"tool-erase","消す",168,38,75,35,()=>SetTool("消去"));
             Button(tools,"trial-clear","クリア",248,38,82,35,()=>{preview.Clear();AfterTrial();});
-            Button(tools,"trial-reset","試験配置",336,38,94,35,()=>{preview.Place(new TrialPiece("subject",selectedDefinition,Side.A,default));selectedPiece="subject";AfterTrial();});
-            Button(tools,"side","陣営 A / B",8,81,119,34,()=>{placementSide=placementSide==Side.A?Side.B:Side.A;Notice("配置陣営 "+placementSide);});
+            Button(tools,"trial-reset","中央に置く",336,38,94,35,()=>{preview.Place(new TrialPiece("subject",selectedDefinition,Side.A,default));selectedPiece="subject";AfterTrial();});
+            Button(tools,"side","陣営 A / B",8,81,119,34,()=>{placementSide=placementSide==Side.A?Side.B:Side.A;Notice("置く駒："+(placementSide==Side.A?"先手 A":"後手 B"));});
             Button(tools,"trial-undo","Undo",135,81,86,34,()=>{preview.Undo();AfterTrial();});Button(tools,"trial-redo","Redo",229,81,86,34,()=>{preview.Redo();AfterTrial();});
             var toggles=displayToggles=Cfg2Ui.Panel(center,"Display options",458,754,262,124,new Color(.04f,.065f,.09f,.7f));
             Toggle(toggles,"移動候補",showCandidates,8,4,244,v=>showCandidates=v);Toggle(toggles,"攻撃範囲",showAttacks,8,42,244,v=>showAttacks=v);Toggle(toggles,"座標グリッド",showGrid,8,80,244,v=>showGrid=v);
@@ -307,7 +311,7 @@ namespace Showcase.Unity.Settings
                 Cfg2Ui.PieceIcon(b.transform,d.Id,Side.A,7,6,37,46);
             }
             CfgUi.Label(pieceHost,"成りなし",12,607,162,30,18,Muted);
-            CfgUi.Label(pieceHost,"と金・成銀・成桂\n成香・龍王・龍馬\n\nこのデモでは無効",12,648,162,160,16,Muted);
+            CfgUi.Label(pieceHost,"と金・成銀・成桂\n成香・龍王・龍馬\n\nデモ版では成りません",12,648,162,160,16,Muted);
         }
         // Looked up by definition id so a reordered definition list cannot mislabel a button.
         static readonly System.Collections.Generic.Dictionary<string,string> ShortNames=new System.Collections.Generic.Dictionary<string,string>
@@ -350,9 +354,9 @@ namespace Showcase.Unity.Settings
             if(category==0)
             {
                 int n=DraftDimensions;cols=Columns(c,2);
-                CfgUi.Label(cols[0],"王捕獲 "+n+"Dデモ",8,7,330,44,26,Gold);
-                CfgUi.Label(cols[0],"N="+n+" · 対称"+n+"D\n\n王の捕獲で勝ち。\n着手できる手がなければ引分。\n時計が0になると負け。\n\n成り・打ち・反復判定なし。\n自玉安全による着手制限なし。",8,73,330,375,20);
-                CfgUi.Label(cols[0],"今回のデモ用ルールです。\n正式ルールの確定ではありません。",8,473,330,89,17,Muted);
+                CfgUi.Label(cols[0],n+"次元将棋（デモ版ルール）",8,7,330,44,24,Gold);
+                CfgUi.Label(cols[0],"相手の王を取れば勝ち。\n動ける手がなければ引き分け。\n持ち時間が0になると負け。\n\n成り・持ち駒（打ち）・千日手は\nありません。\n王手を放置しても反則になりません。",8,73,330,375,20);
+                CfgUi.Label(cols[0],"デモ版の暫定ルールです。\n今後変わることがあります。",8,473,330,89,17,Muted);
                 Field(cols[1],"name","表示名",draft.Name,7,v=>{draft.Edit(d=>d.Name=v);AfterEdit();});
                 if(startupLoadError!="")Button(cols[1],"recover-default","元保存を保持して新しい設定で復旧",8,142,330,58,RecoverToNewBundle);
             }
@@ -381,22 +385,22 @@ namespace Showcase.Unity.Settings
             else if(category==3)
             {
                 cols=Columns(c,2);
-                CfgUi.Label(cols[0],"走り駒の遮蔽",8,8,330,35,21);
-                Button(cols[0],"occlusion-lattice","格子直線 / 1",8,58,330,44,()=>{draft.Edit(d=>d.Occlusion="lattice-line/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="lattice-line/1");
-                Button(cols[0],"occlusion-supercover","閉Supercover / 1",8,111,330,44,()=>{draft.Edit(d=>d.Occlusion="supercover-closed/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="supercover-closed/1");
+                CfgUi.Label(cols[0],"飛車・角などが斜めに走るときの通り道",8,8,330,35,19);
+                Button(cols[0],"occlusion-lattice","通り道のマスだけで判定（標準）",8,58,330,44,()=>{draft.Edit(d=>d.Occlusion="lattice-line/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="lattice-line/1");
+                Button(cols[0],"occlusion-supercover","かすめるマスも塞ぐ（厳しめ）",8,111,330,44,()=>{draft.Edit(d=>d.Occlusion="supercover-closed/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="supercover-closed/1");
                 Field(cols[0],"time","双方の持ち時間（秒）",options.TimeSeconds,211,v=>{options.TimeSeconds=v;AfterEdit();});
-                CfgUi.Label(cols[1],"加算・秒読みなし\n\n王捕獲／手なし／時間切れ\n成り・打ちなし\n自玉安全による制限なし",8,8,330,238,20);
+                CfgUi.Label(cols[1],"秒読み・時間の加算はありません。\n\n終局：王を取る／動ける手がない\n／時間切れ\n成り・打ちはありません。\n王手を放置しても指せます。",8,8,330,238,20);
             }
             else if(category==4)
             {
                 int n=DraftDimensions;cols=Columns(c,2);var left=cols[0];var right=cols[1];
-                CfgUi.Label(left,"共通"+n+"D CPU",8,8,330,42,25,Gold);
-                CfgUi.Label(left,"全"+n+"Dの着手可能手から\n捕獲を優先します。\n\n両側が同じ規則で動きます。",8,69,330,165,20);
-                Field(left,"seed","同点処理 seed",options.CpuSeed,264,v=>{options.CpuSeed=v;AfterEdit();});
-                Field(left,"budget","照会予算",options.CpuBudget,389,v=>{options.CpuBudget=v;AfterEdit();});
-                CfgUi.Label(left,"強さの段階設定はありません。",8,514,330,40,17,Muted);
+                CfgUi.Label(left,"CPU（"+n+"次元）",8,8,330,42,25,Gold);
+                CfgUi.Label(left,"取れる駒があれば取り、なければ\n決まった規則で手を選ぶ簡単なCPUです。\n強さの段階はありません。",8,69,330,165,20);
+                CfgUi.Label(left,"以下は通常、変更不要です。",8,226,330,30,16,Muted);
+                Field(left,"seed","乱数の種（同じ値なら同じ手順）",options.CpuSeed,264,v=>{options.CpuSeed=v;AfterEdit();});
+                Field(left,"budget","CPUが調べる手の上限",options.CpuBudget,389,v=>{options.CpuBudget=v;AfterEdit();});
                 CfgUi.Label(right,"CPU戦の演出",8,8,330,34,21,Gold);
-                CfgUi.Toggle(right,"着手前に"+n+"D回転で超平面を見せる",CpuShowEnabled,8,48,330,v=>{CpuShowEnabled=v;Record("Pref",CpuShowKey+"="+v);});
+                CfgUi.Toggle(right,"CPUの手を、盤を回して見せる",CpuShowEnabled,8,48,330,v=>{CpuShowEnabled=v;Record("Pref",CpuShowKey+"="+v);});
                 CfgUi.Toggle(right,"手番交代ごとに初期表示へ戻す",TurnResetEnabled,8,90,330,v=>{TurnResetEnabled=v;Record("Pref",TurnResetKey+"="+v);});
                 int delay=int.TryParse(options.CpuDelayMilliseconds,out var parsed)?parsed:500;
                 var delayLabel=CfgUi.Label(right,"",8,138,330,30,18);void ShowDelay(float ms)=>delayLabel.text="画面切り替えの待ち時間："+(ms/1000f).ToString("0.0")+" 秒";ShowDelay(delay);
@@ -407,7 +411,7 @@ namespace Showcase.Unity.Settings
             else
             {
                 cols=Columns(c,3);
-                CfgUi.Label(cols[0],"表示",8,8,330,34,21,Gold);BuildDisplay(cols[0],50,cols[2]);BuildSound(cols[0],462);
+                CfgUi.Label(cols[0],"表示",8,8,330,34,21,Gold);BuildDisplay(cols[0],50,cols[2]);BuildSound(cols[0],511);
                 BuildGraphics(cols[1],8);
             }
             FitColumns(c,cols);
@@ -424,7 +428,7 @@ namespace Showcase.Unity.Settings
             var d=draft.Current.Definitions.Single(p=>p.Id==selectedDefinition);bool editable=IsEditable(d);int n=DraftDimensions;
             CfgUi.Label(c,d.Name,8,0,330,43,25,Gold);
             if(detailTab==2){BuildDisplay(c,67);return;}
-            if(!editable){CfgUi.Label(c,"既存の移動定義を使用\n\nこの駒の動きは固定です。\n両側の全"+n+"Dに適用します。\n\n成り・打ちはありません。",8,71,330,290,20);return;}
+            if(!editable){CfgUi.Label(c,"この駒の動きは固定です。\n普段の将棋の動きを"+n+"次元に広げて、\n先手・後手の両方に使います。\n\n成り・打ちはありません。",8,71,330,290,20);return;}
             if(detailTab==0)
             {
                 float sliderBottom=431;
@@ -446,7 +450,7 @@ namespace Showcase.Unity.Settings
                 // A slider moves exactly k of its axes at once: with fewer axes in use it has no move at all, so say so here.
                 int used=0;for(int core=0;core<n;core++)if((mask&1<<core)!=0)used++;int k=SlideAxesOf(d);
                 if(k>used){CfgUi.Label(c,"使う軸が"+used+"本しかないため、"+k+"軸を同時に動かすこの駒は動けません。",8,ly-26,330,44,15,new Color(1,.55f,.45f));ly+=26;}
-                var legend=CfgUi.Label(c,"青：移動候補   赤：攻撃範囲\n金：選択中の駒\n\n全"+n+"Dで照会し、表示内を描きます。",8,ly,330,146,18,Muted);
+                var legend=CfgUi.Label(c,"青：移動できるマス　赤：攻撃範囲\n金：選択中の駒\n\n候補は"+n+"次元全体で数え、\n今の断面にあるものだけを描きます。",8,ly,330,146,18,Muted);
                 float bottom=legend.rectTransform.anchoredPosition.y*-1+146+20;if(c.sizeDelta.y<bottom)c.sizeDelta=new Vector2(c.sizeDelta.x,bottom);
             }
             else
@@ -456,7 +460,7 @@ namespace Showcase.Unity.Settings
                 Toggle(c,"後",d.Backward,8,177,330,v=>Edit(x=>x.Backward=v));
                 Toggle(c,"空セルへ移動",d.AllowEmpty,8,258,330,v=>Edit(x=>x.AllowEmpty=v));
                 Toggle(c,"敵駒を捕獲",d.AllowCapture,8,308,330,v=>Edit(x=>x.AllowCapture=v));
-                CfgUi.Label(c,"味方のセルへは移動できません。\n\n王捕獲デモの着手候補です。\n完全合法性L・詰みは未評価。\n\n変更は試し盤と次局へ反映します。",8,389,330,217,18,Muted);
+                CfgUi.Label(c,"味方の駒があるマスには動けません。\n\n変更は試し盤と次の対局に反映されます。",8,389,330,217,18,Muted);
             }
         }
         // The coordinate field is written in UI order X,Y,Z,W,V...; QN is in core order.
@@ -623,7 +627,8 @@ namespace Showcase.Unity.Settings
             Toggle(c,"拡大した超平面図に駒の点を表示",MagnifierDotsEnabled,8,y+245,330,v=>{MagnifierDotsEnabled=v;Record("Pref",MagnifierDotsKey+"="+v);});
             Toggle(c,"超平面図に駒の点を小さく表示",PanelDotsEnabled,8,y+294,330,v=>{PanelDotsEnabled=v;Record("Pref",PanelDotsKey+"="+v);});
             Toggle(c,"超平面図を盤の断面に合わせて並べ替える",PanelsFollowSection,8,y+343,330,v=>{PanelsFollowSection=v;Record("Pref",PanelsFollowKey+"="+v);});
-            if(helpColumn==null){helpText=CfgUi.Label(c,HelpText(),8,y+416,330,440,17);return;}
+            Toggle(c,"対局中に操作ヒントを表示",HintsEnabled,8,y+392,330,v=>{HintsEnabled=v;Record("Pref",HintsKey+"="+v);});
+            if(helpColumn==null){helpText=CfgUi.Label(c,HelpText(),8,y+465,330,440,17);return;}
             CfgUi.Label(helpColumn,"操作",8,8,330,34,21,Gold);helpText=CfgUi.Label(helpColumn,HelpText(),8,50,330,440,17);
         }
         Text helpText;
@@ -631,8 +636,8 @@ namespace Showcase.Unity.Settings
         string HelpText()
         {
             string h=SliceAxes.AxisName(SliceAxes.AxisOfCore(RotationCoreAxis));
-            string rotation=CurrentDimensions<=3?"":"Ctrl＋左：X"+h+"／Y"+h+"回転\nCtrl＋Shift＋左：Z"+h+"／Y"+h+"回転\n4〜9・0・-：Ctrl回転の隠れ軸\n";
-            return "左／右ドラッグ：視点回転\n中／Shift＋左：平行移動\nホイール：拡大・縮小\n"+rotation+"\n軸名クリック：基準断面へ\n軸ドラッグ：N次元中心移動\nShift／Ctrl＋軸ドラッグ：1マス吸着\nR：初期位置・回転なしへ戻す\nプレビュー・軸・小窓上で\nHome：原点Oへ\nShift＋Home：開始中心Pへ\nEsc：戻る／操作取消";
+            string rotation=CurrentDimensions<=3?"":"Ctrl＋左：X"+h+"／Y"+h+"回転（4次元）\nCtrl＋Shift＋左：Z"+h+"／Y"+h+"回転\n4〜9・0・-：Ctrl で回す相手の軸\n";
+            return "左クリック：駒を選ぶ・動かす\nTab：見えない候補の断面へ（対局中）\n左／右ドラッグ：視点回転\n中／Shift＋左：平行移動\nホイール：拡大・縮小\n"+rotation+"\n軸名クリック：その軸が入った断面へ\n軸ドラッグ：断面を平行移動\nShift／Ctrl＋軸ドラッグ：1マスずつ\nR：最初の表示に戻す\n図・軸の上で Home：原点へ\nShift＋Home：最初の位置へ\nF1：遊び方　Esc：戻る／操作取消";
         }
         void UpdateHelpText(){if(helpText!=null)helpText.text=HelpText();}
         void ShowMenu()

@@ -8,8 +8,8 @@
 
 1. `C:\dev\n-dimensional-shogi-showcase\artifacts\PIVOT-DESIGN-20261017\00_DESIGN_JA.md`
 2. 本実装依頼書と、同じフォルダーのpreflight・manifest・受入台帳・設計レビュー記録。
-3. `D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md`
-4. `D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\output\CFG0-20261016-194144-JST\` の00〜05の6文書と、同じ直下の `06_READONLY_EVIDENCE.json`、`07_FINAL_READONLY_CHECK.json`、`08_ACCEPTANCE_ID_LEDGER.json`。
+3. `D:\Users\USER\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md`
+4. `D:\Users\USER\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\output\CFG0-20261016-194144-JST\` の00〜05の6文書と、同じ直下の `06_READONLY_EVIDENCE.json`、`07_FINAL_READONLY_CHECK.json`、`08_ACCEPTANCE_ID_LEDGER.json`。
 5. 現在の `docs/CFG1_IMPLEMENTATION.md`、`artifacts/CFG2-20261017-004021-JST/00_IMPLEMENTATION_RETURN_SUMMARY_JA.md` と関連コード。CFG2と呼ばれる現存実装を保全するために読むのであって、新規CFG2仕様の採用ではない。
 
 最初に指定されたHANDOFF直下のCFG1依頼書は実在しなかったが、上記3の兄弟パッケージ内に実在する原本を確認した。パス違いだけを理由に旧依頼へ戻ったり、架空の原本を作らない。

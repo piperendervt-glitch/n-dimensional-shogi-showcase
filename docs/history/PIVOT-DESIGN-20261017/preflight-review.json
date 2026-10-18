@@ -3,49 +3,49 @@
   "observedAt": "2026-10-17T03:43:49.6299064+09:00",
   "scope": "Read-only source/preflight; only these two new report files written. No application tests, Unity imports, builds, or source edits.",
   "contract": {
-    "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md",
+    "path": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md",
     "sha256": "7019DD40866420C02264C387249AE7F6D4F7A4AFDA629E661A54A77CF811E408",
     "readStatus": "FULL_CONTENT_READ",
     "precedence": "Latest user clarification and authorization supersede historical draft approval state."
   },
   "cfg0Documents": [
     {
-      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\00_RETURN_SUMMARY_JA.md",
+      "path": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\00_RETURN_SUMMARY_JA.md",
       "sha256": "5303146D402BF5896BD99DE36D3E6564CA787CA6AD5DC9F0BE161E7CE5A93FF6",
       "readStatus": "FULL_CONTENT_READ"
     },
     {
-      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\01_LOCAL_REPOSITORY_AUDIT_JA.md",
+      "path": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\01_LOCAL_REPOSITORY_AUDIT_JA.md",
       "sha256": "E30B7EE7A7AA49EDAE9ACCE2002985911C3B0D240EC94A6B401784B1C4F03DCF",
       "readStatus": "FULL_CONTENT_READ"
     },
     {
-      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\02_CAPABILITY_AND_GAP_MATRIX_JA.md",
+      "path": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\02_CAPABILITY_AND_GAP_MATRIX_JA.md",
       "sha256": "32F3C66E196265BD8C80A7D8C92129DB273E2F20B55A1EC3ECCF78067074FF67",
       "readStatus": "FULL_CONTENT_READ"
     },
     {
-      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\03_IMPLEMENTATION_PLAN_AND_DECISIONS_JA.md",
+      "path": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\03_IMPLEMENTATION_PLAN_AND_DECISIONS_JA.md",
       "sha256": "EE2E8FE0A2A13282424A051B6217EFB1565A4D70CA4E56B1BB466F6313C95ADD",
       "readStatus": "FULL_CONTENT_READ"
     },
     {
-      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\04_ACCEPTANCE_TRACEABILITY_JA.md",
+      "path": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\04_ACCEPTANCE_TRACEABILITY_JA.md",
       "sha256": "CC84AD1C93136DE487B3E691629536114BB0D186BE6DDF3E0124058619F392A8",
       "readStatus": "FULL_CONTENT_READ"
     },
     {
-      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\05_CODEX_IMPLEMENTATION_REQUEST_DRAFT_JA.md",
+      "path": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\05_CODEX_IMPLEMENTATION_REQUEST_DRAFT_JA.md",
       "sha256": "6585DF1C76BEAD56959C212E03F5D1DB844FAF4D348329FDE7A0FAFF7BF0C80B",
       "readStatus": "FULL_CONTENT_READ"
     },
     {
-      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\06_READONLY_EVIDENCE.json",
+      "path": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\06_READONLY_EVIDENCE.json",
       "sha256": "29AD3C8A89512FF33F8DE0036E4A73871BD8E9C8AB26E980A18A3F1E1188240A",
       "readStatus": "FULL_CONTENT_READ"
     },
     {
-      "path": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\07_FINAL_READONLY_CHECK.json",
+      "path": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\07_FINAL_READONLY_CHECK.json",
       "sha256": "2D1B60BAE409FB5A1F8CE2453B3511F623E1479F0C8E3247159BA9CE5F82A23A",
       "readStatus": "FULL_CONTENT_READ"
     }
@@ -192,7 +192,7 @@
     "remoteFetched": false
   },
   "preservation": {
-    "sourceLedger": "D:\\Users\\pipe_render\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\06_READONLY_EVIDENCE.json",
+    "sourceLedger": "D:\\Users\\USER\\Downloads\\n-dimensional-shogi-showcase\\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\\output\\CFG0-20261016-194144-JST\\06_READONLY_EVIDENCE.json",
     "expectedCount": 46,
     "checkedCount": 46,
     "matchedCount": 46,

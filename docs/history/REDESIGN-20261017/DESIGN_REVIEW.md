@@ -12,14 +12,14 @@
 |---|---|
 | メインメニュー | [修正後のメインメニュー外観](C:/dev/n-dimensional-shogi-showcase/artifacts/REDESIGN-20261017-0210-JST/appearance-menu.png) は**利用者承認済み**。外観の承認であり、製品への実装・ビルド・操作検収の完了を意味しない。旧画像のナビゲーション名の不一致は修正済みで、旧本文の指摘は現画像へ適用しない |
 | 対局画面 | 下部の角度操作パネル、設計注記、吹き出しを除き、余計なメニューやボタンを追加しない。マウス・キーボードの操作は利用者の提示したヒントに沿って整理する。[整理した外観案](C:/dev/n-dimensional-shogi-showcase/artifacts/REDESIGN-20261017-0210-JST/appearance-match-clean.png) は認識確認用であり、位置モデルの承認ではない |
-| 設定画面 | 小窓を、承認原画像の **XY／XZ／XW／YZという2D図**へ戻す。旧本文の「設定でもXYZ／XYW／XZW／YZWへ置き換える」という提案は今回の最新指示により撤回する。[承認済み原画像](C:/Users/pipe_render/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/references/approved_piece_settings.png) を変更せず根拠にする。[復元中の外観案](C:/dev/n-dimensional-shogi-showcase/artifacts/REDESIGN-20261017-0210-JST/appearance-settings-restored.png) の生成文字や細部を仕様の正本にしない |
+| 設定画面 | 小窓を、承認原画像の **XY／XZ／XW／YZという2D図**へ戻す。旧本文の「設定でもXYZ／XYW／XZW／YZWへ置き換える」という提案は今回の最新指示により撤回する。[承認済み原画像](C:/Users/USER/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/references/approved_piece_settings.png) を変更せず根拠にする。[復元中の外観案](C:/dev/n-dimensional-shogi-showcase/artifacts/REDESIGN-20261017-0210-JST/appearance-settings-restored.png) の生成文字や細部を仕様の正本にしない |
 | 盤原点と回転原点 | 盤の原点をO、4D回転の原点をPとして分離し、差Δは未確定として図示する。既存コードに合わせてP=c=0と置いた計算を、利用者の意図した幾何だと扱わない |
 | 初期40駒と40／4／0等の見え方 | 既存配置・形状・P=c=0という条件の下でのソース整合計算に限る。「通常ならこのように見える」「この駒数が正解」という製品判断を撤回する。初期全駒が同じ高さ・W=0にあるという現コードの前提を、意図した4D初期配置の採用根拠にしない |
 | 0.24mと4.8セル | 現コードの二つの表示アンカーの差という実装事実に限る。これを根拠に4D回転原点の高さやΔを決める推論は撤回する。数値4.8は承認された回転原点ではない |
 | 空の木製台／真4D木盤／高さ4.8のピボット | いずれも未採用。特に「空の木製台＋空中実体」を主案として推進しない。旧比較表、`board-alternatives.svg`、旧状態画像は現行案の証拠に使わない |
 | 数理の次の確認 | まずXYWの説明図でOとPと未確定Δの関係を合わせる。原点関係が未確定のまま、全4Dシミュレーションや駒数表示を設計の結論にしない |
 
-数理説明図の保存先は [section-review.html](C:/Users/pipe_render/.codex/visualizations/2026/10/16/01a1446d-8cc2-7540-be54-cee9210eab27/section-review.html)。旧全4D表示から、O／P／未確定Δを区別する図へ改訂する対象である。本追記時点では新しい図への置換完了を確認していないため、このリンク先の旧全4D内容を現在の採用案と扱わない。rootが別途作成する最新の短いレビューと図を、提示時に照合する。
+数理説明図の保存先は [section-review.html](C:/Users/USER/.codex/visualizations/2026/10/16/01a1446d-8cc2-7540-be54-cee9210eab27/section-review.html)。旧全4D表示から、O／P／未確定Δを区別する図へ改訂する対象である。本追記時点では新しい図への置換完了を確認していないため、このリンク先の旧全4D内容を現在の採用案と扱わない。rootが別途作成する最新の短いレビューと図を、提示時に照合する。
 
 設計計算の初版は半空間の正規化に不足があり、旧本文のモデルhash `8268…` と初版82検算はそのまま引用しない。改訂モデルhashは `9094d5f25c69d29d72a7996840beacb0895dd1d41b041a278d738e40be45f0f5`、記録は238検算（既存C#との比較156＋設計不変量82）に更新されている。ただしこれは**条件付きのソース整合計算**であり、OとPの意図が正しいこと、初期配置の採用、Unity修正、利用者の承認を証明しない。
 
@@ -56,7 +56,7 @@
 
 ## 2. 参照資料と優先順位
 
-優先順位は、最新の利用者指示・共通条件、今回のCFG2実行範囲、承認画像の外観、CFG1の実装事実と証跡、旧設計の順とする。根拠は [CFG2実行契約19行](C:/Users/pipe_render/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/CODEX_CFG2_UI_MATCH_IMPLEMENTATION_REQUEST_JA.md:19)。現在は最新指示により、設計・画面案・人間確認を先に行う。旧契約の実装継続権限を理由に新実装へ進まない。
+優先順位は、最新の利用者指示・共通条件、今回のCFG2実行範囲、承認画像の外観、CFG1の実装事実と証跡、旧設計の順とする。根拠は [CFG2実行契約19行](C:/Users/USER/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/CODEX_CFG2_UI_MATCH_IMPLEMENTATION_REQUEST_JA.md:19)。現在は最新指示により、設計・画面案・人間確認を先に行う。旧契約の実装継続権限を理由に新実装へ進まない。
 
 画像は外観の根拠であり、駒配置、数値、断面の数学、CPU、製品ルールの採用を意味しない。
 
@@ -64,9 +64,9 @@
 
 | ID | 実在する参照画像 | 寸法 | 主な根拠 |
 |---|---|---:|---|
-| UI-01 | [メインメニュー](C:/Users/pipe_render/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/references/approved_main_menu.png) | 1536×1024 | 金の和文タイトル、紋章／アイコン、縦5カード、広場と木製造形 |
-| UI-02 | [対人戦](C:/Users/pipe_render/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/references/approved_pvp.png) | 1672×941 | 左の上下時計、木盤・駒、空中断面、開いた主ギズモ、縦4小窓 |
-| UI-03 | [駒設定](C:/Users/pipe_render/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/references/approved_piece_settings.png) | 1536×1024 | 4列の密度と余白、カテゴリのアイコン、詳細設定の群、中央の大きい選択駒 |
+| UI-01 | [メインメニュー](C:/Users/USER/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/references/approved_main_menu.png) | 1536×1024 | 金の和文タイトル、紋章／アイコン、縦5カード、広場と木製造形 |
+| UI-02 | [対人戦](C:/Users/USER/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/references/approved_pvp.png) | 1672×941 | 左の上下時計、木盤・駒、空中断面、開いた主ギズモ、縦4小窓 |
+| UI-03 | [駒設定](C:/Users/USER/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/references/approved_piece_settings.png) | 1536×1024 | 4列の密度と余白、カテゴリのアイコン、詳細設定の群、中央の大きい選択駒 |
 
 寸法はファイルから取得した実値。以下の部品寸法や色の記述は、画像の目視比較から作る設計候補であり、元UIの数値を復元したものではない。透過率は合成済み画像から一意に求められない。
 
@@ -87,10 +87,10 @@
 
 | 資料 | 該当位置 | 継承すること／優先関係 |
 |---|---|---|
-| [主ギズモ＋4超平面の採用記録](D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md:24) | 24、28–36、48–57、74–88行 | 同じ局面と断面状態、W/Z/Y/X対応、空中マス中心、世界軸移動。寸法・自由角操作・miniの数学的表現は提案段階 |
-| [設定設計v0.2](D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_DESIGN_v0_2_JA.md:179) | 181–197行 | 承認画像の2D小窓と4超平面を区別。4D統合は4mini、2Dは平面確認。固定立方格子の回転を厳密な断面と呼ばない |
-| [同・操作案](D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_DESIGN_v0_2_JA.md:217) | 217–240行 | 右orbit／中pan／wheel案、開始時の所有保持、Wクリックは位置初期化と分離。画像下端の曖昧な右pan説明は入力契約にしない |
-| [旧Playable設計](D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/FOUR_DIMENSIONAL_SHOGI_PLAYABLE_DESIGN_v0_1_JA.md:149) | 149–205、207–300行 | 通常カメラと4D操作の分離、代替パン、慣性なし、入力所有、透明背景の全面遮断禁止。旧主XYZパン／W局所法線案は後続UI差分を覆さない |
+| [主ギズモ＋4超平面の採用記録](D:/Users/USER/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md:24) | 24、28–36、48–57、74–88行 | 同じ局面と断面状態、W/Z/Y/X対応、空中マス中心、世界軸移動。寸法・自由角操作・miniの数学的表現は提案段階 |
+| [設定設計v0.2](D:/Users/USER/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_DESIGN_v0_2_JA.md:179) | 181–197行 | 承認画像の2D小窓と4超平面を区別。4D統合は4mini、2Dは平面確認。固定立方格子の回転を厳密な断面と呼ばない |
+| [同・操作案](D:/Users/USER/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/FOUR_DIMENSIONAL_SHOGI_SETTINGS_WINDOW_DESIGN_v0_2_JA.md:217) | 217–240行 | 右orbit／中pan／wheel案、開始時の所有保持、Wクリックは位置初期化と分離。画像下端の曖昧な右pan説明は入力契約にしない |
+| [旧Playable設計](D:/Users/USER/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/FOUR_DIMENSIONAL_SHOGI_PLAYABLE_DESIGN_v0_1_JA.md:149) | 149–205、207–300行 | 通常カメラと4D操作の分離、代替パン、慣性なし、入力所有、透明背景の全面遮断禁止。旧主XYZパン／W局所法線案は後続UI差分を覆さない |
 | [旧レンダリング原典](C:/dev/n-dimensional-shogi-showcase/docs/references/06_REALTIME_CG_RENDERING_DESIGN_v0_1_1_JA.md:180) | 180–184、226–228行 | 幾何確認中のカメラ固定、カメラと断面回転の分離、検査・操作後に勝手に映画再生へ戻らない。旧卓中央の解釈で後続の空中中心を上書きしない |
 | [CFG1実装記録](C:/dev/n-dimensional-shogi-showcase/docs/CFG1_IMPLEMENTATION.md:41) | 41–43行 | 右回転／中パン、感度等は実装選択で、人間の操作感採用待ち。既存値という理由だけで採用済みにしない |
 

@@ -104,7 +104,10 @@ namespace Showcase.Unity.Settings
                     bool moved=session.TryMove(new Move(selected.Id,selected.Position,q),stateRevision,generation,out var reason);Record("HumanCommit",moved+";"+reason+";"+session.State.Hash);
                     if(moved){PlayPieceSound();selectedPiece="";QueueQuery();SaveMatchRecord();RefreshMatch();}return;
                 }
-                if(target!=null&&target.Side==session.State.Turn){selectedPiece=target.Id;QueueQuery();Record("MatchSelected",selectedPiece+";"+q);}
+                if(target!=null&&target.Side==session.State.Turn){selectedPiece=target.Id;QueueQuery();Record("MatchSelected",selectedPiece+";"+q);return;}
+                // A click that does nothing says why, so a first-time player knows the game heard it.
+                if(selected!=null&&selected.Side==session.State.Turn)Notice(target!=null&&target.Side!=session.State.Turn?"その駒は、選んだ駒では取れません。":"そのマスには動かせません。青いマスが動ける場所です。");
+                else if(target!=null)Notice("相手の駒です。自分の駒をクリックして選んでください。");
                 return;
             }
             if(!opened)return;

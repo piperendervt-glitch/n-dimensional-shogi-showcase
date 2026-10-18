@@ -107,6 +107,8 @@ namespace Showcase.Unity.Settings
             if(!actions.TryGetValue(key,out var button)||button==null||!button.gameObject.activeInHierarchy||!button.interactable)
                 throw new InvalidOperationException("CFG2 SMOKE unavailable UI action "+key);
             button.onClick.Invoke();Record("SmokeSimulatedButton",key);
+            // Leaving a match that is still being played asks first; the checks answer it as a player who means to leave.
+            if(key=="match-menu"&&leaveOverlay!=null&&leaveOverlay.gameObject.activeSelf){actions["leave-confirm"].onClick.Invoke();Record("SmokeSimulatedButton","leave-confirm");}
         }
         void SmokeInput(string key,string value)
         {
@@ -361,6 +363,7 @@ namespace Showcase.Unity.Settings
         {
             if(phase=="pivot"||phase=="pivot-reload"||phase=="pivot-recovery"||phase=="pivot-recovery-reload"){yield return PivotSteps(phase);yield break;}
             if(phase=="nd"||phase=="nd-reload"){yield return ReviewSteps(phase);yield break;}
+            if(phase=="guide"){yield return GuideSteps();yield break;}
             yield return new WaitForSecondsRealtime(2);
             SmokeCheck(config!=null&&menu.gameObject.activeSelf&&!opened,"normal startup restores executable setup and opens menu");
             var names=Enumerable.Range(0,5).Select(i=>actions["menu-"+i].GetComponentInChildren<Text>().text).ToArray();

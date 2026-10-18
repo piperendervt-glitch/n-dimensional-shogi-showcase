@@ -13,7 +13,7 @@
 | IMG-04 | `ChatGPT 画像 2026年10月15日 17_56_39-4.png` | Scene 04のH0帰還後の不在 |
 | IMG-05 | `ChatGPT 画像 2026年10月15日 17_56_40-5.png` | Scene 05の4D経路・王捕獲・終局 |
 
-原本は `D:\Users\pipe_render\Downloads\n-dimensional-shogi` にあり、配布ZIPには含めない。ハッシュは [入力台帳](SOURCE_MANIFEST.md) を参照。参照画像のghost表現・誤った文字・駒配置を受入条件の幾何やルールへ転用しない。
+原本は `D:\Users\USER\Downloads\n-dimensional-shogi` にあり、配布ZIPには含めない。ハッシュは [入力台帳](SOURCE_MANIFEST.md) を参照。参照画像のghost表現・誤った文字・駒配置を受入条件の幾何やルールへ転用しない。
 
 | 確認 | 見るもの | 現在 |
 |---|---|---|

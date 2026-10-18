@@ -24,9 +24,9 @@
 
 ## 原本で確認した範囲
 
-- [主ギズモと4ビューの採用記録32行](D:/Users/pipe_render/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md:32)：回転中心は木盤中心ではなく空中の3次元マス領域中心。
+- [主ギズモと4ビューの採用記録32行](D:/Users/USER/Downloads/n-dimensional-shogi-showcase/FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA/sources/references/FOUR_DIMENSIONAL_SHOGI_UI_DECISION_MAIN_GIZMO_4_VIEWS_v0_1_JA.md:32)：回転中心は木盤中心ではなく空中の3次元マス領域中心。
 - 同36行：表示範囲と回転中心の連動などは詳細設計で確定する。O→Pの4D変位の具体値はここでは確定されていない。
-- [CFG2契約106行](C:/Users/pipe_render/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/CODEX_CFG2_UI_MATCH_IMPLEMENTATION_REQUEST_JA.md:106)：既存InitialStateのV=W=0は盤のルール座標についての記載。P相対座標の証明には使えない。最新ユーザー指示を優先する。
+- [CFG2契約106行](C:/Users/USER/.codex/.chatgpt-projects/g-p-6ad04e32b33c8191b44c5dfad644d21c/deliverables/CFG2_UI_MATCH_REQUEST_v0_1_JA/CODEX_CFG2_UI_MATCH_IMPLEMENTATION_REQUEST_JA.md:106)：既存InitialStateのV=W=0は盤のルール座標についての記載。P相対座標の証明には使えない。最新ユーザー指示を優先する。
 
 現コードの描画アンカー0.86m／1.10mの差は、別々の描画経路の値。共通写像とO/P/cの定義を確定せずに、ΔY=4.8セルという設計値へ換算してはいけない。
 

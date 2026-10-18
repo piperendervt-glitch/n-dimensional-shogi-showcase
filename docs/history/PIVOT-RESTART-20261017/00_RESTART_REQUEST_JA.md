@@ -24,8 +24,8 @@
 
 1. `C:\dev\n-dimensional-shogi-showcase\artifacts\PIVOT-DESIGN-20261017\00_DESIGN_JA.md`
 2. 同フォルダーの `01_CODEX_IMPLEMENTATION_REQUEST_JA.md`、`02_DESIGN_CHECKS.json`、`03_IMPLEMENTATION_ACCEPTANCE.json`、`04_SOURCE_MANIFEST.json`、`05_DESIGN_REVIEW.json`、`06_PRESERVATION_CHECK.json`、`07_CODEX_HANDOFF_RECEIPT.json`、`preflight-review.md`。
-3. `D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md`
-4. `D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\output\CFG0-20261016-194144-JST\` の00〜05の6文書、`06_READONLY_EVIDENCE.json`、`07_FINAL_READONLY_CHECK.json`、`08_ACCEPTANCE_ID_LEDGER.json`。計画書§4を上位制約と照合し、具体値は限定された実装選択として記録します。
+3. `D:\Users\USER\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA\CODEX_CFG1_IMPLEMENTATION_REQUEST_v0_1_JA.md`
+4. `D:\Users\USER\Downloads\n-dimensional-shogi-showcase\FOUR_DIMENSIONAL_SHOGI_CODEX_HANDOFF_v0_1_JA\output\CFG0-20261016-194144-JST\` の00〜05の6文書、`06_READONLY_EVIDENCE.json`、`07_FINAL_READONLY_CHECK.json`、`08_ACCEPTANCE_ID_LEDGER.json`。計画書§4を上位制約と照合し、具体値は限定された実装選択として記録します。
 5. `C:\dev\n-dimensional-shogi-showcase\artifacts\PIVOT-IMPLEMENT-20261017-034421-JST\` のpreflight、ui/storage実装記録、試験記録と対応ソース。これは今回引き継ぐ未完実装です。
 6. `docs/CFG1_IMPLEMENTATION.md` と `artifacts/CFG2-20261017-004021-JST/00_IMPLEMENTATION_RETURN_SUMMARY_JA.md`。現存経路の保全に使い、新しい対局ルールの採用根拠にしません。
 
@@ -44,9 +44,9 @@
 
 承認画像は次の実ファイルを閲覧します。画像は外観基準であり、駒数・手・候補集合・時計の仕様や実行証拠ではありません。
 
-- 設定：`D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\ChatGPT 画像 2026年10月17日 02_38_14.png`
-- プレイ：`D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\ChatGPT 画像 2026年10月17日 02_38_02.png`
-- メニュー：`D:\Users\pipe_render\Downloads\n-dimensional-shogi-showcase\ChatGPT 画像 2026年10月17日 02_38_23.png`
+- 設定：`D:\Users\USER\Downloads\n-dimensional-shogi-showcase\ChatGPT 画像 2026年10月17日 02_38_14.png`
+- プレイ：`D:\Users\USER\Downloads\n-dimensional-shogi-showcase\ChatGPT 画像 2026年10月17日 02_38_02.png`
+- メニュー：`D:\Users\USER\Downloads\n-dimensional-shogi-showcase\ChatGPT 画像 2026年10月17日 02_38_23.png`
 
 ## 4 再開地点と既存変更の保全
 
