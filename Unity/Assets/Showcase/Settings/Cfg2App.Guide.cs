@@ -34,30 +34,32 @@ namespace Showcase.Unity.Settings
 
         // ---- 遊び方 ----
         RectTransform helpOverlay;Text helpTitle,helpBody,helpPageLabel;int helpPage;readonly List<Button> helpTabs=new List<Button>();
+        // Unity's Text breaks lines only at ASCII spaces, so the pages have none: a space before a long run of Japanese
+        // pushes the whole run to the next line and leaves the word before it alone on its own line.
         static readonly (string tab,string title,string body)[] HelpPages=
         {
             ("ルール","この将棋について",
-             "盤は各軸 −4〜4 の 9 マス。4次元なら 9×9×9×9 のマスがあり、メニューの「次元」で 3〜11 次元を選べます。\n"+
-             "駒は普段の将棋の駒（王・飛車・角行・金・銀・桂馬・香車・歩兵）で、動きを N 次元に広げたものです。\n\n"+
+             "盤は各軸−4〜4の9マス。4次元なら9×9×9×9のマスがあり、メニューの「次元」で3〜11次元を選べます。\n"+
+             "駒は普段の将棋の駒（王・飛車・角行・金・銀・桂馬・香車・歩兵）で、動きをN次元に広げたものです。\n\n"+
              "<color=#F2C97D>勝ち負け</color>\n"+
              "・相手の王を取れば勝ちです。\n"+
-             "・持ち時間が 0 になると負け、どちらも動ける手がなければ引き分けです。\n"+
+             "・持ち時間が0になると負け、どちらも動ける手がなければ引き分けです。\n"+
              "・王手を放っておいても反則になりません。自分の王が狙われると、盤の上に赤い文字で知らせます。\n\n"+
              "<color=#F2C97D>普段の将棋との違い</color>\n"+
              "・成り、持ち駒（取った駒を打つ）、千日手はありません。\n"+
-             "・先手 A は +Z 方向（奥）へ、後手 B は −Z 方向へ進みます。\n"+
+             "・先手Aは+Z方向（奥）へ、後手Bは−Z方向へ進みます。\n"+
              "・デモ版の暫定ルールです。オプションで駒の動きを変えられます。"),
             ("動かし方","駒の動かし方",
-             "<color=#F2C97D>1. 駒を選ぶ</color>　自分の駒をクリックします。選んだ駒は金色になります。"+
+             "<color=#F2C97D>1．駒を選ぶ</color>　自分の駒をクリックします。選んだ駒は金色になります。"+
              "盤に見えない駒は、左下の「駒をさがす」で種類をクリックすると、その駒が見える断面へ盤が動いて選ばれます（押すたびに同じ種類の次の駒へ）。\n\n"+
-             "<color=#F2C97D>2. 移動先をクリック</color>　青く光るマスが動ける場所です。相手の駒があるマスへ動けば、その駒を取れます。\n\n"+
-             "<color=#F2C97D>3. 見えない候補を見る</color>　盤に見えているのは 4次元空間を 3次元で切った「断面」だけです。"+
-             "見えていない方向（W など）にも動ける手があり、盤の上の案内に「この断面に 26 手／全 80 手」のように出ます。\n"+
-             "Tab キー（または「見えない候補へ」ボタン）を押すと、残りの候補が見える断面へ盤が回ります。"+
+             "<color=#F2C97D>2．移動先をクリック</color>　青く光るマスが動ける場所です。相手の駒があるマスへ動けば、その駒を取れます。\n\n"+
+             "<color=#F2C97D>3．見えない候補を見る</color>　盤に見えているのは、4次元空間を3次元で切った「断面」だけです。"+
+             "見えていない方向（Wなど）にも動ける手があり、盤の上の案内に「この断面に26手／全80手」のように出ます。\n"+
+             "Tabキー（または「見えない候補へ」ボタン）を押すと、残りの候補が見える断面へ盤が回ります。"+
              "押すたびに次の断面へ進み、最後は元の表示に戻ります。回った先でも、青いマスをクリックすれば移動できます。\n\n"+
-             "<color=#F2C97D>4. 迷ったら</color>　R キーで最初の表示に戻ります。別の駒をクリックすれば選び直せます。"),
+             "<color=#F2C97D>4．迷ったら</color>　Rキーで最初の表示に戻ります。別の駒をクリックすれば選び直せます。"),
             ("4次元の見方","画面の見方",
-             "<color=#F2C97D>盤</color>　4次元空間の 3次元の断面です。最初は X（横）・Y（上）・Z（奥）の 3 軸が見えていて、W=0 の場所を切っています。\n\n"+
+             "<color=#F2C97D>盤</color>　4次元空間の3次元の断面です。最初はX（横）・Y（上）・Z（奥）の3軸が見えていて、W=0の場所を切っています。\n\n"+
              "<color=#F2C97D>右上の球（軸ジャイロ）</color>　今どの軸が見えているかを示します。軸の名前をクリックすると、その軸が入った断面へ盤が回ります。\n\n"+
              "<color=#F2C97D>右の小さな図</color>　ほかの軸の組み合わせで切った断面です。クリックすると盤がその断面になります。"+
              "マウスを乗せると左に拡大され、右クリックで拡大を固定できます。図の点は駒の位置で、拡大図の点をクリックするとその駒が見える位置まで盤が動きます。\n\n"+
@@ -69,29 +71,29 @@ namespace Showcase.Unity.Settings
              "左ドラッグ／右ドラッグ：視点を回す　　ホイール：拡大・縮小　　中ドラッグ／Shift＋左ドラッグ：平行移動\n"+
              "F1：この画面　　Esc：操作の取り消し／メニューへ（対局中は確認します）\n\n"+
              "<color=#F2C97D>4次元の回転（慣れてきたら）</color>\n"+
-             "Ctrl＋左ドラッグ：盤を 4次元で回す（X・Y と W の回転）　　Ctrl＋Shift＋左ドラッグ：Z と W の回転\n"+
-             "4〜9・0・−：Ctrl で回す相手の軸（4=W、5=V …）\n"+
-             "右上の球の軸をドラッグ：断面を平行に動かす（Shift か Ctrl で 1 マスずつ）\n"+
-             "右の図・球の上で Home：原点へ　　Shift＋Home：最初の位置へ\n\n"+
+             "Ctrl＋左ドラッグ：盤を4次元で回す（X・YとWの回転）　　Ctrl＋Shift＋左ドラッグ：ZとWの回転\n"+
+             "4〜9・0・−：Ctrlで回す相手の軸（4=W、5=V…）\n"+
+             "右上の球の軸をドラッグ：断面を平行に動かす（ShiftかCtrlで1マスずつ）\n"+
+             "右の図・球の上でHome：原点へ　　Shift＋Home：最初の位置へ\n\n"+
              "<color=#F2C97D>メニュー</color>\n"+
              "↑↓：項目を選ぶ　　Enter／Space：決定"),
             ("N次元・設定","N次元とオプション",
-             "<color=#F2C97D>次元を変える</color>　メニューの「次元」の − ＋ で 3〜11 次元を選べます。初めてなら 4 次元がおすすめです。"+
-             "5 次元以上では右の図が増え、上に大きく出る 3 枚が Ctrl＋ドラッグで回せる断面です。8 次元以上は動作が重くなります。\n\n"+
+             "<color=#F2C97D>次元を変える</color>　メニューの「次元」の「−」「＋」で3〜11次元を選べます。初めてなら4次元がおすすめです。"+
+             "5次元以上では右の図が増え、上に大きく出る3枚がCtrl＋ドラッグで回せる断面です。8次元以上は動作が重くなります。\n\n"+
              "<color=#F2C97D>オプション</color>\n"+
-             "・盤・初期配置：次元と、駒の並べ方（平面、またはある軸の方向へ 9 層コピー）。\n"+
+             "・盤・初期配置：次元と、駒の並べ方（平面、またはある軸の方向へ9層コピー）。\n"+
              "・駒の動き設定：駒ごとの動きを変え、試し盤で確かめられます。\n"+
-             "・対局ルール：持ち時間など。　・CPU設定：CPU の手を見せる演出。\n"+
+             "・対局ルール：持ち時間など。　・CPU設定：CPUの手を見せる演出。\n"+
              "・表示・操作：表示の切り替え、操作ヒント、音量、画質。\n\n"+
              "<color=#F2C97D>保存と不具合の報告</color>\n"+
-             "設定と棋譜は %USERPROFILE%\\AppData\\LocalLow\\piperendervt-glitch\\四次元将棋 に保存されます。"+
-             "うまく動かないときは、同じ場所の Player.log を添えて GitHub の Issues へお知らせください。"),
+             "設定と棋譜は「%USERPROFILE%\\AppData\\LocalLow\\piperendervt-glitch\\四次元将棋」に保存されます。"+
+             "うまく動かないときは、同じ場所のPlayer.logを添えてGitHubのIssuesへお知らせください。"),
         };
         void CreateHelp()
         {
             // Wider than the stage so a wide window is dimmed edge to edge.
             helpOverlay=CfgUi.Rect(root,"Help overlay",-1200,-600,1536+2400,1024+1200);var dim=helpOverlay.gameObject.AddComponent<Image>();dim.color=new Color(0,0,0,.62f);dim.raycastTarget=true;
-            var panel=Cfg2Ui.Panel(helpOverlay,"Help panel",1200+138,600+70,1260,884,Dark,true);
+            var panel=Cfg2Ui.Panel(helpOverlay,"Help panel",1200+138,600+70,1260,884,new Color(Dark.r,Dark.g,Dark.b,.97f),true);
             helpTitle=CfgUi.Label(panel,"",36,22,900,48,32,Gold);
             CfgUi.Label(panel,"遊び方",1060,30,170,30,18,Muted).alignment=TextAnchor.UpperRight;
             for(int i=0;i<HelpPages.Length;i++){int page=i;var b=Button(panel,"help-tab-"+i,HelpPages[i].tab,36+i*238,86,228,46,()=>ShowHelpPage(page));b.GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;helpTabs.Add(b);}

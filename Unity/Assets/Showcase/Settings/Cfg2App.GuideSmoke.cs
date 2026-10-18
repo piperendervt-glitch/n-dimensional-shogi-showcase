@@ -19,7 +19,12 @@ namespace Showcase.Unity.Settings
             yield return SmokeCapture("guide-menu");
             SmokeAction("menu-help");yield return null;
             SmokeCheck(helpOverlay.gameObject.activeSelf,"遊び方 opens from the menu");
-            for(int i=0;i<HelpPages.Length;i++){SmokeAction("help-tab-"+i);yield return null;yield return SmokeCapture("guide-help-"+i);}
+            for(int i=0;i<HelpPages.Length;i++)
+            {
+                SmokeAction("help-tab-"+i);yield return null;
+                SmokeCheck(helpBody.text.IndexOf(' ')<0,"help page "+(i+1)+" has no ASCII space for Text to break a short word off at");
+                yield return SmokeCapture("guide-help-"+i);
+            }
             SmokeAction("help-close");yield return null;SmokeCheck(!OverlayOpen,"遊び方 closes");
             SmokeAction("menu-dimensions-up");yield return null;SmokeCheck(DraftDimensions==5,"the menu's ＋ raises N to 5");
             yield return SmokeCapture("guide-menu-5d");
@@ -57,7 +62,8 @@ namespace Showcase.Unity.Settings
             var aPiece=session.State.Pieces.First(p=>p.Side==Side.A);CommitCell(aPiece.Position,slice.ViewRevision,session.Revision,session.Generation);yield return null;
             SmokeCheck(notice.Contains("相手の駒"),"clicking the other side's piece says so");
 
-            SmokeAction("match-menu");yield return null;
+            // SmokeAction would answer the question as a player who means to leave; press the button itself to see it asked.
+            actions["match-menu"].onClick.Invoke();yield return null;
             SmokeCheck(session!=null&&leaveOverlay.gameObject.activeSelf,"☰ メニュー during a match asks before leaving");
             yield return SmokeCapture("guide-leave-question");
             double before=session.Clock.ASeconds+session.Clock.BSeconds;yield return new WaitForSecondsRealtime(1.5f);
