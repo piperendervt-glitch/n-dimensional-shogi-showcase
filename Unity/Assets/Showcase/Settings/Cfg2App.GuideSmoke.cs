@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using NDShogi.Showcase.Core;
 using NDShogi.Showcase.Core.Match;
 using Showcase.Geometry;
@@ -12,6 +13,12 @@ namespace Showcase.Unity.Settings
     // the notice for a click that does nothing, the king warning and the question before leaving a match. Run on a fresh --cfg2-data.
     public sealed partial class Cfg2App
     {
+        static int PunctuationLineStarts(Text label)
+        {
+            var plain=System.Text.RegularExpressions.Regex.Replace(label.text,"<[^>]+>","");
+            var settings=label.GetGenerationSettings(label.rectTransform.rect.size);settings.richText=false;var generator=new TextGenerator();generator.Populate(plain,settings);
+            return generator.lines.Skip(1).Count(l=>l.startCharIdx>0&&l.startCharIdx<plain.Length&&NoLineStart.IndexOf(plain[l.startCharIdx])>=0&&plain[l.startCharIdx-1]!='\n');
+        }
         IEnumerator GuideSteps()
         {
             yield return new WaitForSecondsRealtime(2);
@@ -23,6 +30,7 @@ namespace Showcase.Unity.Settings
             {
                 SmokeAction("help-tab-"+i);yield return null;
                 SmokeCheck(helpBody.text.IndexOf(' ')<0,"help page "+(i+1)+" has no ASCII space for Text to break a short word off at");
+                SmokeCheck(PunctuationLineStarts(helpBody)==0,"help page "+(i+1)+" starts no line with 、 or 。");
                 yield return SmokeCapture("guide-help-"+i);
             }
             SmokeAction("help-close");yield return null;SmokeCheck(!OverlayOpen,"遊び方 closes");

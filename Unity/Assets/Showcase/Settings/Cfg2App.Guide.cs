@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -93,7 +94,7 @@ namespace Showcase.Unity.Settings
         {
             // Wider than the stage so a wide window is dimmed edge to edge.
             helpOverlay=CfgUi.Rect(root,"Help overlay",-1200,-600,1536+2400,1024+1200);var dim=helpOverlay.gameObject.AddComponent<Image>();dim.color=new Color(0,0,0,.62f);dim.raycastTarget=true;
-            var panel=Cfg2Ui.Panel(helpOverlay,"Help panel",1200+138,600+70,1260,884,new Color(Dark.r,Dark.g,Dark.b,.97f),true);
+            var panel=Cfg2Ui.Panel(helpOverlay,"Help panel",1200+138,600+70,1260,884,new Color(Dark.r,Dark.g,Dark.b,1),true);
             helpTitle=CfgUi.Label(panel,"",36,22,900,48,32,Gold);
             CfgUi.Label(panel,"遊び方",1060,30,170,30,18,Muted).alignment=TextAnchor.UpperRight;
             for(int i=0;i<HelpPages.Length;i++){int page=i;var b=Button(panel,"help-tab-"+i,HelpPages[i].tab,36+i*238,86,228,46,()=>ShowHelpPage(page));b.GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;helpTabs.Add(b);}
@@ -113,9 +114,27 @@ namespace Showcase.Unity.Settings
         void ShowHelpPage(int page)
         {
             helpPage=Mathf.Clamp(page,0,HelpPages.Length-1);
-            helpTitle.text=HelpPages[helpPage].title;helpBody.text=HelpPages[helpPage].body;helpPageLabel.text=(helpPage+1)+" / "+HelpPages.Length;
+            helpTitle.text=HelpPages[helpPage].title;helpBody.text=KeepPunctuationOffLineStarts(helpBody,HelpPages[helpPage].body);helpWrapScale=canvas.scaleFactor;helpPageLabel.text=(helpPage+1)+" / "+HelpPages.Length;
             for(int i=0;i<helpTabs.Count;i++)MarkSelected(helpTabs[i],i==helpPage);
             actions["help-prev"].interactable=helpPage>0;actions["help-next"].interactable=helpPage<HelpPages.Length-1;
+        }
+        // Unity's Text breaks Japanese at any character, so a line can start with 、 or 。. Breaking one character earlier carries
+        // the character before it down too, as Japanese typesetting does. Measured without the colour tags, which take no width.
+        const string NoLineStart="、。，．・：；？！ー）」』】〉》…ぁぃぅぇぉっゃゅょァィゥェォッャュョ";
+        float helpWrapScale;
+        static string KeepPunctuationOffLineStarts(Text label,string text)
+        {
+            var plain=new StringBuilder();var tagged=new StringBuilder(text);var at=new List<int>();
+            for(int i=0;i<text.Length;i++){if(text[i]=='<'){int close=text.IndexOf('>',i);if(close>i){i=close;continue;}}plain.Append(text[i]);at.Add(i);}
+            var settings=label.GetGenerationSettings(label.rectTransform.rect.size);settings.richText=false;var generator=new TextGenerator();
+            for(int pass=0;pass<32;pass++)
+            {
+                generator.Populate(plain.ToString(),settings);int cut=-1;
+                foreach(var line in generator.lines.Skip(1)){int s=line.startCharIdx;if(s>=2&&s<plain.Length&&NoLineStart.IndexOf(plain[s])>=0&&plain[s-1]!='\n'&&plain[s-2]!='\n'){cut=s-1;break;}}
+                if(cut<0)break;
+                tagged.Insert(at[cut],'\n');plain.Insert(cut,'\n');for(int k=cut;k<at.Count;k++)at[k]++;at.Insert(cut,at[cut]-1);
+            }
+            return tagged.ToString();
         }
         void CloseHelp(){if(helpOverlay!=null&&helpOverlay.gameObject.activeSelf){helpOverlay.gameObject.SetActive(false);CfgUi.ReleaseSelection();Record("HelpClosed");}}
 

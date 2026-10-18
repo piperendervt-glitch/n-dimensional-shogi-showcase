@@ -238,6 +238,7 @@ namespace Showcase.Unity.Settings
             if(previousWidth!=Screen.width||previousHeight!=Screen.height){previousWidth=Screen.width;previousHeight=Screen.height;layoutRevision++;ownership.Cancel();pointerButton=-1;RefreshAuxiliaryViews();}
             // The canvas scaler sizes the canvas on its own schedule, so the spare width is re-read each frame (a no-op when unchanged).
             if(opened)LayoutSettings();
+            if(helpOverlay!=null&&helpOverlay.gameObject.activeSelf&&canvas.scaleFactor!=helpWrapScale)ShowHelpPage(helpPage);
             if(slice.IsAnimating){slice.Advance(Time.unscaledDeltaTime);geometryDirty=true;stableDirty=true;}
             // The help and the leave question hold the match: its clock, the CPU and the hand-over wait until they close.
             matchClock?.Hold(OverlayOpen);if(!OverlayOpen)UpdateMatch();UpdateCandidateTour();StepSectionGlide();if(geometryDirty)RenderGeometry();UpdateMagnifier();
