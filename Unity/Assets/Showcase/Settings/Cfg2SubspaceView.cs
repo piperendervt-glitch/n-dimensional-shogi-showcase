@@ -23,6 +23,8 @@ namespace Showcase.Unity.Settings
         bool showCandidates=true,showAttacks=true,showGrid=true;
         // Fixed 3-D camera around the projected cube, and the k×k rotation that keeps the hidden axes apart.
         float yaw=-35,pitch=22;double[,] rotation;
+        // Bound of every drawn point: the k-D radius of the cube (and the axis labels), then the 3-D radius after the hidden axes.
+        double radius=1,radius3=1;
         int pointer=-1;bool pressed,moved;Vector2 lastPosition,downPosition;
         public int Dimensions=4;
         public IReadOnlyList<int> Axes=>uiAxes;
@@ -52,6 +54,8 @@ namespace Showcase.Unity.Settings
             uiAxes=(int[])axes.Clone();coreAxes=uiAxes.Select(a=>SliceAxes.CoreAxis((LogicalAxis)a)).ToArray();ownership=input;uiScale=scale;interactive=orbitable;
             yaw=-35;pitch=22;BuildRotation();
             var size=((RectTransform)transform).rect;
+            // The edges run to the cube's corners, so anything the projection pushes past the frame is clipped there.
+            if(!TryGetComponent<RectMask2D>(out _))gameObject.AddComponent<RectMask2D>();
             heading=CfgUi.Label(transform,Name,8,2,size.width-16,22,15,Cfg2Ui.Gold);
             var rect=CfgUi.Rect(transform,"Fixed-axes subspace",0,0,size.width,size.height);
             CfgUi.Fill(rect);graphic=rect.gameObject.AddComponent<Cfg2SubspaceGraphic>();graphic.View=this;graphic.color=Color.white;graphic.transform.SetAsFirstSibling();
@@ -65,6 +69,10 @@ namespace Showcase.Unity.Settings
         {
             int k=uiAxes.Length;rotation=new double[k,k];for(int i=0;i<k;i++)rotation[i,i]=1;
             for(int a=3;a<k;a++){Turn(a%3,a,a==3?32:a==4?26:14+6*(a-5));if(a>=4)Turn((a+1)%3,a,10);}
+            radius=Math.Max(Half*Math.Sqrt(k),Half+.8);radius3=1e-6;var o=new double[k];
+            void Reach(){var p=Hidden(o,out _);radius3=Math.Max(radius3,Math.Sqrt(p[0]*p[0]+(k>1?p[1]*p[1]:0)+(k>2?p[2]*p[2]:0)));}
+            for(int v=0;v<1<<k;v++){for(int i=0;i<k;i++)o[i]=(v>>i&1)!=0?Half:-Half;Reach();}
+            for(int i=0;i<k;i++){Array.Clear(o,0,k);o[i]=Half+.8;Reach();}
         }
         void Turn(int a,int b,double degrees)
         {
@@ -82,21 +90,31 @@ namespace Showcase.Unity.Settings
         public bool Contains(QN cell)
         {int n=Math.Max(Dimensions,Math.Max(cell.Dimensions,center.Dimensions));for(int axis=0;axis<n;axis++)if(!coreAxes.Contains(axis)&&cell.Axis(axis)!=center.Axis(axis))return false;return true;}
         // ---- projection: cell offsets along the k axes → 3-D (one perspective division per hidden axis) → the fixed camera ----
-        const double HiddenCamera=16,Camera3=16,Half=4.5;
-        Vector3 Project(double[] offset,out float depth)
+        // Each perspective step only shrinks (the nearest possible point keeps its size, the camera sits twice the bound away), so a
+        // point never grows past the bound however many hidden axes there are; with five or more axes the old enlarging step
+        // compounded and sent corners far outside the figure.
+        const double Half=4.5;
+        double[] Hidden(double[] offset,out double depth)
         {
             int k=uiAxes.Length;var p=new double[k];for(int i=0;i<k;i++){double v=0;for(int j=0;j<k;j++)v+=rotation[i,j]*offset[j];p[i]=v;}
-            double d=0;for(int a=k-1;a>=3;a--){double s=HiddenCamera/Math.Max(2,HiddenCamera-p[a]);d+=p[a]/HiddenCamera;for(int i=0;i<a;i++)p[i]*=s;}
+            double camera=2*radius;depth=0;for(int a=k-1;a>=3;a--){double s=camera/(camera+radius-Math.Min(radius,p[a]));depth+=p[a]/camera;for(int i=0;i<a;i++)p[i]*=s;}
+            return p;
+        }
+        Vector3 Project(double[] offset,out float depth)
+        {
+            int k=uiAxes.Length;var p=Hidden(offset,out double d);
             double x=p[0],y=k>1?p[1]:0,z=k>2?p[2]:0;
             double cy=Math.Cos(yaw*Math.PI/180),sy=Math.Sin(yaw*Math.PI/180),cp=Math.Cos(pitch*Math.PI/180),sp=Math.Sin(pitch*Math.PI/180);
             double x1=x*cy-z*sy,z1=x*sy+z*cy,y2=y*cp-z1*sp,z2=y*sp+z1*cp;
-            double s3=Camera3/Math.Max(2,Camera3-z2);depth=(float)d;
+            double camera=2*radius3,s3=camera/(camera+radius3-Math.Min(radius3,z2));depth=(float)d;
             return new Vector3((float)(x1*s3),(float)(y2*s3),(float)z2);
         }
+        // A drawn point lies within radius3 of the centre in 3-D; after the camera's perspective it stays within about .71·radius3 on
+        // screen at any angle (checked over the whole orbit for 3–11 axes), so the figure fills the frame without leaving it.
         void Frame(out Vector2 origin,out float scale)
         {
             var rect=((RectTransform)transform).rect;float size=Mathf.Max(9,Mathf.Min(rect.width-16,rect.height-44));
-            origin=new Vector2(rect.width*.5f,-22-size*.5f);scale=size/(float)(2*Half*(uiAxes.Length<=3?1.75:2.1));
+            origin=new Vector2(rect.width*.5f,-22-size*.5f);scale=size/(float)(2*radius3*.74);
         }
         Vector2 ToScreen(Vector3 projected,Vector2 origin,float scale)=>origin+new Vector2(projected.x,projected.y)*scale;
         double[] Offset(QN cell){var o=new double[uiAxes.Length];for(int i=0;i<o.Length;i++)o[i]=cell.Axis(coreAxes[i])-center.Axis(coreAxes[i]);return o;}
