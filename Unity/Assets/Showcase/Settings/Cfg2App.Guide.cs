@@ -134,6 +134,8 @@ namespace Showcase.Unity.Settings
                 generator.Populate(plain.ToString(),settings);int cut=-1;
                 foreach(var line in generator.lines.Skip(1)){int s=line.startCharIdx;if(s>=2&&s<plain.Length&&NoLineStart.IndexOf(plain[s])>=0&&plain[s-1]!='\n'&&plain[s-2]!='\n'){cut=s-1;break;}}
                 if(cut<0)break;
+                // The character carried down may itself be one a line must not start with (the ） of "A）、"): carry the one before it too.
+                while(cut>1&&NoLineStart.IndexOf(plain[cut])>=0&&plain[cut-1]!='\n')cut--;
                 tagged.Insert(at[cut],'\n');plain.Insert(cut,'\n');for(int k=cut;k<at.Count;k++)at[k]++;at.Insert(cut,at[cut]-1);
             }
             return tagged.ToString();

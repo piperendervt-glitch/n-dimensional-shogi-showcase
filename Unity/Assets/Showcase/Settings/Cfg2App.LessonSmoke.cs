@@ -23,7 +23,7 @@ namespace Showcase.Unity.Settings
         bool InCaption(GameObject top)=>top!=null&&top.transform.IsChildOf(lessonCaption);
         void SmokeLessonLight(LessonStep step)
         {
-            SmokeCheck(lessonText.IndexOf(' ')<0&&PunctuationLineStarts(lessonBody)==0,"lesson "+step.Id+" has no ASCII space and starts no subtitle line with 、 。 or ）");
+            SmokeCheck(lessonText.IndexOf(' ')<0&&PunctuationLineStarts(lessonBody)==0&&!lessonBody.text.Split('\n').Skip(1).Any(l=>l.Length>0&&NoLineStart.IndexOf(l[0])>=0),"lesson "+step.Id+" has no ASCII space and starts no subtitle line with 、 。 or ）");
             var target=LessonTarget();
             if(!target.HasValue)
             {
