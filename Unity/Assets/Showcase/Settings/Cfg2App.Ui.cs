@@ -360,7 +360,7 @@ namespace Showcase.Unity.Settings
             {
                 int n=DraftDimensions;cols=Columns(c,2);
                 CfgUi.Label(cols[0],n+"次元将棋（デモ版ルール）",8,7,330,44,24,Gold);
-                CfgUi.Label(cols[0],"相手の王を取れば勝ち。\n動ける手がなければ引き分け。\n持ち時間が0になると負け。\n\n成り・持ち駒（打ち）・千日手は\nありません。\n王手を放置しても反則になりません。",8,73,330,375,20);
+                CfgUi.Label(cols[0],"相手の王を取れば勝ち。\n手番の側に動かせる手が\nなければ引き分け。\n持ち時間が0になると負け。\n\n成り・持ち駒（打ち）・千日手は\nありません。\n王手を放置しても反則になりません。",8,73,330,375,20);
                 CfgUi.Label(cols[0],"デモ版の暫定ルールです。\n今後変わることがあります。",8,473,330,89,17,Muted);
                 Field(cols[1],"name","表示名",draft.Name,7,v=>{draft.Edit(d=>d.Name=v);AfterEdit();});
                 if(startupLoadError!="")Button(cols[1],"recover-default","元保存を保持して新しい設定で復旧",8,142,330,58,RecoverToNewBundle);
@@ -394,7 +394,7 @@ namespace Showcase.Unity.Settings
                 Button(cols[0],"occlusion-lattice","通り道のマスだけで判定（標準）",8,58,330,44,()=>{draft.Edit(d=>d.Occlusion="lattice-line/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="lattice-line/1");
                 Button(cols[0],"occlusion-supercover","かすめるマスも塞ぐ（厳しめ）",8,111,330,44,()=>{draft.Edit(d=>d.Occlusion="supercover-closed/1");AfterEdit();BuildDetails();},draft.Current.Occlusion=="supercover-closed/1");
                 Field(cols[0],"time","双方の持ち時間（秒）",options.TimeSeconds,211,v=>{options.TimeSeconds=v;AfterEdit();});
-                CfgUi.Label(cols[1],"秒読み・時間の加算はありません。\n\n終局：王を取る／動ける手がない\n／時間切れ\n成り・打ちはありません。\n王手を放置しても指せます。",8,8,330,238,20);
+                CfgUi.Label(cols[1],"秒読み・時間の加算はありません。\n\n終局：王を取る／手番の側に\n動ける手がない／時間切れ\n成り・打ちはありません。\n王手を放置しても指せます。",8,8,330,238,20);
             }
             else if(category==4)
             {

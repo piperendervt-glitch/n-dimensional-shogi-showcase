@@ -272,11 +272,12 @@ namespace Showcase.Unity.Settings
                 if(Input.GetKeyDown(KeyCode.Y))HistoryKey(true);
             }
         }
-        // R: the 4D view back to C=P and XYZ; in a match the camera also returns to the player's own view.
+        // R: the 4D view back to C=P and XYZ; the camera also returns, to the player's own view in a match or to the opening preview view in options.
         void ResetView()
         {
             ResetCandidateTour();slice.Restore(NewPivotSlice().DisplayState);geometryDirty=true;stableDirty=true;
             if(session!=null&&!opened){manualCamera=false;SetMatchCamera(cameraSide,false);}
+            else if(opened){yaw=32;pitch=29;distance=.58f;pan=Vector3.zero;UpdateCamera();}
             Record("PivotReset","C=P;XYZ");
         }
         void PickRotationAxis(LogicalAxis logical)

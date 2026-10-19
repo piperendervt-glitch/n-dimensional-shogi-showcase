@@ -258,13 +258,15 @@ namespace Showcase.Unity.Settings
             id=default;if(expectedRevision!=ViewRevision)return false;float nearest=float.PositiveInfinity;bool found=false;
             if(prioritizeSelection)
             {
-                if(PickPieces(ray,expectedRevision,out id,out nearest))return true;
+                // A piece behind a nearer candidate cell must not take the click meant for that cell, unless the piece is itself a capture target.
+                bool piece=PickPieces(ray,expectedRevision,out var pieceId,out float pieceDistance);
                 foreach(var c in cells.Where(c=>candidateCells.Contains(c.Id)))
                 for(int i=0;i<c.Section.Indices.Length;i+=3)
                 {
                     Vector3 At(int n)=>Anchor+SectionView.MapVector(c.Section.Vertices[c.Section.Indices[i+n]].Position)*displayCell;
                     if(RayTriangle(ray,At(0),At(1),At(2),out float distance)&&distance<nearest){nearest=distance;id=c.Id;found=true;}
                 }
+                if(piece&&(pieceDistance<=nearest||candidateCells.Contains(pieceId))){id=pieceId;return true;}
                 if(found)return true;
             }
             foreach(var c in cells)
