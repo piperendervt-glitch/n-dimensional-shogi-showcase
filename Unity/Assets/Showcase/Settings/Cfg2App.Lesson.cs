@@ -25,7 +25,7 @@ namespace Showcase.Unity.Settings
             // then waits for Then (B's answer, for instance) before the next step.
             public Func<bool> Done,Then;
             // The screen rectangle to light; null leaves the screen undimmed unless DimAll.
-            public Func<Rect?> Light;public bool DimAll;
+            public Func<Rect?> Light;public bool DimAll;public float Pad=10;
             // A move the step does not want is answered with this text instead of being played. Steps without it want no move.
             public Func<Piece,QN,string> Refuse;
             public string Next;
@@ -38,8 +38,9 @@ namespace Showcase.Unity.Settings
         // What the step started from, for Done tests that compare.
         float lessonYaw,lessonPitch,lessonDistance;int lessonPly;ReferenceSection lessonSection;string lessonPiece="",lessonTarget="";
         RectTransform lessonOverlay,lessonCaption,lessonBoardArea;Cfg2Spotlight spotlight;CanvasGroup captionFade;Text lessonHeader,lessonBody,lessonPraise,lessonStatus;
-        Rect lessonHole;bool lessonHoleShown;float captionY;
-        const float LessonPraiseSeconds=.9f,LessonDim=.66f,CaptionX=394,CaptionWidth=880,CaptionHeight=226,CaptionBottom=788,CaptionTop=90;
+        Rect lessonHole;bool lessonHoleShown;float captionHigh,captionHeight=CaptionHeight;string lessonText="";float lessonWrapScale;int lessonWrapFrame;
+        // The caption's bottom edge when it sits low, and its top edge when it sits high, under the hint bar.
+        const float LessonPraiseSeconds=.9f,LessonDim=.66f,CaptionX=394,CaptionWidth=880,CaptionHeight=226,CaptionFloor=1012,CaptionTop=90;
         // The board between the left column and the right panels, for steps that are about the board itself.
         const float BoardLeft=372,BoardTop=86,BoardWidth=922,BoardHeight=930;
 
@@ -47,13 +48,13 @@ namespace Showcase.Unity.Settings
         {
             lessonOverlay=CfgUi.Rect(root,"Lesson overlay",-1200,-600,1536+2400,1024+1200);
             var dim=CfgUi.Rect(lessonOverlay,"Lesson spotlight",0,0,1536+2400,1024+1200);CfgUi.Fill(dim);spotlight=dim.gameObject.AddComponent<Cfg2Spotlight>();spotlight.color=Color.white;
-            lessonCaption=Cfg2Ui.Panel(lessonOverlay,"Lesson caption",1200+CaptionX,600+CaptionBottom,CaptionWidth,CaptionHeight,new Color(Dark.r,Dark.g,Dark.b,1),true);
+            lessonCaption=Cfg2Ui.Panel(lessonOverlay,"Lesson caption",1200+CaptionX,600+CaptionFloor-CaptionHeight,CaptionWidth,CaptionHeight,new Color(Dark.r,Dark.g,Dark.b,1),true);
             captionFade=lessonCaption.gameObject.AddComponent<CanvasGroup>();
             var frame=Cfg2Ui.Frame(lessonCaption);if(frame!=null){frame.color=new Color(Gold.r,Gold.g,Gold.b,.8f);frame.Glow=true;frame.SetVerticesDirty();}
             lessonHeader=CfgUi.Label(lessonCaption,"",20,12,560,30,19,Gold);
             lessonPraise=CfgUi.Label(lessonCaption,"",584,12,276,30,19,Gold);lessonPraise.alignment=TextAnchor.UpperRight;
             lessonBody=CfgUi.Label(lessonCaption,"",20,46,840,104,20);lessonBody.lineSpacing=1.1f;
-            lessonStatus=CfgUi.Label(lessonCaption,"",20,152,840,24,16);
+            lessonStatus=CfgUi.Label(lessonCaption,"",20,180,404,38,15);lessonStatus.alignment=TextAnchor.MiddleLeft;
             Button(lessonCaption,"lesson-next","次へ ▶",436,180,180,38,NextLessonStep,true).GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
             Button(lessonCaption,"lesson-skip","次のレッスンへ",624,180,136,38,SkipLesson).GetComponentInChildren<Text>().fontSize=15;
             Button(lessonCaption,"lesson-quit","やめる",768,180,92,38,()=>ReturnFromMatch()).GetComponentInChildren<Text>().fontSize=15;
@@ -63,7 +64,7 @@ namespace Showcase.Unity.Settings
         void StartLesson()
         {
             lessonSteps=lessonSteps??LessonSteps();CloseHelp();
-            lessonOverlay.SetAsLastSibling();lessonOverlay.gameObject.SetActive(true);spotlight.Dim=0;lessonHoleShown=false;captionY=CaptionBottom;
+            lessonOverlay.SetAsLastSibling();lessonOverlay.gameObject.SetActive(true);spotlight.Dim=0;lessonHoleShown=false;captionHigh=-1;
             Record("LessonStarted");EnterLessonStep(0);
         }
         // From ReturnFromMatch: the lesson ends with the board it was played on.
@@ -80,12 +81,21 @@ namespace Showcase.Unity.Settings
             lessonHeard.Clear();lessonYaw=yaw;lessonPitch=pitch;lessonDistance=distance;lessonPly=session.State.Ply;lessonSection=slice.StableSection??ReferenceSection.Initial(slice.Frame.Dimensions);
             guideText.transform.parent.gameObject.SetActive(false);
             lessonHeader.text="レッスン "+step.Lesson+"／"+LessonTitles.Length+"　"+LessonTitles[step.Lesson-1];
-            lessonBody.text=KeepPunctuationOffLineStarts(lessonBody,step.Text());lessonPraise.text="";lessonStatus.text="";
             bool narration=step.Done==null;actions["lesson-next"].gameObject.SetActive(narration);
+            lessonStatus.rectTransform.sizeDelta=new Vector2(narration?404:592,38);SetCaptionText(step.Text());lessonWrapFrame=Time.frameCount;lessonPraise.text="";lessonStatus.text="";if(hudNotice!=null)hudNotice.text="";
             actions["lesson-next"].GetComponentInChildren<Text>().text=step.Next??"次へ ▶";
             actions["lesson-skip"].gameObject.SetActive(!narration&&step.Lesson<LessonTitles.Length);
             captionFade.alpha=0;lessonShown=Time.unscaledTime;
             Record("LessonStep",(index+1)+"/"+lessonSteps.Length+";"+step.Id);
+        }
+        // The caption fits its text: the subtitle's lines, then one row with the latest notice on the left and the buttons on the
+        // right. Wrapped again when the text or the canvas scale changes, and on the first frames, once the screen has settled.
+        void SetCaptionText(string raw)
+        {
+            lessonText=raw;lessonWrapScale=canvas.scaleFactor;lessonBody.rectTransform.sizeDelta=new Vector2(840,400);lessonBody.text=KeepPunctuationOffLineStarts(lessonBody,raw);
+            float body=Mathf.Ceil(Mathf.Max(28,lessonBody.preferredHeight)),row=46+body+8;lessonBody.rectTransform.sizeDelta=new Vector2(840,body);
+            foreach(var id in new[]{"lesson-next","lesson-skip","lesson-quit"}){var r=(RectTransform)actions[id].transform;r.anchoredPosition=new Vector2(r.anchoredPosition.x,-row);}
+            lessonStatus.rectTransform.anchoredPosition=new Vector2(20,-row);captionHeight=row+38+12;lessonCaption.sizeDelta=new Vector2(CaptionWidth,captionHeight);
         }
         void NextLessonStep()
         {
@@ -100,7 +110,7 @@ namespace Showcase.Unity.Settings
             Record("LessonSkipped",Step.Id);if(next<0)NextLessonStep();else EnterLessonStep(next);
         }
         void LessonHeard(string name){if(LessonActive)lessonHeard.Add(name);}
-        // During a lesson, notices (a refused click, a move the step does not want) appear in the caption, which stays lit.
+        // During a lesson, notices (a refused click, a move the step does not want) appear only in the caption, which stays lit.
         void LessonSay(string text){if(!LessonActive)return;lessonSaid=text;lessonSaidAt=Time.unscaledTime;}
         string LessonRefusal(Piece piece,QN to)
         {
@@ -135,8 +145,9 @@ namespace Showcase.Unity.Settings
         // screen, whichever covers less of the hole.
         void LayoutLesson()
         {
-            var step=Step;float dt=Mathf.Min(.1f,Time.unscaledDeltaTime);var target=step.Light?.Invoke();
-            float pad=10*canvas.scaleFactor;var full=spotlight.rectTransform.rect;
+            var step=Step;float dt=Mathf.Min(.1f,Time.unscaledDeltaTime);var target=LessonTarget();
+            var raw=step.Text();if(raw!=lessonText||canvas.scaleFactor!=lessonWrapScale||Time.frameCount<=lessonWrapFrame+2)SetCaptionText(raw);
+            float pad=step.Pad*canvas.scaleFactor;var full=spotlight.rectTransform.rect;
             spotlight.Dim=Mathf.MoveTowards(spotlight.Dim,target.HasValue||step.DimAll?LessonDim:0,dt*2.4f);
             Rect? goal=target.HasValue?ScreenToSpotlight(Rect.MinMaxRect(target.Value.xMin-pad,target.Value.yMin-pad,target.Value.xMax+pad,target.Value.yMax+pad)):step.DimAll?(Rect?)null:full;
             if(goal.HasValue)
@@ -148,15 +159,23 @@ namespace Showcase.Unity.Settings
             }
             else{spotlight.HasHole=false;lessonHoleShown=false;}
             spotlight.Pulse=Mathf.Repeat(Time.unscaledTime*.8f,1);spotlight.raycastTarget=spotlight.Dim>.05f;spotlight.SetVerticesDirty();
-            float wanted=CaptionBottom;
-            if(target.HasValue&&Overlap(target.Value,StageRect(CaptionX,CaptionBottom,CaptionWidth,CaptionHeight))>Overlap(target.Value,StageRect(CaptionX,CaptionTop,CaptionWidth,CaptionHeight)))wanted=CaptionTop;
-            captionY=Mathf.Lerp(captionY,wanted,1-Mathf.Exp(-dt*12));
+            // Low, the caption keeps its bottom edge whatever its height; high, its top edge.
+            float low=CaptionFloor-captionHeight;
+            float high=target.HasValue&&Overlap(target.Value,StageRect(CaptionX,low,CaptionWidth,captionHeight))>Overlap(target.Value,StageRect(CaptionX,CaptionTop,CaptionWidth,captionHeight))?1:0;
+            captionHigh=captionHigh<0?high:Mathf.Lerp(captionHigh,high,1-Mathf.Exp(-dt*12));float captionY=Mathf.Lerp(low,CaptionTop,captionHigh);
             float shown=Mathf.Clamp01((Time.unscaledTime-lessonShown)/.3f);captionFade.alpha=shown;
             lessonCaption.anchoredPosition=new Vector2(1200+CaptionX,-(600+captionY+(1-shown)*(1-shown)*14));
             // できました pops up once the step is done; the latest notice of this step stays a while under the subtitle, then fades.
             float done=lessonDoneAt<0?0:Mathf.Clamp01((Time.unscaledTime-lessonDoneAt)/.25f);
             lessonPraise.text=lessonDoneAt<0?"":"✓ できました";lessonPraise.color=new Color(.62f,.95f,.62f,done);lessonPraise.rectTransform.localScale=Vector3.one*(1+.2f*(1-done));
             float age=Time.unscaledTime-lessonSaidAt;lessonStatus.text=age<6?lessonSaid:"";lessonStatus.color=new Color(1,.70f,.45f,Mathf.Clamp01(6-age));
+        }
+        // The step's target on screen, kept far enough inside the screen for the frame around it to show.
+        Rect? LessonTarget()
+        {
+            var step=Step;var t=step?.Light?.Invoke();if(!t.HasValue)return null;float m=(step.Pad+4)*canvas.scaleFactor;
+            var r=Rect.MinMaxRect(Mathf.Max(t.Value.xMin,m),Mathf.Max(t.Value.yMin,m),Mathf.Min(t.Value.xMax,Screen.width-m),Mathf.Min(t.Value.yMax,Screen.height-m));
+            return r.width>0&&r.height>0?r:(Rect?)null;
         }
         Rect ScreenToSpotlight(Rect screen)
         {
@@ -193,8 +212,14 @@ namespace Showcase.Unity.Settings
             }
             return x0<=x1?Rect.MinMaxRect(x0,y0,x1,y1):(Rect?)null;
         }
-        Rect? PieceRect(string id)=>previewRenderer.PieceSections.TryGetValue(id??"",out var view)&&view.Renderer.enabled?SectionRect(view.Last):null;
+        Rect? PieceRect(string id)=>previewRenderer.PieceSections.TryGetValue(id??"",out var view)&&view.Renderer.enabled?OnBoard(SectionRect(view.Last)):null;
         Rect? BoardRect()=>ScreenRect(lessonBoardArea);
+        // A piece or cell drawn outside the board area (behind the hint bar, off the screen) is not lit: a click there would not reach it.
+        Rect? OnBoard(Rect? r)
+        {
+            var board=BoardRect();if(!r.HasValue||!board.HasValue)return r;if(!board.Value.Contains(r.Value.center))return null;var a=r.Value;var b=board.Value;
+            return Rect.MinMaxRect(Mathf.Max(a.xMin,b.xMin),Mathf.Max(a.yMin,b.yMin),Mathf.Min(a.xMax,b.xMax),Mathf.Min(a.yMax,b.yMax));
+        }
         // The blue cells of the selected piece that the step would play, as drawn now. Which of the visible cells the step allows
         // is worked out once per query and view (a king's safety test queries the board).
         List<QN> lessonCells;QueryResult lessonCellsFor;int lessonCellsStep=-1;long lessonCellsView=-1;
@@ -206,7 +231,7 @@ namespace Showcase.Unity.Settings
                 var embedding=slice.DisplayState.Embedding;lessonCellsFor=result;lessonCellsStep=lesson;lessonCellsView=slice.ViewRevision;
                 lessonCells=result.P.Where(q=>InSlice(slice.Frame,CfgPreviewRenderer.V(q)+embedding)&&Step?.Refuse?.Invoke(piece,q)==null).ToList();
             }
-            return Union(lessonCells.Select(q=>previewRenderer.TryGetCellSection(q,out var section)?SectionRect(section):null));
+            return Union(lessonCells.Select(q=>previewRenderer.TryGetCellSection(q,out var section)?OnBoard(SectionRect(section)):null));
         }
         Rect? MinisRect(int first=0)=>Union(minis.Skip(first).Select(m=>ScreenRect(m.transform)));
         Rect? HintRect()=>ScreenRect(hintPanel);
@@ -252,8 +277,8 @@ namespace Showcase.Unity.Settings
         LessonStep[] LessonSteps()
         {
             var s=new List<LessonStep>();
-            void Add(int lesson,string id,Func<string> text,Func<bool> done=null,Func<Rect?> light=null,Action enter=null,Func<bool> then=null,Func<Piece,QN,string> refuse=null,bool dimAll=false,string next=null)
-                =>s.Add(new LessonStep{Lesson=lesson,Id=id,Text=text,Done=done,Light=light,Enter=enter,Then=then,Refuse=refuse,DimAll=dimAll,Next=next});
+            void Add(int lesson,string id,Func<string> text,Func<bool> done=null,Func<Rect?> light=null,Action enter=null,Func<bool> then=null,Func<Piece,QN,string> refuse=null,bool dimAll=false,string next=null,float pad=10)
+                =>s.Add(new LessonStep{Lesson=lesson,Id=id,Text=text,Done=done,Light=light,Enter=enter,Then=then,Refuse=refuse,DimAll=dimAll,Next=next,Pad=pad});
             string OnlyLessonPiece(Piece p,QN q)=>p.Id==lessonPiece?null:"このレッスンでは、光っている"+LessonName(session.State.Find(lessonPiece)?.Kind??PieceKind.Pawn)+"を動かします。";
 
             // 1 駒を選んで動かす
@@ -297,15 +322,15 @@ namespace Showcase.Unity.Settings
                     return "飛車が盤から消えました。W＝"+(rook?.Position.W??0)+"へ動いたので、今の断面（W＝0）には映らないのです。駒が消えても、なくなったわけではありません。";
                 },enter:()=>EnsureOpening(true));
             Add(4,"finder",()=>"左下の「駒をさがす」で、飛車の行が「見える0／全1」になっています。飛車の行をクリックしてください。",
-                done:()=>selectedPiece==lessonPiece&&SeesPiece(lessonPiece)&&SettledView,light:()=>ScreenRect(actions["finder-Rook"].transform));
+                done:()=>selectedPiece==lessonPiece&&SeesPiece(lessonPiece)&&SettledView,light:()=>ScreenRect(actions["finder-Rook"].transform),pad:3);
             Add(4,"found",()=>"盤がW方向へ平行に動いて、飛車が見えるようになりました。左上には、選んだ駒の名前と座標が出ます。",
-                light:()=>ScreenRect(selectionText.transform));
+                light:()=>StageRect(30,244,330,92),pad:4);
 
             // 5 右の図の見方
             Add(5,"panels",()=>"右の4枚の図は、軸の組み合わせを変えて切った断面です。図の点が駒の位置で、盤に見えない駒もここに出ます。",
-                light:()=>MinisRect()??BoardRect());
+                light:()=>MinisRect()??BoardRect(),pad:4);
             Add(5,"panel-click",()=>"図をクリックすると、盤がその断面に切り替わります。下の3枚のどれかをクリックしてみましょう。",
-                done:()=>SettledView&&slice.StableSection.HasValue&&slice.StableSection.Value!=lessonSection,light:()=>MinisRect(1)??BoardRect());
+                done:()=>SettledView&&slice.StableSection.HasValue&&slice.StableSection.Value!=lessonSection,light:()=>MinisRect(1)??BoardRect(),pad:4);
             Add(5,"gizmo",()=>"右上の球は、今見えている軸を示します。軸の名前をクリックしても、その軸が入った断面へ盤が回ります。",
                 light:()=>ScreenRect(matchGizmo));
 
@@ -315,7 +340,7 @@ namespace Showcase.Unity.Settings
                     Placed("b-rook",Side.B,PieceKind.Rook,-2,0,0,3),Placed("b-king",Side.B,PieceKind.King,3,0),Placed("b-pawn",Side.B,PieceKind.Pawn,2,-2)});lessonPiece="a-king";},
                 light:HintRect);
             Add(6,"where",()=>"狙っているのは後手Bの飛車です。W方向にいるので盤には見えませんが、右の図には点で出ています。",
-                light:()=>MinisRect()??BoardRect());
+                light:()=>MinisRect()??BoardRect(),pad:4);
             Add(6,"select-king",()=>"王をクリックして選びましょう。",
                 done:()=>selectedPiece==lessonPiece,light:()=>PieceRect(lessonPiece)??BoardRect());
             Add(6,"escape",()=>"青いマスへ動かして逃げましょう。飛車の通り道（W方向の線）から外れれば、もう狙われません。",
@@ -326,7 +351,7 @@ namespace Showcase.Unity.Settings
             // 7 王を取って勝つ
             Add(7,"win-select",()=>"最後の練習です。後手Bの王は見えないW方向にいますが、飛車で取れる位置です。光っている飛車をクリックしてください。",
                 enter:()=>{LessonBoard("win/1",new[]{Placed("a-king",Side.A,PieceKind.King,-4,0),Placed("a-rook",Side.A,PieceKind.Rook,-1,0),Placed("a-pawn",Side.A,PieceKind.Pawn,-2,2),
-                    Placed("b-king",Side.B,PieceKind.King,-1,0,0,3),Placed("b-pawn",Side.B,PieceKind.Pawn,3,-2),Placed("b-gold",Side.B,PieceKind.Gold,3,2)});lessonPiece="a-rook";lessonTarget="b-king";},
+                    Placed("b-king",Side.B,PieceKind.King,-1,0,0,1),Placed("b-pawn",Side.B,PieceKind.Pawn,3,-2),Placed("b-gold",Side.B,PieceKind.Gold,3,2)});lessonPiece="a-rook";lessonTarget="b-king";},
                 done:()=>selectedPiece==lessonPiece,light:()=>PieceRect(lessonPiece)??BoardRect());
             Add(7,"win-tour",()=>"Tabキー（または「見えない候補へ」）で、見えない手が見える向きへ盤を回しましょう。",
                 done:()=>TourActive&&SettledView&&SeesPiece(lessonTarget),light:HintRect);
@@ -341,7 +366,7 @@ namespace Showcase.Unity.Settings
             Add(8,"rotate-back",()=>"戻すときは、いつでもRキーです。",
                 done:()=>Heard("PivotReset"),light:BoardRect);
             Add(8,"five",()=>"メニューの「次元」で、3〜11次元の盤を選べます。これは5次元の盤です。右の図が増え、上の大きな図の下の3枚がCtrl＋ドラッグで回せる断面です。",
-                enter:()=>LessonBoard("five/1",null,5),light:()=>MinisRect()??BoardRect());
+                enter:()=>LessonBoard("five/1",null,5),light:()=>MinisRect()??BoardRect(),pad:4);
             Add(8,"end",()=>"これでレクチャーはおしまいです。迷ったら、F1でいつでも遊び方を開けます。メニューから対局を始めましょう。",
                 dimAll:true,next:"メニューへ");
             return s.ToArray();

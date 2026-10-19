@@ -171,7 +171,7 @@ namespace Showcase.Unity.Settings
         void Notice(string text)
         {
             notice=text;noticeTime=Time.unscaledTime;noticeFrame=Time.frameCount;screenNotice=true;
-            if(statusText!=null)statusText.text=text;if(hudNotice!=null)hudNotice.text=text;if(menuNotice!=null)menuNotice.text=text;LessonSay(text);Record("Notice",text);
+            if(statusText!=null)statusText.text=text;if(hudNotice!=null)hudNotice.text=LessonActive?"":text;if(menuNotice!=null)menuNotice.text=text;LessonSay(text);Record("Notice",text);
         }
         void KeepScreenNotice(){if(noticeFrame!=Time.frameCount)ClearScreenNotice();}
         void ClearScreenNotice(){screenNotice=false;if(hudNotice!=null)hudNotice.text="";if(menuNotice!=null)menuNotice.text="";}

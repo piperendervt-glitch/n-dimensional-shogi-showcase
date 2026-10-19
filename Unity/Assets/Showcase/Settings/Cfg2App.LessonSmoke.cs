@@ -23,7 +23,8 @@ namespace Showcase.Unity.Settings
         bool InCaption(GameObject top)=>top!=null&&top.transform.IsChildOf(lessonCaption);
         void SmokeLessonLight(LessonStep step)
         {
-            var target=step.Light?.Invoke();
+            SmokeCheck(lessonText.IndexOf(' ')<0&&PunctuationLineStarts(lessonBody)==0,"lesson "+step.Id+" has no ASCII space and starts no subtitle line with 、 。 or ）");
+            var target=LessonTarget();
             if(!target.HasValue)
             {
                 SmokeCheck(step.DimAll?spotlight.Dim>.5f&&!spotlight.HasHole:spotlight.Dim<.05f,"lesson "+step.Id+(step.DimAll?" dims the whole screen":" leaves the screen undimmed"));
@@ -46,18 +47,25 @@ namespace Showcase.Unity.Settings
             SmokeCheck(top!=null&&top.transform.IsChildOf(r),"lesson button "+id+" takes the click (top: "+(top!=null?top.name:"none")+")");
             SmokeAction(id);
         }
-        // A blue cell the step would play that a real click reaches.
+        // A blue cell the step would play that a real click reaches: nothing (the dim, the hint bar, the caption) is over it.
         QN SmokeLessonCell(Piece piece,LessonStep step)
         {
             RenderGeometry();var embedding=slice.DisplayState.Embedding;
             foreach(var q in result.P.Where(q=>step.Refuse?.Invoke(piece,q)==null&&InSlice(slice.Frame,CfgPreviewRenderer.V(q)+embedding)))
-                if(SmokePointForCell2(q,out _))return q;
+                if(SmokePointForCell2(q,out var point)&&SmokeTopAt(point)==matchSurface.gameObject)return q;
             throw new InvalidOperationException("CFG2 SMOKE no reachable lesson cell for "+step.Id);
+        }
+        void SmokeLessonClick(QN cell,string purpose)
+        {
+            Canvas.ForceUpdateCanvases();RenderGeometry();
+            var top=SmokePointForCell2(cell,out var point)?SmokeTopAt(point):null;
+            SmokeCheck(top==matchSurface.gameObject,purpose+": a real click on "+cell+" reaches the board (top: "+(top!=null?top.name:"none")+")");
+            SmokeClickCell(cell,purpose);
         }
         void SmokeLessonRefused(QN q,string purpose,string says)
         {
             int ply=session.State.Ply;CommitCell(q,slice.ViewRevision,session.Revision,session.Generation);
-            SmokeCheck(session.State.Ply==ply&&lessonSaid.Contains(says),"lesson refuses "+purpose+" and says so in the caption ("+lessonSaid+")");
+            SmokeCheck(session.State.Ply==ply&&lessonSaid.Contains(says)&&hudNotice.text=="","lesson refuses "+purpose+" and says so in the caption only ("+lessonSaid+")");
         }
         IEnumerator SmokeLessonAct(LessonStep step)
         {
@@ -65,23 +73,23 @@ namespace Showcase.Unity.Settings
             switch(step.Id)
             {
                 case "select-pawn":case "select-rook":case "select-king":case "win-select":
-                    SmokeClickCell(piece.Position,"lesson "+step.Id);break;
-                case "move-pawn":SmokeClickCell(SmokeLessonCell(piece,step),"lesson "+step.Id);break;
+                    SmokeLessonClick(piece.Position,"lesson "+step.Id);break;
+                case "move-pawn":SmokeLessonClick(SmokeLessonCell(piece,step),"lesson "+step.Id);break;
                 case "move-w":
                 {
                     var embedding=slice.DisplayState.Embedding;
                     var flat=result.P.First(q=>q.W==piece.Position.W&&InSlice(slice.Frame,CfgPreviewRenderer.V(q)+embedding));
                     SmokeLessonRefused(flat,"a rook move that keeps W","W方向");
-                    var to=SmokeLessonCell(piece,step);SmokeClickCell(to,"lesson "+step.Id);
+                    var to=SmokeLessonCell(piece,step);SmokeLessonClick(to,"lesson "+step.Id);
                     SmokeCheck(session.State.Find(lessonPiece).Position.W!=0,"lesson move-w plays the rook along W");break;
                 }
                 case "escape":
                     // The rook's W line is hidden from this section; the refusal is tried through the board API.
                     SmokeLessonRefused(piece.Position.WithAxis(3,1),"a king step that stays on the rook's line","狙われて");
-                    SmokeClickCell(SmokeLessonCell(piece,step),"lesson "+step.Id);break;
+                    SmokeLessonClick(SmokeLessonCell(piece,step),"lesson "+step.Id);break;
                 case "win-capture":
-                    SmokeLessonRefused(piece.Position.WithAxis(3,1),"a rook move that does not take the king","王");
-                    SmokeClickCell(session.State.Find(lessonTarget).Position,"lesson "+step.Id);break;
+                    SmokeLessonRefused(piece.Position.WithAxis(3,-1),"a rook move that does not take the king","王");
+                    SmokeLessonClick(session.State.Find(lessonTarget).Position,"lesson "+step.Id);break;
                 case "orbit":PivotGesture(new Vector2(240,-50));break;
                 case "zoom":PreviewScroll(new PointerEventData(EventSystem.current){scrollDelta=new Vector2(0,4)});break;
                 case "reset-camera":case "back":case "rotate-back":ResetView();break;
