@@ -418,7 +418,7 @@ namespace Showcase.Unity.Settings
             SmokeAction("back");SmokeAction("menu-0");yield return null;
             long DisplayedSeconds(string text)
             {
-                var token=text.Split((char[])null,StringSplitOptions.RemoveEmptyEntries).Last();var values=token.Split(':');
+                var token=text.Split((char[])null,StringSplitOptions.RemoveEmptyEntries).Last();var tenths=token.Split('.');if(tenths.Length!=2||tenths[1].Length!=1||!char.IsDigit(tenths[1][0]))return -1;var values=tenths[0].Split(':');
                 if(values.Length!=2||!long.TryParse(values[0],out var minutes)||!int.TryParse(values[1],out var seconds)||minutes<0||seconds<0||seconds>=60)return -1;
                 return minutes*60+seconds;
             }

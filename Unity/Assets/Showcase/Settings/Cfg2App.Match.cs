@@ -481,7 +481,8 @@ namespace Showcase.Unity.Settings
         void RefreshMatch()
         {
             if(session==null)return;var s=session.State;var clock=session.Clock;
-            string TimeText(double v){long t=(long)Math.Ceiling(Math.Max(0,v));return (t/60).ToString("00")+":"+(t%60).ToString("00");}
+            // Tenths of a second, rounded up so 0.0 appears only when the time has run out; CPU turns charge only a fraction of a second.
+            string TimeText(double v){long t=(long)Math.Ceiling(Math.Max(0,v)*10-1e-6),sec=t/10;return (sec/60).ToString("00")+":"+(sec%60).ToString("00")+"."+(t%10);}
             string Label(Side side)=> (side==Side.A?"先手 A":"後手 B")+(s.Turn==side&&!session.IsFinished?"  手番":"")+"\n"+(session.Snapshot.Controller(side)==MatchController.Human?"PLAYER":"CPU")+"    "+TimeText(side==Side.A?clock.ASeconds:clock.BSeconds);
             clockNear.text=Label(cameraSide);clockFar.text=Label(RuleCore.Other(cameraSide));
             bool cvc=session.Snapshot.Mode==MatchMode.CvC;actions["pause"].gameObject.SetActive(cvc&&!session.IsFinished);actions["step"].gameObject.SetActive(cvc&&!session.IsFinished);
