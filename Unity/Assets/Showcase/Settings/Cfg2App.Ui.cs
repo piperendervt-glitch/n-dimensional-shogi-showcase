@@ -42,14 +42,14 @@ namespace Showcase.Unity.Settings
             var title=CfgUi.Label(menu,"N 次 元 将 棋",80,94,740,98,66,Gold);var shadow=title.gameObject.AddComponent<Shadow>();shadow.effectColor=new Color(0,0,0,.8f);shadow.effectDistance=new Vector2(2,-2);
             CfgUi.Label(menu,"N - D I M E N S I O N A L  S H O G I",88,195,680,40,22,Gold);
             CfgUi.Line(menu,new Vector2(80,245),new Vector2(700,245),Gold,1);
-            // The play modes keep ids menu-0..2, オプション menu-3 and 終了 menu-4; 遊び方 sits between them as menu-help.
-            string[] labels={"人間 vs 人間","人間 vs CPU","CPU vs CPU","遊び方","オプション","終了"};
-            string[] symbols={"PvP","PvC","CvC","？","設 定","終 了"};
+            // The play modes keep ids menu-0..2, オプション menu-3 and 終了 menu-4; 操作レクチャー and 遊び方 sit between them.
+            string[] labels={"人間 vs 人間","人間 vs CPU","CPU vs CPU","操作レクチャー","遊び方","オプション","終了"};
+            string[] symbols={"PvP","PvC","CvC","入 門","？","設 定","終 了"};
             for(int i=0;i<MenuEntries;i++)
             {
-                int entry=i;var b=Button(menu,MenuIds[i],labels[i],86,290+i*94,550,84,()=>{if(entry<3)StartMatch((MatchMode)entry);else if(entry==3)OpenHelp(0);else if(entry==4)OpenSettings();else Quit();},i==0);
-                var t=b.GetComponentInChildren<Text>();t.fontSize=27;t.alignment=TextAnchor.MiddleLeft;t.rectTransform.anchoredPosition=new Vector2(130,-3);t.rectTransform.sizeDelta=new Vector2(405,78);
-                CfgUi.Label(b.transform,symbols[i],16,21,105,42,18,Gold).alignment=TextAnchor.MiddleCenter;
+                int entry=i;var b=Button(menu,MenuIds[i],labels[i],86,290+i*80,550,72,()=>MenuEntry(MenuIds[entry]),i==0);
+                var t=b.GetComponentInChildren<Text>();t.fontSize=27;t.alignment=TextAnchor.MiddleLeft;t.rectTransform.anchoredPosition=new Vector2(130,-3);t.rectTransform.sizeDelta=new Vector2(405,66);
+                CfgUi.Label(b.transform,symbols[i],16,15,105,42,18,Gold).alignment=TextAnchor.MiddleCenter;
                 // Pointing at an entry moves the same cursor the arrow keys move.
                 var hover=b.gameObject.AddComponent<EventTrigger>();var enter=new EventTrigger.Entry{eventID=EventTriggerType.PointerEnter};
                 enter.callback.AddListener(_=>SetMenuIndex(entry,true));hover.triggers.Add(enter);
@@ -58,9 +58,14 @@ namespace Showcase.Unity.Settings
             menuNotice=CfgUi.Label(menu,"",86,860,640,140,17,Gold);
             CfgUi.Label(menu,"デモ版 v"+Application.version+"　F1：遊び方",86,996,640,24,14,Muted);
         }
-        static readonly string[] MenuIds={"menu-0","menu-1","menu-2","menu-help","menu-3","menu-4"};
+        static readonly string[] MenuIds={"menu-0","menu-1","menu-2","menu-lesson","menu-help","menu-3","menu-4"};
+        void MenuEntry(string id)
+        {
+            if(id=="menu-0")StartMatch(MatchMode.PvP);else if(id=="menu-1")StartMatch(MatchMode.PvC);else if(id=="menu-2")StartMatch(MatchMode.CvC);
+            else if(id=="menu-lesson")StartLesson();else if(id=="menu-help")OpenHelp(0);else if(id=="menu-3")OpenSettings();else Quit();
+        }
         // Main menu cursor: ↑↓ (or W/S) move it, Enter/Space presses the entry. The highlighted entry is the one Enter starts.
-        int menuIndex;const int MenuEntries=6;
+        int menuIndex;const int MenuEntries=7;
         void SetMenuIndex(int index,bool sound)
         {
             index=(index%MenuEntries+MenuEntries)%MenuEntries;bool moved=index!=menuIndex;menuIndex=index;
@@ -566,23 +571,25 @@ namespace Showcase.Unity.Settings
         void SetDimensions(int n)
         {
             int old=DraftDimensions;if(n==old||n<BoundsN.MinDimensions||n>BoundsN.MaxDimensions)return;
+            draft.Edit(d=>ResizeDraft(d,old,n));
+            SyncViewToDraft();AfterEdit();BuildPieces();BuildDetails();Record("Dimensions",n.ToString(CultureInfo.InvariantCulture));
+        }
+        // The edit behind SetDimensions, also used for the lessons' own 5D rules.
+        static void ResizeDraft(DraftData d,int old,int n)
+        {
             string Inv(int value)=>value.ToString(CultureInfo.InvariantCulture);
-            draft.Edit(d=>
+            d.Dimensions=Inv(n);
+            foreach(var x in d.Definitions)
             {
-                d.Dimensions=Inv(n);
-                foreach(var x in d.Definitions)
-                {
-                    int.TryParse(x.AxesMask,NumberStyles.Integer,CultureInfo.InvariantCulture,out int mask);
-                    bool every=!IsEditable(x)||mask==BoundsN.FullAxesMask(old)||mask<=0;
-                    x.AxesMask=Inv(every?BoundsN.FullAxesMask(n):mask&BoundsN.FullAxesMask(n));
-                    int.TryParse(x.MaxAxes,NumberStyles.Integer,CultureInfo.InvariantCulture,out int axes);
-                    // A slider's axis count is a rule choice, not "every axis": it only shrinks when the new board has fewer axes.
-                    if(x.Kind=="hkk/1"){if(axes>n||axes<=0)SetSlideAxes(x,Math.Max(1,Math.Min(axes,n)),n);}
-                    else if(!IsEditable(x)||axes==old||axes>n||axes<=0)x.MaxAxes=Inv(n);
-                }
-                var copy=DraftData.CopyAxisOf(d.InitialLayout);if(copy.HasValue&&copy.Value>=n)d.InitialLayout=DraftData.FlatLayout;
-            });
-            SyncViewToDraft();AfterEdit();BuildPieces();BuildDetails();Record("Dimensions",Inv(n));
+                int.TryParse(x.AxesMask,NumberStyles.Integer,CultureInfo.InvariantCulture,out int mask);
+                bool every=!IsEditable(x)||mask==BoundsN.FullAxesMask(old)||mask<=0;
+                x.AxesMask=Inv(every?BoundsN.FullAxesMask(n):mask&BoundsN.FullAxesMask(n));
+                int.TryParse(x.MaxAxes,NumberStyles.Integer,CultureInfo.InvariantCulture,out int axes);
+                // A slider's axis count is a rule choice, not "every axis": it only shrinks when the new board has fewer axes.
+                if(x.Kind=="hkk/1"){if(axes>n||axes<=0)SetSlideAxes(x,Math.Max(1,Math.Min(axes,n)),n);}
+                else if(!IsEditable(x)||axes==old||axes>n||axes<=0)x.MaxAxes=Inv(n);
+            }
+            var copy=DraftData.CopyAxisOf(d.InitialLayout);if(copy.HasValue&&copy.Value>=n)d.InitialLayout=DraftData.FlatLayout;
         }
         // N and initial layout the trial board and view were built for.
         int viewDimensions;string viewLayout;

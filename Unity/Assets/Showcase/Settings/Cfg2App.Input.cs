@@ -75,6 +75,7 @@ namespace Showcase.Unity.Settings
         void PreviewUp(PointerEventData e)
         {
             if(pointerButton!=(int)e.button||ownership.PointerId!=e.pointerId)return;int button=pointerButton;pointerButton=-1;ownership.Release(ownership.Owner,e.pointerId);
+            if(pointerMoved&&gesture==Gesture.Rotate4D&&pointerView.Dimensions>3)Record("Rotation4D",rotateZw?"ZW":"XY");
             if(button!=0||pointerMoved||gesture!=Gesture.ClickOrbit)return;
             if(pointerCamera!=cameraRevision||pointerLayout!=layoutRevision||geometryDirty||pointerDraft!=draft.Revision||pointerMatch!=session?.Snapshot.MatchId){Record("StalePointerRejected");return;}
             Ray ray;
@@ -101,6 +102,8 @@ namespace Showcase.Unity.Settings
                 var target=session.State.At(q);var selected=session.State.Find(selectedPiece);
                 if(selected!=null&&selected.Side==session.State.Turn&&result?.P.Contains(q)==true)
                 {
+                    // A lesson step that wants one particular move answers any other instead of playing it.
+                    var refusal=LessonRefusal(selected,q);if(refusal!=null){Notice(refusal);return;}
                     bool moved=session.TryMove(new Move(selected.Id,selected.Position,q),stateRevision,generation,out var reason);Record("HumanCommit",moved+";"+reason+";"+session.State.Hash);
                     if(moved){PlayPieceSound();selectedPiece="";QueueQuery();SaveMatchRecord();RefreshMatch();}return;
                 }

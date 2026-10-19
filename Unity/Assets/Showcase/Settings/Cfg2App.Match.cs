@@ -88,16 +88,16 @@ namespace Showcase.Unity.Settings
         }
         static string GuideText(int dimensions)=>"ドラッグ：視点回転　ホイール：ズーム　"+(dimensions>3?"Ctrl＋ドラッグ：高次元回転（4〜9・0・−キーで回す軸）　":"")+"R：表示リセット";
         // A match that cannot be created leaves everything as it was; one whose screen cannot be set up is ended like a menu return,
-        // so a failure never leaves a half-started match behind.
-        void StartMatch(MatchMode mode,IReadOnlyList<Piece> fixture=null,string fixtureId=null)
+        // so a failure never leaves a half-started match behind. A lesson passes its own rules; every other match plays the options'.
+        void StartMatch(MatchMode mode,IReadOnlyList<Piece> fixture=null,string fixtureId=null,MatchConfig rules=null)
         {
-            CancelActiveInput();
-            ValidateSettings();if(config==null){Notice("入力を確認してください："+string.Join(" / ",validation.Errors));if(session!=null)ReturnFromMatch();OpenSettings();return;}
+            CancelActiveInput();if(rules==null)EndLesson();
+            ValidateSettings();var use=rules??config;if(use==null){Notice("入力を確認してください："+string.Join(" / ",validation.Errors));if(session!=null)ReturnFromMatch();OpenSettings();return;}
             if(settingsDirty&&!AutoSave())return;
             // Only unsaved settings hold the next match back; a match display that cannot be saved has been reported and is left behind.
             if(!SaveStableView()&&(session==null||opened))return;
             MatchSession next;var clock=new Cfg2MatchClock();
-            try{next=fixture==null?MatchSession.Create(config,mode,clock):MatchSession.CreateFixture(config,mode,clock,fixture,fixtureId);}
+            try{next=fixture==null?MatchSession.Create(use,mode,clock):MatchSession.CreateFixture(use,mode,clock,fixture,fixtureId);}
             catch(Exception e){Debug.LogException(e);Notice("対局を開始できません："+e.Message);return;}
             if(session==null){trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;trialSelectedPiece=selectedPiece;trialSelectedCell=selectedCell;trialPlaneReference=planeReferenceCell;}
             if(session!=null){session.Interrupt("次局開始");SaveMatchRecord();}CancelCpu();ownership.Cancel();
@@ -326,12 +326,13 @@ namespace Showcase.Unity.Settings
         void ReturnFromMatch()
         {
             CancelActiveInput();
-            if(session==null){ShowMenu();return;}CancelCpu();session.Interrupt();SaveMatchRecord();Record("MatchLeft",session.State.Outcome+";"+session.State.Hash);session=null;
+            EndLesson();if(session==null){ShowMenu();return;}CancelCpu();session.Interrupt();SaveMatchRecord();Record("MatchLeft",session.State.Outcome+";"+session.State.Hash);session=null;
             // The match panels wait, hidden, for the next StartMatch to show them that match's space.
             selectedPiece=preview.Find(trialSelectedPiece)!=null?trialSelectedPiece:preview.Pieces.FirstOrDefault()?.Id??"";selectedCell=trialSelectedCell;planeReferenceCell=trialPlaneReference;slice=trialSlice;yaw=trialYaw;pitch=trialPitch;distance=trialDistance;pan=trialPan;rotationAxis=LogicalAxis.W;ShowMenu();
         }
+        // Lesson games are practice: they leave no record.
         void SaveMatchRecord()
-        {if(session!=null)try{MatchRecordStore.Save(Path.Combine(recordRoot,session.Snapshot.MatchId+".xml"),session);}catch(Exception e){Notice("棋譜の保存に失敗："+e.Message);}}
+        {if(session!=null&&!LessonGame(session))try{MatchRecordStore.Save(Path.Combine(recordRoot,session.Snapshot.MatchId+".xml"),session);}catch(Exception e){Notice("棋譜の保存に失敗："+e.Message);}}
         void TogglePause()
         {
             if(session==null)return;CancelCpu();if(session.IsPaused)session.ResumeCvc();else session.PauseCvc();
@@ -446,7 +447,8 @@ namespace Showcase.Unity.Settings
                 {CancelTurnReset();session.CompletePresentation();presentationStart=-1;Record("PresentationCompleted","input owner retained the view");}
                 else
                 {
-                    if(presentationStart<0){presentationStart=Time.unscaledTime;bool pvp=session.Snapshot.Mode==MatchMode.PvP;presentationSeconds=pvp?TurnChangeSeconds:.45f;if(!manualCamera)SetMatchCamera(pvp?session.State.Turn:Side.A,true);BeginTurnReset();}
+                    // A lesson keeps the camera on A's side: B's answers are the lesson's own.
+                    if(presentationStart<0){presentationStart=Time.unscaledTime;bool pvp=session.Snapshot.Mode==MatchMode.PvP&&!LessonActive;presentationSeconds=pvp?TurnChangeSeconds:.45f;if(!manualCamera)SetMatchCamera(pvp?session.State.Turn:Side.A,true);BeginTurnReset();}
                     float t=manualCamera?1:Mathf.Clamp01((Time.unscaledTime-presentationStart)/presentationSeconds);float smooth=t*t*(3-2*t);
                     if(!manualCamera){
                     // Orbit around the board instead of cutting straight through it.
@@ -494,7 +496,7 @@ namespace Showcase.Unity.Settings
                 shownPly=s.Ply;geometryDirty=true;
                 visuals.RefreshCaptured(s.Captured.Where(c=>c.Victim.Kind!=PieceKind.King).GroupBy(c=>new{c.Captor,c.Victim.Kind}).Select(g=>new Cfg2CapturedPiece{Owner=g.Key.Captor,DefinitionId=MatchConfig.DefinitionId(g.Key.Kind),Count=g.Count()}));
             }
-            resultPanel.gameObject.SetActive(session.IsFinished&&s.Outcome!=MatchOutcome.Interrupted);
+            resultPanel.gameObject.SetActive(session.IsFinished&&s.Outcome!=MatchOutcome.Interrupted&&!LessonActive);
             if(session.IsFinished)
             {
                 string why=s.Outcome==MatchOutcome.KingCapture?"王捕獲":s.Outcome==MatchOutcome.NoMovesDraw?"着手可能手なし":s.Outcome==MatchOutcome.TimeLoss?"時間切れ":"中断";

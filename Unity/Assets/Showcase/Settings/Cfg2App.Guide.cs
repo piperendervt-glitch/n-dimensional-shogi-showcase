@@ -100,6 +100,8 @@ namespace Showcase.Unity.Settings
             for(int i=0;i<HelpPages.Length;i++){int page=i;var b=Button(panel,"help-tab-"+i,HelpPages[i].tab,36+i*238,86,228,46,()=>ShowHelpPage(page));b.GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;helpTabs.Add(b);}
             helpBody=CfgUi.Label(panel,"",44,158,1172,610,21);helpBody.supportRichText=true;helpBody.lineSpacing=1.15f;
             helpPageLabel=CfgUi.Label(panel,"",36,808,200,40,18,Muted);helpPageLabel.alignment=TextAnchor.MiddleLeft;
+            // From the menu the help also offers the lecture; during a match starting it would end the match, so it is not offered there.
+            Button(panel,"help-lesson","▶ 操作レクチャー",236,800,250,54,StartLesson).GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
             Button(panel,"help-prev","◀ 前へ",650,800,170,54,()=>ShowHelpPage(helpPage-1)).GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
             Button(panel,"help-next","次へ ▶",830,800,170,54,()=>ShowHelpPage(helpPage+1)).GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
             Button(panel,"help-close","閉じる",1010,800,214,54,CloseHelp,true).GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
@@ -108,7 +110,7 @@ namespace Showcase.Unity.Settings
         void OpenHelp(int page=-1)
         {
             if(helpOverlay==null)return;CancelActiveInput();
-            helpOverlay.SetAsLastSibling();helpOverlay.gameObject.SetActive(true);ShowHelpPage(page>=0?page:helpPage);
+            helpOverlay.SetAsLastSibling();helpOverlay.gameObject.SetActive(true);actions["help-lesson"].gameObject.SetActive(session==null);ShowHelpPage(page>=0?page:helpPage);
             PlayerPrefs.SetInt(HelpSeenKey,1);PlayerPrefs.Save();Record("HelpOpened",helpPage.ToString());
         }
         void ShowHelpPage(int page)
@@ -139,13 +141,12 @@ namespace Showcase.Unity.Settings
         void CloseHelp(){if(helpOverlay!=null&&helpOverlay.gameObject.activeSelf){helpOverlay.gameObject.SetActive(false);CfgUi.ReleaseSelection();Record("HelpClosed");}}
 
         // ---- 対局の中断確認 ----
-        RectTransform leaveOverlay;
+        RectTransform leaveOverlay;Text leaveTitle,leaveBody;
         void CreateLeaveQuestion()
         {
             leaveOverlay=CfgUi.Rect(root,"Leave match question",-1200,-600,1536+2400,1024+1200);var dim=leaveOverlay.gameObject.AddComponent<Image>();dim.color=new Color(0,0,0,.5f);dim.raycastTarget=true;
             var panel=Cfg2Ui.Panel(leaveOverlay,"Leave panel",1200+468,600+372,600,250,Dark,true);
-            CfgUi.Label(panel,"対局を中断してメニューに戻りますか？",30,26,540,40,24,Gold);
-            CfgUi.Label(panel,"中断した対局は再開できません（棋譜は保存されます）。",30,76,540,60,18,Muted);
+            leaveTitle=CfgUi.Label(panel,"",30,26,540,40,24,Gold);leaveBody=CfgUi.Label(panel,"",30,76,540,60,18,Muted);
             Button(panel,"leave-cancel","対局を続ける",30,166,260,56,CloseLeaveQuestion,true).GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
             Button(panel,"leave-confirm","中断して戻る",310,166,260,56,()=>{CloseLeaveQuestion();ReturnFromMatch();}).GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
             leaveOverlay.gameObject.SetActive(false);
@@ -154,6 +155,8 @@ namespace Showcase.Unity.Settings
         void RequestLeaveMatch()
         {
             if(session==null||session.IsFinished||leaveOverlay==null){ReturnFromMatch();return;}
+            leaveTitle.text=LessonActive?"レクチャーを終えてメニューに戻りますか？":"対局を中断してメニューに戻りますか？";
+            leaveBody.text=LessonActive?"メニューの「操作レクチャー」から、いつでも最初から始められます。":"中断した対局は再開できません（棋譜は保存されます）。";
             CancelActiveInput();leaveOverlay.SetAsLastSibling();leaveOverlay.gameObject.SetActive(true);Record("LeaveAsked");
         }
         void CloseLeaveQuestion(){if(leaveOverlay!=null&&leaveOverlay.gameObject.activeSelf){leaveOverlay.gameObject.SetActive(false);CfgUi.ReleaseSelection();}}
@@ -202,6 +205,8 @@ namespace Showcase.Unity.Settings
             Button(matchHud,"match-help","？ 遊び方",1202,16,150,40,()=>OpenHelp()).GetComponentInChildren<Text>().alignment=TextAnchor.MiddleCenter;
             CreatePieceFinder();
         }
+        // A side a person plays. In a lesson B is the lesson's own and answers by itself.
+        bool HumanTurn(Side side)=>session.Snapshot.Controller(side)==MatchController.Human&&!(LessonActive&&side==Side.B);
         // The visible candidates are those whose cell the section cuts: every normal offset within half a cell.
         static bool InSlice(SliceFrame frame,VecN world)=>frame.Normals.All(normal=>Math.Abs(VecN.Dot(normal,world-frame.Center))<.5);
         int HiddenCandidateCount()
@@ -214,13 +219,13 @@ namespace Showcase.Unity.Settings
         {
             if(hintPanel==null||session==null)return;
             RefreshPieceFinder();
-            bool show=HintsEnabled&&!session.IsFinished;hintPanel.gameObject.SetActive(show);
+            bool show=(HintsEnabled||LessonActive)&&!session.IsFinished;hintPanel.gameObject.SetActive(show);
             UpdateThreat();
             if(!show)return;
-            var s=session.State;bool human=session.Snapshot.Controller(s.Turn)==MatchController.Human;
-            string who=session.Snapshot.Mode==MatchMode.PvP?(s.Turn==Side.A?"先手 A":"後手 B")+" の番":"あなたの番";
+            var s=session.State;bool human=HumanTurn(s.Turn);
+            string who=session.Snapshot.Mode==MatchMode.PvP&&!LessonActive?(s.Turn==Side.A?"先手 A":"後手 B")+" の番":"あなたの番";
             string line;int hidden=0;
-            if(session.PresentationPaused||!human||PresentingMove)line=session.Snapshot.Mode==MatchMode.CvC?"CPU どうしの対局です。視点はドラッグで動かせます。":session.PresentationPaused?"手番を交代しています…":"CPU が考えています。視点はドラッグで動かせます。";
+            if(session.PresentationPaused||!human||PresentingMove)line=LessonActive?"相手（後手 B）の番です。":session.Snapshot.Mode==MatchMode.CvC?"CPU どうしの対局です。視点はドラッグで動かせます。":session.PresentationPaused?"手番を交代しています…":"CPU が考えています。視点はドラッグで動かせます。";
             else if(session.State.Find(selectedPiece) is var piece&&piece!=null&&piece.Side==s.Turn&&result!=null)
             {
                 hidden=HiddenCandidateCount();int all=result.P.Count;
@@ -371,7 +376,7 @@ namespace Showcase.Unity.Settings
             var s=session.State;
             // Each human turn starts on the mover's own pieces; the other side stays one click away.
             string turn=session.Snapshot.MatchId+"/"+s.Ply;
-            if(finderTurn!=turn&&session.Snapshot.Controller(s.Turn)==MatchController.Human&&!session.PresentationPaused){finderTurn=turn;finderSide=s.Turn;}
+            if(finderTurn!=turn&&HumanTurn(s.Turn)&&!session.PresentationPaused){finderTurn=turn;finderSide=s.Turn;}
             MarkSelected(actions["finder-A"],finderSide==Side.A);MarkSelected(actions["finder-B"],finderSide==Side.B);
             var frame=slice.Frame;
             foreach(var row in finderRows)
@@ -418,7 +423,7 @@ namespace Showcase.Unity.Settings
         {
             var s=session.State;if(threatPly==s.Ply&&threatMatch==session.Snapshot.MatchId)return;
             threatPly=s.Ply;threatMatch=session.Snapshot.MatchId;threatText="";
-            if(session.IsFinished||session.Snapshot.Controller(s.Turn)!=MatchController.Human)return;
+            if(session.IsFinished||!HumanTurn(s.Turn))return;
             var preview=session.ToPreview();var preset=session.Snapshot.Config.Preset;var names=new List<string>();
             foreach(var king in s.Pieces.Where(p=>p.Side==s.Turn&&p.Kind==PieceKind.King))
             {

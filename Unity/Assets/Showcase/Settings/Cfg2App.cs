@@ -121,7 +121,7 @@ namespace Showcase.Unity.Settings
                 previewRenderer.SetDisplayState(slice.DisplayState);
                 draft=SettingsDraft.CreateMatchDemo();options=new MatchOptionsRaw();preview=PreviewSession.CreateExperiment();
                 LoadStartup();if(slice.Frame.Dimensions!=DraftDimensions)slice=NewPivotSlice();trialSlice=slice;viewDimensions=DraftDimensions;viewLayout=draft.Current.InitialLayout;SyncViewToDraft();
-                ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();CreateHelp();CreateLeaveQuestion();ShowMenu();
+                ValidateSettings();CreateAudio();CreateCanvas();CreateMenu();CreateSettings();CreateMatchHud();CreateHelp();CreateLeaveQuestion();CreateLesson();ShowMenu();
                 trialYaw=yaw;trialPitch=pitch;trialDistance=distance;trialPan=pan;settingsDirty=(!File.Exists(validPath)||migratedView)&&startupLoadError=="";
                 Application.wantsToQuit+=PrepareShutdown;
                 Record("Started","CFG2; font="+fontName+"; "+Screen.width+"x"+Screen.height+"; reportedDpi="+Screen.dpi+"; data="+runtimeRoot);
@@ -164,14 +164,14 @@ namespace Showcase.Unity.Settings
         }
         string Arg(string key,string fallback){var a=System.Environment.GetCommandLineArgs();int i=Array.IndexOf(a,key);return i>=0&&i+1<a.Length?a[i+1]:fallback;}
         void Record(string name,string data="")
-        {var row=DateTime.UtcNow.ToString("o")+"\t"+name+"\t"+data.Replace('\n',' ');eventTrace.Add(row);Debug.Log("CFG2 "+name+" "+data);}
+        {var row=DateTime.UtcNow.ToString("o")+"\t"+name+"\t"+data.Replace('\n',' ');eventTrace.Add(row);Debug.Log("CFG2 "+name+" "+data);LessonHeard(name);}
         // Options show the latest notice in their status line; the menu and the match HUD show it for a while,
         // and a new screen keeps only a notice raised by the action that opened it.
         Text hudNotice,menuNotice;float noticeTime=-100;int noticeFrame=-1;bool screenNotice;const float NoticeSeconds=10;
         void Notice(string text)
         {
             notice=text;noticeTime=Time.unscaledTime;noticeFrame=Time.frameCount;screenNotice=true;
-            if(statusText!=null)statusText.text=text;if(hudNotice!=null)hudNotice.text=text;if(menuNotice!=null)menuNotice.text=text;Record("Notice",text);
+            if(statusText!=null)statusText.text=text;if(hudNotice!=null)hudNotice.text=text;if(menuNotice!=null)menuNotice.text=text;LessonSay(text);Record("Notice",text);
         }
         void KeepScreenNotice(){if(noticeFrame!=Time.frameCount)ClearScreenNotice();}
         void ClearScreenNotice(){screenNotice=false;if(hudNotice!=null)hudNotice.text="";if(menuNotice!=null)menuNotice.text="";}
@@ -241,7 +241,8 @@ namespace Showcase.Unity.Settings
             if(helpOverlay!=null&&helpOverlay.gameObject.activeSelf&&canvas.scaleFactor!=helpWrapScale)ShowHelpPage(helpPage);
             if(slice.IsAnimating){slice.Advance(Time.unscaledDeltaTime);geometryDirty=true;stableDirty=true;}
             // The help and the leave question hold the match: its clock, the CPU and the hand-over wait until they close.
-            matchClock?.Hold(OverlayOpen);if(!OverlayOpen)UpdateMatch();UpdateCandidateTour();StepSectionGlide();if(geometryDirty)RenderGeometry();UpdateMagnifier();
+            // A lesson has no clock at all.
+            matchClock?.Hold(OverlayOpen||LessonActive);if(!OverlayOpen){UpdateMatch();UpdateLesson();}UpdateCandidateTour();StepSectionGlide();if(geometryDirty)RenderGeometry();UpdateMagnifier();
             if(settingsDirty&&Time.unscaledTime>=saveDue)AutoSave();
             if(screenNotice&&Time.unscaledTime-noticeTime>NoticeSeconds)ClearScreenNotice();
             // The view is saved once it has settled: never during a CPU move show, a turn reset or a piece glide,
@@ -256,8 +257,7 @@ namespace Showcase.Unity.Settings
                 bool initial=Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift);
                 slice.SetCenter(initial?slice.DisplayState.Embedding:default);geometryDirty=true;stableDirty=true;Record("PivotHome",initial?"P":"O");
             }
-            if(!typing&&ownership.Owner==InputOwner.None&&cpuShowResult==null&&resetStage==0&&Input.GetKeyDown(KeyCode.R)&&!Input.GetKey(KeyCode.LeftControl)&&!Input.GetKey(KeyCode.RightControl))
-            {ResetCandidateTour();slice.Restore(NewPivotSlice().DisplayState);geometryDirty=true;stableDirty=true;Record("PivotReset","C=P;XYZ");}
+            if(!typing&&ownership.Owner==InputOwner.None&&cpuShowResult==null&&resetStage==0&&Input.GetKeyDown(KeyCode.R)&&!Input.GetKey(KeyCode.LeftControl)&&!Input.GetKey(KeyCode.RightControl))ResetView();
             // Number keys pick the hidden axis Ctrl+drag rotates against: 4=W, 5=V, 6=U, 7=T, 8=S, 9=R, 0=Q, -=P.
             if(!typing&&ownership.Owner==InputOwner.None&&(opened||session!=null))
                 for(int axis=4;axis<=BoundsN.MaxDimensions;axis++)
@@ -271,6 +271,13 @@ namespace Showcase.Unity.Settings
                 if(Input.GetKeyDown(KeyCode.Z))HistoryKey(false);
                 if(Input.GetKeyDown(KeyCode.Y))HistoryKey(true);
             }
+        }
+        // R: the 4D view back to C=P and XYZ; in a match the camera also returns to the player's own view.
+        void ResetView()
+        {
+            ResetCandidateTour();slice.Restore(NewPivotSlice().DisplayState);geometryDirty=true;stableDirty=true;
+            if(session!=null&&!opened){manualCamera=false;SetMatchCamera(cameraSide,false);}
+            Record("PivotReset","C=P;XYZ");
         }
         void PickRotationAxis(LogicalAxis logical)
         {

@@ -364,6 +364,7 @@ namespace Showcase.Unity.Settings
             if(phase=="pivot"||phase=="pivot-reload"||phase=="pivot-recovery"||phase=="pivot-recovery-reload"){yield return PivotSteps(phase);yield break;}
             if(phase=="nd"||phase=="nd-reload"){yield return ReviewSteps(phase);yield break;}
             if(phase=="guide"){yield return GuideSteps();yield break;}
+            if(phase=="lesson"){yield return LessonSmokeSteps();yield break;}
             yield return new WaitForSecondsRealtime(2);
             SmokeCheck(config!=null&&menu.gameObject.activeSelf&&!opened,"normal startup restores executable setup and opens menu");
             var names=Enumerable.Range(0,5).Select(i=>actions["menu-"+i].GetComponentInChildren<Text>().text).ToArray();
