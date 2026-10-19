@@ -29,6 +29,9 @@ namespace Showcase.Unity.Settings
         readonly List<(int a,int b)> listedPlanes=new List<(int a,int b)>();Button resetButton,clearButton;
         // One check box per axis: unchecked axes (UI order) are hidden.
         readonly List<Toggle> shownToggles=new List<Toggle>();readonly List<Text> shownNames=new List<Text>();readonly HashSet<int> hiddenAxes=new HashSet<int>();
+        // UI axes in projection order: the three screen slots (across, up, depth) first, then the axes divided away by perspective.
+        // A checked X, Y or Z keeps its own slot; a slot whose axis is unchecked goes to the next checked axis after Z (W, V, ...).
+        int[] slotAxes=new int[0];
         // Board and piece shown.
         int dimensions=4;string pieceName="",refreshKey;
         // Directions in UI axis order (X Y Z W V ...), one int[dimensions] each, and the ray length in cells.
@@ -52,6 +55,21 @@ namespace Showcase.Unity.Settings
         internal bool AxisShown(int axis)=>!hiddenAxes.Contains(axis);
         // A direction is shown unless it moves along an unchecked axis.
         internal bool Shown(int[] d){foreach(int axis in hiddenAxes)if(axis<d.Length&&d[axis]!=0)return false;return true;}
+        // UI axis in screen slot 0 (across), 1 (up) or 2 (depth).
+        internal int ScreenAxis(int slot)=>slot>=0&&slot<Math.Min(3,slotAxes.Length)?slotAxes[slot]:-1;
+        internal bool SlotsSwapped{get{for(int i=0;i<3&&i<slotAxes.Length;i++)if(slotAxes[i]!=i)return true;return false;}}
+        void UpdateSlots()
+        {
+            int n=dimensions;var order=new int[n];var used=new bool[n];int next=3;
+            for(int slot=0;slot<3&&slot<n;slot++)
+            {
+                int axis=slot;
+                if(!AxisShown(slot)){while(next<n&&!AxisShown(next))next++;if(next<n)axis=next++;}
+                order[slot]=axis;used[axis]=true;
+            }
+            int k=Math.Min(3,n);for(int axis=0;axis<n;axis++)if(!used[axis])order[k++]=axis;
+            slotAxes=order;
+        }
         internal IReadOnlyCollection<(int a,int b)> Selected=>selected;
         internal IReadOnlyCollection<(int axis,int sign)> AxisSelected=>axisSelected;
         internal (int a,int b)? Hovered=>hovered;
@@ -94,7 +112,7 @@ namespace Showcase.Unity.Settings
             resetButton=Cfg2Ui.Button(controls,"初期位置に戻す",0,0,100,30,()=>ResetRotation());
             clearButton=Cfg2Ui.Button(controls,"選択をクリア",0,0,100,30,ClearSelection);
             foreach(var b in stepButtons.Concat(new[]{resetButton,clearButton})){var t=b.GetComponentInChildren<Text>();t.alignment=TextAnchor.MiddleCenter;t.fontSize=12;}
-            ResetRotation(false);EnsureLabels();EnsureAxisButtons();EnsureShownToggles();Layout();
+            UpdateSlots();ResetRotation(false);EnsureLabels();EnsureAxisButtons();EnsureShownToggles();Layout();
         }
         // Rebuilds the direction list for the piece. Allowed unit directions of {-1,0,1}^N are enumerated like the preview query does.
         internal void Refresh(PreviewPreset preset,string definitionId,string displayName)
@@ -103,7 +121,7 @@ namespace Showcase.Unity.Settings
             // The list only changes with the rules or the piece; a view change (the usual reason for a refresh) keeps it.
             string key=(preset?.RuleHash??"")+"/"+definitionId+"/"+n;
             if(key==refreshKey&&pieceName==displayName)return;refreshKey=key;
-            if(n!=dimensions){dimensions=n;selected.RemoveWhere(c=>c.a>=n||c.b>=n);axisSelected.RemoveWhere(c=>c.axis>=n);hiddenAxes.RemoveWhere(a=>a>=n);hovered=null;ResetRotation(false);EnsureLabels();EnsureAxisButtons();EnsureShownToggles();Layout();UpdateTexts();}
+            if(n!=dimensions){dimensions=n;selected.RemoveWhere(c=>c.a>=n||c.b>=n);axisSelected.RemoveWhere(c=>c.axis>=n);hiddenAxes.RemoveWhere(a=>a>=n);UpdateSlots();hovered=null;ResetRotation(false);EnsureLabels();EnsureAxisButtons();EnsureShownToggles();Layout();UpdateTexts();}
             pieceName=displayName;directions.Clear();rayLength=1;
             if(definition!=null&&definition.IsSupported)
             {
@@ -165,12 +183,14 @@ namespace Showcase.Unity.Settings
                 for(int j=0;j<dimensions;j++){double ra=rotation[a,j],rb=rotation[b,j];rotation[a,j]=c*ra-s*rb;rotation[b,j]=s*ra+c*rb;}
             }
         }
-        // Projection of a point in UI axis order: N → 3 by one perspective division per hidden axis (camera at +Distance on it),
-        // then the fixed 3-D camera. depth sums the hidden coordinates so nearer rays can be drawn brighter and thicker.
+        // Projection of a point in UI axis order: turned, put in slot order (screen axes first), N → 3 by one perspective division per
+        // remaining axis (camera at +Distance on it), then the fixed 3-D camera. depth sums the divided coordinates so nearer rays can
+        // be drawn brighter and thicker.
         internal const double HiddenCamera=16,Camera3=16;
         internal Vector3 Project(double[] point,out float depth)
         {
-            var p=new double[dimensions];for(int i=0;i<dimensions;i++){double v=0;for(int j=0;j<dimensions;j++)v+=rotation[i,j]*point[j];p[i]=v;}
+            if(slotAxes.Length!=dimensions)UpdateSlots();
+            var p=new double[dimensions];for(int i=0;i<dimensions;i++){int r=slotAxes[i];double v=0;for(int j=0;j<dimensions;j++)v+=rotation[r,j]*point[j];p[i]=v;}
             double d=0;
             // The divisor is kept at 2 or more so a point almost at a hidden camera grows at most eightfold per axis.
             for(int a=dimensions-1;a>=3;a--){double s=HiddenCamera/Math.Max(2,HiddenCamera-p[a]);d+=p[a]/HiddenCamera;for(int i=0;i<a;i++)p[i]*=s;}
@@ -299,7 +319,7 @@ namespace Showcase.Unity.Settings
         internal void SetAxisSelected(int axis,int sign,bool on){var key=(axis,Math.Sign(sign));if(on)axisSelected.Add(key);else axisSelected.Remove(key);UpdateTexts();graphic?.SetVerticesDirty();}
         internal void SetAxisShown(int axis,bool on)
         {
-            if(axis<0||axis>=dimensions||on==AxisShown(axis))return;if(on)hiddenAxes.Remove(axis);else hiddenAxes.Add(axis);
+            if(axis<0||axis>=dimensions||on==AxisShown(axis))return;if(on)hiddenAxes.Remove(axis);else hiddenAxes.Add(axis);UpdateSlots();
             syncing=true;if(axis<shownToggles.Count)shownToggles[axis].isOn=on;syncing=false;
             UpdateTexts();graphic?.SetVerticesDirty();
         }
@@ -459,7 +479,8 @@ namespace Showcase.Unity.Settings
             countLabel.text=piece+dimensions+"次元 → 3次元 透視投影　"+total.ToString("N0",CultureInfo.InvariantCulture)+"方向"+(shown<total?"（表示 "+shown.ToString("N0",CultureInfo.InvariantCulture)+"）":"")+(AnyChoice?"　強調 "+lit.ToString("N0",CultureInfo.InvariantCulture)+" 本"+(lit>MaxLitRays?"（表示は"+MaxLitRays.ToString("N0",CultureInfo.InvariantCulture)+"本まで）":""):"")+(total>MaxFaintRays?"　（多いので選んだ方向だけ描画）":"");
             var parts=angles.Where(kv=>Math.Abs(kv.Value)>=.5).Select(kv=>CellName(kv.Key)+" "+kv.Value.ToString("0",CultureInfo.InvariantCulture)+"°").ToList();
             var chosen=selected.OrderBy(c=>c).Select(CellName).Concat(axisSelected.OrderBy(c=>c).Select(c=>(c.sign>0?"+":"−")+AxisName(c.axis))).ToList();
-            rotationLabel.text="回転："+(parts.Count==0?"なし":string.Join("  ",parts))+"　ズーム "+Mathf.RoundToInt(zoom*100)+"%"+(chosen.Count>0?"　選択："+string.Join(" ",chosen):"");
+            rotationLabel.text="回転："+(parts.Count==0?"なし":string.Join("  ",parts))+"　ズーム "+Mathf.RoundToInt(zoom*100)+"%"+(chosen.Count>0?"　選択："+string.Join(" ",chosen):"")
+                +(SlotsSwapped&&dimensions>=3?"　画面：横 "+AxisName(ScreenAxis(0))+" 縦 "+AxisName(ScreenAxis(1))+" 奥 "+AxisName(ScreenAxis(2)):"");
             activeLabel.text=CellName(active)+" の回転　"+Angle(active.a,active.b).ToString("0",CultureInfo.InvariantCulture)+"°";
             zoomLabel.text=Mathf.RoundToInt(zoom*100)+"%";
             syncing=true;zoomSlider.value=zoom;syncing=false;
@@ -492,14 +513,15 @@ namespace Showcase.Unity.Settings
             vh.Clear();if(View==null||View.Rotation==null)return;var r=rectTransform.rect;int n=View.Dimensions;
             Cfg2Glow.Gradient(vh,0,0,r.width,r.height,new Color(.55f,.65f,1,.06f),new Color(.08f,.11f,.25f,.02f));
             var origin=View.ToScreen(View.Project(new double[n],out _));
-            // A cube grid of the XYZ cells within ±GridReach, projected like the rays so a hidden-axis turn bends it. Each line runs
-            // along one axis; an unchecked axis drops its lines and keeps only the layer at 0 across it. Lines on the cube's edges are the
-            // firmest, then those on its faces and on the planes through the origin, then the inner ones.
+            // A cube grid of the cells within ±GridReach on the three screen axes, projected like the rays so a turn of a divided axis
+            // bends it. Each line runs along one axis; an unchecked axis drops its lines and keeps only the layer at 0 across it. Lines
+            // on the cube's edges are the firmest, then those on its faces and on the planes through the origin, then the inner ones.
             int g=Cfg2ProjectionView.GridReach;var a=new double[n];var b=new double[n];
-            for(int p=0;p<3&&p<n;p++)
+            for(int slot=0;slot<3&&slot<n;slot++)
             {
+                if((slot+1)%3>=n||(slot+2)%3>=n)continue;
+                int p=View.ScreenAxis(slot),q=View.ScreenAxis((slot+1)%3),s=View.ScreenAxis((slot+2)%3);
                 if(!View.AxisShown(p))continue;
-                int q=(p+1)%3,s=(p+2)%3;if(q>=n||s>=n)continue;
                 int qr=View.AxisShown(q)?g:0,sr=View.AxisShown(s)?g:0,edges=(qr>0?1:0)+(sr>0?1:0);
                 for(int i=-qr;i<=qr;i++)for(int j=-sr;j<=sr;j++)
                 {
